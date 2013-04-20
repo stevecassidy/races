@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>{{race.title}}</h2>
+
+<table class='table'>
+  <tr><th>Date</th><td>{{race.date}}</td></tr>
+  <tr><th>Time</th><td>{{race.time}}</td></tr>
+  <tr><th>Location</th><td>{{race.location}}</td></tr>
+  <tr><th>Title</th><td>{{race.title}}</td></tr>
+  <tr><th>Club</th><td>{{race.club}} (<a href='{{race.club.url}}'>Website</a>)</td></tr>
+</table>
+
+<p><a href="{{race.url}}">View Race Details</a> on Club website</p>
+
+{% endblock %}
