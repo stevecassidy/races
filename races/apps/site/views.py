@@ -7,9 +7,17 @@ from django.views.generic import DetailView
 from races.apps.site.models import Race, Club, RaceCourse
 import datetime
 
-class HomePage(TemplateView):
+class HomePage(ListView):
 
+    model = Race
     template_name = "index.html"
+
+
+    def get_queryset(self):
+        # show the races for the next week
+        startdate = datetime.date.today()
+        enddate = startdate + datetime.timedelta(days=14)
+        return Race.objects.filter(date__gt=startdate, date__lt=enddate)
 
 
 class ListRacesView(ListView):
@@ -31,4 +39,6 @@ class RaceDetailView(DetailView):
     model = Race
     template_name = 'race_detail.html'
     context_object_name = 'race'
+
+
 

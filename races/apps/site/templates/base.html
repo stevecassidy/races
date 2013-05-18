@@ -1,15 +1,26 @@
+{% load flatpages %}
+{% get_flatpages as flatpages %}
+
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-    <title>Project name</title>
+    <title>cabici</title>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}site.css" />
      <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
       }
     </style>
+    
+    <!-- for maps... -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    
+    {% block extrahead %}
+    {% endblock %}
+    
 </head>
 <body>
     <!-- navbar -->
@@ -23,12 +34,17 @@
           </a>
           <a class="brand" href="#">cabici</a>
           <div class="nav-collapse">
+
+          {% block nav %}
             <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="/races">Races</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li {% ifequal request.path '/' %}class='active'{% endifequal %}><a href="/">Home</a></li>
+              <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'site:races' %}">Races</a></li>
+              {% for page in flatpages %}
+                <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+              {% endfor %}
             </ul>
+          {% endblock %}
+
           </div><!--/.nav-collapse -->
         </div>
       </div>

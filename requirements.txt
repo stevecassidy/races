@@ -1,0 +1,8 @@
+django >= 1.5
+django-pagination
+south
+django-coverage
+django-ical
+icalendar
+python-dateutil
+django-geoposition

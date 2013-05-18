@@ -26,6 +26,7 @@ def ingest():
         race['title'] = row['Title']
         race['location'] = row['Location']
         race['url'] = row['url']
+        race['club'] = row['Club']
 
         races.append(race)
     return races

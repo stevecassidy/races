@@ -1,4 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-Welcome to my project!
+
+<h2>Races in the next 2 weeks</h2>
+{% regroup object_list by date as date_list %}
+        <table class='table'>
+          <thead>
+           <tr><th>Time</th><th>Club</th><th>Race</th><th>Location</th></tr>
+          </thead>
+        {% for date in date_list %}
+           <tr><th>{{date.grouper|date:"D d M"}}</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+           {% for race in date.list %}
+                  <tr><td>{{race.time}} <a href="/races/{{race.id}}/">View</a></td><td><a href="{{race.club.url}}">{{race.club}}</a></td>
+                  <td><a href="{{race.url}}">{{ race.title }}</a></td><td>{{ race.location }}</td></tr>
+           {% endfor %}
+         {% endfor %}
+        </table>
 {% endblock %}

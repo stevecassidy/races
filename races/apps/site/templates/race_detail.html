@@ -1,4 +1,29 @@
 {% extends "base.html" %}
+
+{% block extrahead %}
+    <script>
+function initialize() {
+  var myLatlng = new google.maps.LatLng({{race.location.location.latitude}}, {{race.location.location.longitude}});
+  var mapOptions = {
+    zoom: 12,
+    center: myLatlng,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  }
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: '{{race.location.name}}'
+  });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+{% endblock %}
+
 {% block content %}
 
 <h2>{{race.title}}</h2>
@@ -13,4 +38,7 @@
 
 <p><a href="{{race.url}}">View Race Details</a> on Club website</p>
 
+    <div id="map-canvas"></div>
+
 {% endblock %}
+

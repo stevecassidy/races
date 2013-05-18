@@ -1,5 +1,5 @@
 from django.db import models
-
+from geoposition.fields import GeopositionField
 
 class Club(models.Model):
 
@@ -12,7 +12,7 @@ class Club(models.Model):
 class RaceCourse(models.Model):
 
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=200)
+    location = GeopositionField()
 
     def __unicode__(self):
         return self.name

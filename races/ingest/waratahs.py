@@ -16,16 +16,20 @@ def ingest():
 
     webtext = urllib2.urlopen(WARATAH_URL).read()
     soup = BeautifulSoup(webtext)
+    
+    tables = soup.find_all('table', class_='raceroster_table')
 
-    table = soup.find_all('table', class_='raceroster_table')[0]
-
+    if len(tables) == 0:
+        print "No table found in Waratah's web page"
+        return []
+    
+    table = tables[0]
 
     TIME_GRADED = re.compile(r'([0-9.]+)am ([AC]-[BF])')
 
     races = []
 
     for row in table.find_all('tr'):
-
         cells = row.find_all('td')
         if len(cells) == 4:
             dateinfo =  [c for c in cells[0].children]
