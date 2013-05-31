@@ -6,3 +6,5 @@ django-ical
 icalendar
 python-dateutil
 django-geoposition
+beautifulsoup4
+lxml

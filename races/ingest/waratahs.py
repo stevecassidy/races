@@ -15,8 +15,7 @@ def ingest():
     """Return a list of dictionaries, one for each race"""
 
     webtext = urllib2.urlopen(WARATAH_URL).read()
-    soup = BeautifulSoup(webtext)
-    
+    soup = BeautifulSoup(webtext, "lxml")
     tables = soup.find_all('table', class_='raceroster_table')
 
     if len(tables) == 0:
@@ -25,7 +24,7 @@ def ingest():
     
     table = tables[0]
 
-    TIME_GRADED = re.compile(r'([0-9.]+)am ([AC]-[BF])')
+    TIME_GRADED = re.compile(r'([0-9.:]+)am ([AC]-[BF])')
 
     races = []
 
@@ -37,10 +36,14 @@ def ingest():
 
             date = datetime.datetime.strptime(dateinfo[0], "%d %b %Y")
 
-            if times.find('All Grades') >= 0:
+            if times.lower().find('all grades') >= 0:
                 times = [times.split()[0]]
-            else:
+            elif times.find(':') >= 0:
                 times = times.split(':')
+            else:
+                print "Unknown time format: ", times, "defaulting to 7:45/9:00"
+                times = ('07:45', '09:00')
+
 
             title = cells[1]('strong')[0].string
 
@@ -50,10 +53,12 @@ def ingest():
                 if match != None:
                     time = match.group(1)
                     # time is 9 or 7.45
-                    if time == u'9':
+                    if time == u'9' or time == u'9.00':
                         time = '09:00'
                     elif time == u'7.45':
                         time = '07:45'
+                    elif time == u'7.00am':
+                        time = '07:00'
                     grades = match.group(2)
                     racetitle = title + " Grades " + grades
                 else:

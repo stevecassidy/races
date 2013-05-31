@@ -1,0 +1,13 @@
+        <table class='table'>
+          <thead>
+           <tr><th>Time</th><th>Club</th><th>Race</th><th>Location</th></tr>
+          </thead>
+        {% for date in date_list %}
+           <tr><th>{{date.grouper|date:"D d M"}}</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+           {% for race in date.list %}
+                  <tr><td>{{race.time}}</td>
+                      <td><a href="{% url 'site:club' race.club.id %}">{{race.club}}</a></td>
+                  <td><a href="/races/{{race.id}}/">{{ race.title }}</a></td><td>{{ race.location }}</td></tr>
+           {% endfor %}
+         {% endfor %}
+        </table>

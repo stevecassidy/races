@@ -40,5 +40,13 @@ class RaceDetailView(DetailView):
     template_name = 'race_detail.html'
     context_object_name = 'race'
 
+class ClubListView(ListView):
+    model = Club
+    template_name = 'club_list.html'
+    context_object_name = 'clubs'
 
+class ClubDetailView(DetailView):
+    model = Club
+    template_name = 'club_detail.html'
+    context_object_name = 'club'
 

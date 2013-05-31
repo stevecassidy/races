@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>{{club.name}}</h2>
+
+<p></p><a href='{{club.url}}'>Website</a></p>
+
+{% regroup club.race_set.all by date as date_list %}
+
+ 
+    {% include 'race_table.html' %}
+
+
+{% endblock %}
+
