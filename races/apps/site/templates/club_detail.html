@@ -6,8 +6,7 @@
 
 <p></p><a href='{{club.url}}'>Website</a></p>
 
-{% regroup club.race_set.all by date as date_list %}
-
+{% regroup races by date as date_list %}
  
     {% include 'race_table.html' %}
 

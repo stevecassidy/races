@@ -11,6 +11,10 @@ def find_location(name):
     
     ng = ngram.NGram(courses, key=str)
     
-    return ng.finditem(name)
+    location = ng.finditem(name)
 
+    if location == None:
+        location = RaceCourse.objects.get(name="Unknown")
+        
+    return location
 

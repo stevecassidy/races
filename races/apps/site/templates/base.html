@@ -41,7 +41,9 @@
               <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'site:races' %}">Races</a></li>
               <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'site:clubs' %}">Clubs</a></li>
               {% for page in flatpages %}
+                {% ifnotequal page.url '/' %}
                 <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+                {% endifnotequal %}
               {% endfor %}
             </ul>
           {% endblock %}

@@ -3,6 +3,8 @@
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views.generic import DetailView
+from django.contrib.flatpages.models import FlatPage
+
 
 from races.apps.site.models import Race, Club, RaceCourse
 import datetime
@@ -17,7 +19,19 @@ class HomePage(ListView):
         # show the races for the next week
         startdate = datetime.date.today()
         enddate = startdate + datetime.timedelta(days=14)
-        return Race.objects.filter(date__gt=startdate, date__lt=enddate)
+        return Race.objects.filter(date__gte=startdate, date__lt=enddate)
+    
+    def get_context_data(self, **kwargs):
+        
+        context = super(HomePage, self).get_context_data(**kwargs)
+        pages = FlatPage.objects.filter(url='/')
+        if len(pages) == 1:
+            context['page'] = pages[0]
+        else:
+            context['page'] = {'title': 'Content',
+                               'content': "<p>Create a flatpage with url '/' to see content here</p>"}
+        return context    
+    
 
 
 class ListRacesView(ListView):
@@ -32,7 +46,7 @@ class ListRacesView(ListView):
             return Race.objects.filter(date__year=year, date__month=month)
         else:
             # just pull races after today
-            return Race.objects.filter(date__gt=datetime.date.today())
+            return Race.objects.filter(date__gte=datetime.date.today())
 
 
 class RaceDetailView(DetailView):
@@ -49,4 +63,16 @@ class ClubDetailView(DetailView):
     model = Club
     template_name = 'club_detail.html'
     context_object_name = 'club'
+    
+    def get_context_data(self, **kwargs):
+        
+        context = super(ClubDetailView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        clubid = int(self.kwargs['pk'])
+        club = Club.objects.get(id=clubid)
+        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
+        return context
+    
+    
+    
 

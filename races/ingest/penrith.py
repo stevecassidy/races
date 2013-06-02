@@ -4,6 +4,7 @@ Created on Apr 15, 2013
 @author: steve
 '''
 CALENDAR_URL = 'http://penrithp.ipower.com/calendar.php'
+LOCATION = "Penrith Regatta Centre"
 
 import urllib2
 from bs4 import BeautifulSoup
@@ -56,6 +57,7 @@ def ingest():
             race['time'] = "7:30"
         
         race['title'] = info
+        race['location'] = LOCATION
         
         races.append(race)
         

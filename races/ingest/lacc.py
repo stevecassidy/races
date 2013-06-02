@@ -55,7 +55,8 @@ def ingest():
         if len(info) > 0:
             race['type'] = info[0].text
         
-#        print race['type'], race['title']
+        # use title for location since it's generally in there
+        race['location'] = race['title']
         
         if race['type'] != 'Meeting' and not 'Training' in race['type']:
             races.append(race)
