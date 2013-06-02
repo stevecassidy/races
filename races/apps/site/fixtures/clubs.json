@@ -1,0 +1,74 @@
+[
+{
+    "pk": 1, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.waratahmasters.com.au/", 
+        "name": "Waratah Masters Cycling Club", 
+        "slug": "WMCC"
+    }
+},
+{
+    "pk": 2, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.lacc.org.au/", 
+        "name": "Lidcombe Auburn Cycling Club", 
+        "slug": "LACC"
+    }
+},
+{
+    "pk": 3, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.parramattacycling.com.au/", 
+        "name": "Parramatta Cycling Club", 
+        "slug": "Parramatta"
+    }
+},
+{
+    "pk": 4, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.suvelo.com.au/", 
+        "name": "SUVelo", 
+        "slug": "SUVelo"
+    }
+},
+{
+    "pk": 5, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://bankstownsportscycling.com/", 
+        "name": "Bankstown Sports Cycling Club", 
+        "slug": "Bankstown"
+    }
+},
+{
+    "pk": 6, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.penrithcyclingclub.com/", 
+        "name": "Penrith Cycling Club", 
+        "slug": "Penrith"
+    }
+},
+{
+    "pk": 7, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.stgeorge.cycling.org.au/", 
+        "name": "St George Cycling Club", 
+        "slug": "StGeorge"
+    }
+},
+{
+    "pk": 8, 
+    "model": "site.club", 
+    "fields": {
+        "url": "http://www.marconicyclingclub.com/", 
+        "name": "Marconi Cycling Club", 
+        "slug": "Marconi"
+    }
+}
+]
