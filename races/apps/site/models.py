@@ -4,7 +4,7 @@ from geoposition.fields import GeopositionField
 class Club(models.Model):
 
     name = models.CharField(max_length=100)
-    url = models.URLField()
+    url = models.URLField(max_length=400)
     slug = models.SlugField()  # short name eg. WVCC, MWCC for use in URL
 
     def __unicode__(self):
@@ -41,7 +41,7 @@ class Race(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club)
-    url  = models.URLField(blank=True)
+    url  = models.URLField(blank=True, max_length=400)
     location = models.ForeignKey(RaceCourse)
 
     class Meta:

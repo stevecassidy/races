@@ -141,7 +141,6 @@ INSTALLED_APPS = (
     'south',
 #    'debug_toolbar',
 #    'django_coverage',
-   # 'sorl.thumbnail',
 
     # my apps
 
