@@ -19,3 +19,18 @@
         margin-top: 0px;
     }
 }
+
+footer {
+    border-top: 1px solid #999999;
+    margin: 1em;
+    color: #999999;
+}
+footer ul {
+    float: right;
+}
+footer ul li {
+    list-style: none;
+}
+footer a:link {
+    color #999999;
+}

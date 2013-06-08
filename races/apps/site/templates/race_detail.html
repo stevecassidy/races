@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
-{% block extrahead %}
+{% block extrahead %}    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs&sensor=false"></script>
     <script>
 function initialize() {
   var myLatlng = new google.maps.LatLng({{race.location.location.latitude}}, {{race.location.location.longitude}});

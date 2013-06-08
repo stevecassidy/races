@@ -5,13 +5,11 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-    <title>cabici</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cabici.net - Where's your next race?</title>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap-responsive.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}site.css" />
-    
-    <!-- for maps... -->
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
     
     {% block extrahead %}
     {% endblock %}
@@ -28,7 +26,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="/">cabici</a>
+          <a class="brand" href="/">cabici.net</a>
           <div class="nav-collapse">
 
           {% block nav %}
@@ -57,23 +55,17 @@
     {% block content %}
     {% endblock %}
     </div>
+    
+    <footer>
+       <ul>
+            <li>Copyright &copy; 2013, Steve Cassidy</li>
+        </ul>
+    </footer>
+    
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ STATIC_URL }}bootstrap/js/jquery.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-transition.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-alert.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-modal.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-dropdown.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-scrollspy.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-tab.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-tooltip.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-popover.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-button.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-collapse.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-carousel.js"></script>
-    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-typeahead.js"></script>
-    
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
