@@ -26,6 +26,9 @@ def ingest_club(races, club=None):
             else:
                 thisclub = club
             
+            if len(r['title']) > 100:
+                r['title'] = r['title'][:99]
+            
             race = Race(title=r['title'], date=r['date'], time=r['time'], club=thisclub, location=location, url=r['url'])
             race.save()
         except Exception as e:
