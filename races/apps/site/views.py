@@ -7,6 +7,8 @@ from django.contrib.flatpages.models import FlatPage
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 from races.apps.site.models import Race, Club, RaceCourse
 import datetime
@@ -81,12 +83,24 @@ class RaceUpdateView(UpdateView):
     model = Race
     template_name = "race_form.html"
     
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(RaceUpdateView, self).dispatch(*args, **kwargs)
+    
+    
 class RaceDeleteView(DeleteView):
     model = Race
     success_url = reverse_lazy('races')
     
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(RaceDeleteView, self).dispatch(*args, **kwargs)
+    
 class RaceCreateView(CreateView):
     model = Race
     
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(RaceCreateView, self).dispatch(*args, **kwargs)
     
 
