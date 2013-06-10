@@ -34,3 +34,7 @@ footer ul li {
 footer a:link {
     color #999999;
 }
+
+#editbutton {
+    float: right;
+}

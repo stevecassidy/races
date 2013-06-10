@@ -1,5 +1,6 @@
 from django.db import models
 from geoposition.fields import GeopositionField
+from django.core.urlresolvers import reverse
 
 class Club(models.Model):
 
@@ -49,3 +50,7 @@ class Race(models.Model):
 
     def __unicode__(self):
         return unicode(self.club) + u": " + self.title + ", " + str(self.date)
+    
+    def get_absolute_url(self):
+        return reverse('site:race', kwargs={'pk': self.id})
+    

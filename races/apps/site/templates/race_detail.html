@@ -26,6 +26,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 {% block content %}
 
+<div id='editbutton'><a class='btn' href="{% url 'site:race_update' race.id %}">Edit</a></div>
+
 <h2>{{race.title}}</h2>
 
 <table class='table'>

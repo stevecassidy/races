@@ -5,6 +5,8 @@ from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.contrib.flatpages.models import FlatPage
 
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.core.urlresolvers import reverse_lazy
 
 from races.apps.site.models import Race, Club, RaceCourse
 import datetime
@@ -73,6 +75,18 @@ class ClubDetailView(DetailView):
         context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
         return context
     
+    
+
+class RaceUpdateView(UpdateView):
+    model = Race
+    template_name = "race_form.html"
+    
+class RaceDeleteView(DeleteView):
+    model = Race
+    success_url = reverse_lazy('races')
+    
+class RaceCreateView(CreateView):
+    model = Race
     
     
 
