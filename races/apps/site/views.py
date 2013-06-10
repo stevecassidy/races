@@ -68,8 +68,8 @@ class ClubDetailView(DetailView):
         
         context = super(ClubDetailView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
-        clubid = int(self.kwargs['pk'])
-        club = Club.objects.get(id=clubid)
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
         context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
         return context
     

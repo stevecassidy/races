@@ -9,9 +9,17 @@ from races.apps.site.models import Club, RaceCourse, Race
 
 admin.site.register(Club)
 
-admin.site.register(Race)
 
+class RaceAdmin(admin.ModelAdmin):
+    
+    model = Race
+    date_hierarchy = 'date'
+    list_display = ['date', 'club', 'title']
+    list_filter = ['club', 'location']
+    class Meta:
+        pass
 
+admin.site.register(Race, RaceAdmin)
 
 class RaceCourseAdmin(admin.ModelAdmin):
     pass
