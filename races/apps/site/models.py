@@ -7,7 +7,8 @@ class Club(models.Model):
     name = models.CharField(max_length=100)
     url = models.URLField(max_length=400)
     slug = models.SlugField()  # short name eg. WVCC, MWCC for use in URL
-
+    contact = models.EmailField(null=True)
+    
     def __unicode__(self):
         return self.name
     
