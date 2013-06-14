@@ -1,13 +1,25 @@
         <table class='table'>
           <thead>
-           <tr><th>Time</th><th>Club</th><th>Race</th><th>Location</th></tr>
+           <tr>
+               <th>Time</th><th>Club</th><th>Race</th><th>Location</th>
+               {% if user.is_authenticated %}
+               <th>&nbsp;</th>
+               {% endif %}
+           </tr>
           </thead>
         {% for date in date_list %}
-           <tr><th>{{date.grouper|date:"d M"}}</th><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+           <tr><th colspan='4'>{{date.grouper|date:"D d M"}}</th></tr>
            {% for race in date.list %}
                   <tr><td>{{race.time}}</td>
                       <td><a href="{% url 'site:club' race.club.slug %}">{{race.club.name}}</a></td>
-                  <td><a href="/races/{{race.id}}/">{{ race.title }}</a></td><td>{{ race.location }}</td></tr>
+                  <td><a href="{% url 'site:race' race.id %}">{{ race.title }}</a></td><td>{{ race.location }}</td>
+                  {% if user.is_authenticated %}
+                  <td>
+                      <a href="{% url 'site:race_delete' race.id %}"><i class="icon-remove"></i></a>
+                      <a href="{% url 'site:race_update' race.id %}"><i class="icon-pencil"></i></a>
+                  </td>
+                  {% endif %}
+                  </tr>
            {% endfor %}
          {% endfor %}
         </table>

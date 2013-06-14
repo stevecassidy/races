@@ -11,8 +11,8 @@ urlpatterns = patterns('',
     url(r'^races/(?P<pk>\d+)/$', views.RaceDetailView.as_view(), name='race'),
     
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
-    
-    
+    url(r'^races/(?P<pk>\d+)/delete/$', views.RaceDeleteView.as_view(), name='race_delete'),
+
     
     url(r'^ical$', feeds.EventFeed(), name='ical'),
     url(r'^clubs/$', views.ClubListView.as_view(), name='clubs'),

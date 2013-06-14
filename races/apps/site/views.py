@@ -90,7 +90,8 @@ class RaceUpdateView(UpdateView):
     
 class RaceDeleteView(DeleteView):
     model = Race
-    success_url = reverse_lazy('races')
+    success_url = reverse_lazy('site:races')
+    template_name = "race_confirm_delete.html"
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
