@@ -23,7 +23,7 @@ class HomePage(ListView):
         # show the races for the next week
         startdate = datetime.date.today()
         enddate = startdate + datetime.timedelta(days=14)
-        return Race.objects.filter(date__gte=startdate, date__lt=enddate)
+        return Race.objects.filter(date__gte=startdate, date__lt=enddate, status__exact='p')
     
     def get_context_data(self, **kwargs):
         
@@ -47,10 +47,10 @@ class ListRacesView(ListView):
         if self.kwargs.has_key('year') and self.kwargs.has_key('month'):
             month = int(self.kwargs['month'])
             year = int(self.kwargs['year'])
-            return Race.objects.filter(date__year=year, date__month=month)
+            return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
         else:
             # just pull races after today
-            return Race.objects.filter(date__gte=datetime.date.today())
+            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
 
 
 class RaceDetailView(DetailView):
@@ -74,10 +74,8 @@ class ClubDetailView(DetailView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
-        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
+        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
         return context
-    
-    
 
 class RaceUpdateView(UpdateView):
     model = Race

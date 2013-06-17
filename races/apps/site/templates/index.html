@@ -4,11 +4,13 @@
 
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span5">
+    <div class="span4">
         <h2>{{page.title}}</h2>
         {{ page.content|safe }}
+        
+        <div class="fb-like" data-href="http://cabici.net/race/{{race.id}}" data-send="true" data-width="450" data-show-faces="true"></div>        
     </div>
-    <div class="span7">
+    <div class="span8">
         
 {% regroup object_list by date as date_list %}
         
@@ -21,7 +23,7 @@
            {% for race in date.list %}
                   <tr><td>{{race.time}}</td>
                       <td><a href="{% url 'site:club' race.club.slug %}">{{race.club.slug}}</a></td>
-                  <td><a href="/races/{{race.id}}/">{{ race.title| truncatechars:20}}</a></td><td>{{ race.location }}</td></tr>
+                  <td class='racetitle'><a href="/races/{{race.id}}/">{{ race.title }}</a></td><td>{{ race.location }}</td></tr>
            {% endfor %}
          {% endfor %}
         </table>

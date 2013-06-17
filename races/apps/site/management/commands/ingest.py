@@ -12,28 +12,10 @@ import races.ingest.waratahs as waratahs
 import races.ingest.csvingest as csvingest
 import races.ingest.lacc as laccm
 import races.ingest.penrith as penrith
-from races.ingest import find_location
+
+from races.ingest import ingest_club
 
 
-def ingest_club(races, club=None):
-    
-    for r in races:
-
-        try:
-            location = find_location(r['location'])
-            if club == None:
-                thisclub = Club.objects.get(slug=r['club'])
-            else:
-                thisclub = club
-            
-            if len(r['title']) > 100:
-                r['title'] = r['title'][:99]
-            
-            race = Race(title=r['title'], date=r['date'], time=r['time'], club=thisclub, location=location, url=r['url'])
-            race.save()
-        except Exception as e:
-            print "problem with", club, "race: ", r
-            print e
 
 
 class Command(BaseCommand):

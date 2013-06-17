@@ -6,13 +6,18 @@ Created on Apr 15, 2013
 LACC_URL = 'http://lacc.org.au/index.php?option=com_jevents&task=year.listevents&year=2013'
 
 import urllib2
+from urlparse import urljoin
 from bs4 import BeautifulSoup
 import datetime
 import re
+from races.apps.site.models import Club
+from util import find_location
 
 
 def ingest():
     """Return a list of dictionaries, one for each race"""
+
+    #(lacc, created) = Club.objects.get_or_create(name="Lidcombe Auburn Cycling Club", slug='LACC', url="http://www.lacc.org.au/")
 
     webtext = urllib2.urlopen(LACC_URL).read()
     soup = BeautifulSoup(webtext, "lxml")
@@ -21,7 +26,6 @@ def ingest():
     if len(events) == 0:
         print "No events found in LACC's web page"
         return []
-    
 
     races = []
 
@@ -49,7 +53,7 @@ def ingest():
         
         info = event.find_all('a', class_='ev_link_row')
         if len(info) > 0:
-            race['url'] = info[0]['href']
+            race['url'] = urljoin(LACC_URL, info[0]['href'])
             race['title'] = info[0].text
         info = event.find_all('a', class_='ev_link_cat')
         if len(info) > 0:
@@ -60,17 +64,7 @@ def ingest():
         
         if race['type'] != 'Meeting' and not 'Training' in race['type']:
             races.append(race)
-        
+            
     return races
 
 
-
-if __name__ == '__main__':
-
-    races = ingest()
-    #print races[0]
-    
-    for race in ingest():
-        print race['title'], '|', race['location'], '|', race['date']
-        
-        

@@ -36,6 +36,11 @@ class RacePrototype(models.Model):
     def __unicode__(self):
         return unicode(self.club) + u": " + self.title
     
+STATUS_CHOICES = (
+    ('d', 'Draft'),
+    ('p', 'Published'),
+    ('w', 'Withdrawn'),
+)
 
 class Race(models.Model):
 
@@ -45,7 +50,10 @@ class Race(models.Model):
     club = models.ForeignKey(Club)
     url  = models.URLField(blank=True, max_length=400)
     location = models.ForeignKey(RaceCourse)
-
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d')
+    description = models.TextField(default="")
+    
+    
     class Meta:
         ordering = ['date', 'time']
 
