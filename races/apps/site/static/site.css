@@ -3,7 +3,7 @@
     width: 100%;
  }
  
-.masthead {
+#masthead {
     margin-top: 60px;
     height: 75px;
     position: relative;
@@ -15,7 +15,7 @@
 
 @media (max-width: 980px) {
     
-    .masthead {
+    #masthead {
         margin-top: 0px;
     }
 }
