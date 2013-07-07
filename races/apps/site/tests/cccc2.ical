@@ -1,0 +1,172 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Drupal: Date iCal//NONSGML kigkonsult.se iCalcreator 2.16.12//
+METHOD:PUBLISH
+X-WR-CALNAME;VALUE=TEXT:CCCC
+BEGIN:VTIMEZONE
+TZID:Australia/Sydney
+BEGIN:STANDARD
+DTSTART:20130407T030000
+TZOFFSETFROM:+1100
+TZOFFSETTO:+1000
+RDATE:20140406T030000
+TZNAME:EST
+END:STANDARD
+BEGIN:DAYLIGHT
+DTSTART:20131006T020000
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1100
+TZNAME:EST
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:calendar.4.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Wednesday\\, April 10\\, 2013 - 4\:45pm to 6\:00pm \n Ju
+ niors\: 4\:45-6 Elite Juniors\: 6-7 Seniors\: 7-8 At Adcock Park Veledrome
+  West  \n Gosford.
+DTSTART;TZID=Australia/Sydney:20130410T164500
+DTEND;TZID=Australia/Sydney:20130410T180000
+LAST-MODIFIED:20130430T121534Z
+SUMMARY:Road Training
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/4
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.5.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Tuesday\\, April 16\\, 2013 - 7\:30pm \n Meeting at Cent
+ ral Coast Leagues Club
+DTSTART;TZID=Australia/Sydney:20130416T193000
+DTEND;TZID=Australia/Sydney:20130416T193000
+LAST-MODIFIED:20130411T093017Z
+SUMMARY:Club Meeting
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/5
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.17.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Wednesday\\, May 1\\, 2013 - 4\:45pm to 8\:00pm \n Junio
+ rs\: 4\:45-6pm \n  \n Elite juniors\: 6-7pm \n  \n Seniors\: 7-8pm \n  \n 
+ Adcock Park Veledrome
+DTSTART;TZID=Australia/Sydney:20130501T164500
+DTEND;TZID=Australia/Sydney:20130501T200000
+LAST-MODIFIED:20130430T131515Z
+SUMMARY:Road Training
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/17
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.19.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Saturday\\, May 4\\, 2013 - 1\:30pm to 4\:00pm \n Racing
+  at Calga (Pacific Hwy and Jones Rd)
+DTSTART;TZID=Australia/Sydney:20130504T133000
+DTEND;TZID=Australia/Sydney:20130504T160000
+LAST-MODIFIED:20130430T132216Z
+SUMMARY:Road Racing Calga
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/19
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.18.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Monday\\, May 6\\, 2013 - 4\:45pm to 8\:00pm \n Juniors\
+ : 4\:45-6pm \n  \n Elite juniors\: 6-7pm \n  \n Seniors\: 7-8pm \n  \n Adc
+ ock Park Veledrome
+DTSTART;TZID=Australia/Sydney:20130506T164500
+DTEND;TZID=Australia/Sydney:20130506T200000
+LAST-MODIFIED:20130430T132045Z
+SUMMARY:Road Training
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/18
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.9.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Wednesday\\, May 8\\, 2013 - 6\:30pm to 9\:30pm \n Break
+ ers
+DTSTART;TZID=Australia/Sydney:20130508T183000
+DTEND;TZID=Australia/Sydney:20130508T213000
+LAST-MODIFIED:20130507T080752Z
+SUMMARY:Presentation Dinner
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/9
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.21.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Saturday\\, May 11\\, 2013 - 1\:30pm to 4\:00pm \n Racin
+ g at Calga. \n  \n Registration from 1\:30pm \n  \n Racing starts at 2pm. 
+ \n  \n A grade 50km \n B grade 50km \n C grade 50km \n D graade 50km \n ​E
+  grade 25km \n  \n   \n  \n View Larger Map [1] \n  \n  \n [1] http\://map
+ s.google.com.au/maps?f=q&amp\\;source=embed&amp\\;hl=en&amp\\;geocode=&amp
+ \\;q=cnr+peats+ridge+road+and+jones+road+somersby&amp\\;aq=&amp\\;sll=-32.
+ 830735\\,147.451465&amp\\;sspn=19.902819\\,21.09375&amp\\;t=h&amp\\;ie=UTF
+ 8&amp\\;hq=&amp\\;hnear=Peats+Ridge+Rd+%26+Jones+Rd\\,+Calga+New+South+Wal
+ es+2250&amp\\;z=14&amp\\;ll=-33.416256\\,151.222367
+DTSTART;TZID=Australia/Sydney:20130511T133000
+DTEND;TZID=Australia/Sydney:20130511T160000
+LAST-MODIFIED:20130507T080409Z
+SUMMARY:Road Racing
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/21
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.38.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Monday\\, May 13\\, 2013 - 4\:45pm to 8\:00pm \n Juniors
+ \: 4\:45-6pm \n  \n Elite juniors (U15 up) and A Grade\: 6-7pm \n  \n Seni
+ ors\: 7-8pm \n  \n Adcock Park Velodrome \n  \n View Larger Map [1] \n  \n
+   \n [1] http\://maps.google.com.au/maps?f=q&amp\\;source=embed&amp\\;hl=e
+ n&amp\\;geocode=&amp\\;q=adcock+park\\,+west+gosford&amp\\;aq=&amp\\;sll=-
+ 32.830735\\,147.451465&amp\\;sspn=19.902819\\,21.09375&amp\\;t=h&amp\\;ie=
+ UTF8&amp\\;hq=adcock+park\\,&amp\\;hnear=West+Gosford+New+South+Wales&amp\
+ \;ll=-33.427873\\,151.327084&amp\\;spn=0.006295\\,0.022602
+DTSTART;TZID=Australia/Sydney:20130513T164500
+DTEND;TZID=Australia/Sydney:20130513T200000
+LAST-MODIFIED:20130508T075939Z
+SUMMARY:Road Training
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/38
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.40.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Wednesday\\, May 15\\, 2013 - 4\:45pm to 8\:00pm \n Juni
+ ors\: 4\:45-6pm \n  \n Elite juniors (U15 up) and A Grade\: 6-7pm \n  \n S
+ eniors\: 7-8pm \n  \n Adcock Park Velodrome \n  \n View Larger Map [1] \n 
+  \n  \n [1] http\://maps.google.com.au/maps?f=q&amp\\;source=embed&amp\\;h
+ l=en&amp\\;geocode=&amp\\;q=adcock+park\\,+west+gosford&amp\\;aq=&amp\\;sl
+ l=-32.830735\\,147.451465&amp\\;sspn=19.902819\\,21.09375&amp\\;t=h&amp\\;
+ ie=UTF8&amp\\;hq=adcock+park\\,&amp\\;hnear=West+Gosford+New+South+Wales&a
+ mp\\;ll=-33.427873\\,151.327084&amp\\;spn=0.006295\\,0.022602
+DTSTART;TZID=Australia/Sydney:20130515T164500
+DTEND;TZID=Australia/Sydney:20130515T200000
+LAST-MODIFIED:20130508T075956Z
+SUMMARY:Road Training
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/40
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.46.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION:Date\: Saturday\\, May 18\\, 2013 - 1\:30pm to 4\:00pm \n Wybon
+ g Cycling Event\\, Central Division Road Racing.  \n  \n Grade \n Start Ti
+ me \n No of Laps \n Distance \n  \n  \n  \n  \n Elite (19 & 23) \n 1\:30pm
+  \n 3 \n 75km \n  \n  \n M1 & 2 \n 1\:32pm \n 2 \n 50km \n  \n  \n M3 & 4 
+ \n 1\:34pm \n 2 \n 50km \n  \n  \n M5 & 6 \n 1\:36pm \n 2 \n 50km \n  \n  
+ \n M7+ \n 1\:38pm \n 2 \n 50km \n  \n  \n Women \n 1\:40pm \n 2 \n 50km \n
+   \n  \n Junior U11/U13 \n 1\:42pm \n Out & back \n 6km \n  \n  \n Junior 
+ U17/U15 \n 1\:44pm \n 1 \n 25km \n More information [1] \n  \n  \n [1] htt
+ p\://www.centralcoastcyclingclub.com.au/sites/default/files/CentralDivisio
+ nAgeChamionshipsMuswellbrook.pdf
+DTSTART;TZID=Australia/Sydney:20130518T133000
+DTEND;TZID=Australia/Sydney:20130518T160000
+LAST-MODIFIED:20130516T115254Z
+SUMMARY:Central Division Road Racing Muswellbrook
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/46
+END:VEVENT
+BEGIN:VEVENT
+UID:calendar.49.field_date.0@www.centralcoastcyclingclub.com.au
+DTSTAMP:20130602T111335Z
+DESCRIPTION: New Road Race Event 
+DTSTART;TZID=Australia/Sydney:20130607T133000
+DTEND;TZID=Australia/Sydney:20130607T160000
+LAST-MODIFIED:20130516T115254Z
+SUMMARY:New Road Race Event
+URL;TYPE=URI:http://www.centralcoastcyclingclub.com.au/node/46
+END:VEVENT
+END:VCALENDAR

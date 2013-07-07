@@ -10,6 +10,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import datetime
 import re
+import hashlib
 
 
 def ingest():
@@ -58,6 +59,7 @@ def ingest():
         
         race['title'] = info
         race['location'] = LOCATION
+        race['hash'] = hashlib.sha1(str(race)).hexdigest()
         
         races.append(race)
         

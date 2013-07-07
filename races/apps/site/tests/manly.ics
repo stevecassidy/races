@@ -1,0 +1,1124 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Manly Warringah Cycling Club Event Calendar
+X-WR-TIMEZONE:Australia/Sydney
+BEGIN:VTIMEZONE
+TZID:Australia/Sydney
+X-LIC-LOCATION:Australia/Sydney
+BEGIN:STANDARD
+TZOFFSETFROM:+1100
+TZOFFSETTO:+1000
+TZNAME:EST
+DTSTART:19700405T030000
+RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU
+END:STANDARD
+BEGIN:DAYLIGHT
+TZOFFSETFROM:+1000
+TZOFFSETTO:+1100
+TZNAME:EST
+DTSTART:19701004T020000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU
+END:DAYLIGHT
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130720
+DTEND;VALUE=DATE:20130721
+DTSTAMP:20130706T103017Z
+UID:h37ukmv1qe2nrrvovciksfpo70@google.com
+CREATED:20130627T015950Z
+DESCRIPTION:The NSW Team Tiem Trial Championships. Entries close 7th July. 
+ More info at http://www.nsw.cycling.org.au/cy_nsw/races/?f=2013/13146/13146
+ .htm
+LAST-MODIFIED:20130627T015950Z
+LOCATION:Nowra Airport - Braidwood Road
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:NSW Team Time Trial
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130714T000000Z
+DTEND:20130714T053000Z
+DTSTAMP:20130706T103017Z
+UID:mi010fbdjbivnjuv1p2m5bap9o@google.com
+CREATED:20130627T015632Z
+DESCRIPTION:The second day of the NSW rounds of the National Cyclo Cross Se
+ ries. This day ha racing for the elites\, as well as open rounds open to al
+ l and a kids race. More details - http://www.manlywarringahcc.org.au/events
+ /national-cyclo-cross-series-info/
+LAST-MODIFIED:20130627T015757Z
+LOCATION: JJ Melbourne Hills Memorial Reserve\, Terrey Hills
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:National Cyclo Cross Series
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130713T000000Z
+DTEND:20130713T053000Z
+DTSTAMP:20130706T103017Z
+UID:hkfd7ckah0j8ri9jet2gqblia8@google.com
+CREATED:20130627T015438Z
+DESCRIPTION:The first of the NSW rounds for the National Cyclo Cross Series
+ . There are also support events open to all riders. More details - http://w
+ ww.manlywarringahcc.org.au/events/national-cyclo-cross-series-info/
+LAST-MODIFIED:20130627T015620Z
+LOCATION: JJ Melbourne Hills Memorial Reserve\, Terrey Hills
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:National Cyclo Cross Series
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130628T080000Z
+DTEND:20130628T103000Z
+DTSTAMP:20130706T103017Z
+UID:mdpjn3shcs1vg68bvpfkoosn48@google.com
+CREATED:20130614T041829Z
+DESCRIPTION:Spend the night at 2\,228 metres and participate in a TT up Alp
+ e D'Huez. Check out the facilities while racing your club mates and having 
+ a bit of a laugh. All welcome but numbers are limited so RSVP to the Club S
+ ecretary. Cost is FREE
+LAST-MODIFIED:20130614T042241Z
+LOCATION:Sydney Altitude Training Centre - 1st Floor\, 789 Military Road\, 
+ Mosman
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Off to Alpe D'Huez
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130614T230000Z
+DTEND:20130615T020000Z
+DTSTAMP:20130706T103017Z
+UID:a48loqtrobfdktjcfgl3sgo738@google.com
+CREATED:20130524T055612Z
+DESCRIPTION:The best of both worlds - road and dirt racing combined into th
+ is adreline filled day of racing. Races for both cross bikes and non cross 
+ bikes plus a kids race. $10 race entry.
+LAST-MODIFIED:20130524T055933Z
+LOCATION:JJ Melbourne Hills Reserve\, Kamber Road\, Terrey Hills
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Cyclo Cross Action!
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130424T193000Z
+DTEND:20130425T013000Z
+DTSTAMP:20130706T103017Z
+UID:c3mf2193tqmhrrrlmlr860n6v8@google.com
+CREATED:20130422T000937Z
+DESCRIPTION:Leaving Neutral Bay at 5:30am from the street opposite the Oaks
+ . We take the back streets through Cammeray\, Northbridge\, Willoughby etc 
+ to be at St Ives shops on Mona Vale Road at about 6:20am. Down and up throu
+ gh Bobbin Head and then the normal way up the Old Pacific Hwy to make the 9
+ :30 ferry. Then home from Palm Beach. Bring ferry money. Ride suitable for 
+ strong C graders and up.
+LAST-MODIFIED:20130422T231950Z
+LOCATION:Leaving Neutral Bay to Ettalong then home via Palm Beach
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Ettalong Loop
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130505
+DTEND;VALUE=DATE:20130506
+DTSTAMP:20130706T103017Z
+UID:uadj0egrf0o33jljtoa4rukkag@google.com
+CREATED:20130409T010136Z
+DESCRIPTION:Your opportunity to get in some practice on the course prior to
+  club champs. A & B Grade will be doing the 43km course and C & D Grade the
+  25km course. Sign on from 7am\, with riders rolling out in 1 minute interv
+ als from 8am. www.atta.asn.au
+LAST-MODIFIED:20130409T010308Z
+LOCATION:Peats Ridge Road\, Calga
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:ATTA Calga Time Trial
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130519
+DTEND;VALUE=DATE:20130520
+DTSTAMP:20130706T103017Z
+UID:4c08js62ijiovo4nk9pkmli6ig@google.com
+CREATED:20130409T002048Z
+DESCRIPTION:Northern Sydney hold their criterium races along Beamount road.
+  A fast hot dog circuit. $10 entry. Sign on from about 7:45am. No day licen
+ ces available. Get some practice in on the same course that will be used in
+  our club championships.
+LAST-MODIFIED:20130409T002115Z
+LOCATION:Beaumont Road\, Mt Kuring-gai
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:NSCC Beauie Worlds Crit
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130427T220000Z
+DTEND:20130428T000000Z
+DTSTAMP:20130706T103017Z
+UID:vgcplt1ctt73n3dl1hv53dli0g@google.com
+CREATED:20130409T001753Z
+DESCRIPTION:Northern Sydney hold their criterium races along Beamount road.
+  A fast hot dog circuit. $10 entry. Sign on from about 7:45am. No day licen
+ ces available. Get some practice in on the same course that will be used in
+  our club championships.
+LAST-MODIFIED:20130409T002011Z
+LOCATION:Beaumont Road\, Mt Kuring-gai
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Northern Sydney Beauie Worlds
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130713T210000Z
+DTEND:20130714T000000Z
+DTSTAMP:20130706T103017Z
+UID:4ad2ilflk2dqkbgjqk187o3044@google.com
+CREATED:20130408T060926Z
+DESCRIPTION:Open t all club and riders and the final round of the MWCC club
+  championships. $15 entry with a GOLD 2013 racing licence. Grades A-D with 
+ racing from Akuna Bay and out along West Head. Finish is at Elvina Walking 
+ Track Carpark West Head. Racing starts 7:30am.
+LAST-MODIFIED:20130408T061108Z
+LOCATION:Sign on Akuna Bay Marina Carpark from 7am.
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Akuna West Head Road Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130629T220000Z
+DTEND:20130630T000000Z
+DTSTAMP:20130706T103017Z
+UID:r2f7al72tj8jqh722b2f29ffr4@google.com
+CREATED:20130408T060909Z
+DESCRIPTION:Round 3 of club champs will be held at the NSCC Beaumont Road- 
+ crit course. This fast and hotdog course will be run in conjunction with th
+ e NSCC race. $10 entry on the day. More details www.northernsydneycyclingcl
+ ub.org.au\n
+LAST-MODIFIED:20130408T060909Z
+LOCATION:Beaumont Road\, Mt Ku-ring gai
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Round 3 MWCC Club Champs
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130608T210000Z
+DTEND:20130609T000000Z
+DTSTAMP:20130706T103017Z
+UID:583p69lfinflggm9sfl0s3bolk@google.com
+CREATED:20130408T060526Z
+DESCRIPTION:Sydney's best and only monthly road race. $15 entry. Race from 
+ Akuna Bay and out along West Head. Finish Line is opposite the Elvina Walki
+ ng Track. Grades A-C complete 2 laps of West Head\, D Grade complete 1 lap 
+ of West Head. Racing starts 7:30am. All clubs and riders welcome.
+LAST-MODIFIED:20130408T060658Z
+LOCATION:Sign on Akuna BAy Marina Car Park from 7am
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Akuna West Road Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130601T220000Z
+DTEND:20130602T000000Z
+DTSTAMP:20130706T103017Z
+UID:dhjuq5sslnhbqsglt2586mnflo@google.com
+CREATED:20130408T052919Z
+DESCRIPTION:Round 1 of MWCC Club Champs. Head along to the ATTA monthly TT'
+ s. A & B Grade do the 43km course\, C\,D & Womens 25km course. More details
+  http://www.atta.asn.au/
+LAST-MODIFIED:20130408T060503Z
+LOCATION:Peats Ridge Road\, Calga\, Corner Jones Road
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Calga Time Trial\, Reats Ridge
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130331T204500Z
+DTEND:20130331T221500Z
+DTSTAMP:20130706T103017Z
+UID:u7f6q2gtgl2k7ji0g72g2c6cog@google.com
+CREATED:20130324T230704Z
+DESCRIPTION:Northern Sydney Criterium Racing. $10 entry. No day licences av
+ ailable. Flat and fast racing.
+LAST-MODIFIED:20130324T230850Z
+LOCATION:Beaumont Road\, Mt Kuring Gai 
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:NSCC Beauie Worlds
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130331T203000Z
+DTEND:20130331T230000Z
+DTSTAMP:20130706T103017Z
+UID:biunufjpc6s3asqaujjh0jlh04@google.com
+CREATED:20130311T044642Z
+DESCRIPTION:Waratah Masters Cycling Club Race. Grades A-F open to all licen
+ sed racers over 30 or all ages for women. $15 entry. No day licences availa
+ ble. For info http://www.waratahmasters.com.au/eventsmenu.cfm
+LAST-MODIFIED:20130324T230658Z
+LOCATION:Eastern Creek Dragway\, Eastern Creek
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Waratah Masters Racing
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130406
+DTEND;VALUE=DATE:20130407
+DTSTAMP:20130706T103017Z
+UID:b1lbnhvsqigf2f6rmfl7pao18o@google.com
+CREATED:20130311T045556Z
+DESCRIPTION:The Sydney Road Titles. This is an age graded day of racing\, a
+ round the regatta centre.\nEnter by the 24 March. Details on the www.nsw.cy
+ cling.org.au website.
+LAST-MODIFIED:20130311T045556Z
+LOCATION:Penrith Regatta Centre\, Penrith
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Sydney Road Titles
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130421
+DTEND;VALUE=DATE:20130422
+DTSTAMP:20130706T103017Z
+UID:217ls9nnkd42ljrqrbkd2am9pk@google.com
+CREATED:20130311T045204Z
+DESCRIPTION:The Blayney to Bathurst Sportif is a popular weekend of riding\
+ , with 70km and 110km options. There is also criteriums and hill climbing o
+ n Saturday around Mount Panorama. This is open to all riders\, you do not n
+ eed a racing licence. More details at www.b2b.asn.au/
+LAST-MODIFIED:20130311T045204Z
+LOCATION:Bathurst\, NSW
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blayney to Bathurst Sportif
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130324T050000Z
+DTEND:20130324T060000Z
+DTSTAMP:20130706T103017Z
+UID:0sqvl8bdqtblk1gq4b8sm7tqgg@google.com
+CREATED:20130311T044946Z
+DESCRIPTION:A challenging sportif with two options of 80 & 160kms. Entries 
+ via Cycling NSW. This is open to all riders - you do not need a racing lice
+ nce.
+LAST-MODIFIED:20130311T044946Z
+LOCATION:Jindabyne
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Jindabyne Sportif
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;TZID=Australia/Sydney:20130315T173000
+DTEND;TZID=Australia/Sydney:20130315T190000
+RRULE:FREQ=WEEKLY;UNTIL=20130329T063000Z;BYDAY=FR
+DTSTAMP:20130706T103017Z
+UID:u4mlusl3bnudi0ihcjkqq1tlqg@google.com
+CREATED:20130311T043857Z
+DESCRIPTION:Criterium racing put on by Peloton Sports on a completely car f
+ ree and closed course. $15 entry. Sign on from 5:30pm with racing starting 
+ at 6pm. Great way to finish the week and start the weekend. More details ht
+ tp://pelotonsports.com.au/\n
+LAST-MODIFIED:20130311T043857Z
+LOCATION:HART Driver Training Centre\, St Ives
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:HART Driver Training Crit Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20130512
+DTEND;VALUE=DATE:20130513
+DTSTAMP:20130706T103017Z
+UID:5vp7i42qfk4nsjqmqlqfod0eak@google.com
+CREATED:20130311T043350Z
+DESCRIPTION:Sydney's best and only monthly road race. $15 entry. Race from 
+ Akuna Bay and out along West Head. Finish Line is opposite the Elvina Walki
+ ng Track. Grades A-C complete 2 laps of West Head\, D Grade complete 1 lap 
+ of West Head. Racing starts 7:30am. All clubs and riders welcome.
+LAST-MODIFIED:20130311T043350Z
+LOCATION:Sign on from 7am D'Albora Marina Akuna Bay
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Akuna West Head Road Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130413T210000Z
+DTEND:20130414T000000Z
+DTSTAMP:20130706T103017Z
+UID:1thf429eupj9i3e6j7jotlt3t4@google.com
+CREATED:20130311T043043Z
+DESCRIPTION:Sydney's best and only monthly road race. $15 entry. Race from 
+ Akuna Bay and out along West Head. Finish Line is opposite the Elvina Walki
+ ng Track. Grades A-C complete 2 laps of West Head\, D Grade complete 1 lap 
+ of West Head. Racing starts 7:30am. All clubs and riders welcome.
+LAST-MODIFIED:20130311T043307Z
+LOCATION:Akuna Bay D'Albora Marina Carpark for sign on 7am
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Akuna West Head Road Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130316T190000Z
+DTEND:20130317T000000Z
+DTSTAMP:20130706T103017Z
+UID:bigri6ogisb266k9vuuriks1g4@google.com
+CREATED:20130301T062149Z
+DESCRIPTION:Leaving Bike Addiction at 6am. This club ride will go straight 
+ up Allambie Road and out towards Bobbin Head\, through Bobbo\, then into th
+ e Gorges\, back via Bobbo and down Allambie Road finishing at Bacino. A hil
+ ly ride\, however we will wait at the top of all main climbs. If it is rain
+ ing - stay in bed!
+LAST-MODIFIED:20130301T062447Z
+LOCATION:Three Gorges Ride
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:3 Gorges Ride
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130309T200000Z
+DTEND:20130309T230000Z
+DTSTAMP:20130706T103017Z
+UID:pm7tdfpj2m1hsivkpdddo5fjrc@google.com
+CREATED:20130131T040803Z
+DESCRIPTION:Sydney's best and only monthly road race. Race from Akuna Bay a
+ nd out along West Head. Finish Line is opposite the Elvina Walking Track. G
+ rades A-C complete 2 laps of West Head\, D Grade complete 1 lap of West Hea
+ d. Racing starts 7:30am All clubs and riders welcome.
+LAST-MODIFIED:20130218T020311Z
+LOCATION:Sign on Akuna Bay Marina car park from 7am
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Akuna West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130215T184500Z
+DTEND:20130215T231500Z
+DTSTAMP:20130706T103017Z
+UID:lvk0btbl2gg5oribusofh3ocr0@google.com
+CREATED:20130131T040914Z
+DESCRIPTION:Looking for something a bit different? 5:45am and head south to
+  Waterfall and then down returning through the National Park. Returning to 
+ Kirribilli about 10am. Pace will be steady. Distance about 115km -120km
+LAST-MODIFIED:20130131T041126Z
+LOCATION:5:45am at the Northern Harbour Bridge Steps
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Waterfall/National Park Ride
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20130112T200000Z
+DTEND:20130112T230000Z
+DTSTAMP:20130706T103017Z
+UID:uplsv3fggv3chmtv3qn6qo3od0@google.com
+CREATED:20121116T013959Z
+DESCRIPTION:RACE CONFIRMED. Grades A-D. All clubs and riders welcome. Pleas
+ e ensure that you have a 2013 Gold racing licence. Entry $10\, one day lice
+ nce can be purchased for an additional $30.
+LAST-MODIFIED:20130108T230419Z
+LOCATION:Sign on D'Albora Marina\, Akuna Bay
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Akuna-West Head RR
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121222T190000Z
+DTEND:20121222T210000Z
+DTSTAMP:20130706T103017Z
+UID:br9upu1jsrsgbfahqr95uq4na8@google.com
+CREATED:20121213T030121Z
+DESCRIPTION:Christmas Eve eve Crit. $15 entry - Grades A-C All grades start
+  6:50am. Sign on from 6:20am. All clubs and riders welcome.
+LAST-MODIFIED:20121213T030438Z
+LOCATION:HART Driver Training - 451 Mona Vale Road St Ives
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Easy Read Time Teacher Crit
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121209T040000Z
+DTEND:20121209T080000Z
+DTSTAMP:20130706T103017Z
+UID:clddelmf0k18o4crnd7pj35vkg@google.com
+CREATED:20121116T014157Z
+DESCRIPTION:One for all the family. Just a casual Sunday afternoon barbie d
+ own at the Dam\, suitable for the whole family. The club will be set up at 
+ Table 33 which is around near the Boat Ramp.\n\nClub will put on some food 
+ and snacks. BYO alcohol and smiles.\n\nhttp://www.warringah.nsw.gov.au/comm
+ unity/documents/TableBookings_Mar2011.pdf\n
+LAST-MODIFIED:20121204T041354Z
+LOCATION:Manly Dam
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:MWCC Christmas BBQ
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121216T050000Z
+DTEND:20121216T060000Z
+DTSTAMP:20130706T103017Z
+UID:o7ivelo7evk4jefbtnc8krkbvs@google.com
+CREATED:20121116T014053Z
+DESCRIPTION:Annual AGM Meeting. Election of all committee members and discu
+ ssion about issues facing the club.
+LAST-MODIFIED:20121116T014053Z
+LOCATION:Bacino\, Manly - Upstairs
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:MWCC AGM
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20121208T200000Z
+DTEND:20121208T230000Z
+DTSTAMP:20130706T103017Z
+UID:p70hnahcn1hpb9vq2qofom8tio@google.com
+CREATED:20121002T053254Z
+DESCRIPTION:Sign on from 7:00am. Grades A-D. All female racers will race fo
+ r free. Entry fee for all other riders is $10 with a GOLD 2012 licence. If 
+ you don't have a gold licence\, then you will be required to purchase a one
+  day licence for $30 in addition to the normal entry fee. 
+LAST-MODIFIED:20121116T013820Z
+LOCATION:Sign On at the D'Albora Marina\, Akuna Bay
+SEQUENCE:3
+STATUS:CONFIRMED
+SUMMARY:Akuna Bay / West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VFREEBUSY
+DTSTART:20121026T210000Z
+DTEND:20121026T220000Z
+DTSTAMP:20130706T103017Z
+UID:cfdf5d8a38c90cfbf59c9b4f8db8d38328c3727c@google.com
+ATTENDEE;X-NUM-GUESTS=0:mailto:account@manlywarringahcc.org.au
+SUMMARY:Busy
+END:VFREEBUSY
+BEGIN:VEVENT
+DTSTART:20121102T190000Z
+DTEND:20121103T063000Z
+DTSTAMP:20130706T103017Z
+UID:o9is8h0n7nqodfpe9qq1pi2ov4@google.com
+CREATED:20121018T025253Z
+DESCRIPTION:A day of riding around Kangaroo Valley\, Berry and potentially 
+ Macquarie Pass if you have the legs for it.\nPlan is to drive from Neutral 
+ Bay at 6am\, with riding time of about 4-5 hours\, before the drive back. B
+ ook out the day.
+LAST-MODIFIED:20121018T025253Z
+LOCATION:Meeting Place - Robertson Pie Shop
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Big Ride Down South - Kangaoo Valley\, Macquarie Pass
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VFREEBUSY
+DTSTART:20121013T200000Z
+DTEND:20121013T230000Z
+DTSTAMP:20130706T103017Z
+UID:e0a5ab10aa3feb9b721efcf5521a76c992c7bfc0@google.com
+ATTENDEE;X-NUM-GUESTS=0:mailto:account@manlywarringahcc.org.au
+SUMMARY:Busy
+END:VFREEBUSY
+BEGIN:VEVENT
+DTSTART:20120825T210000Z
+DTEND:20120825T233000Z
+DTSTAMP:20130706T103017Z
+UID:4gqodmdnvc96bufhs2llkcca0g@google.com
+CREATED:20120810T020632Z
+DESCRIPTION:The annual Energize Gym Akuna Bay Hill Climb Challenge. Will yo
+ u be the Strava Champ?\nAll clubs and riders welcome.
+LAST-MODIFIED:20120815T051456Z
+LOCATION:D'Albora Marina Carpark\, Akuna  Bay
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Akuna Bay Hill Climb Challenge
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120811T210000Z
+DTEND:20120812T000000Z
+DTSTAMP:20130706T103017Z
+UID:3gn4eso9k0gf163hiupdji5kp4@google.com
+CREATED:20120111T042233Z
+DESCRIPTION:Sign on from 7am in the Marina Carpark. Race finishes up at the
+  Elvina Walking Track Carpark $10 Entry
+LAST-MODIFIED:20120810T043734Z
+LOCATION:D'Albora Marina\, Akuna Bay
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20120930
+DTEND;VALUE=DATE:20121001
+DTSTAMP:20130706T103017Z
+UID:b0u7g4c5nk03h86bi4k06trl84@google.com
+CREATED:20120810T021007Z
+DESCRIPTION:National Series Round of Cyclo Cross. Support events open to al
+ l riders\, of all abilities. Register on the day for the support events.
+LAST-MODIFIED:20120810T021007Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Series Cyclo Cross Day 2
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20120929
+DTEND;VALUE=DATE:20120930
+DTSTAMP:20130706T103017Z
+UID:j3vp0eksbalici7vhbulukf5qo@google.com
+CREATED:20120810T020929Z
+DESCRIPTION:National Series Round of Cyclo Cross. Support events open to al
+ l riders\, of all abilities. Register on the day for the support events.
+LAST-MODIFIED:20120810T020929Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:National Series Cyclo Cross
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120908T211500Z
+DTEND:20120909T001500Z
+DTSTAMP:20130706T103017Z
+UID:aelj43vfd8vub185ukflkr8jvk@google.com
+CREATED:20120111T042304Z
+DESCRIPTION:Sign on from 7am in the Marina Carpark. Race finishes up at the
+  Elvina Walking Track Carpark $10 Entry
+LAST-MODIFIED:20120810T020705Z
+LOCATION:D'Albora Marina carpark \, Akuna Bay
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120824T223000Z
+DTEND:20120825T010000Z
+DTSTAMP:20130706T103017Z
+UID:7qbr0e9ifn3ns7i9ivd1uhs23k@google.com
+CREATED:20120522T050550Z
+DESCRIPTION:The club runs a short course mountain bike race from 8:30am wit
+ h the cyclo cross starting from 9:30am. Entry for these events is $10 with 
+ day licences available for those that don’t have a racing licence.
+LAST-MODIFIED:20120522T050550Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cyclocross Winter Series
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120727T223000Z
+DTEND:20120728T010000Z
+DTSTAMP:20130706T103017Z
+UID:4cj1l77e73mlj4n0d8841e9mc4@google.com
+CREATED:20120522T050531Z
+DESCRIPTION:The club runs a short course mountain bike race from 8:30am wit
+ h the cyclo cross starting from 9:30am. Entry for these events is $10 with 
+ day licences available for those that don’t have a racing licence.
+LAST-MODIFIED:20120522T050531Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cyclocross Winter Series
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120622T223000Z
+DTEND:20120623T010000Z
+DTSTAMP:20130706T103017Z
+UID:gt0lomadd4jdlmm09t2dgik9a4@google.com
+CREATED:20120522T050503Z
+DESCRIPTION:The club runs a short course mountain bike race from 8:30am wit
+ h the cyclo cross starting from 9:30am. Entry for these events is $10 with 
+ day licences available for those that don’t have a racing licence.
+LAST-MODIFIED:20120522T050503Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cyclocross Winter Series
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120525T223000Z
+DTEND:20120526T010000Z
+DTSTAMP:20130706T103017Z
+UID:onnd7n8hl3av0lcuqbi7rvbum4@google.com
+CLASS:PUBLIC
+CREATED:20120522T050436Z
+DESCRIPTION:The club runs a short course mountain bike race from 8:30am wit
+ h the cyclo cross starting from 9:30am. Entry for these events is $10 with 
+ day licences available for those that don’t have a racing licence.
+LAST-MODIFIED:20120522T050436Z
+LOCATION:JJ Melbourne Memorial Reserve\, Terrey Hills
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Cyclocross Winter Series
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120120T210000Z
+DTEND:20120121T000000Z
+DTSTAMP:20130706T103017Z
+UID:f5th0l9t884fsejh9t1dl792cg@google.com
+CREATED:20111205T232443Z
+DESCRIPTION:Sign on from 8:00am Racing from 8:30am
+LAST-MODIFIED:20120118T234521Z
+LOCATION:JJ Melbourne Hills Memorial Reserve
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cyclocross Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120707T211500Z
+DTEND:20120708T001500Z
+DTSTAMP:20130706T103017Z
+UID:uf7svros4hpjq9mhhatmmpbu68@google.com
+CREATED:20120111T042206Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T042206Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120609T211500Z
+DTEND:20120610T001500Z
+DTSTAMP:20130706T103017Z
+UID:q6ht6d3e5j7rcqhh0fd5hitmss@google.com
+CREATED:20120111T042145Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T042146Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120512T211500Z
+DTEND:20120513T001500Z
+DTSTAMP:20130706T103017Z
+UID:dn1fgfrnk52iddu0sprgr653ic@google.com
+CREATED:20120111T042122Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T042122Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120407T211500Z
+DTEND:20120408T001500Z
+DTSTAMP:20130706T103017Z
+UID:j28n66qaqdqu82u1ei94cqb67k@google.com
+CREATED:20120111T042054Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T042054Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120310T201500Z
+DTEND:20120310T231500Z
+DTSTAMP:20130706T103017Z
+UID:ddahflt2ftlo14k0tosc2ll7bg@google.com
+CREATED:20120111T042023Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T042023Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120211T201500Z
+DTEND:20120211T231500Z
+DTSTAMP:20130706T103017Z
+UID:nsqfcfrqgogtpcu9pbpejb5o8o@google.com
+CREATED:20120111T041954Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T041954Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111210T201500Z
+DTEND:20111210T231500Z
+DTSTAMP:20130706T103017Z
+UID:0fmuiolst6miim8csoh6rbm488@google.com
+CREATED:20111024T042923Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20120111T041850Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:West Head Road Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20120106T210000Z
+DTEND:20120107T000000Z
+DTSTAMP:20130706T103017Z
+UID:hd0srf1j9ohepmkt5h0op4ulf8@google.com
+CREATED:20111205T232425Z
+DESCRIPTION:Sign on from 8:00am Racing from 8:45am
+LAST-MODIFIED:20111205T232425Z
+LOCATION:JJ Melbourne Hills Memorial Reserve
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cyclocross Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111216T210000Z
+DTEND:20111217T000000Z
+DTSTAMP:20130706T103017Z
+UID:8a4oatare553hnrpl5l871diq4@google.com
+CREATED:20111205T232404Z
+DESCRIPTION:Sign on from 8:00am Racing from 8:45am
+LAST-MODIFIED:20111205T232404Z
+LOCATION:JJ Melbourne Hills Memorial Reserve
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cyclocross Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20111203T193000Z
+DTEND:20111203T233000Z
+DTSTAMP:20130706T103017Z
+UID:9fg13s32ncg6r1c24e47gv8dm0@google.com
+CLASS:PUBLIC
+CREATED:20110628T055554Z
+DESCRIPTION:6:30am sign on for a 7am start
+LAST-MODIFIED:20111116T221104Z
+LOCATION:North Head
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:North Head Criterium
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110925
+DTEND;VALUE=DATE:20110926
+DTSTAMP:20130706T103017Z
+UID:lfi76aejftnks2nsqn6kg2tsg0@google.com
+CREATED:20110628T055514Z
+DESCRIPTION:Sign on from 7am - Race start at 7:30am
+LAST-MODIFIED:20110919T000803Z
+LOCATION:North Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:North Head Criterium
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20111113
+DTEND;VALUE=DATE:20111114
+DTSTAMP:20130706T103017Z
+UID:g78om3oam8e7cj7s496r41vdmo@google.com
+CREATED:20110905T033706Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110905T033706Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20111009
+DTEND;VALUE=DATE:20111010
+DTSTAMP:20130706T103017Z
+UID:m8ms05o49tj7m3n4qf3a7m6mjo@google.com
+CREATED:20110905T033645Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110905T033646Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110911
+DTEND;VALUE=DATE:20110912
+DTSTAMP:20130706T103017Z
+UID:2anls475q95v76klg2avj2sh20@google.com
+CREATED:20110905T014440Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110905T014441Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110814
+DTEND;VALUE=DATE:20110815
+DTSTAMP:20130706T103017Z
+UID:808ivn38d7q8390p1alihl0e24@google.com
+CREATED:20110328T020154Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110727T095018Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:3
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110828
+DTEND;VALUE=DATE:20110829
+DTSTAMP:20130706T103017Z
+UID:jpiqj0rorqd3pumrp5nak2hij8@google.com
+CLASS:PUBLIC
+CREATED:20110718T002723Z
+DESCRIPTION:http://www.manlywarringahcc.org.au/racing/akuna-bay-hill-climb-
+ tt/
+LAST-MODIFIED:20110718T002723Z
+LOCATION:8am Illawong Bay Car Park
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Akuna Bay Hill Climb TT 
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110723T204500Z
+DTEND:20110724T010000Z
+DTSTAMP:20130706T103017Z
+UID:g6a5b2tmdkugt0a0fhl00n0lr4@google.com
+CREATED:20110628T055423Z
+DESCRIPTION:
+LAST-MODIFIED:20110712T004722Z
+LOCATION:North Head
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:North Head Criterium
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART:20110716T100000Z
+DTEND:20110716T170000Z
+DTSTAMP:20130706T103017Z
+UID:dd54kkebtjgtg82ggia76847m8@google.com
+CLASS:PUBLIC
+CREATED:20110711T045036Z
+DESCRIPTION:http://tdfatbacino.eventbrite.com/ 
+LAST-MODIFIED:20110711T045036Z
+LOCATION:Bacino Manly
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:TDF @ Bacino
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110522
+DTEND;VALUE=DATE:20110523
+DTSTAMP:20130706T103017Z
+UID:n0sl7e2c5d5aqt4lg4f97fpfok@google.com
+CLASS:PUBLIC
+CREATED:20110502T000651Z
+DESCRIPTION:$85 JM19\n$85 JW19\n$85 U/23\n$85 Elite Men\n$85 Elite Women\n$
+ 85 Men Masters\n$85 Women Masters\n$240 Team\n\nThe Great Hunter Cycling Cl
+ assic is open to Cycling NSW members and the general public catering to rid
+ ers 18 years and over.\n\nEntry includes a competitors T-Shirt and a bottle
+  of wine.\n\nApprox 100km long course will be 5 laps of a approx 19km circu
+ it around wineries.\n\nNSW Road Series points on offer. -Elite Men\, Women/
+ U19 Women\, U/23 Men \, U/19 Men (Juniors will participate in the short cou
+ rse)\n\n3 Team classifications- Sport Club\, Race Club and Corporate Teams.
+ \nTeam members will not be eligible for individual prizes.\n\nAll riders wh
+ o finish will receive a certificate including their finish time.\nAge Categ
+ ories will be:\n\n18-22 years\n23-34 years\n35-49 years\n50-64 years\n65+ y
+ ears\n\n\nOnline Entries\n\nStart Times\n7:30am Family Fun Ride\n8:20am Lon
+ g Course\n8:30am Short Course\n\nRegistration will be at the rotunda in fro
+ nt of Oscars Caf� at Hunter Valley Gardens\, Broke Rd\, Pokolbin\n\nAll par
+ ticipants must be registered 30 minutes prior to their event start time.\n\
+ n\nhttp://www.nsw.cycling.org.au/cy_nsw/races/?f=2011/11078/11078.htm 
+LAST-MODIFIED:20110502T000651Z
+LOCATION:Pokolbin
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:The Xstrata Great Hunter Cycling Classic 100km Long Course
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110515
+DTEND;VALUE=DATE:20110516
+DTSTAMP:20130706T103017Z
+UID:msbk6r1c9p1uq713pr03u7o7i4@google.com
+CLASS:PUBLIC
+CREATED:20110502T000500Z
+DESCRIPTION:o M9+: 8.30am \, 30min + 3 laps\no M8 : 9.10am\no M7 : 9.50am\n
+ o M6 : 10.30am\no W4+ : 11.10am\no W1-3 : 11.50am\no M5 : 12.30pm\no M4 : 1
+ .10pm \, 40min + 3 laps \no M3 : 2.00pm \no M2 : 2.50pm\no M1 : 3.40pm
+LAST-MODIFIED:20110502T000500Z
+LOCATION:Marulan Driver Training Centre. Prairie Oak Rd Marulan
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:NSW Masters Criterium Championships
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110514
+DTEND;VALUE=DATE:20110515
+DTSTAMP:20130706T103017Z
+UID:muh1pdn6ss9ksvqjd34vpemjmc@google.com
+CLASS:PUBLIC
+CREATED:20110502T000346Z
+DESCRIPTION:o M6: 9.00am - 57k\no M7: 9.15am - 57k\no W1-3: 9.30am - 57k\no
+  W4+ : 9.45am - 57k\no M8: 10.00am - 57k\no M9+: 10.15am - 57k\no M3: 12noo
+ n - 84k\no M4: 12.15pm - 84k\no M5: 12.30pm - 84k\no M2: 12.45pm - 102k\no 
+ M1: 1.00pm - 102k\n\nFree Car parking - off Forbes Street in Eastgrove Park
+  North \n\nRoad Race Entry Fee - includes a Dinner Ticket to the Masters Ch
+ ampions Dinner at the Goulburn Workers Club. Drinks at the Golburn workers 
+ club are from 6:00pm in the first floor function room\, with dinner service
+  commencing at 7pm sharp.
+LAST-MODIFIED:20110502T000346Z
+LOCATION:Park Rd & Forbes St Goulburn (Eastgrove Park North)
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:NSW Masters Road Race Championships
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110619
+DTEND;VALUE=DATE:20110620
+DTSTAMP:20130706T103017Z
+UID:ucnvnkdai39n37f5igg3j07910@google.com
+CREATED:20110328T034733Z
+DESCRIPTION:
+LAST-MODIFIED:20110427T010744Z
+LOCATION:http://www.manlywarringahcc.org.au/racing/nsw-team-time-trials/
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:NSW Team Time Trials
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110710
+DTEND;VALUE=DATE:20110711
+DTSTAMP:20130706T103017Z
+UID:vthn9p1nlpbt7f49sq72nmafj0@google.com
+CREATED:20110328T020005Z
+DESCRIPTION:Sign on at 7:15am
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110508
+DTEND;VALUE=DATE:20110509
+DTSTAMP:20130706T103017Z
+UID:ub472bfhnicos11t1gkuiurqps@google.com
+CREATED:20110328T015710Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah West Head Race
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110410
+DTEND;VALUE=DATE:20110411
+DTSTAMP:20130706T103017Z
+UID:ipiiupv5vg2r4lnil3st6co27c@google.com
+CLASS:PUBLIC
+CREATED:20110405T054702Z
+DESCRIPTION:Blayney to Bathurst\nCyclo Sportif Challenge \n\nhttp://www.b2b
+ .asn.au/
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Blaney to Bathurst
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Blayney to Bathurst Cyclo Sportif Challenge
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110403
+DTEND;VALUE=DATE:20110404
+DTSTAMP:20130706T103017Z
+UID:g6luq26p886p3tcjjm1l8561g0@google.com
+CLASS:PUBLIC
+CREATED:20110328T014713Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah West Head Race - Handicap Format
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110612
+DTEND;VALUE=DATE:20110613
+DTSTAMP:20130706T103017Z
+UID:pmbuojqcued4ce7bmhfb8gjuu0@google.com
+CREATED:20110328T015857Z
+DESCRIPTION:Sign on from 7:15am
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Elvina Track\, West Head
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Manly Warringah Cycling Club Race
+TRANSP:OPAQUE
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20110429
+DTEND;VALUE=DATE:20110502
+DTSTAMP:20130706T103017Z
+UID:s48ndduvoui2gvuvoequcet8ns@google.com
+CLASS:PUBLIC
+CREATED:20110405T055020Z
+DESCRIPTION:http://canberratour.org.au/
+LAST-MODIFIED:20110427T010743Z
+LOCATION:Canberra
+SEQUENCE:0
+STATUS:CONFIRMED
+SUMMARY:Canberra Tour
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

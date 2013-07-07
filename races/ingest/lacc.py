@@ -10,8 +10,7 @@ from urlparse import urljoin
 from bs4 import BeautifulSoup
 import datetime
 import re
-from races.apps.site.models import Club
-from util import find_location
+import hashlib
 
 
 def ingest():
@@ -61,6 +60,8 @@ def ingest():
         
         # use title for location since it's generally in there
         race['location'] = race['title']
+        
+        race['hash'] = hashlib.sha1(str(race)).hexdigest()
         
         if race['type'] != 'Meeting' and not 'Training' in race['type']:
             races.append(race)

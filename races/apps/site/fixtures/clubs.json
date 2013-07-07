@@ -1,74 +1,110 @@
 [
 {
-    "pk": 1, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.waratahmasters.com.au/", 
-        "name": "Waratah Masters Cycling Club", 
-        "slug": "WMCC"
-    }
+  "pk": 1, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Waratah Masters Cycling Club", 
+    "url": "http://www.waratahmasters.com.au/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "WMCC"
+  }
 },
 {
-    "pk": 2, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.lacc.org.au/", 
-        "name": "Lidcombe Auburn Cycling Club", 
-        "slug": "LACC"
-    }
+  "pk": 2, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Lidcombe Auburn Cycling Club", 
+    "url": "http://www.lacc.org.au/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "LACC"
+  }
 },
 {
-    "pk": 3, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.parramattacycling.com.au/", 
-        "name": "Parramatta Cycling Club", 
-        "slug": "Parramatta"
-    }
+  "pk": 3, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Parramatta Cycling Club", 
+    "url": "http://www.parramattacycling.com.au/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "Parramatta"
+  }
 },
 {
-    "pk": 4, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.suvelo.com.au/", 
-        "name": "SUVelo", 
-        "slug": "SUVelo"
-    }
+  "pk": 4, 
+  "model": "site.club", 
+  "fields": {
+    "name": "SUVelo", 
+    "url": "http://www.suvelo.com.au/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "SUVelo"
+  }
 },
 {
-    "pk": 5, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://bankstownsportscycling.com/", 
-        "name": "Bankstown Sports Cycling Club", 
-        "slug": "Bankstown"
-    }
+  "pk": 5, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Bankstown Sports Cycling Club", 
+    "url": "http://bankstownsportscycling.com/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "Bankstown"
+  }
 },
 {
-    "pk": 6, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.penrithcyclingclub.com/", 
-        "name": "Penrith Cycling Club", 
-        "slug": "Penrith"
-    }
+  "pk": 6, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Penrith Cycling Club", 
+    "url": "http://www.penrithcyclingclub.com/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "Penrith"
+  }
 },
 {
-    "pk": 7, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.stgeorge.cycling.org.au/", 
-        "name": "St George Cycling Club", 
-        "slug": "StGeorge"
-    }
+  "pk": 7, 
+  "model": "site.club", 
+  "fields": {
+    "name": "St George Cycling Club", 
+    "url": "http://www.stgeorge.cycling.org.au/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "StGeorge"
+  }
 },
 {
-    "pk": 8, 
-    "model": "site.club", 
-    "fields": {
-        "url": "http://www.marconicyclingclub.com/", 
-        "name": "Marconi Cycling Club", 
-        "slug": "Marconi"
-    }
+  "pk": 8, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Marconi Cycling Club", 
+    "url": "http://www.marconicyclingclub.com/", 
+    "icalurl": "", 
+    "contact": "", 
+    "icalpatterns": "", 
+    "slug": "Marconi"
+  }
+},
+{
+  "pk": 9, 
+  "model": "site.club", 
+  "fields": {
+    "name": "Central Coast Cycling Club", 
+    "url": "http://www.centralcoastcyclingclub.com.au/", 
+    "icalurl": "http://www.centralcoastcyclingclub.com.au/calendar/ical", 
+    "contact": "", 
+    "icalpatterns": "Racing, Race, Handicap", 
+    "slug": "CCCC"
+  }
 }
 ]

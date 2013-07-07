@@ -9,7 +9,7 @@ import urllib2
 from bs4 import BeautifulSoup
 import datetime
 import re
-
+import hashlib
 
 def ingest():
     """Return a list of dictionaries, one for each race"""
@@ -29,6 +29,7 @@ def ingest():
     races = []
 
     for row in table.find_all('tr'):
+        
         cells = row.find_all('td')
         if len(cells) == 4:
             dateinfo =  [c for c in cells[0].children]
@@ -74,7 +75,10 @@ def ingest():
                 race['id'] = str(cells[1]('span')[0].string)
                 race['location'] = str(cells[2].string)
                 race['url'] = WARATAH_URL
-
+                # hash will change if this row changes, include time since we split some rows
+                # into two races
+                race['hash'] = hashlib.sha1(str(row)+time).hexdigest()
+                
                 races.append(race)
     return races
 
@@ -82,5 +86,10 @@ def ingest():
 
 if __name__ == '__main__':
 
-    for race in ingest():
-        print race
+    import pprint
+    
+    races = ingest()
+    
+    pprint.pprint(races)
+    
+    

@@ -40,6 +40,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <tr><th>Title</th><td>{{race.title}}</td></tr>
   <tr><th>Club</th><td><a href="{% url 'site:club' race.club.slug %}">{{race.club}}</a> (<a href='{{race.club.url}}'>Website</a>)</td></tr>
 </table>
+<pre id='description'>{{race.description}}</pre>
 
 <p><a href="{{race.url}}">View Race Details</a> on Club website</p>
 
