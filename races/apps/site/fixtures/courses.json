@@ -70,5 +70,29 @@
         "name": "Unknown", 
         "location": "-33.8674869,151.20699020000006"
     }
+},
+{
+    "pk": 13, 
+    "model": "site.racecourse", 
+    "fields": {
+        "name": "Calga", 
+        "location": "-33.41555606327039,151.2222833016831"
+    }
+},
+{
+    "pk": 14, 
+    "model": "site.racecourse", 
+    "fields": {
+        "name": "Akuna", 
+        "location": "-33.64598763692696,151.23529343782047"
+    }
+},
+{
+    "pk": 15, 
+    "model": "site.racecourse", 
+    "fields": {
+        "name": "HART ", 
+        "location": "-33.70886892624663,151.18815424473576"
+    }
 }
 ]
