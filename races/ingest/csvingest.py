@@ -7,12 +7,11 @@ Created on Apr 15, 2013
 import datetime
 import re
 import csv
+import hashlib
 
-def ingest():
+def ingest(csvfile):
     """Return a list of dictionaries, one for each race"""
 
-
-    csvfile = 'parramatta.csv'
     races = []
     h = open(csvfile, 'rU')
     reader = csv.DictReader(h)
@@ -27,7 +26,8 @@ def ingest():
         race['location'] = row['Location']
         race['url'] = row['url']
         race['club'] = row['Club']
-
+        race['hash'] = hashlib.sha1(str(row))
+        
         races.append(race)
     return races
 
