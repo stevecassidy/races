@@ -1,6 +1,5 @@
 from django.conf.urls import patterns, url, include
 
-
 from races.apps.site import views
 from races.apps.site import feeds
 
@@ -17,4 +16,7 @@ urlpatterns = patterns('',
     url(r'^ical$', feeds.EventFeed(), name='ical'),
     url(r'^clubs/$', views.ClubListView.as_view(), name='clubs'),
     url(r'^clubs/(?P<slug>.*)/$', views.ClubDetailView.as_view(), name='club'),
+    
+    url(r'^test.html$', views.TestPageView.as_view(), name='test'),
+    
 )

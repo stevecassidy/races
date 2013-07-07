@@ -36,6 +36,9 @@ class HomePage(ListView):
                                'content': "<p>Create a flatpage with url '/' to see content here</p>"}
         return context    
     
+class TestPageView(TemplateView):
+
+    template_name = "test.html"
 
 
 class ListRacesView(ListView):

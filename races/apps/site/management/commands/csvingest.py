@@ -19,7 +19,9 @@ class Command(BaseCommand):
             
             for racedict in races:
                 club = Club.objects.get(slug=racedict['club'])
-                races = club.ingest_race_list([racedict])
+                (races, errors) = club.ingest_race_list([racedict])
+                if errors != []:
+                    print "Errors: ", errors
                 if races != []:
                     print races[0]
             

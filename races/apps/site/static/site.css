@@ -5,6 +5,8 @@
  
 #masthead {
     margin-top: 60px;
+    margin-left: -100px;
+    margin-right: -100px;
     height: 75px;
     position: relative;
     top: -20px;
@@ -18,6 +20,7 @@
     #masthead {
         margin-top: 0px;
     }
+    
 }
 
 footer {

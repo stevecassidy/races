@@ -26,7 +26,7 @@ def ingest(csvfile):
         race['location'] = row['Location']
         race['url'] = row['url']
         race['club'] = row['Club']
-        race['hash'] = hashlib.sha1(str(row))
+        race['hash'] = hashlib.sha1(str(race)).hexdigest()
         
         races.append(race)
     return races
