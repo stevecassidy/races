@@ -256,5 +256,5 @@ class Race(models.Model):
         return unicode(self.club) + u": " + self.title + ", " + str(self.date)
     
     def get_absolute_url(self):
-        return reverse('site:race', kwargs={'pk': self.id})
+        return reverse('site:race', kwargs={'pk': self.id, 'slug': self.club.slug})
     
