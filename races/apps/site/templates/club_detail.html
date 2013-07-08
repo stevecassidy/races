@@ -4,12 +4,11 @@
 
 <h2>{{club.name}}</h2>
 
-<p></p><a href='{{club.url}}'>Website</a></p>
+<p></p><a href='{{club.url}}'>{{club.name}} Website</a></p>
 
 {% regroup races by date as date_list %}
  
     {% include 'race_table.html' %}
-
 
 {% endblock %}
 

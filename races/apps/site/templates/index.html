@@ -31,7 +31,7 @@
            {% for race in date.list %}
                 <tr>
                   <td class='racetime'>{{race.time}}</td>
-                  <td class='racetitle'><a href="/races/{{race.id}}/">{{race.club.slug}} - {{ race.title }}</a></td>
+                  <td class='racetitle'>{{race.club.slug}}: <a href="{% url 'site:race' race.club.slug race.pk %}">{{ race.title }}</a></td>
                   <td class='racelocation'>{{ race.location }}</td>
                 </tr>
            {% endfor %}
