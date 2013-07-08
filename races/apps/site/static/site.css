@@ -23,6 +23,21 @@
     
 }
 
+.racetitle {
+}
+
+.racetime {
+    width: 5em;
+}
+
+@media (max-width: 480px) {
+    
+    .racelocation {
+        display: none;
+    }
+    
+}
+
 footer {
     border-top: 1px solid #999999;
     margin: 1em;

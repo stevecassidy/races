@@ -32,8 +32,7 @@ class HomePage(ListView):
         if len(pages) == 1:
             context['page'] = pages[0]
         else:
-            context['page'] = {'title': 'Content',
-                               'content': "<p>Create a flatpage with url '/' to see content here</p>"}
+            context['page'] = {'title': 'Content',}
         return context    
     
 class TestPageView(TemplateView):

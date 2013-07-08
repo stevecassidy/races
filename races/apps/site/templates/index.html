@@ -1,11 +1,18 @@
 {% extends "base.html" %}
+{% load webdesign %}
 {% block content %}
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span4">
         <h2>{{page.title}}</h2>
+        
+        {% if page.content %}
         {{ page.content|safe }}
+        {% else %}
+        <p>Create a flatpage with url '/' to see content here</p>
+        {% lorem 2 p %}
+        {% endif %}
         
          <div class="fb-like" data-href="http://cabici.net/race/{{race.id}}" data-send="true" 
               data-layout="button_count" data-width="450" data-show-faces="true"></div>        
@@ -17,14 +24,16 @@
         
         <table class='table'>
           <thead>
-           <tr><th>Time</th><th>Club</th><th>Race</th><th>Location</th></tr>
+           <tr><th class='racetime'>Time</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th></tr>
           </thead>
         {% for date in date_list %}
            <tr><th colspan='4'>{{date.grouper|date:"D d M"}}</th></tr>
            {% for race in date.list %}
-                  <tr><td>{{race.time}}</td>
-                      <td><a href="{% url 'site:club' race.club.slug %}">{{race.club.slug}}</a></td>
-                  <td class='racetitle'><a href="/races/{{race.id}}/">{{ race.title }}</a></td><td>{{ race.location }}</td></tr>
+                <tr>
+                  <td class='racetime'>{{race.time}}</td>
+                  <td class='racetitle'><a href="/races/{{race.id}}/">{{race.club.slug}} - {{ race.title }}</a></td>
+                  <td class='racelocation'>{{ race.location }}</td>
+                </tr>
            {% endfor %}
          {% endfor %}
         </table>
