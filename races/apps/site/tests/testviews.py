@@ -17,7 +17,7 @@ class ViewTests(TestCase):
         nextfortnight = today + timedelta(14)
         nextthreeweeks = today + timedelta(21)
         
-        self.wmcc = Club.objects.get(slug='WMCC')
+        self.wmcc = Club.objects.get(slug='Waratahs')
         self.lacc = Club.objects.get(slug='LACC')
         
         lansdowne = RaceCourse.objects.get(name='Lansdowne Park')

@@ -245,7 +245,7 @@ class Race(models.Model):
     url  = models.URLField(blank=True, max_length=400)
     location = models.ForeignKey(RaceCourse)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d')
-    description = models.TextField(default="")
+    description = models.TextField(default="", blank=True)
     hash = models.CharField(max_length=100, blank=True)
     
     
@@ -257,4 +257,12 @@ class Race(models.Model):
     
     def get_absolute_url(self):
         return reverse('site:race', kwargs={'pk': self.id, 'slug': self.club.slug})
+    
+    def duplicate(self):
+        """Create a race just like this one with a slightly modified title 
+        but make it draft"""
+        
+        pass
+    
+    
     

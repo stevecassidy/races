@@ -17,7 +17,17 @@ committee@penrithcyclingclub.com,
 captain@suvelo.com.au,
 pbates@cycleclassic.com.au,
 i.jackson52@optusnet.com.au,
-pcraft@vtown.com.au
+pcraft@vtown.com.au,
+stelio.pappas@gmail.com,
+robbiejd5@hotmail.com,
+geoff.turnbull@visy.com.au,
+bigfriendlyvegan@yahoo.com,
+hamil0425@gmail.com,
+cthompso@au1.ibm.com,
+info@bicycles.net.au
+
+
+
 
 Hi,
  my name is Steve Cassidy, I ride with Waratah Masters CC.  I've been working on a new website that aims to list all of the club cycling races in the Sydney area.  The idea is to have a single point of reference to find out what races are scheduled. This is a personal project, not a commercial enterprise; at the moment I'm supporting the site myself but in the future I might introduce some advertising to help pay site costs.

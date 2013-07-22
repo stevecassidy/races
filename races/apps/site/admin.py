@@ -14,9 +14,9 @@ class RaceAdmin(admin.ModelAdmin):
     
     model = Race
     date_hierarchy = 'date'
-    list_display = ['date', 'club', 'title', 'status']
+    list_display = ['date', 'club', 'title', 'location', 'status']
     list_filter = ['club', 'location', 'status']
-    list_editable = ['status']
+    list_editable = ['status', 'location']
     actions = ['make_published', 'make_draft', 'make_withdrawn']
     
     def make_published(self, request, queryset):

@@ -53,7 +53,7 @@ class IngestTests(TestCase):
         
     def test_ical_ingest_for_non_ical_club(self):
         
-        wmcc = Club.objects.get(slug='WMCC')
+        wmcc = Club.objects.get(slug='Waratahs')
         
         (races, error) = wmcc.ingest_ical()
         
@@ -71,7 +71,7 @@ class IngestTests(TestCase):
         
     def test_ical_ingest_bad_url(self):
         
-        wmcc = Club.objects.get(slug='WMCC')
+        wmcc = Club.objects.get(slug='Waratahs')
         wmcc.icalurl = "http://google.com/"
         
         (races, error) = wmcc.ingest_ical()
@@ -112,7 +112,7 @@ class IngestTests(TestCase):
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'}
                  ]
         
-        wmcc = Club.objects.get(slug='WMCC')
+        wmcc = Club.objects.get(slug='Waratahs')
         
         # ingest the first three
         (races, errors) = wmcc.ingest_race_list(racedicts[:3])
@@ -151,13 +151,13 @@ class IngestTests(TestCase):
         
         
 
-    def test_ingest_by_module_wmcc(self):
+    def test_ingest_by_module_waratahs(self):
         """ingest_by_module should be able to find a module
         for some clubs and call the ingest procedure in it
         this test for the WMCC club"""
         
         
-        wmcc = Club.objects.get(slug="WMCC")
+        wmcc = Club.objects.get(slug="Waratahs")
         
         (races, errors) = wmcc.ingest_by_module()
         
@@ -165,7 +165,7 @@ class IngestTests(TestCase):
         # exactly what results we'll get
         # so we'll just assert that we get some races back
         
-        self.assertGreater(len(races), 0, "No races returned by WMCC ingest module")
+        self.assertGreater(len(races), 0, "No races returned by Waratahs ingest module")
         
         # and that the club is WMCC
         self.assertEqual(races[0].club, wmcc, "Wrong club in race returned by ingest_by_module")
