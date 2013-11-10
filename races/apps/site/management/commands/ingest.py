@@ -16,7 +16,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         
-        for club in Club.objects.all():
+        if len(args) > 0:
+            clubs = []
+            for arg in args:
+                clubs.append(Club.objects.get(slug=arg))
+        else:
+            clubs = Club.objects.all()
+        
+        
+        for club in clubs:
             try:
                 (races, errors) = club.ingest()
                 print "Club: ", club, "found", len(races), "races"

@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from importlib import import_module
 
 import icalendar
-from urllib2 import urlopen, HTTPError
+from urllib2 import urlopen, HTTPError, Request
 import datetime
 import hashlib
 import ngram
@@ -73,8 +73,10 @@ class Club(models.Model):
         if self.icalurl == '':
             return ([], "No icalendar URL")
     
-        try:    
-            h = urlopen(self.icalurl)
+        try:
+            req = Request(self.icalurl)
+            req.add_header('User-Agent', 'cabici/1.0 event harvester http://cabici.net/')
+            h = urlopen(req)
             ical_text = h.read()
             h.close()
         except HTTPError as e:
@@ -102,9 +104,7 @@ class Club(models.Model):
                 description = icalendar.parser.unescape_char(description)
                 description = description.replace(r'\:', r':')
                 
-                
-                
-                if any([title.find(p) >- 0 for p in patterns]):
+                if patterns == [''] or any([title.find(p) >- 0 for p in patterns]):
                 
                     calstring = "%s%s%s%s" % (str(start), title, description, url)
                     # need to fix encoding to ascii before calculating the hash
