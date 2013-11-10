@@ -42,7 +42,11 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <tr><th>Location</th><td>{{race.location}}</td></tr>
   <tr><th>Title</th><td>{{race.title}}</td></tr>
   <tr><th>Club</th><td><a href='{{race.club.url}}'>{{race.club.name}}</a> [<a href="{% url 'site:club' race.club.slug %}">View all {{race.club}} Races</a>] </td></tr>
+  {%if race.url %}
   <tr><th>More Detail</th><td>See race on <a href="{{race.url}}">{{race.club.name}} website</a></td></tr>
+  {% else %}
+  <tr><th>More Detail</th><td>Refer to <a href="{{race.club.url}}">{{race.club.name}} website</a> (no direct race link)</td></tr>
+  {% endif %}
 
 </table>
 {% if race.description %}
