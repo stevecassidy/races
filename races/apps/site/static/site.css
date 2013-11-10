@@ -23,6 +23,13 @@
     
 }
 
+#feed {
+    text-align: right;
+    padding: 0px;
+    margin: -10px;
+    font-size: small;
+}
+
 .racetitle {
 }
 
