@@ -51,16 +51,16 @@ class EventAtomFeed(Feed):
     def items(self):
         startdate = datetime.date.today()
         enddate = startdate + datetime.timedelta(days=14)
-        return Race.objects.filter(date__gte=startdate, date__lt=enddate, status__exact='p').order_by('-date')
+        return Race.objects.filter(date__gte=startdate, date__lt=enddate, status__exact='p').order_by('date')
 
     def item_title(self, item):
-        return "%s %s" % (item.date, item.title)
+        return "%d/%d - %s, %s" % (item.date.month, item.date.day, item.club.slug, item.location)
 
     def item_description(self, item):
         
-        content = """<p>Club: %s</p>
+        content = """<p>%s</p>
 <p>Location: %s</p>
-<pre>%s</pre>""" % (item.club.name, item.location, item.description)
+<pre>%s</pre>""" % (item.title, item.location, item.description)
         
         return content
 
