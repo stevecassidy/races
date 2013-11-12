@@ -54,7 +54,7 @@ class EventAtomFeed(Feed):
         return Race.objects.filter(date__gte=startdate, date__lt=enddate, status__exact='p').order_by('date')
 
     def item_title(self, item):
-        return "%d/%d - %s, %s" % (item.date.month, item.date.day, item.club.slug, item.location)
+        return "%s - %s, %s" % (item.date.strftime("%b %d"), item.club.slug, item.location)
 
     def item_description(self, item):
         
