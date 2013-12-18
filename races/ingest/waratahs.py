@@ -24,7 +24,9 @@ def ingest():
     
     table = tables[0]
 
-    TIME_GRADED = re.compile(r'([0-9.:]+)am ([AC]-[BF])')
+    # 7.45am C/F-9am A/B
+
+    TIME_GRADED = re.compile(r'([0-9.:]+)am ([AC][-/][BF])')
 
     races = []
 
@@ -41,6 +43,8 @@ def ingest():
                 times = [times.split()[0]]
             elif times.find(':') >= 0:
                 times = times.split(':')
+            elif times.find('-') >= 0:
+                times = times.split('-')
             else:
                 print "Unknown time format: ", times, "defaulting to 7:45/9:00"
                 times = ('07:45', '09:00')
