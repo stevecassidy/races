@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
     url(r'^races/(?P<pk>\d+)/delete/$', views.RaceDeleteView.as_view(), name='race_delete'),
+    url(r'^races/create/$', views.RaceCreateView.as_view(), name='race_create'),
 
     url(r'^feed', feeds.EventAtomFeed(), name='feed'),
     

@@ -18,6 +18,7 @@ class RaceAdmin(admin.ModelAdmin):
     list_filter = ['club', 'location', 'status']
     list_editable = ['status', 'location']
     actions = ['make_published', 'make_draft', 'make_withdrawn']
+    save_as = True
     
     def make_published(self, request, queryset):
         self.set_status(request, queryset, 'p')

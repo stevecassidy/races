@@ -99,6 +99,7 @@ class RaceDeleteView(DeleteView):
     
 class RaceCreateView(CreateView):
     model = Race
+    template_name = 'race_form.html'
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
