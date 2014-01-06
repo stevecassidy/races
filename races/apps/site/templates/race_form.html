@@ -2,12 +2,11 @@
 
 {% block content %}
 
-
-
 <form method='post'>
     {% csrf_token %}
     <fieldset>
         <legend>{{race.title}}</legend>
+        
         {{form}}
         <div class="form-actions">  
             <button type="submit" class="btn btn-primary">Save changes</button>  

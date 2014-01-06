@@ -4,13 +4,17 @@ from django.views.generic.base import TemplateView
 from django.views.generic import ListView
 from django.views.generic import DetailView
 from django.contrib.flatpages.models import FlatPage
-
+from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponseRedirect
 
 from races.apps.site.models import Race, Club, RaceCourse
+from races.apps.site.forms import RaceCreateForm
+
 import datetime
 
 class HomePage(ListView):
@@ -77,6 +81,7 @@ class ClubDetailView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
         context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
+        context['form'] = RaceCreateForm()
         return context
 
 class RaceUpdateView(UpdateView):
@@ -97,12 +102,34 @@ class RaceDeleteView(DeleteView):
     def dispatch(self, *args, **kwargs):
         return super(RaceDeleteView, self).dispatch(*args, **kwargs)
     
-class RaceCreateView(CreateView):
-    model = Race
-    template_name = 'race_form.html'
+@login_required
+def create_races(request):
     
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(RaceCreateView, self).dispatch(*args, **kwargs)
+    if request.POST:
+        form = RaceCreateForm(request.POST)
+    else: 
+        form = RaceCreateForm()
     
+    if form.is_valid():
+        # process it 
+        if form.cleaned_data['weekly']:
+            date = form.cleaned_data['date']
+            race = form.save()
+            # now make N more races one week apart
+            for n in range(form.cleaned_data['number']-1):
+                # force 'save as new'
+                race.pk = None
+                # modify date
+                date += datetime.timedelta(7)
+                race.date = date
+                race.save()
+            return HttpResponseRedirect(reverse('site:club', kwargs={'slug': race.club.slug}))
+        else:
+            race = form.save()
+            return HttpResponseRedirect(reverse('site:race', kwargs={'slug': race.club.slug, 'pk': race.id}))
+    else:
+        return render_to_response('race_create_form.html', 
+                                  {'form': form},
+                                  context_instance=RequestContext(request))
+
 

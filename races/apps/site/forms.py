@@ -1,7 +1,15 @@
 
-
 from django import forms
+from races.apps.site.models import Race
 
-class RaceEditForm(forms.Form):
+class RaceCreateForm(forms.ModelForm):
     
-    pass
+    class Meta:
+        model = Race
+    
+        fields = ['title', 'date', 'time', 'club', 'url', 'location', 'status', 'description']
+    
+    weekly = forms.BooleanField(required=False)
+    monthly = forms.BooleanField(required=False)
+    number = forms.IntegerField(initial=6, required=False)
+    
