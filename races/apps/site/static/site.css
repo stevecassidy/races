@@ -3,6 +3,10 @@
     width: 100%;
  }
  
+#map-canvas img {
+    max-width: none;
+}
+ 
 #masthead {
     margin-top: 60px;
     margin-left: -100px;
