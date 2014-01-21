@@ -3,12 +3,15 @@ Created on Apr 15, 2013
 
 @author: steve
 '''
-LACC_URL = 'http://lacc.org.au/index.php?option=com_jevents&task=year.listevents&year=2013'
+
+import datetime, time
+
+year = datetime.date.fromtimestamp(time.time()).year
+LACC_URL = 'http://lacc.org.au/index.php?option=com_jevents&task=year.listevents&year=%s' % year
 
 import urllib2
 from urlparse import urljoin
 from bs4 import BeautifulSoup
-import datetime
 import re
 import hashlib
 
