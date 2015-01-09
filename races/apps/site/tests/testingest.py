@@ -101,7 +101,7 @@ class IngestTests(TestCase):
                   'hash': 'c0fb7620efe9e21273293ad9dbdf2a2be5758bd0',
                   'location': 'Sydney Dragway Full',
                   'time': u'08:00',
-                  'title': 'TBC',
+                  'title': 'This title is really long and will be truncated because we only allow titles up to one hundred characters and this is a bit longer than that in fact it is quite a bit longer',
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'},
                 
                  {'date': '2013-10-07',

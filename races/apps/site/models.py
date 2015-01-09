@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from importlib import import_module
 
 import icalendar
-from urllib2 import urlopen, HTTPError, Request
+from urllib2 import urlopen, HTTPError, URLError, Request
 import datetime
 import hashlib
 import ngram
@@ -58,7 +58,7 @@ class Club(models.Model):
             
         except ImportError:
             races = []
-            error = ''
+            error = 'No ingest module for club "' + modulename + '"'
         
         return (races, error)
         
@@ -82,6 +82,9 @@ class Club(models.Model):
         except HTTPError as e:
             content = e.read()
             return ([], "Error reading icalendar URL:" + content)
+        except URLError as e:
+            return ([], "Bad URL: " + self.icalurl)
+            
         
         try:
             cal = icalendar.Calendar.from_ical(ical_text)
@@ -186,6 +189,9 @@ class Club(models.Model):
                 except ValidationError as e:
                     # report the error?
                     errors.append(str(e))
+                    print "Race ingest error: ", e
+            else:
+                print "Race duplicate", r
 
         return (racelist, errors)
     
@@ -264,5 +270,6 @@ class Race(models.Model):
         
         pass
     
+
     
     

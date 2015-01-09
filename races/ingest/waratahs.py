@@ -11,10 +11,39 @@ import datetime
 import re
 import hashlib
 
-def ingest():
-    """Return a list of dictionaries, one for each race"""
 
-    webtext = urllib2.urlopen(WARATAH_URL).read()
+def parse_times(times):
+    """Given a time string from the web page, return a list of
+    pairs (time, grades)"""
+
+    # 7.45am C/F-9am A/B
+    # E/F-7.30am B/D-8.15am A/C-9.15am
+    # 7:00am all grades
+    # 9.00am-2.00pm
+    # 8.00am All Grades
+    
+
+    if times == "7.45am C/F-9am A/B":
+        return [('07:45', 'C/F Grade'), ('09:00', 'A/B Grade')]
+    elif times == 'E/F-7.30am B/D-8.15am A/C-9.15am':
+        return [('07:30', 'E/F Grade'), ('08:15', 'B/D Grade'), ('09:15', 'A/C Grade')]
+    elif times == '7:00am all grades':
+        return [('07:00', '')]
+    elif times == '8.00am All Grades':
+        return [('08:00', '')]
+    elif times == '9.00am-2.00pm':
+        return [('09:00', '')]
+    else:
+        print "Unkown time format: ", times
+        return []
+
+
+    
+    
+def parse_web_text(webtext):
+    """Parse the content scraped from the Waratahs web page and return
+    a list of dictionaries, one for each race"""
+    
     soup = BeautifulSoup(webtext, "lxml")
     tables = soup.find_all('table', class_='raceroster_table')
 
@@ -24,10 +53,7 @@ def ingest():
     
     table = tables[0]
 
-    # 7.45am C/F-9am A/B
-
-    TIME_GRADED = re.compile(r'([0-9.:]+)am ([AC][-/][BF])')
-
+    
     races = []
 
     for row in table.find_all('tr'):
@@ -35,58 +61,44 @@ def ingest():
         cells = row.find_all('td')
         if len(cells) == 4:
             dateinfo =  [c for c in cells[0].children]
-            times = dateinfo[2].strip()
+            times = parse_times(dateinfo[2].strip())
 
             date = datetime.datetime.strptime(dateinfo[0], "%d %b %Y")
-
-            if times.lower().find('all grades') >= 0:
-                times = [times.split()[0]]
-            elif times.find(':') >= 0:
-                times = times.split(':')
-            elif times.find('-') >= 0:
-                times = times.split('-')
-            else:
-                print "Unknown time format: ", times, "defaulting to 7:45/9:00"
-                times = ('07:45', '09:00')
-
 
             title = cells[1]('strong')[0].string
 
             for time in times:
-                time = time.strip()
-                match = TIME_GRADED.match(time)
-                if match != None:
-                    time = match.group(1)
-                    # time is 9 or 7.45
-                    if time == u'9' or time == u'9.00':
-                        time = '09:00'
-                    elif time == u'7.45':
-                        time = '07:45'
-                    elif time == u'7.00am':
-                        time = '07:00'
-                    grades = match.group(2)
-                    racetitle = title + " Grades " + grades
-                else:
-                    # time is 0800
-                    if time == '0800':
-                        time = '08:00'
-                    racetitle = title
 
                 race = {}
                 race['date'] = date.date().isoformat()
-                race['time'] = time
-                race['title'] = str(racetitle)
+                race['time'] = time[0]
+                race['title'] = title + " " + time[1]
                 race['id'] = str(cells[1]('span')[0].string)
                 race['location'] = str(cells[2].string)
                 race['url'] = WARATAH_URL
                 # hash will change if this row changes, include time since we split some rows
                 # into two races
-                race['hash'] = hashlib.sha1(str(row)+time).hexdigest()
+                race['hash'] = hashlib.sha1(str(row)+time[0]).hexdigest()
                 
                 races.append(race)
     return races
 
 
+
+def ingest():
+    """Return a list of dictionaries, one for each race"""
+
+    try:
+        webtext = urllib2.urlopen(WARATAH_URL).read()
+        return parse_web_text(webtext)
+    except urllib2.HTTPError as e:
+        content = e.read()
+        print "HTTP Error: ", content
+        return []
+    except urllib2.URLError as e:
+        print "URLError: ", e
+        return []
+        
 
 if __name__ == '__main__':
 
