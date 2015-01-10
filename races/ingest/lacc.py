@@ -20,11 +20,27 @@ def ingest():
     """Return a list of dictionaries, one for each race"""
 
     #(lacc, created) = Club.objects.get_or_create(name="Lidcombe Auburn Cycling Club", slug='LACC', url="http://www.lacc.org.au/")
+    
+    try:
+        req = urllib2.Request(LACC_URL)
+        req.add_header('User-Agent', 'cabici/1.0 event harvester http://cabici.net/')
+        h = urllib2.urlopen(req)
+        webtext = h.read()
+        h.close()
+    except urllib2.HTTPError as e:
+        content = e.read()
+        if e.code == 418:
+            webtext = content
+        else:  
+            return ([], "Error reading icalendar URL:" + content[1:20])
+    except urllib2.URLError as e:
+        return ([], "Bad URL: " + self.icalurl)
+        
 
-    webtext = urllib2.urlopen(LACC_URL).read()
     soup = BeautifulSoup(webtext, "lxml")
     events = soup.find_all('li', class_='ev_td_li')
-
+    
+    
     if len(events) == 0:
         print "No events found in LACC's web page"
         return []

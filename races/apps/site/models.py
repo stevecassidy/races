@@ -183,16 +183,17 @@ class Club(models.Model):
                                 location=location,
                                 url=r['url'],
                                 hash=r['hash'])
-                    
+                                
                     race.save()
                     racelist.append(race)
                 except ValidationError as e:
                     # report the error?
                     errors.append(str(e))
-                    print "Race ingest error: ", e
-            else:
-                print "Race duplicate", r
-
+                    #print "Race ingest error: ", e
+           # else:
+                #print "Race duplicate", r['title'], r['date']
+ 
+                
         return (racelist, errors)
     
 class RaceCourseManager(models.Manager):

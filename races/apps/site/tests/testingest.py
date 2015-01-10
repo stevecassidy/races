@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+import vcr
 
 from races.apps.site.models import Club, RaceCourse, Race
+from races.ingest import lacc
 from datetime import datetime, timedelta
 
 
@@ -51,6 +53,7 @@ class IngestTests(TestCase):
         races_stored = Race.objects.filter(club=cccc)
         self.assertEqual(len(races_stored), 28)
         
+    @vcr.use_cassette('fixtures/vcr_cassettes/nonical.yaml')
     def test_ical_ingest_for_non_ical_club(self):
         
         wmcc = Club.objects.get(slug='Waratahs')
@@ -68,7 +71,7 @@ class IngestTests(TestCase):
         self.assertEqual(error, "Error reading icalendar file")
         
         
-        
+    @vcr.use_cassette('fixtures/vcr_cassettes/badurl.yaml')
     def test_ical_ingest_bad_url(self):
         
         wmcc = Club.objects.get(slug='Waratahs')
@@ -150,7 +153,7 @@ class IngestTests(TestCase):
                          '[u\"\'8 o\'clock in the morning\' value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] format.\"]')
         
         
-
+    @vcr.use_cassette('fixtures/vcr_cassettes/module_waratahs.yaml')
     def test_ingest_by_module_waratahs(self):
         """ingest_by_module should be able to find a module
         for some clubs and call the ingest procedure in it
@@ -173,12 +176,22 @@ class IngestTests(TestCase):
         # try one that won't work
         cccc = Club.objects.get(slug="CCCC")
         
-        (races, errors) = wmcc.ingest_by_module()
+        (races, errors) = cccc.ingest_by_module()
         
         self.assertEqual(races, [])
         
         
+    @vcr.use_cassette('fixtures/vcr_cassettes/lacc.yaml')
+    def test_lacc(self):
         
+        races = lacc.ingest()
+        
+        self.assertEqual(33, len(races))
+        
+        self.assertEqual("Seniors Track Training", races[0]['title'])
+        
+        
+                
         
         
         

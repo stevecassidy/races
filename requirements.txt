@@ -9,3 +9,4 @@ django-geoposition
 beautifulsoup4
 lxml
 ngram
+vcrpy
