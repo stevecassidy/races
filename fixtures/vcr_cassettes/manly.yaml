@@ -1,0 +1,1430 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [www.google.com]
+      User-Agent: ['cabici/1.0 event harvester http://cabici.net/']
+    method: GET
+    uri: https://www.google.com:443/calendar/ical/account%40manlywarringahcc.org.au/public/basic.ics
+  response:
+    body: {string: "BEGIN:VCALENDAR\r\nPRODID:-//Google Inc//Google Calendar 70.9054//EN\r\
+        \nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:Manly\
+        \ Warringah Cycling Club Event Calendar\r\nX-WR-TIMEZONE:Australia/Sydney\r\
+        \nBEGIN:VTIMEZONE\r\nTZID:Australia/Sydney\r\nX-LIC-LOCATION:Australia/Sydney\r\
+        \nBEGIN:STANDARD\r\nTZOFFSETFROM:+1100\r\nTZOFFSETTO:+1000\r\nTZNAME:AEST\r\
+        \nDTSTART:19700405T030000\r\nRRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU\r\nEND:STANDARD\r\
+        \nBEGIN:DAYLIGHT\r\nTZOFFSETFROM:+1000\r\nTZOFFSETTO:+1100\r\nTZNAME:AEDT\r\
+        \nDTSTART:19701004T020000\r\nRRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU\r\nEND:DAYLIGHT\r\
+        \nEND:VTIMEZONE\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150406\r\nDTEND;VALUE=DATE:20150407\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:m4m042oe44egk8kg5olqru3g4s@google.com\r\n\
+        CREATED:20150320T053445Z\r\nDESCRIPTION:The order window for the navy kit\
+        \ which is for mountain bike an\r\n d cyclocross closes off tonight via Champion\
+        \ System. Get your order in www.\r\n champ-sys.com.au\r\nLAST-MODIFIED:20150320T053612Z\r\
+        \nLOCATION:www.champ-sys.com.au\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MTB\
+        \ & CX Clothing Portal Closes\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;TZID=Australia/Sydney:20150412T070000\r\nDTEND;TZID=Australia/Sydney:20150412T100000\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:qvoue6ohce58q02em6d6crr3k0@google.com\r\n\
+        RECURRENCE-ID;TZID=Australia/Sydney:20150412T070000\r\nCREATED:20150309T222433Z\r\
+        \nDESCRIPTION:Grades A-D $20 with a gold licence. Riders complete a number\
+        \ of\r\n  laps of West Head Road after starting at Akuna Bay Marina. Entries\
+        \ open on\r\n line a week before the event.\r\nLAST-MODIFIED:20150318T054730Z\r\
+        \nLOCATION:Akuna Bay\\, Ku-ring-gai Chase National Park\\, Ku-Ring-Gai Chase\
+        \ NS\r\n W 2083\\, Australia\r\nSEQUENCE:2\r\nSTATUS:CONFIRMED\r\nSUMMARY:WD40\
+        \ Bikes Akuna West Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\n\
+        BEGIN:VEVENT\r\nDTSTART:20150409T040000Z\r\nDTEND:20150409T050000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:v7j8f7ontu62l4lcm9pmebrh3k@google.com\r\nCREATED:20150318T051733Z\r\n\
+        DESCRIPTION:Kids Training Day with three separate groups - beginners/ under\r\
+        \n  8 / under 11. Open to all not just club members. Please book your spot\
+        \ on \r\n Trybooking with the group sizes limited to maintain training quality.\
+        \ www.t\r\n rybooking.com//GZOZ\\n\\n\r\nLAST-MODIFIED:20150318T052905Z\r\n\
+        LOCATION:JJ Melbourne Memorial Hills Reserve\\, Terrey Hills\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:WD40 Bikes Kids Training Day\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20151115\r\nDTEND;VALUE=DATE:20151116\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:8oq89gcuro6933n4q7g19itf6g@google.com\r\n\
+        CREATED:20150317T020008Z\r\nDESCRIPTION:http://www.chocolatefoot.com.au/\r\
+        \nLAST-MODIFIED:20150317T020008Z\r\nLOCATION:Orange NSW 2800\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Chocolate Food Good Times MTB\
+        \ Enduro\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20151107\r\
+        \nDTEND;VALUE=DATE:20151109\r\nDTSTAMP:20150419T120223Z\r\nUID:ffvkj0rq2f9b21rot8c944jv10@google.com\r\
+        \nCREATED:20150317T015953Z\r\nDESCRIPTION:http://www.wildhorizons.com.au/highland-fling\r\
+        \nLAST-MODIFIED:20150317T015954Z\r\nLOCATION:Bundanoon NSW 2578\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Highland Fling\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20151004\r\nDTEND;VALUE=DATE:20151005\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:05thsdvetlhfd7nuqr0f57hnak@google.com\r\n\
+        CREATED:20150317T015927Z\r\nDESCRIPTION:http://www.chocolatefoot.com.au/\r\
+        \nLAST-MODIFIED:20150317T015927Z\r\nLOCATION:Kiwarrak State Forest\\, Kiwarrak\
+        \ NSW 2430\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Chocolate\
+        \ Food Good Times MTB Enduro\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20151003\r\nDTEND;VALUE=DATE:20151004\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:42kgj00g1h2n0f58ppchr46mms@google.com\r\nCREATED:20150317T015910Z\r\n\
+        DESCRIPTION:http://www.rockytrailentertainment.com/events/MTBGP-overview.ht\r\
+        \n ml\r\nLAST-MODIFIED:20150317T015910Z\r\nLOCATION:Wylde MTB Trail\\, Elizabeth\
+        \ Drive\\, Cecil Park NSW 2178\\, Australi\r\n a\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Shimano MTB GP Round 6\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20150913\r\nDTEND;VALUE=DATE:20150914\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:8h22h7a79gu0v8flqi300jc9m8@google.com\r\nCREATED:20150317T015854Z\r\n\
+        DESCRIPTION:www.amysgranfondo.org.au\r\nLAST-MODIFIED:20150317T015854Z\r\n\
+        LOCATION:Lorne VIC 3232\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:[VIC] Amy&#39\\;s Grand Fondo\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150808\r\nDTEND;VALUE=DATE:20150809\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:vt8a1gqk9khj32q9im6881mjs0@google.com\r\n\
+        CREATED:20150317T015802Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/MTBGP-overview.ht\r\
+        \n ml\r\nLAST-MODIFIED:20150317T015802Z\r\nLOCATION:Stromlo Forest Park\\\
+        , Cotter Road\\, Stromlo ACT 2611\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Shimano MTB GP Round 4\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20150725\r\nDTEND;VALUE=DATE:20150727\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:ehgh3atl9mro5gg28062ts9j78@google.com\r\nCREATED:20150317T015736Z\r\n\
+        DESCRIPTION:http://www.wildhorizons.com.au/3-ring-circus\r\nLAST-MODIFIED:20150317T015736Z\r\
+        \nLOCATION:Wingello State Forest\\, Wingello NSW 2579\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Three Ringed Circus\r\nTRANSP:TRANSPARENT\r\n\
+        END:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150704\r\nDTEND;VALUE=DATE:20150706\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:3fufv8ro4pgcvtt4ljt8233u78@google.com\r\n\
+        CREATED:20150317T015717Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/Rollercoaster-ove\r\
+        \n rview.html\\n\\nSeries Round Location Race Date\\nRound 1 Killingworth\
+        \ / NSW 2\r\n 5. January 2015\\nRound 2 Del Rio\\, Wisemans Ferry / NSW 28.\
+        \ February 2015\\n\r\n Round 3 Thredbo / NSW 11. April 2015\\nRound 4 Kempsey\
+        \ / NSW 4. + 5. July 20\r\n 15\\nRound 5 Stromlo / ACT 2. August 2015 \r\n\
+        LAST-MODIFIED:20150317T015717Z\r\nLOCATION:Kempsey NSW 2440\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Rockytrail Rollercoaster Round\
+        \ 4\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150704\r\
+        \nDTEND;VALUE=DATE:20150706\r\nDTSTAMP:20150419T120223Z\r\nUID:uaf2n7ar0l3jdnqjbbg5o92h7c@google.com\r\
+        \nCREATED:20150317T015639Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/Rollercoaster-ove\r\
+        \n rview.html\\n\\nSeries Round Location Race Date\\nRound 1 Killingworth\
+        \ / NSW 2\r\n 5. January 2015\\nRound 2 Del Rio\\, Wisemans Ferry / NSW 28.\
+        \ February 2015\\n\r\n Round 3 Thredbo / NSW 11. April 2015\\nRound 4 Kempsey\
+        \ / NSW 4. + 5. July 20\r\n 15\\nRound 5 Stromlo / ACT 2. August 2015 \r\n\
+        LAST-MODIFIED:20150317T015639Z\r\nLOCATION:Kempsey NSW 2440\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Rockytrail Rollercoaster Round\
+        \ 4\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150628\r\
+        \nDTEND;VALUE=DATE:20150629\r\nDTSTAMP:20150419T120223Z\r\nUID:a27avub7rcm4cnstb6aggk5d3k@google.com\r\
+        \nCREATED:20150317T015620Z\r\nDESCRIPTION:http://www.chocolatefoot.com.au/singletrack-mind-series/latest-\r\
+        \n news/382-2015-singletrack-mind-series\r\nLAST-MODIFIED:20150317T015620Z\r\
+        \nLOCATION:Wingello State Forest\\, Wingello NSW 2579\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Singletrack Mind Series Round 2\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150620\r\nDTEND;VALUE=DATE:20150621\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:v9qbjsboeves21g6iqm69loii8@google.com\r\n\
+        CREATED:20150317T015604Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/MTBGP-overview.ht\r\
+        \n ml\r\nLAST-MODIFIED:20150317T015604Z\r\nLOCATION:Ourimbah State Forest\\\
+        , Central Coast NSW\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Shimano\
+        \ MTB GP Round 3\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150607\r\
+        \nDTEND;VALUE=DATE:20150608\r\nDTSTAMP:20150419T120223Z\r\nUID:p1e2innhgdfiop5hu5ed4ro81s@google.com\r\
+        \nCREATED:20150317T015545Z\r\nDESCRIPTION:http://www.chocolatefoot.com.au/\r\
+        \nLAST-MODIFIED:20150317T015545Z\r\nLOCATION:Mogo NSW 2536\\, Australia\r\n\
+        SEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Chocolate Food Good Times MTB Enduro\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150531\r\
+        \nDTEND;VALUE=DATE:20150601\r\nDTSTAMP:20150419T120223Z\r\nUID:1so4f5nub0ef8pvcohiae7f5qc@google.com\r\
+        \nCREATED:20150317T015526Z\r\nDESCRIPTION:http://nsw.cycling.org.au/Events-Results/Events-Calendar/Event-\r\
+        \n Details/ken-dinnerville-memorial-handicap-130053\r\nLAST-MODIFIED:20150317T015526Z\r\
+        \nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Ken Dinnerville Memorial\
+        \ Handicap\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150523\r\
+        \nDTEND;VALUE=DATE:20150526\r\nDTSTAMP:20150419T120223Z\r\nUID:q5sa2onkotc578sf99up8oeu00@google.com\r\
+        \nCREATED:20150317T015439Z\r\nDESCRIPTION:http://nsw.cycling.org.au/Events-Results/Events-Calendar/Event-\r\
+        \n Details/nsw-masters-road-championships-130048\r\nLAST-MODIFIED:20150317T015439Z\r\
+        \nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters Road\
+        \ Championship\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150517\r\
+        \nDTEND;VALUE=DATE:20150518\r\nDTSTAMP:20150419T120223Z\r\nUID:si4cavn4m1nfgmfni0fdfnf6ak@google.com\r\
+        \nCREATED:20150317T015421Z\r\nDESCRIPTION:http://www.wildhorizons.com.au/rockaroad/rar-main\r\
+        \nLAST-MODIFIED:20150317T015421Z\r\nLOCATION:Rydal NSW 2790\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Rock &amp\\; Road\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150509\r\nDTEND;VALUE=DATE:20150510\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:8h8olr24o5v9hp8hcttoggir98@google.com\r\n\
+        CREATED:20150317T015405Z\r\nDESCRIPTION:http://nsw.cycling.org.au/Events-Results/Events-Calendar/Event-\r\
+        \n Details/cootamundra-haycarters-handicap-130045\r\nLAST-MODIFIED:20150317T015405Z\r\
+        \nLOCATION:Cootamundra\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Cootamundra\
+        \ Handicap\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150502\r\
+        \nDTEND;VALUE=DATE:20150503\r\nDTSTAMP:20150419T120223Z\r\nUID:3nagpdard2prgv5okmnnevlsa0@google.com\r\
+        \nCREATED:20150317T015341Z\r\nDESCRIPTION:Convict 100\\n\\nhttp://convict100.com.au/\r\
+        \nLAST-MODIFIED:20150317T015341Z\r\nLOCATION:St Albans NSW 2775\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:[NSW] National MTB Marathon Series\
+        \ Round 3 - Convict 100\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20150502\r\nDTEND;VALUE=DATE:20150503\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:4g4lss75afgsmrdq6mnkgagbr8@google.com\r\nCREATED:20150317T015310Z\r\n\
+        DESCRIPTION:Convict 100\\n\\nhttp://convict100.com.au/\r\nLAST-MODIFIED:20150317T015310Z\r\
+        \nLOCATION:St Albans NSW 2775\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:[NSW] National MTB Marathon Series Round 3 - Convict 100\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150418\r\nDTEND;VALUE=DATE:20150419\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:fjbk7hsbialk7f8ab7atb9mepc@google.com\r\n\
+        CREATED:20150317T015245Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/MTBGP-overview.ht\r\
+        \n ml\r\nLAST-MODIFIED:20150317T015245Z\r\nLOCATION:Awaba Mountain Bike Park\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Shimano MTB GP Round 2\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150412\r\nDTEND;VALUE=DATE:20150413\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:tcjs9eknd9vtc2s8thjp8u2hrc@google.com\r\n\
+        CREATED:20150317T015227Z\r\nDESCRIPTION:\r\nLAST-MODIFIED:20150317T015227Z\r\
+        \nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Cyclocross Newcastle\
+        \ - Round 1\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150411\r\
+        \nDTEND;VALUE=DATE:20150412\r\nDTSTAMP:20150419T120223Z\r\nUID:3n3kngcabc9r51l1djolrl6shk@google.com\r\
+        \nCREATED:20150317T015203Z\r\nDESCRIPTION:http://www.rockytrailentertainment.com/events/Rollercoaster-ove\r\
+        \n rview.html\\n\\nSeries Round Location Race Date\\nRound 1 Killingworth\
+        \ / NSW 2\r\n 5. January 2015\\nRound 2 Del Rio\\, Wisemans Ferry / NSW 28.\
+        \ February 2015\\n\r\n Round 3 Thredbo / NSW 11. April 2015\\nRound 4 Kempsey\
+        \ / NSW 4. + 5. July 20\r\n 15\\nRound 5 Stromlo / ACT 2. August 2015 \r\n\
+        LAST-MODIFIED:20150317T015203Z\r\nLOCATION:Thredbo NSW 2625\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Rockytrail Rollercoaster Round\
+        \ 3\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150328\r\
+        \nDTEND;VALUE=DATE:20150330\r\nDTSTAMP:20150419T120223Z\r\nUID:l8cpan2het4qp0d1g9qln20lao@google.com\r\
+        \nCREATED:20150317T015128Z\r\nDESCRIPTION:https://selfpropelled.com.au/event/mont-24/the-race/\r\
+        \nLAST-MODIFIED:20150317T015128Z\r\nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Mont 24 Hour\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20150405T215000Z\r\nDTEND:20150405T233000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:3vjlhog9d0o5mi1lmrcb3setdk@google.com\r\nCREATED:20150316T015424Z\r\n\
+        DESCRIPTION:NSCC Beauie Worlds Criterium on Easter Monday. Grades A-D $15\
+        \ e\r\n ntry. Gold Licence required. More details www.northernsydneycyclingclub.org\r\
+        \n .au\r\nLAST-MODIFIED:20150316T015504Z\r\nLOCATION:Beaumont Rd\\, Mt Kuring-gai\
+        \ NSW 2080\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Easter\
+        \ Monday NSCC Racing\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20150328T205000Z\r\nDTEND:20150328T223000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:hqa309b08gjpe416ugblmn0mq8@google.com\r\nCREATED:20150316T015409Z\r\n\
+        DESCRIPTION:NSCC Beauie Worlds Criterium. Grades A-D $15 entry. Gold Licenc\r\
+        \n e required. More details www.northernsydneycyclingclub.org.au\r\nLAST-MODIFIED:20150316T015409Z\r\
+        \nLOCATION:Beaumont Rd\\, Mt Kuring-gai NSW 2080\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:NSCC Beauie Worlds\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20150320T202000Z\r\nDTEND:20150321T030000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:i4bflgsmd1b166491tnsmab448@google.com\r\nCREATED:20150316T015130Z\r\n\
+        DESCRIPTION:Join us for the next instalment of MWCC's social rides on Satur\r\
+        \n day the 21st of March\\n\\nTaking in some of the Central Coast's most beautif\r\
+        \n ul scenery\\, this 125km loop takes in some of the nicest roads on the\
+        \ coast\r\n  before heading inland to tackle the infamous Bumble Hill before\
+        \ heading ba\r\n ck down to Ettalong for the ferry back to Palmie.\\n\\nIf\
+        \ you're up for the a\r\n dditional challenge a bunch will be leaving from\
+        \ opposite Bike addiction at\r\n  6.15. This option adds 55km to the ride.\\\
+        n\\nTime: 7.20 for the 7.30am Ferr\r\n y\\nPlace: Palm Beach Wharf\\nDist:\
+        \ 125km with with 3 significant climbs and \r\n lots of undulations\\nPace:\
+        \ 28-30km/h (strong C grade+)\\nCost: $25 for the F\r\n erry x 2\\nRoute:\
+        \ www.strava.com/routes/1561385\r\nLAST-MODIFIED:20150316T015229Z\r\nLOCATION:Palm\
+        \ Beach Ferry Wharf\\, 1151 Barrenjoey Road\\, Palm Beach NSW 210\r\n 8\\\
+        , Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Central Coast\
+        \ Loop\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20150412T070000\r\
+        \nDTEND;TZID=Australia/Sydney:20150412T100000\r\nRRULE:FREQ=MONTHLY;COUNT=8;BYDAY=2SU\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:qvoue6ohce58q02em6d6crr3k0@google.com\r\n\
+        CREATED:20150309T222433Z\r\nDESCRIPTION:Grades A-D $20 with a gold licence.\
+        \ Riders complete a number of\r\n  laps of West Head Road after starting at\
+        \ Akuna Bay Marina. Entries open on\r\n line a week before the event.\r\n\
+        LAST-MODIFIED:20150309T222625Z\r\nLOCATION:Akuna Bay\\, Ku-ring-gai Chase\
+        \ National Park\\, Ku-Ring-Gai Chase NS\r\n W 2083\\, Australia\r\nSEQUENCE:2\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150425T210000Z\r\nDTEND:20150426T000000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:u0likrg9dfkeobcbd5b17tlsbg@google.com\r\n\
+        CREATED:20150309T222232Z\r\nDESCRIPTION:Dulwich Hill are waking the dead with\
+        \ this unique race course a\r\n round Rookwood Cemetary. Grades A-E\\, great\
+        \ for spectators. More details as\r\n  it gets closer.\r\nLAST-MODIFIED:20150309T222421Z\r\
+        \nLOCATION:Rookwood Cemetery\\, Hawthorne Ave\\, Rookwood NSW 1825\\, Australia\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:DHBC Rookwood Cemetery Crit Race\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150314T200000Z\r\
+        \nDTEND:20150314T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:fql8telp64v6hdr72l5kge1nno@google.com\r\
+        \nCREATED:20150309T221932Z\r\nDESCRIPTION:Road Racing is back for 2015. Grades\
+        \ A-D $20 entry. Make sure y\r\n ou enter online via www.trybooking.com/EQVY\
+        \ Only regular metropolitan road \r\n race in Sydney.\r\nLAST-MODIFIED:20150309T222106Z\r\
+        \nLOCATION:Akuna Bay\\, Ku-ring-gai Chase National Park\\, Ku-Ring-Gai Chase\
+        \ NS\r\n W 2083\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Autumn\
+        \ Classic - Akuna West Head RR\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20150326\r\nDTEND;VALUE=DATE:20150327\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:hu5r9a6i5gqghn4bjnpgoqd894@google.com\r\nCREATED:20150308T233116Z\r\n\
+        DESCRIPTION:MWCC Social Night. Come along for a few drinks\\, discuss the\
+        \ cl\r\n assics\\, whinge about life and have a few beverages with your club\
+        \ mates. A\r\n ll members welcome.\r\nLAST-MODIFIED:20150308T233216Z\r\nLOCATION:4\
+        \ Pines Brewing Company\\, 29/43-45 East Esplanade\\, Manly NSW 2095\r\n \\\
+        , Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Social Drinks\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150220\r\
+        \nDTEND;VALUE=DATE:20150221\r\nDTSTAMP:20150419T120223Z\r\nUID:ljddrc9737qvuq6tdc1ck584a4@google.com\r\
+        \nCREATED:20150217T001751Z\r\nDESCRIPTION:Our current Club Order for our light\
+        \ blue riding kit closes tod\r\n ay. Order via the CS Direct Portal - www.champ-sys.com.au\
+        \ Login and Passwor\r\n d 'mwcc' You can order any item you like. The navy\
+        \ mountain bike kit can be\r\n  ordered in a separate order shortly.\r\nLAST-MODIFIED:20150217T001945Z\r\
+        \nLOCATION:www.champ-sys.com.au\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Club\
+        \ Kit Order Closes\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n\
+        DTSTART:20150227T200000Z\r\nDTEND:20150227T230000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:4mv6vlm9d05pf7ab5f3vcgle8o@google.com\r\nCREATED:20150215T080359Z\r\n\
+        DESCRIPTION:NSW Cycling She Rides Event. This round is hosted by NSCC with\
+        \ \r\n a ride of circa 50km. More details: http://www.nsw.cycling.org.au/Get-Invol\r\
+        \n ved/Womens-Bunch-Rides or check out the NSCC Facebook Event Page https://ww\r\
+        \n w.facebook.com/events/1551557295122355/ \r\nLAST-MODIFIED:20150217T001733Z\r\
+        \nLOCATION:Ku-ring-gai Creative Arts High School\\, Bobbin Head Road\\, North\
+        \ T\r\n urramurra NSW 2074\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Women's She Rides NSCC Ride\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20150301T040000Z\r\nDTEND:20150301T053000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:smhcmun432giuioaljq94g4qmo@google.com\r\nCREATED:20150216T050158Z\r\n\
+        DESCRIPTION:A training day for children of all abilities and ages. Child wi\r\
+        \n ll be grouped based on ability and trained by qualified coaches. Enter\
+        \ via \r\n http://www.trybooking.com/GZOZ for $5. This covers ground hire\\\
+        , qualified \r\n coaches and a BBQ at the end.\r\nLAST-MODIFIED:20150216T050158Z\r\
+        \nLOCATION:JJ Melbourne Memorial Hills Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Rhodes Docherty KIDZ Training Day\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150301\r\nDTEND;VALUE=DATE:20150302\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:g1d0nt6jqt4cjhefu876035duc@google.com\r\n\
+        CREATED:20150215T233708Z\r\nDESCRIPTION:Entries Close Orica Kermesse. Enter\
+        \ via Cycling NSW https://eve\r\n ntdesq.imgstg.com/index.cfm?fuseaction=main&EventDesqID=11872&OrgID=20999\r\
+        \nLAST-MODIFIED:20150215T233743Z\r\nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Entries Close Orica Kermesse\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150307\r\nDTEND;VALUE=DATE:20150308\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:6u2l88hcko93oddjaf33is4v3k@google.com\r\n\
+        CREATED:20150215T233411Z\r\nDESCRIPTION:Hunter District CC present the Orica\
+        \ Kermesse. Everything from \r\n U/9 to Elite Grades. Great day of racing\
+        \ with plenty of prize money. Entrie\r\n s close 1 March. More details https://eventdesq.imgstg.com/index.cfm?fuseac\r\
+        \n tion=main&EventDesqID=11872&OrgID=20999 Entries via Cycling NSW\r\nLAST-MODIFIED:20150215T233703Z\r\
+        \nLOCATION:Kurri Kurri NSW 2327\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Orica Kermesse\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20150517\r\nDTEND;VALUE=DATE:20150518\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:g9imujoas9tagatkgcc05kq5jo@google.com\r\nCREATED:20150215T233219Z\r\n\
+        DESCRIPTION:Presented by Wild Horizons Wild Horizons is excited to present\
+        \ \r\n a new concept in cycle racing:  Rock&Road.  Complete part of the course\
+        \ on \r\n your road bike\\, then swap to your MTB to bring it home.  Or team\
+        \ up with a\r\n  friend who rides the opposite cycling disciple to you and\
+        \ race as a duo. M\r\n ore details: https://www.wildhorizons.com.au/rockaroad/rar-main\r\
+        \nLAST-MODIFIED:20150215T233334Z\r\nLOCATION:Rydal NSW 2790\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Wild Horizons - Rock'n'Road\r\n\
+        TRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150221T190000Z\r\
+        \nDTEND:20150222T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:tten1o7pq3ftd79ktnngr1cvto@google.com\r\
+        \nCREATED:20150215T224825Z\r\nDESCRIPTION:This group will meet at 6am at the\
+        \ corner of Spofforth St and M\r\n ilitary Rd\\, Cremorne at 6am or 6:15am\
+        \ at the Northern Harbour Bridge Steps\r\n . The ride will then go south to\
+        \ Waterfall. Returning to the CBD for Allpre\r\n ss Coffee and then homeward.\
+        \ Loop distance from Cremorne is 105km. This is \r\n a relatively flat route.\
+        \ Suitable for strong D Graders and above.\r\nLAST-MODIFIED:20150215T225114Z\r\
+        \nLOCATION:South Ride to Waterfall and Back\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Sunday Social Allpress Coffee Ride\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20150221T210000Z\r\nDTEND:20150222T010000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:gstdcdcbsf69c2hv5mrqh50huc@google.com\r\nCREATED:20150215T074958Z\r\n\
+        DESCRIPTION:The Central Coast Ourimbah MTB are kicking off off the season\
+        \ w\r\n ith a double header (the first of many for 2015 DH & XC on the same\
+        \ day) Th\r\n e canteen will be in full swing and they may even squeeze in\
+        \ a battle of th\r\n e disciplines novelty event. On-Line rego for the DH\
+        \ is up so jump on now a\r\n nd be the first to register\\, XC regos to follow\
+        \ soon.\\nEvent day is Sunday\r\n  22 February from 8am.\\nMore details:https://www.facebook.com/events/159475\r\
+        \n 8690761783/?ref_newsfeed_story_type=regular\r\nLAST-MODIFIED:20150215T075201Z\r\
+        \nLOCATION:Central Coast Ourimbah MTB Club\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Central Coast Ourimbah MTB Club\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20150311T053000Z\r\nDTEND:20150311T083000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:ni0tmvie537a4ptctjmuffqb9s@google.com\r\nCREATED:20150209T232359Z\r\n\
+        DESCRIPTION:Subaru Active Short Course MTB Racing. \\n5:30 Registration Open\r\
+        \n  & Course available for practice\\n5:45 U13 Boys & Girls\\n6:00 C Grade\
+        \ Men &\r\n  Women / U15 Boys & Girls\\n6:20 B Grade Men / A&B Grade Women\\\
+        n6:45 A Grade\r\n  Men\r\nLAST-MODIFIED:20150209T232506Z\r\nLOCATION:JJ Melbourne\
+        \ Memorial Hills Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Subaru MTB Short Course Racing\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\n\
+        BEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20150211T163000\r\nDTEND;TZID=Australia/Sydney:20150211T193000\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:cqvedrlunhiktic0p6b3go5e04@google.com\r\n\
+        RECURRENCE-ID;TZID=Australia/Sydney:20150211T170000\r\nCREATED:20150209T094111Z\r\
+        \nDESCRIPTION:\r\nLAST-MODIFIED:20150209T232334Z\r\nLOCATION:JJ Melbourne\
+        \ Memorial Hills Reserve\\, Terrey Hills\r\nSEQUENCE:4\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Short Course MTB & CX Racing\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20150211T170000\r\nDTEND;TZID=Australia/Sydney:20150211T200000\r\
+        \nRRULE:FREQ=MONTHLY;COUNT=1;BYDAY=2WE\r\nDTSTAMP:20150419T120223Z\r\nUID:cqvedrlunhiktic0p6b3go5e04@google.com\r\
+        \nCREATED:20150209T094111Z\r\nDESCRIPTION:\r\nLAST-MODIFIED:20150209T232201Z\r\
+        \nLOCATION:JJ Melbourne Memorial Hills Reserve\\, Terrey Hills\r\nSEQUENCE:3\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Short Course MTB & CX Racing\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150214T190000Z\r\nDTEND:20150215T010000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:r3q4snmvh568k2ajf948n1g77k@google.com\r\n\
+        CREATED:20150209T093732Z\r\nDESCRIPTION:Ride leaves from the usual bus shelter\
+        \ opposite BA.\\nDist: 140k\r\n m with with 5 significant climbs\\nPace: 28-30km/h\
+        \ (strong C grade+)\\nCost: \r\n $15 for the water taxi\\nRoute: www.mapmyride.com/routes/view/625846462\r\
+        \nLAST-MODIFIED:20150209T094048Z\r\nLOCATION:Ettalong Loop\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Sunday Social Ride\r\nTRANSP:TRANSPARENT\r\n\
+        END:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150214T200000Z\r\nDTEND:20150214T213000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:m8rimle9kvv2l3i5opl3tuj9b4@google.com\r\n\
+        CREATED:20150204T050155Z\r\nDESCRIPTION:SuVelo are hosting a Womens - Come\
+        \ and Try Race Day. You can en\r\n ter from 7am with the race starting at\
+        \ 7:30am. $10 entry with a race licenc\r\n e or $33 for a day licence. Race\
+        \ distance is 20 minutes plus 2 laps.\r\nLAST-MODIFIED:20150204T050733Z\r\n\
+        LOCATION:Heffron Park\\, Fitzgerald Ave\\, Maroubra NSW 2035\\, Australia\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:SuVelo Women's Come and Try Race\
+        \ Day\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150214T210000Z\r\
+        \nDTEND:20150214T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:b3ko68j6khu7tv4ul2atbmnsak@google.com\r\
+        \nCREATED:20150203T103254Z\r\nDESCRIPTION:NSCC Beaumont Road\\, Criterium\
+        \ Racing. Run by NSCC this is a gr\r\n eat course\\, flat and fast. Grades\
+        \ A-D\\, $15 entry. Riders must have a gold\r\n  racing licence. \r\nLAST-MODIFIED:20150203T103404Z\r\
+        \nLOCATION:Beaumont Rd\\, Mt Kuring-gai NSW 2080\\, Australia\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:NSCC Beaumont Road\r\nTRANSP:TRANSPARENT\r\n\
+        END:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20150206T190000Z\r\nDTEND:20150206T223000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:8ok6dd3eekkd4jcmv36ti0m5lg@google.com\r\n\
+        CREATED:20141128T000225Z\r\nDESCRIPTION:The Allpress Espresso Womens Ride\
+        \ Series is for ladies who are \r\n confident on the bike and are looking\
+        \ for like minded riders. This ride is \r\n lead by MWCC ladies. This ride\
+        \ will go out to West Head before returning to\r\n  Manly for coffee. Riders\
+        \ should have a road bike and have some road riding\r\n  experience. This\
+        \ event is in conjunction with Cycling NSW.\r\nLAST-MODIFIED:20150203T103123Z\r\
+        \nLOCATION:Manly to West Head and Return\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Allpress Espresso Womens Ride Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20150204T053000\r\nDTEND;TZID=Australia/Sydney:20150204T070000\r\
+        \nRRULE:FREQ=MONTHLY;BYDAY=1WE\r\nDTSTAMP:20150419T120223Z\r\nUID:ivasofsfip1sh7rc0v9kim4rc4@google.com\r\
+        \nCREATED:20141128T000701Z\r\nDESCRIPTION:Leaving the bus shelter opposite\
+        \ Bike Addiction at 5:35am this \r\n is a womens group ride that will ride\
+        \ out to Mona Vale before returning to \r\n Market Lane Cafe for coffee around\
+        \ 7am. This ride has a no drop policy. All\r\n  ladies are welcome to join\
+        \ in.\r\nLAST-MODIFIED:20150203T102923Z\r\nLOCATION:Manly to Mona Vale Return\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Womens Ride\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20150204\r\nDTEND;VALUE=DATE:20150205\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ubv5sl0l44u2rc64rb52dajlck@google.com\r\n\
+        CREATED:20150203T102820Z\r\nDESCRIPTION:\r\nLAST-MODIFIED:20150203T102820Z\r\
+        \nLOCATION:\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20141210T050000Z\r\nDTEND:20141210T090000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:fdt3vfun32g7kovomghj3mgl0c@google.com\r\n\
+        CREATED:20141128T000948Z\r\nDESCRIPTION:Short Course mountain bike racing.\
+        \ This year the series has mov\r\n ed from St Ives to Terrey Hills. A great\
+        \ way to spend the evening.\r\nLAST-MODIFIED:20141128T001054Z\r\nLOCATION:JJ\
+        \ Melbourne Hills Memorial Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Short Course Mountain Biking\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\n\
+        BEGIN:VEVENT\r\nDTSTART:20141207T040000Z\r\nDTEND:20141207T060000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:brbfbqm13i8gp1mfg8umushsvc@google.com\r\nCREATED:20141128T000534Z\r\n\
+        DESCRIPTION:The Allpress Womens Series goes offroad. This is a chance for\
+        \ l\r\n adies who would like to do some offorad riding with other ladies.\
+        \ This offr\r\n oad ride will be lead by our experienced female MTB Riders.\
+        \ No cost and ref\r\n reshments will be provided at the end. Meeting point\
+        \ is at the top box at M\r\n c Carrs Creek Road at the intersection with Akuna\
+        \ Bay.\r\nLAST-MODIFIED:20141128T000534Z\r\nLOCATION:McCarrs Creek Reserve\\\
+        , Ku-Ring-Gai Chase NSW 2083\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Allpress Espresso Womens Offroad Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20141213T200000Z\r\nDTEND:20141213T230000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:4i1dbiknu8jhd2lc9b5e57gfkk@google.com\r\nCREATED:20131122T065844Z\r\n\
+        DESCRIPTION:Our monthly road race. Starting in Akuna Bay before heading out\r\
+        \n  to West Head. Grades A-D $15 entry. All riders and clubs welcome. All\
+        \ ride\r\n rs must have a Gold Racing Licence or purhcase a day licence. Riders\
+        \ should\r\n  be in Club Jerseys or registered kits only.\r\nLAST-MODIFIED:20141128T000048Z\r\
+        \nLOCATION:Akuna Bay Marina\r\nSEQUENCE:5\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20141206T220000Z\r\
+        \nDTEND:20141206T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:a7hcsbd7csckeljjcmhlvobj9c@google.com\r\
+        \nCREATED:20141127T235856Z\r\nDESCRIPTION:The final road race of the year\
+        \ will pack a load of excitement.\r\n  Will you finish 2014 a winner? Grades\
+        \ A-D $15 entry All Clubs and Riders W\r\n elcome. www.trybooking.com/EQVY\r\
+        \nLAST-MODIFIED:20141128T000007Z\r\nLOCATION:www.trybooking.com/EQVY\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Entries Open MWCC 2014 Finale RR\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140305T053000\r\
+        \nDTEND;TZID=Australia/Sydney:20140305T073000\r\nRRULE:FREQ=MONTHLY;UNTIL=20140930T193000Z;BYDAY=1WE\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:moetce06en8kq65pm7nfskkn38@google.com\r\n\
+        CREATED:20140204T225638Z\r\nDESCRIPTION:A Womens Group Ride. Leaving just\
+        \ behind the main 5:30am group\\\r\n , this bunch as a no drop policy. Riding\
+        \ out to Church Point before heading\r\n  back to Manly. Open to all female\
+        \ riders.\r\nLAST-MODIFIED:20141105T101543Z\r\nLOCATION:Bus stop opposite\
+        \ Bike Addiction\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Womens Group\
+        \ Ride\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20141101T220000Z\r\
+        \nDTEND:20141101T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:j5tkpportqgcuunuk545p9l88s@google.com\r\
+        \nCREATED:20141027T032548Z\r\nDESCRIPTION:Entries open for this months WD40\
+        \ Bikes Akuna West Head RR. Gua\r\n rantee your spot on the startline by pre\
+        \ entering. www.trybooking.com/EQVY \r\n Pre entry closes off Friday 5pm or\
+        \ if sold out earlier. \r\nLAST-MODIFIED:20141027T032548Z\r\nLOCATION:www.trybooking.com/EQVY\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Entries open WD40 Bikes Akuna-WEst\
+        \ Head RR\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20141108T200000Z\r\
+        \nDTEND:20141108T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:vg6g96c77ghfl2u0r92d8ecf2s@google.com\r\
+        \nCREATED:20141027T032215Z\r\nDESCRIPTION:WD40 Bikes Road Race. Grades A-D\
+        \ $15 entry. Pre enter via www.t\r\n rybooking.com/EQVY from 2nd November.\
+        \ All clubs and riders welcome. Numbers\r\n  strictly limited.\r\nLAST-MODIFIED:20141027T032356Z\r\
+        \nLOCATION:Akuna Bay\\, Ku-ring-gai Chase National Park\\, Ku-Ring-Gai Chase\
+        \ NS\r\n W 2083\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:WD40\
+        \ Bikes Akuna West Head RR\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20141107T190000Z\r\nDTEND:20141107T220000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:vtjdgq1orpeuvoe6bd8urlq4s4@google.com\r\nCREATED:20141027T031144Z\r\n\
+        DESCRIPTION:Female bunch ride led by female MWCC riders. This is the first\
+        \ \r\n in a series. This is a approx 50km loop via Akuna Bay. Suitable for\
+        \ riders \r\n with a reasonable level of skill and fitness looking to enjoy\
+        \ a ride with o\r\n ther ladies. Leaves from the bus shelter opposite Bike\
+        \ Addiction 6am sharp\r\nLAST-MODIFIED:20141027T031513Z\r\nLOCATION:Akuna\
+        \ Bay Loop\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Allpress Espresso\
+        \ Womens Ride Series\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20141108T000000Z\r\nDTEND:20141108T040000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:1vj2cb8f4vumaa38ahg37danoo@google.com\r\nCREATED:20141017T002707Z\r\n\
+        DESCRIPTION:Bikes for Humanity are looking to send old mountain bikes to Na\r\
+        \n mibia. Please no kids bikes or road bikes. Clear out your shed and make\
+        \ a d\r\n ifference. More details www.bikesforhumanity.com.au\r\nLAST-MODIFIED:20141017T002707Z\r\
+        \nLOCATION:St Ives Showground\\, Mona Vale Rd\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Donate Your Mountain Bikes\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140930T090000Z\r\nDTEND:20140930T103000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:7fts97f2dphte5m5hb6uch48b4@google.com\r\n\
+        CREATED:20140922T052040Z\r\nDESCRIPTION:Club Social Meeting. Come along to\
+        \ catch up with your club mate\r\n s. The club will put on some food and drinks.\
+        \ \r\nLAST-MODIFIED:20140922T052154Z\r\nLOCATION:Market Lane Cafe\\, Market\
+        \ Pl\\, Manly NSW\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Club\
+        \ Meeting - Market Lane Cafe\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20141004\r\nDTEND;VALUE=DATE:20141007\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:5o16c929jh2d8qigbe6hemrfns@google.com\r\nCREATED:20140922T045504Z\r\n\
+        DESCRIPTION:3 Day Tour comprising a TT\\, Road Race x 2 and Criterium. Open\
+        \ \r\n to all not just elite level riders. Great opportunity to participate\
+        \ in a m\r\n ulti stage Tour close to Sydney. Details via www.kooragangcycling.asn.au\r\
+        \nLAST-MODIFIED:20140922T045504Z\r\nLOCATION:Kooragang Island\\, Kooragang\
+        \ NSW\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Newcastle\
+        \ 3 Day Tour\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20141026\r\
+        \nDTEND;VALUE=DATE:20141027\r\nDTSTAMP:20150419T120223Z\r\nUID:rnskd0re5ec6cu3q7lemo2bt7o@google.com\r\
+        \nCREATED:20140922T045103Z\r\nDESCRIPTION:Great day of Crit Racing. Hosted\
+        \ by Hunter District Cycling Clu\r\n b. There is hope that there will be 2\
+        \ Divisions for ladies to race in\\, if \r\n riders get their entries in.\
+        \ More details via Hunter District Cycling Club \r\n and entries via Cycling\
+        \ NSW\r\nLAST-MODIFIED:20140922T045239Z\r\nLOCATION:Kooragang Island\\, Kooragang\\\
+        , New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Mick\
+        \ Chapman Memorial Criterium\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140929\r\nDTEND;VALUE=DATE:20140930\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:a6rp21nvg9cq9fmqvrsomnnvmg@google.com\r\nCREATED:20140829T002541Z\r\n\
+        DESCRIPTION:NSW Masters Time Trial Championship. All masters grades catered\r\
+        \n  for. More details http://www.griffithcycleclub.com/ Entries via Cycling\
+        \ NS\r\n W\r\nLAST-MODIFIED:20140829T002541Z\r\nLOCATION:Griffith NSW 2680\\\
+        , Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters Time\
+        \ Trial Championship\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140929\r\nDTEND;VALUE=DATE:20140930\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:1gg91qqmp3puvtjt8b8fbpbi9o@google.com\r\nCREATED:20140829T002452Z\r\n\
+        DESCRIPTION:\r\nLAST-MODIFIED:20140829T002452Z\r\nLOCATION:\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140928\r\nDTEND;VALUE=DATE:20140929\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:l4aa51moccuhau5g5fi6t9fk2o@google.com\r\nCREATED:20140829T002350Z\r\n\
+        DESCRIPTION:NSW Masters Criterium Championship. Grades for all masters divi\r\
+        \n sions. Details at http://www.griffithcycleclub.com/ Entries via Cycling\
+        \ NSW\r\nLAST-MODIFIED:20140829T002442Z\r\nLOCATION:Griffith NSW 2680\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters Criterium Championship\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20140927\r\
+        \nDTEND;VALUE=DATE:20140928\r\nDTSTAMP:20150419T120223Z\r\nUID:jpngv276dhbkbohure80cj63ac@google.com\r\
+        \nCREATED:20140829T002304Z\r\nDESCRIPTION:NSW Masters Road Race Championship.\
+        \ Races for each of the Maste\r\n rs Grades. Details http://www.griffithcycleclub.com/\
+        \ Entries via Cycling NS\r\n W\r\nLAST-MODIFIED:20140829T002315Z\r\nLOCATION:Griffith\
+        \ NSW 2680\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters\
+        \ Road Race Championship\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20141025\r\nDTEND;VALUE=DATE:20141026\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:ek4gdia93v1ugv6f6lful6ep34@google.com\r\nCREATED:20140829T002047Z\r\n\
+        DESCRIPTION:A challenging 228km road race from Grafton to Inverell. This is\r\
+        \n  a tough road race with an NRS and A\\,B.C grade. Entries via Cycling NSW.\r\
+        \nLAST-MODIFIED:20140829T002047Z\r\nLOCATION:Grafton NSW 2460\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Grafton to Inverell\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140927T223000Z\r\nDTEND:20140928T010000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:37biktj5n5ame372e94q7di04o@google.com\r\n\
+        CREATED:20140828T234559Z\r\nDESCRIPTION:Central Coast CC Registration from\
+        \ 1:30pm at Jones Rd. Gold lic\r\n ence required. Racing starts at 2pm. A\
+        \ - D grade 50km \u200BE grade 25k More det\r\n ails at  www.centralcoastcyclingclub.com.au/\r\
+        \nLAST-MODIFIED:20140828T234559Z\r\nLOCATION:Peats Ridge Rd S\\, Calga NSW\
+        \ 2250\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Central Coast\
+        \ Road Race Calga\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140830T033000Z\r\
+        \nDTEND:20140830T053000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:uhathvlp7non2mesft4d2f9m1c@google.com\r\
+        \nCREATED:20140828T234132Z\r\nDESCRIPTION:Central Coast CC Registration from\
+        \ 1:30pm at Jones Rd. $15 entr\r\n y gold licence required. Racing starts\
+        \ at 2pm. A - D grade 50km \u200BE grade 25\r\n k More details at  www.centralcoastcyclingclub.com.au/\r\
+        \nLAST-MODIFIED:20140828T234448Z\r\nLOCATION:Peats Ridge Rd S\\, Calga NSW\
+        \ 2250\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Central Coast\
+        \ CC Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140920T033000Z\r\
+        \nDTEND:20140920T060000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:h4gohmsq8r4ca79b259bdis304@google.com\r\
+        \nCREATED:20140828T234212Z\r\nDESCRIPTION:Handicap Road Race run by Central\
+        \ Coast CC. The Peter Parkinson\r\n  Handicap Registration from 1:30pm. Racing\
+        \ starts at 2pm. A -D grade 50km\\,\r\n  \u200BE grade 25km Gold Racing Licence\
+        \ required. More details http://www.centra\r\n lcoastcyclingclub.com.au/node/173\\\
+        n\\n\r\nLAST-MODIFIED:20140828T234415Z\r\nLOCATION:Peats Ridge Rd S\\, Calga\
+        \ NSW 2250\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Central\
+        \ Coast CC Handicap RR\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20141011T200000Z\r\nDTEND:20141011T230000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:6f1844fd3uqr4jpd67eg4ed410@google.com\r\nCREATED:20140828T072126Z\r\n\
+        DESCRIPTION:Sydney's Premier Road Race Akuna Bay and West Head. Enter on li\r\
+        \n ne $15 or on the day for $20. Grades A-D with a gold licence required.\
+        \ Pre \r\n Entry opens the Sunday before at 9am. All clubs and riders welcome.\r\
+        \nLAST-MODIFIED:20140828T072126Z\r\nLOCATION:Akuna Bay\\, Ku-ring-gai Chase\
+        \ National Park\\, Ku-Ring-Gai Chase NS\r\n W 2083\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140913T210000Z\r\nDTEND:20140914T000000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:1il05d7aqp19gebktuqkuaglf8@google.com\r\n\
+        CREATED:20140828T070703Z\r\nDESCRIPTION:Race Akuna Bay and West Head. Grades\
+        \ A-D $15 online Entry or $2\r\n 0 on the day. Gold Licences Only. Entries\
+        \ Open 7th 9am. Al clubs and riders\r\n  welcome.\r\nLAST-MODIFIED:20140828T071927Z\r\
+        \nLOCATION:Akuna Bay\\, Ku-ring-gai Chase National Park\\, Ku-Ring-Gai Chase\
+        \ NS\r\n W 2083\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ West Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20141018T204500Z\r\nDTEND:20141018T224500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:80d7dbqrdv0r9ap2gtns1991h4@google.com\r\nCREATED:20140828T071727Z\r\n\
+        DESCRIPTION:NSCC Beauie Worlds Grades A-D $15 entry on the day with a gold\
+        \ \r\n licence required. Criterium Racing at its best. More details www.northernsy\r\
+        \n dneycyclingclub.org.au\r\nLAST-MODIFIED:20140828T071844Z\r\nLOCATION:Beaumont\
+        \ Rd\\, Mt Kuring-gai NSW 2080\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:NSCC Beauie Worlds\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20141005T204500Z\r\nDTEND:20141005T224500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:f4337uqlo4gkhq64kivcadibfg@google.com\r\nCREATED:20140828T071545Z\r\n\
+        DESCRIPTION:NSCC Criterium. Grades A-D $15 entry with a gold licence. Enter\r\
+        \n  on the day. Perfect way to spend the long weekend. More details www.manlyw\r\
+        \n arringahcc.org.au\r\nLAST-MODIFIED:20140828T071701Z\r\nLOCATION:Beaumont\
+        \ Rd\\, Mt Kuring-gai NSW 2080\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:NSCC Beauie Worlds\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20140920T214500Z\r\nDTEND:20140920T234500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:t9m74jf3etgfrfk019altuled8@google.com\r\nCREATED:20140828T071516Z\r\n\
+        DESCRIPTION:NSCC Criterium $15 entry. Grades A-D Enter on the Day racing st\r\
+        \n arts just after 8am. Day Licences Required. More details www.northernsydney\r\
+        \n cyclingclub.org.au\r\nLAST-MODIFIED:20140828T071521Z\r\nLOCATION:Beaumont\
+        \ Rd\\, Mt Kuring-gai NSW 2080\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:NSCC Beauie Worlds\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20140913T033000Z\r\nDTEND:20140913T070000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:j3dcdf869td9rebnsoqlvfncbk@google.com\r\nCREATED:20140327T040747Z\r\n\
+        DESCRIPTION:MWCC Subaru Active Cyclo Cross Round. Various grades. Racing su\r\
+        \n itable for CX and mtb bikes. Kids Racing.\r\nLAST-MODIFIED:20140828T070646Z\r\
+        \nLOCATION:J.J Melbourne Hills Memorial Reserve\\, Terrey Hills NSW\\, Australi\r\
+        \n a\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Subaru Active Cyclo Cross\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140826T093000Z\r\
+        \nDTEND:20140826T103000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:rok1lfdtt1ma0i26kvjbmisnnc@google.com\r\
+        \nCREATED:20140821T013907Z\r\nDESCRIPTION:An open club meeting\\, come on\
+        \ down and ask any questions you m\r\n ay have or put forward any ideas. Plus\
+        \ just a general chat about cycling.\r\nLAST-MODIFIED:20140821T014045Z\r\n\
+        LOCATION:Market Lane Cafe\\, Market Pl\\, Manly NSW\\, Australia\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Club Meeting\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20140822T153000Z\r\nDTEND:20140822T190000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:j217gvqgcroepltokrn24fk0s0@google.com\r\nCREATED:20140327T040651Z\r\n\
+        DESCRIPTION:MWCC Subaru Active Cyclo Cross Round has been CANCELLED.\r\nLAST-MODIFIED:20140820T065436Z\r\
+        \nLOCATION:J.J Melbourne Hills Memorial Reserve\\, Terrey Hills\\, New South\
+        \ Wa\r\n les\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Subaru\
+        \ Active Cyclo Cross CANCELLED\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;TZID=Australia/Sydney:20140810T070000\r\nDTEND;TZID=Australia/Sydney:20140810T100000\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:upnuretspf6cftc3dtdn8q26gs@google.com\r\n\
+        RECURRENCE-ID;TZID=Australia/Sydney:20140810T070000\r\nCREATED:20131122T065844Z\r\
+        \nDESCRIPTION:Our monthly road race has been cancelled for this month while\
+        \ w\r\n e gain further approvals and clarifications from National Parks.\r\
+        \nLAST-MODIFIED:20140730T051345Z\r\nLOCATION:Akuna Bay Marina\r\nSEQUENCE:3\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race Cancelled\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140816T214500Z\r\nDTEND:20140816T231500Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:dd3022arufj1v7a7de925gocmo@google.com\r\n\
+        CREATED:20140723T053323Z\r\nDESCRIPTION:Northern Sydney CC host 'Beauie Worlds'\
+        \ a fast and flat criteri\r\n um race. Grades A-D $15 entry Gold Licence required.\
+        \ More details head over\r\n  to www.northernsydneycyclingclub.org.au\r\n\
+        LAST-MODIFIED:20140723T053516Z\r\nLOCATION:Beaumont Rd\\, Mt Kuring-gai NSW\
+        \ 2080\\, Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSCC Beaumont\
+        \ Road Criteriums\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n\
+        DTSTART:20140614T033000Z\r\nDTEND:20140614T070000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:noeffdjbpo9892sm9sd4u8np3k@google.com\r\nCREATED:20140327T040440Z\r\n\
+        DESCRIPTION:MWCC Subaru Active Cyclo Cross Round. Various grades. Racing su\r\
+        \n itable for CX and mtb bikes.\r\nLAST-MODIFIED:20140613T070415Z\r\nLOCATION:J.J\
+        \ Melbourne Hills Memorial Reserve\\, Terrey Hills\\, New South Wa\r\n les\\\
+        , Australia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Subaru Active Cyclo\
+        \ Cross\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140621T210000Z\r\
+        \nDTEND:20140622T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:vqv4cmor1b8tqkgkup9ifbnlc4@google.com\r\
+        \nCREATED:20131122T065844Z\r\nDESCRIPTION:Our monthly road race returns. Starting\
+        \ in Akuna Bay before hea\r\n ding out to West Head. Grades A-D $15 entry.\
+        \ All riders and clubs welcome. \r\n All riders must have a Gold Racing Licence.\r\
+        \nLAST-MODIFIED:20140602T003914Z\r\nLOCATION:Akuna Bay Marina\r\nSEQUENCE:3\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140523T214500Z\r\nDTEND:20140523T231500Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:08gek2b55devgodok8fq4rk3m0@google.com\r\n\
+        CREATED:20140502T003317Z\r\nDESCRIPTION:Ride of Silence is a global event\
+        \ held in more than 200 locatio\r\n ns seeking to honour those who've lost\
+        \ their lives\\, promote awareness of c\r\n ycling and sharing of our roads.\
+        \ https://m.facebook.com/events/764568163564\r\n 181\r\nLAST-MODIFIED:20140502T003734Z\r\
+        \nLOCATION:The Pantry Manly\\, North Steyne\\, Manly\\, New South Wales\\\
+        , Austra\r\n lia\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:The Ride of\
+        \ Silence\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140503T200000Z\r\
+        \nDTEND:20140504T010000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:rl42okmk3kgha3u9c0gi5ri494@google.com\r\
+        \nCREATED:20140429T071931Z\r\nDESCRIPTION:Social Ride South towards Stanwell\
+        \ Tops. Exact route will be de\r\n pendant on the riders on the day. But looking\
+        \ at about 120kms. Open to all\\\r\n , come back via an Allpress Coffee stop.\r\
+        \nLAST-MODIFIED:20140429T072113Z\r\nLOCATION:Northern Step Of The Harbour\
+        \ Bridge\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Allpress Social Ride\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140514T083000Z\r\
+        \nDTEND:20140514T103000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:vd88u1b39kf3geq9vel9c77crc@google.com\r\
+        \nCREATED:20140429T071916Z\r\nDESCRIPTION:A free training night at the Altitude\
+        \ The Height Of Fitness. Ha\r\n ve some fun riding at altitude against your\
+        \ club mates. \r\nLAST-MODIFIED:20140429T071916Z\r\nLOCATION:Altitude The\
+        \ Height of Fitness\\, Manly Leagues Brookvale\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Altitude Training Night\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20140506T090000Z\r\nDTEND:20140506T113000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:qke1kpr1sd1rbttlvrah3msmdo@google.com\r\nCREATED:20140429T071617Z\r\n\
+        DESCRIPTION:A casual social night\\, taking in some Tranny Bingo at Minskys.\r\
+        \n  Come along for some drinks\\, food and maybe a meat tray\r\nLAST-MODIFIED:20140429T071617Z\r\
+        \nLOCATION:Minskys\\, Military Road\\, Cremorne\\, New South Wales\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Bingo Social Night\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140426T040000Z\r\nDTEND:20140426T050000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:2d4ums2u8jo1bg9vt4htdj0vf4@google.com\r\n\
+        CREATED:20140422T235508Z\r\nDESCRIPTION:A free kids training day. Suitable\
+        \ for all children who are on \r\n balance bikes\\, training wheels\\, BMX\
+        \ or Mountain Bikes. \r\nLAST-MODIFIED:20140422T235734Z\r\nLOCATION:J.J Melbourne\
+        \ Hills Memorial Reserve\\, Terrey Hills\\, New South Wa\r\n les\\, Australia\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Free Kids Training Day\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140426T210000Z\r\nDTEND:20140427T000000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:t77diku8qvp5g636t64r6iu704@google.com\r\n\
+        CREATED:20140422T235456Z\r\nDESCRIPTION:Road Race - Grades A-C $15 entry.\
+        \ Also hosting the Womens Road \r\n Series grades A-D\r\nLAST-MODIFIED:20140422T235456Z\r\
+        \nLOCATION:d'Albora Marinas Akuna Bay\\, Liberator General San Martin Drive\\\
+        , \r\n Terrey Hills\\, New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140510\r\nDTEND;VALUE=DATE:20140512\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:q389gfi920foe1scci5g7jb85k@google.com\r\nCREATED:20140327T041909Z\r\n\
+        DESCRIPTION:A 4 stage tour\\, including 2 road races\\, 1 crit and a time\
+        \ tri\r\n al. Fantastic racing for Juniors and Women.\r\nLAST-MODIFIED:20140327T041909Z\r\
+        \nLOCATION:Stromlo Forest Park\\, Uriarra Road\\, Stromlo\\, Australian Capital\
+        \ \r\n Territory\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Canberra\
+        \ Juniors and Womens Tour\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140621\r\nDTEND;VALUE=DATE:20140622\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:lqsfcu8t8bdbs08de55vbnk424@google.com\r\nCREATED:20140327T041536Z\r\n\
+        DESCRIPTION:Coonabarabran to Gunnedah Handicap. A fast paced handicap. \r\n\
+        LAST-MODIFIED:20140327T041536Z\r\nLOCATION:Coonabarabran\\, New South Wales\\\
+        , Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Keegan Downes Memorial\
+        \ Sundowner Handicap\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140719\r\nDTEND;VALUE=DATE:20140720\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:no97918fpffecocqtl6haj7lgo@google.com\r\nCREATED:20140327T040849Z\r\n\
+        DESCRIPTION:Help MWCC defend their state title. Form a team and be part of\
+        \ \r\n the action.\r\nLAST-MODIFIED:20140327T040849Z\r\nLOCATION:Nowra\\,\
+        \ New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW\
+        \ Team Time Trial Championships\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20140719\r\nDTEND;VALUE=DATE:20140720\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:0gsn06aok45h3c1h4jnsemmtso@google.com\r\nCREATED:20140327T040611Z\r\n\
+        DESCRIPTION:MWCC Subaru Active Cyclo Cross Round. Various grades. Racing su\r\
+        \n itable for CX and mtb bikes.\r\nLAST-MODIFIED:20140327T040611Z\r\nLOCATION:J.J\
+        \ Melbourne Hills Memorial Reserve\\, Terrey Hills\\, New South Wa\r\n les\\\
+        , Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Subaru Active Cyclo\
+        \ Cross\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20140517\r\
+        \nDTEND;VALUE=DATE:20140518\r\nDTSTAMP:20150419T120223Z\r\nUID:796aq6ro97cu90jeeq6vmi19r0@google.com\r\
+        \nCREATED:20140327T040311Z\r\nDESCRIPTION:The first round of the MWCC Subaru\
+        \ Active Cyclo Cross Series. V\r\n arious grades\\, races suitable for CX\
+        \ bikes and MTB bikes.\r\nLAST-MODIFIED:20140327T040414Z\r\nLOCATION:J.J Melbourne\
+        \ Hills Memorial Reserve\\, Terrey Hills\\, New South Wa\r\n les\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Subaru Active Cyclo Cross Racing\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140307T174500\r\
+        \nDTEND;TZID=Australia/Sydney:20140307T190000\r\nRRULE:FREQ=WEEKLY;BYDAY=FR;UNTIL=20140328T064500Z\r\
+        \nEXDATE;TZID=Australia/Sydney:20140328T174500\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:flv6uaug9dh1sjdq73pmq2056s@google.com\r\nCREATED:20140106T051458Z\r\n\
+        DESCRIPTION:Friday Night Criterium racing continues during summer. The perf\r\
+        \n ect way to end Friday\\, with a great course\\, fantastic prizes and hard\
+        \ rac\r\n ing. Grades A-C $15 entry. Gold Licence required.\r\nLAST-MODIFIED:20140327T012505Z\r\
+        \nLOCATION:HART\\, Mona Vale Road\\, St Ives\\, New South Wales\\, Australia\r\
+        \nSEQUENCE:4\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC HART Crit Racing\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140322T010000Z\r\nDTEND:20140322T023000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:7vd46m9klr5vvfkoogl9qsmm6c@google.com\r\n\
+        CREATED:20140311T045505Z\r\nDESCRIPTION:A training day for kids of all ages.\
+        \ Children will do some ridi\r\n ng on dirt and concrete. All children welcome.\r\
+        \nLAST-MODIFIED:20140311T045505Z\r\nLOCATION:J.J Melbourne Hills Memorial\
+        \ Reserve\\, Terrey Hills\\, New South Wa\r\n les\\, Australia\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Kids Training Day\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140221T174500\r\nDTEND;TZID=Australia/Sydney:20140221T190000\r\
+        \nRRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=FR;UNTIL=20140306T125959Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:6iaub0qi35aj379msg56ig8oak@google.com\r\nCREATED:20140106T051458Z\r\n\
+        DESCRIPTION:Friday Night Criterium racing continues during summer. The perf\r\
+        \n ect way to end Friday\\, with a great course\\, fantastic prizes and hard\
+        \ rac\r\n ing. Grades A-C $15 entry. Gold Licence required.\r\nLAST-MODIFIED:20140311T045235Z\r\
+        \nLOCATION:HART\\, Mona Vale Road\\, St Ives\\, New South Wales\\, Australia\r\
+        \nSEQUENCE:3\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC HART Crit Racing\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20140405\r\nDTEND;VALUE=DATE:20140406\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:mmia0ou48vtoknn0o098i4ccgo@google.com\r\n\
+        CREATED:20140214T003830Z\r\nDESCRIPTION:Take on Mount Panorama in the NSW\
+        \ Hill Climbing Championships. \r\n Enter via the Cycling NSW Website\r\n\
+        LAST-MODIFIED:20140214T003931Z\r\nLOCATION:Mount Panorama Motor Racing Circuit\\\
+        , Panorama Avenue\\, Mount Pano\r\n rama\\, New South Wales\\, Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Hill Climb Championships\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20140302\r\
+        \nDTEND;VALUE=DATE:20140303\r\nDTSTAMP:20150419T120223Z\r\nUID:s5mdi276qe5bgsivaf625lh2rc@google.com\r\
+        \nCREATED:20140210T234744Z\r\nDESCRIPTION:Hosted by Hunter District CC entries\
+        \ are via Cycling NSW and cl\r\n ose tonight. Races for everyone from U/9\
+        \ to Masters.\r\nLAST-MODIFIED:20140210T234849Z\r\nLOCATION:Kooragang Island\\\
+        , Kooragang\\, New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Entries Close Orica Kermesse\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20140213T070000Z\r\nDTEND:20140213T080000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:sk8m6qe0dad03oaq6qcfn9bom8@google.com\r\nCREATED:20140210T233327Z\r\n\
+        DESCRIPTION:After works drinks in the CBD - come and catch up with your clu\r\
+        \n b mates before heading home. \r\nLAST-MODIFIED:20140210T233327Z\r\nLOCATION:The\
+        \ Vault Hotel\\, Pitt Street\\, Sydney\\, New South Wales\\, Austral\r\n ia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Drinks\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140314T230000Z\r\nDTEND:20140315T050000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:5brhrp7p3kmmnauoo04sktinrk@google.com\r\n\
+        CREATED:20140210T233213Z\r\nDESCRIPTION:Orica Kermesse - A great course\\\
+        , Juniors\\, Womens and Mens Gra\r\n des. Enter via the Cycling NSW Website\r\
+        \nLAST-MODIFIED:20140210T233213Z\r\nLOCATION:Kooragang Island\\, Kooragang\\\
+        , New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Orica\
+        \ Kermesse\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20140406\r\
+        \nDTEND;VALUE=DATE:20140407\r\nDTSTAMP:20150419T120223Z\r\nUID:ssurvdtjit837hhkehonkhbqs0@google.com\r\
+        \nCREATED:20140203T051516Z\r\nDESCRIPTION:The Blayney to Bathurst Weekend.\
+        \ Has a crit race around the pit\r\n  lanes and a hill climb up Mt Panorama\
+        \ on Saturday\\, Sunday is the Blayney \r\n to Bathurst 70 ot 110km cyclo\
+        \ sportif enter at www.b2b.asn.au/\r\nLAST-MODIFIED:20140203T051648Z\r\nLOCATION:Mount\
+        \ Panorama\\, New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Blayney 2 Bathurst\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;TZID=Australia/Sydney:20140124T174500\r\nDTEND;TZID=Australia/Sydney:20140124T190000\r\
+        \nRRULE:FREQ=WEEKLY;BYDAY=FR;UNTIL=20140220T125959Z\r\nEXDATE;TZID=Australia/Sydney:20140214T174500\r\
+        \nEXDATE;TZID=Australia/Sydney:20140124T174500\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:6pso01mvacqqgnkss8jdd2siu0@google.com\r\nCREATED:20140106T051458Z\r\n\
+        DESCRIPTION:Friday Night Criterium racing continues during summer. The perf\r\
+        \n ect way to end Friday\\, with a great course\\, fantastic prizes and hard\
+        \ rac\r\n ing. Grades A-C $15 entry. Gold Licence required.\r\nLAST-MODIFIED:20140203T051428Z\r\
+        \nLOCATION:HART\\, Mona Vale Road\\, St Ives\\, New South Wales\\, Australia\r\
+        \nSEQUENCE:2\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC HART Crit Racing\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140128T183000Z\r\nDTEND:20140128T203000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ijcdebq1q4p52smjv1rumb0298@google.com\r\n\
+        CREATED:20140130T221746Z\r\nDESCRIPTION:A ride for the ladies\\, this group\
+        \ has a no drop policy and wil\r\n l wait at all the top of all the inclines.\
+        \ Ride out to Church Point and bac\r\n k to Manly for coffee. This group will\
+        \ depart just after the normal 5:30 gr\r\n oup. All ladies welcome.\r\nLAST-MODIFIED:20140130T221746Z\r\
+        \nLOCATION:Group Leaves 5:30am from the Bus Stop Opposite Bike Addiction\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Womens Ride\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140202T060000Z\r\nDTEND:20140202T073000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:2t2752ngokpu4ivfkond6f7hk8@google.com\r\n\
+        CREATED:20140129T062627Z\r\nDESCRIPTION:The AGM will be run to allow for the\
+        \ nomination of various comm\r\n ittee members. For more info: http://www.manlywarringahcc.org.au/news/mwcc-\r\
+        \n agm-notice/\\n\r\nLAST-MODIFIED:20140129T062909Z\r\nLOCATION:Market Lane\
+        \ Cafe\\, The Corso\\, Manly\\, New South Wales\\, Australia\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:MWCC AGM\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140110T174500\r\nDTEND;TZID=Australia/Sydney:20140110T190000\r\
+        \nRRULE:FREQ=WEEKLY;BYDAY=FR;UNTIL=20140123T125959Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:9logb6lc7eoocll1ecvm6ufnu0@google.com\r\nCREATED:20140106T051458Z\r\n\
+        DESCRIPTION:The Fixed Wheel Crit Series continues. The perfect way to end\
+        \ F\r\n riday\\, with a great course\\, fantastic prizes and hard racing.\
+        \ Grades A-C \r\n $15 entry\r\nLAST-MODIFIED:20140109T052607Z\r\nLOCATION:HART\\\
+        , Mona Vale Road\\, St Ives\\, New South Wales\\, Australia\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Fixed Wheel Crit Series\r\nTRANSP:OPAQUE\r\n\
+        END:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140713T070000\r\
+        \nDTEND;TZID=Australia/Sydney:20140713T100000\r\nRRULE:FREQ=WEEKLY;INTERVAL=4;BYDAY=SU;UNTIL=20140906T135959Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:upnuretspf6cftc3dtdn8q26gs@google.com\r\n\
+        CREATED:20131122T065844Z\r\nDESCRIPTION:Our monthly road race returns. Starting\
+        \ in Akuna Bay before hea\r\n ding out to West Head. Grades A-D $15 entry.\
+        \ All riders and clubs welcome. \r\n All riders must have a Gold Racing Licence.\r\
+        \nLAST-MODIFIED:20140109T052257Z\r\nLOCATION:Akuna Bay Marina\r\nSEQUENCE:3\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140413T070000\r\
+        \nDTEND;TZID=Australia/Sydney:20140413T100000\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:h18b8ge9satsplodg2dojqj828@google.com\r\nRECURRENCE-ID;TZID=Australia/Sydney:20140406T070000\r\
+        \nCREATED:20131122T065844Z\r\nDESCRIPTION:Our monthly road race returns. Starting\
+        \ in Akuna Bay before hea\r\n ding out to West Head. Grades A-D $15 entry.\
+        \ All riders and clubs welcome. \r\n All riders must have a Gold Racing Licence.\r\
+        \nLAST-MODIFIED:20140109T052205Z\r\nLOCATION:Akuna Bay Marina\r\nSEQUENCE:2\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140112T070000\r\
+        \nDTEND;TZID=Australia/Sydney:20140112T100000\r\nRRULE:FREQ=WEEKLY;INTERVAL=4;BYDAY=SU;UNTIL=20140503T135959Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:h18b8ge9satsplodg2dojqj828@google.com\r\n\
+        CREATED:20131122T065844Z\r\nDESCRIPTION:Our monthly road race returns. Starting\
+        \ in Akuna Bay before hea\r\n ding out to West Head. Grades A-D $15 entry.\
+        \ All riders and clubs welcome. \r\n All riders must have a Gold Racing Licence.\r\
+        \nLAST-MODIFIED:20140109T052205Z\r\nLOCATION:Akuna Bay Marina\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20140212T180000\r\
+        \nDTEND;TZID=Australia/Sydney:20140212T200000\r\nRRULE:FREQ=WEEKLY;UNTIL=20140312T070000Z;INTERVAL=4;BYDAY=WE\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:8688l85csfi4iacgke01ngho7c@google.com\r\n\
+        CREATED:20140109T051944Z\r\nDESCRIPTION:$10 race entry. C Grade at 6pm B Grade\
+        \ 6:20pm\\, A Grade at 6:45\r\n pm. Off road racing with everyone invited\
+        \ for some mid week madness\r\nLAST-MODIFIED:20140109T051944Z\r\nLOCATION:St\
+        \ Ives Mini Bike Track\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MTB Short\
+        \ Track Racing\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20140118T210000Z\r\
+        \nDTEND:20140118T223000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:rh00t8g03tdk89smtaer4i66l8@google.com\r\
+        \nCREATED:20140109T051557Z\r\nDESCRIPTION:Northern Sydney host their monthly\
+        \ Beaumont Road Criterium Race\r\n . $10 Entry with a Gold Licence. Flat and\
+        \ fast racing. \r\nLAST-MODIFIED:20140109T051557Z\r\nLOCATION:Beaumont Road\\\
+        , Mount Kuring-gai\\, New South Wales\\, Australia\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:NSCC Beauie Worlds\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20140103T063000Z\r\nDTEND:20140103T090000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:j3qtjuegn8jn7t1gkoe2mm1peo@google.com\r\nCREATED:20140102T112155Z\r\n\
+        DESCRIPTION:Round 3 of the Fixed Wheel Series. 5:45pm sign on for 6:15pm ra\r\
+        \n cing. Grades A-C. $15 entry. All riders must have a 2014 racing licence\
+        \ or \r\n proof of renewal.\r\nLAST-MODIFIED:20140102T112155Z\r\nLOCATION:HART\
+        \ Driving School\\, Mona Vale Road\\, St Ives\\, New South Wales\\,\r\n  Australia\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Fixed Wheel Crit Series\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20131220T190000Z\r\nDTEND:20131220T230000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:h3fhucgdc3h4gne4ct2l33j588@google.com\r\n\
+        CREATED:20131219T053708Z\r\nDESCRIPTION:Meeting at the north side Harbour\
+        \ Bridge Steps at 6am sharp. We\r\n  will then ride out to Waterfall and back\\\
+        , avoiding the National Park. Thi\r\n s is a fairly flat and fast route. Distance\
+        \ from the Bridge Steps is a retu\r\n rn ride of about 95 kilometres. This\
+        \ will be a fairly steady ride with some\r\n  faster sections. We will be\
+        \ having a stop at Sutherland for a quick refill\r\n \\, but otherwise we\
+        \ will be rolling along. C Grade riders should be comfort\r\n able sitting\
+        \ in\\, D Grade or so riders will find this to be a tough but doa\r\n ble\
+        \ ride. No need to RSVP\\, just be at the steps on time. \r\nLAST-MODIFIED:20131219T053708Z\r\
+        \nLOCATION:Harbour Bridge Northern Steps\\, Milsons Point\r\nSEQUENCE:0\r\n\
+        STATUS:CONFIRMED\r\nSUMMARY:Waterfall Club Ride\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20131223T193000Z\r\nDTEND:20131224T003000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:0k93du5pi6rop8tf35unpkv7is@google.com\r\nCREATED:20131219T052600Z\r\n\
+        DESCRIPTION:Christmas Eve Gorges Ride\\n6.30am Seaforth Roundabout\\, 6.45am\
+        \ \r\n Forest Way Bridge \\, Easy ride with extra Akuna if you're keen. Taking\
+        \ in b\r\n obbin\\, galston\\, berowra waters\\, bobbin.\\n\r\nLAST-MODIFIED:20131219T052600Z\r\
+        \nLOCATION:Seaforth Roundabout\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Christmas\
+        \ Eve Gorges Ride\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20131206T180000\r\
+        \nDTEND;TZID=Australia/Sydney:20131206T200000\r\nRRULE:FREQ=WEEKLY;UNTIL=20131220T070000Z;BYDAY=FR\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ntm2thgtqr47udgvb29rlm5g8s@google.com\r\n\
+        CREATED:20131202T004434Z\r\nDESCRIPTION:Criterium races around the Driver\
+        \ Training Centre. 6pm sign on \r\n for a 6:30pm start. Grades A-C $15 entry.\
+        \ Gold Licences Only. Completely Ca\r\n r Free Course.\r\nLAST-MODIFIED:20131202T004801Z\r\
+        \nLOCATION:HART Driver Training Centre\\, Mona Vale Road\\, St Ives\r\nSEQUENCE:2\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:HART Crit Races\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20131211T070000Z\r\nDTEND:20131211T080000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:nb9uj7v7sa2gl2uoisb9c90aag@google.com\r\nCREATED:20131122T065547Z\r\n\
+        DESCRIPTION:Fast and furious mountain biking. Suitable for mountain bikes\
+        \ a\r\n nd cyclo cross bikes. A-C Grade and womens grades. $10 Race Entry.\
+        \ www.mwmt\r\n b.com for more details.\r\nLAST-MODIFIED:20131122T065721Z\r\
+        \nLOCATION:St Ives Mini Bike Track\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:MW\
+        \ MTB SHort Course Mountain Bike Racing\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\n\
+        BEGIN:VEVENT\r\nDTSTART:20131127T080000Z\r\nDTEND:20131127T090000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:62k4jm5k20eq7m5k3thjvls16c@google.com\r\nCREATED:20131122T065458Z\r\n\
+        DESCRIPTION:Come along for this free trial of the Watt Bikes at Cycle Studi\r\
+        \n o. We will run through a threshold session and you will be able to measure\
+        \ \r\n your power performance during the session. Reserve your spot - http://cycle\r\
+        \n studio.zingfit.com/reserve/index.cfm?action=Reserve.chooseClass&site=1\\\
+        n\r\nLAST-MODIFIED:20131122T065458Z\r\nLOCATION:Cycle Studio - 118 Beatrice\
+        \ Street\\, Balgowlah Heights\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Cycle\
+        \ Studio - Free Watt Bike Night\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20131208T060000Z\r\nDTEND:20131208T090000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:0vt90mktrcgrbg46pltfuqies8@google.com\r\nCREATED:20131122T065059Z\r\n\
+        DESCRIPTION:Come for a relaxing afternoon down at Little Manly Beach. Bring\r\
+        \n  your partner or kids. The Club will be putting on some food and drinks.\
+        \ If\r\n  it rains we will move to the Market Lane Cafe.\r\nLAST-MODIFIED:20131122T065059Z\r\
+        \nLOCATION:Little Manly Beach\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC\
+        \ Christmas Party\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20131207T200000Z\r\
+        \nDTEND:20131207T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:cnuenks8f5oaib1uui148vgbi8@google.com\r\
+        \nCREATED:20131001T070049Z\r\nDESCRIPTION:Akuna Bay - West Head Road Race.\
+        \ Grades A-D all clubs and rider\r\n s welcome. Riders depart from Akuna Bay\
+        \ Marina before completing a number o\r\n f laps of West Head Road - A Grade\
+        \ 3 laps\\, B/C Grade 2 laps\\, D Grade 1 la\r\n p. Entry is $15 with a gold\
+        \ licence. Pre entry is available on www.trybooki\r\n ng.com \r\nLAST-MODIFIED:20131001T070049Z\r\
+        \nLOCATION:Akuna Bay Marina\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ West Head RR Season Finale\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20131109T200000Z\r\nDTEND:20131109T230000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:tvnkhuaicia4d7bvr00huv4i1k@google.com\r\nCREATED:20131001T070006Z\r\n\
+        DESCRIPTION:Akuna Bay - West Head Road Race. Grades A-D all clubs and rider\r\
+        \n s welcome. Riders depart from Akuna Bay Marina before completing a number\
+        \ o\r\n f laps of West Head Road - A Grade 3 laps\\, B/C Grade 2 laps\\, D\
+        \ Grade 1 la\r\n p. Entry is $15 with a gold licence. Pre entry is available\
+        \ on www.trybooki\r\n ng.com \r\nLAST-MODIFIED:20131001T070006Z\r\nLOCATION:Akuna\
+        \ Bay Marina\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West Head\
+        \ RR Classic\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20131012T200000Z\r\
+        \nDTEND:20131012T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:mbn8j2bk0tsntu2pae68k4eik4@google.com\r\
+        \nCREATED:20131001T065926Z\r\nDESCRIPTION:Akuna Bay - West Head Road Race.\
+        \ Grades A-D all clubs and rider\r\n s welcome. Riders depart from Akuna Bay\
+        \ Marina before completing a number o\r\n f laps of West Head Road - A Grade\
+        \ 3 laps\\, B/C Grade 2 laps\\, D Grade 1 la\r\n p. Entry is $15 with a gold\
+        \ licence. Pre entry is available on www.trybooki\r\n ng.com \r\nLAST-MODIFIED:20131001T065926Z\r\
+        \nLOCATION:Akuna Bay Marina\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ West Head RR Classic\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n\
+        DTSTART:20130817T203000Z\r\nDTEND:20130818T020000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:965s15lvsvssoe86i7c45igbh8@google.com\r\nCREATED:20130813T053457Z\r\n\
+        DESCRIPTION:This is a ride for the masses\\, not just for the elite.  The\
+        \ id\r\n ea is to offer a longer ride (approximately 130km round trip from\
+        \ Manly) to\r\n  club riders who may not have done this particular ride before\
+        \ or would lik\r\n e to stretch themselves to something a little more challenging\
+        \ than the reg\r\n ular church point ride.  The tempo will therefore be on\
+        \ the easier side and\r\n  designed to encourage everyone out onto the road.\
+        \  So no excuses!\\nRiders \r\n should be self-sufficient and prepared for\
+        \ a fun 130km hilly ride.\r\nLAST-MODIFIED:20130813T053716Z\r\nLOCATION:Leaving\
+        \ from the Bus Stop opposite Bike Addiction\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:The Four Gorges Strikes Back\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20130907T220000Z\r\nDTEND:20130908T060000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:lgoq7995dg9udj76m6plhs5c0g@google.com\r\nCREATED:20130808T045608Z\r\n\
+        DESCRIPTION:State Masters Road Race Championships. Enter via the Cycling NS\r\
+        \n W website.\r\nLAST-MODIFIED:20130808T045954Z\r\nLOCATION:Gunning\\, Copeland\
+        \ Street (Showground Area)\r\nSEQUENCE:2\r\nSTATUS:CONFIRMED\r\nSUMMARY:State\
+        \ Masters Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n\
+        DTSTART:20130907T210000Z\r\nDTEND:20130908T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:u90ljph3m2polrlqf1kphu0hrg@google.com\r\nCREATED:20130808T045921Z\r\n\
+        DESCRIPTION:Akuna Bay - West Head Road Race. Grades A-D all clubs and rider\r\
+        \n s welcome. Riders depart from Akuna Bay Marina before completing a number\
+        \ o\r\n f laps of West Head Road - A Grade 3 laps\\, B/C Grade 2 laps\\, D\
+        \ Grade 1 la\r\n p. Entry is $15 with a gold licence. Pre entry open on www.trybooking.com\
+        \ a\r\n nd search 'MWCC'\r\nLAST-MODIFIED:20130808T045921Z\r\nLOCATION:Akuna\
+        \ West Head Road Race\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West\
+        \ Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130810T210000Z\r\
+        \nDTEND:20130811T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:0rf2m4r3o8qn902s6t5qipv59o@google.com\r\
+        \nCREATED:20130717T060505Z\r\nDESCRIPTION:Akuna Bay - West Head Road Race.\
+        \ Grades A-D all clubs and rider\r\n s welcome. Riders depart from Akuna Bay\
+        \ Marina before completing a number o\r\n f laps of West Head Road - A Grade\
+        \ 3 laps\\, B/C Grade 2 laps\\, D Grade 1 la\r\n p. Entry is $15 with a gold\
+        \ licence. Pre entry open on www.trybooking.com a\r\n nd search 'MWCC'\r\n\
+        LAST-MODIFIED:20130808T045818Z\r\nLOCATION:Sign on Akuna Bay Marina \r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Akuna-West Head Road Race\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130906T220000Z\r\nDTEND:20130907T070000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:194sgke9h8cu4c4nmo7t5mgvbo@google.com\r\n\
+        CREATED:20130808T045604Z\r\nDESCRIPTION:State Masters Crit Championships.\
+        \ Enter via the Cycling NSW web\r\n site.\r\nLAST-MODIFIED:20130808T045604Z\r\
+        \nLOCATION:Marulan Driver Training Centre. Prairie Oak Rd Marulan\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:State Masters Crit Championships\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130906T000000Z\r\nDTEND:20130906T060000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ia9murog82p9ovgu09d5iehhd0@google.com\r\n\
+        CREATED:20130808T045427Z\r\nDESCRIPTION:State Masters Championships - enter\
+        \ via the Cycling NSW website\r\n . Enter for each of the days.\r\nLAST-MODIFIED:20130808T045427Z\r\
+        \nLOCATION:Breadalbane Public School - Corner Collector Rd & Cullerin Rd Brea\r\
+        \n dalbane\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:State Masters Championship\
+        \ Time Trial\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130830T080000Z\r\
+        \nDTEND:20130830T100000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:52rgdhnr7mbrdhdlu02o57vps8@google.com\r\
+        \nCREATED:20130808T044448Z\r\nDESCRIPTION:Time trial at altitude! A good night\
+        \ of racing your friends and\r\n  yourself at altitude. Suitable for all standards.\
+        \ The night costs $40 per \r\n person pre paid online. Rider details must\
+        \ be submitted the Wednesday befor\r\n e on the online form https://docs.google.com/a/sydneyaltitudetraining.com/f\r\
+        \n orms/d/1DRWN92BW5X2kKfPejjrqbP_1ghSI-rjefFUyEM19ebY/viewform\\n.\r\nLAST-MODIFIED:20130808T044935Z\r\
+        \nLOCATION:Sydney Altitude Training Centre 1st Floor\\, 789 Military Road\\\
+        , Mo\r\n sman\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Sydney Altitude\
+        \ Training Night\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130825\r\
+        \nDTEND;VALUE=DATE:20130826\r\nDTSTAMP:20150419T120223Z\r\nUID:5ip06olqk59bhnuu6cjhtnfq8s@google.com\r\
+        \nCREATED:20130808T044256Z\r\nDESCRIPTION:Cyclo Cross racing returns to the\
+        \ scene of the NSW rounds. Open\r\n  to all clubs and riders\\, there are\
+        \ divisions for those with and without c\r\n yclo cross bikes. So no excuses\
+        \ not to get amongst the action!\r\nLAST-MODIFIED:20130808T044430Z\r\nLOCATION:JJ\
+        \ Melbourne Hills Memorial Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Cyclo Cross at Terrey Hills\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130922\r\nDTEND;VALUE=DATE:20130923\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:9jg8guesnj9g6q9bkbatsepkis@google.com\r\n\
+        CREATED:20130808T044202Z\r\nDESCRIPTION:MWCC and MWMTB are hosting teh inaugural\
+        \ NSW State Championship\r\n s for Cyclo Cross as part of the Manly Bike Week.\
+        \ Race in Manly!! More deta\r\n ils soon\r\nLAST-MODIFIED:20130808T044202Z\r\
+        \nLOCATION:Manly Lagoon\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW CX\
+        \ State Championship\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20130720\r\nDTEND;VALUE=DATE:20130721\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:h37ukmv1qe2nrrvovciksfpo70@google.com\r\nCREATED:20130627T015950Z\r\n\
+        DESCRIPTION:The NSW Team Tiem Trial Championships. Entries close 7th July.\
+        \ \r\n More info at http://www.nsw.cycling.org.au/cy_nsw/races/?f=2013/13146/13146\r\
+        \n .htm\r\nLAST-MODIFIED:20130627T015950Z\r\nLOCATION:Nowra Airport - Braidwood\
+        \ Road\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Team Time Trial\r\n\
+        TRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130714T000000Z\r\
+        \nDTEND:20130714T053000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:mi010fbdjbivnjuv1p2m5bap9o@google.com\r\
+        \nCREATED:20130627T015632Z\r\nDESCRIPTION:The second day of the NSW rounds\
+        \ of the National Cyclo Cross Se\r\n ries. This day ha racing for the elites\\\
+        , as well as open rounds open to al\r\n l and a kids race. More details -\
+        \ http://www.manlywarringahcc.org.au/events\r\n /national-cyclo-cross-series-info/\r\
+        \nLAST-MODIFIED:20130627T015757Z\r\nLOCATION: JJ Melbourne Hills Memorial\
+        \ Reserve\\, Terrey Hills\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:National\
+        \ Cyclo Cross Series\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130713T000000Z\r\nDTEND:20130713T053000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:hkfd7ckah0j8ri9jet2gqblia8@google.com\r\nCREATED:20130627T015438Z\r\n\
+        DESCRIPTION:The first of the NSW rounds for the National Cyclo Cross Series\r\
+        \n . There are also support events open to all riders. More details - http://w\r\
+        \n ww.manlywarringahcc.org.au/events/national-cyclo-cross-series-info/\r\n\
+        LAST-MODIFIED:20130627T015620Z\r\nLOCATION: JJ Melbourne Hills Memorial Reserve\\\
+        , Terrey Hills\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:National Cyclo\
+        \ Cross Series\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130628T080000Z\r\
+        \nDTEND:20130628T103000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:mdpjn3shcs1vg68bvpfkoosn48@google.com\r\
+        \nCREATED:20130614T041829Z\r\nDESCRIPTION:Spend the night at 2\\,228 metres\
+        \ and participate in a TT up Alp\r\n e D'Huez. Check out the facilities while\
+        \ racing your club mates and having \r\n a bit of a laugh. All welcome but\
+        \ numbers are limited so RSVP to the Club S\r\n ecretary. Cost is FREE\r\n\
+        LAST-MODIFIED:20130614T042241Z\r\nLOCATION:Sydney Altitude Training Centre\
+        \ - 1st Floor\\, 789 Military Road\\, \r\n Mosman\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Off to Alpe D'Huez\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130614T230000Z\r\nDTEND:20130615T020000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:a48loqtrobfdktjcfgl3sgo738@google.com\r\nCREATED:20130524T055612Z\r\n\
+        DESCRIPTION:The best of both worlds - road and dirt racing combined into th\r\
+        \n is adreline filled day of racing. Races for both cross bikes and non cross\
+        \ \r\n bikes plus a kids race. $10 race entry.\r\nLAST-MODIFIED:20130524T055933Z\r\
+        \nLOCATION:JJ Melbourne Hills Reserve\\, Kamber Road\\, Terrey Hills\r\nSEQUENCE:1\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:Cyclo Cross Action!\r\nTRANSP:TRANSPARENT\r\n\
+        END:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130424T193000Z\r\nDTEND:20130425T013000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:c3mf2193tqmhrrrlmlr860n6v8@google.com\r\n\
+        CREATED:20130422T000937Z\r\nDESCRIPTION:Leaving Neutral Bay at 5:30am from\
+        \ the street opposite the Oaks\r\n . We take the back streets through Cammeray\\\
+        , Northbridge\\, Willoughby etc \r\n to be at St Ives shops on Mona Vale Road\
+        \ at about 6:20am. Down and up throu\r\n gh Bobbin Head and then the normal\
+        \ way up the Old Pacific Hwy to make the 9\r\n :30 ferry. Then home from Palm\
+        \ Beach. Bring ferry money. Ride suitable for \r\n strong C graders and up.\r\
+        \nLAST-MODIFIED:20130422T231950Z\r\nLOCATION:Leaving Neutral Bay to Ettalong\
+        \ then home via Palm Beach\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Ettalong\
+        \ Loop\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130505\r\
+        \nDTEND;VALUE=DATE:20130506\r\nDTSTAMP:20150419T120223Z\r\nUID:uadj0egrf0o33jljtoa4rukkag@google.com\r\
+        \nCREATED:20130409T010136Z\r\nDESCRIPTION:Your opportunity to get in some\
+        \ practice on the course prior to\r\n  club champs. A & B Grade will be doing\
+        \ the 43km course and C & D Grade the\r\n  25km course. Sign on from 7am\\\
+        , with riders rolling out in 1 minute interv\r\n als from 8am. www.atta.asn.au\r\
+        \nLAST-MODIFIED:20130409T010308Z\r\nLOCATION:Peats Ridge Road\\, Calga\r\n\
+        SEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:ATTA Calga Time Trial\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130519\r\nDTEND;VALUE=DATE:20130520\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:4c08js62ijiovo4nk9pkmli6ig@google.com\r\n\
+        CREATED:20130409T002048Z\r\nDESCRIPTION:Northern Sydney hold their criterium\
+        \ races along Beamount road.\r\n  A fast hot dog circuit. $10 entry. Sign\
+        \ on from about 7:45am. No day licen\r\n ces available. Get some practice\
+        \ in on the same course that will be used in\r\n  our club championships.\r\
+        \nLAST-MODIFIED:20130409T002115Z\r\nLOCATION:Beaumont Road\\, Mt Kuring-gai\r\
+        \nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSCC Beauie Worlds Crit\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130427T220000Z\r\nDTEND:20130428T000000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:vgcplt1ctt73n3dl1hv53dli0g@google.com\r\n\
+        CREATED:20130409T001753Z\r\nDESCRIPTION:Northern Sydney hold their criterium\
+        \ races along Beamount road.\r\n  A fast hot dog circuit. $10 entry. Sign\
+        \ on from about 7:45am. No day licen\r\n ces available. Get some practice\
+        \ in on the same course that will be used in\r\n  our club championships.\r\
+        \nLAST-MODIFIED:20130409T002011Z\r\nLOCATION:Beaumont Road\\, Mt Kuring-gai\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Northern Sydney Beauie Worlds\r\
+        \nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130713T210000Z\r\
+        \nDTEND:20130714T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:4ad2ilflk2dqkbgjqk187o3044@google.com\r\
+        \nCREATED:20130408T060926Z\r\nDESCRIPTION:Open t all club and riders and the\
+        \ final round of the MWCC club\r\n  championships. $15 entry with a GOLD 2013\
+        \ racing licence. Grades A-D with \r\n racing from Akuna Bay and out along\
+        \ West Head. Finish is at Elvina Walking \r\n Track Carpark West Head. Racing\
+        \ starts 7:30am.\r\nLAST-MODIFIED:20130408T061108Z\r\nLOCATION:Sign on Akuna\
+        \ Bay Marina Carpark from 7am.\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ West Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130629T220000Z\r\nDTEND:20130630T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:r2f7al72tj8jqh722b2f29ffr4@google.com\r\nCREATED:20130408T060909Z\r\n\
+        DESCRIPTION:Round 3 of club champs will be held at the NSCC Beaumont Road-\
+        \ \r\n crit course. This fast and hotdog course will be run in conjunction\
+        \ with th\r\n e NSCC race. $10 entry on the day. More details www.northernsydneycyclingcl\r\
+        \n ub.org.au\\n\r\nLAST-MODIFIED:20130408T060909Z\r\nLOCATION:Beaumont Road\\\
+        , Mt Ku-ring gai\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Round 3 MWCC\
+        \ Club Champs\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130608T210000Z\r\
+        \nDTEND:20130609T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:583p69lfinflggm9sfl0s3bolk@google.com\r\
+        \nCREATED:20130408T060526Z\r\nDESCRIPTION:Sydney's best and only monthly road\
+        \ race. $15 entry. Race from \r\n Akuna Bay and out along West Head. Finish\
+        \ Line is opposite the Elvina Walki\r\n ng Track. Grades A-C complete 2 laps\
+        \ of West Head\\, D Grade complete 1 lap \r\n of West Head. Racing starts\
+        \ 7:30am. All clubs and riders welcome.\r\nLAST-MODIFIED:20130408T060658Z\r\
+        \nLOCATION:Sign on Akuna BAy Marina Car Park from 7am\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Akuna West Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130601T220000Z\r\nDTEND:20130602T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:dhjuq5sslnhbqsglt2586mnflo@google.com\r\nCREATED:20130408T052919Z\r\n\
+        DESCRIPTION:Round 1 of MWCC Club Champs. Head along to the ATTA monthly TT'\r\
+        \n s. A & B Grade do the 43km course\\, C\\,D & Womens 25km course. More details\r\
+        \n  http://www.atta.asn.au/\r\nLAST-MODIFIED:20130408T060503Z\r\nLOCATION:Peats\
+        \ Ridge Road\\, Calga\\, Corner Jones Road\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Calga Time Trial\\, Reats Ridge\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20130331T204500Z\r\nDTEND:20130331T221500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:u7f6q2gtgl2k7ji0g72g2c6cog@google.com\r\nCREATED:20130324T230704Z\r\n\
+        DESCRIPTION:Northern Sydney Criterium Racing. $10 entry. No day licences av\r\
+        \n ailable. Flat and fast racing.\r\nLAST-MODIFIED:20130324T230850Z\r\nLOCATION:Beaumont\
+        \ Road\\, Mt Kuring Gai \r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSCC\
+        \ Beauie Worlds\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130331T203000Z\r\
+        \nDTEND:20130331T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:biunufjpc6s3asqaujjh0jlh04@google.com\r\
+        \nCREATED:20130311T044642Z\r\nDESCRIPTION:Waratah Masters Cycling Club Race.\
+        \ Grades A-F open to all licen\r\n sed racers over 30 or all ages for women.\
+        \ $15 entry. No day licences availa\r\n ble. For info http://www.waratahmasters.com.au/eventsmenu.cfm\r\
+        \nLAST-MODIFIED:20130324T230658Z\r\nLOCATION:Eastern Creek Dragway\\, Eastern\
+        \ Creek\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Waratah Masters Racing\r\
+        \nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130406\r\
+        \nDTEND;VALUE=DATE:20130407\r\nDTSTAMP:20150419T120223Z\r\nUID:b1lbnhvsqigf2f6rmfl7pao18o@google.com\r\
+        \nCREATED:20130311T045556Z\r\nDESCRIPTION:The Sydney Road Titles. This is\
+        \ an age graded day of racing\\, a\r\n round the regatta centre.\\nEnter by\
+        \ the 24 March. Details on the www.nsw.cy\r\n cling.org.au website.\r\nLAST-MODIFIED:20130311T045556Z\r\
+        \nLOCATION:Penrith Regatta Centre\\, Penrith\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Sydney Road Titles\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20130421\r\nDTEND;VALUE=DATE:20130422\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:217ls9nnkd42ljrqrbkd2am9pk@google.com\r\nCREATED:20130311T045204Z\r\n\
+        DESCRIPTION:The Blayney to Bathurst Sportif is a popular weekend of riding\\\
+        \r\n , with 70km and 110km options. There is also criteriums and hill climbing\
+        \ o\r\n n Saturday around Mount Panorama. This is open to all riders\\, you\
+        \ do not n\r\n eed a racing licence. More details at www.b2b.asn.au/\r\nLAST-MODIFIED:20130311T045204Z\r\
+        \nLOCATION:Bathurst\\, NSW\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Blayney\
+        \ to Bathurst Sportif\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130324T050000Z\r\nDTEND:20130324T060000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:0sqvl8bdqtblk1gq4b8sm7tqgg@google.com\r\nCREATED:20130311T044946Z\r\n\
+        DESCRIPTION:A challenging sportif with two options of 80 & 160kms. Entries\
+        \ \r\n via Cycling NSW. This is open to all riders - you do not need a racing\
+        \ lice\r\n nce.\r\nLAST-MODIFIED:20130311T044946Z\r\nLOCATION:Jindabyne\r\n\
+        SEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Jindabyne Sportif\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;TZID=Australia/Sydney:20130315T173000\r\
+        \nDTEND;TZID=Australia/Sydney:20130315T190000\r\nRRULE:FREQ=WEEKLY;UNTIL=20130329T063000Z;BYDAY=FR\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:u4mlusl3bnudi0ihcjkqq1tlqg@google.com\r\n\
+        CREATED:20130311T043857Z\r\nDESCRIPTION:Criterium racing put on by Peloton\
+        \ Sports on a completely car f\r\n ree and closed course. $15 entry. Sign\
+        \ on from 5:30pm with racing starting \r\n at 6pm. Great way to finish the\
+        \ week and start the weekend. More details ht\r\n tp://pelotonsports.com.au/\\\
+        n\r\nLAST-MODIFIED:20130311T043857Z\r\nLOCATION:HART Driver Training Centre\\\
+        , St Ives\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:HART Driver Training\
+        \ Crit Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20130512\r\
+        \nDTEND;VALUE=DATE:20130513\r\nDTSTAMP:20150419T120223Z\r\nUID:5vp7i42qfk4nsjqmqlqfod0eak@google.com\r\
+        \nCREATED:20130311T043350Z\r\nDESCRIPTION:Sydney's best and only monthly road\
+        \ race. $15 entry. Race from \r\n Akuna Bay and out along West Head. Finish\
+        \ Line is opposite the Elvina Walki\r\n ng Track. Grades A-C complete 2 laps\
+        \ of West Head\\, D Grade complete 1 lap \r\n of West Head. Racing starts\
+        \ 7:30am. All clubs and riders welcome.\r\nLAST-MODIFIED:20130311T043350Z\r\
+        \nLOCATION:Sign on from 7am D'Albora Marina Akuna Bay\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Akuna West Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\n\
+        BEGIN:VEVENT\r\nDTSTART:20130413T210000Z\r\nDTEND:20130414T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:1thf429eupj9i3e6j7jotlt3t4@google.com\r\nCREATED:20130311T043043Z\r\n\
+        DESCRIPTION:Sydney's best and only monthly road race. $15 entry. Race from\
+        \ \r\n Akuna Bay and out along West Head. Finish Line is opposite the Elvina\
+        \ Walki\r\n ng Track. Grades A-C complete 2 laps of West Head\\, D Grade complete\
+        \ 1 lap \r\n of West Head. Racing starts 7:30am. All clubs and riders welcome.\r\
+        \nLAST-MODIFIED:20130311T043307Z\r\nLOCATION:Akuna Bay D'Albora Marina Carpark\
+        \ for sign on 7am\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna West\
+        \ Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130316T190000Z\r\
+        \nDTEND:20130317T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:bigri6ogisb266k9vuuriks1g4@google.com\r\
+        \nCREATED:20130301T062149Z\r\nDESCRIPTION:Leaving Bike Addiction at 6am. This\
+        \ club ride will go straight \r\n up Allambie Road and out towards Bobbin\
+        \ Head\\, through Bobbo\\, then into th\r\n e Gorges\\, back via Bobbo and\
+        \ down Allambie Road finishing at Bacino. A hil\r\n ly ride\\, however we\
+        \ will wait at the top of all main climbs. If it is rain\r\n ing - stay in\
+        \ bed!\r\nLAST-MODIFIED:20130301T062447Z\r\nLOCATION:Three Gorges Ride\r\n\
+        SEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:3 Gorges Ride\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130309T200000Z\r\nDTEND:20130309T230000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:pm7tdfpj2m1hsivkpdddo5fjrc@google.com\r\n\
+        CREATED:20130131T040803Z\r\nDESCRIPTION:Sydney's best and only monthly road\
+        \ race. Race from Akuna Bay a\r\n nd out along West Head. Finish Line is opposite\
+        \ the Elvina Walking Track. G\r\n rades A-C complete 2 laps of West Head\\\
+        , D Grade complete 1 lap of West Hea\r\n d. Racing starts 7:30am All clubs\
+        \ and riders welcome.\r\nLAST-MODIFIED:20130218T020311Z\r\nLOCATION:Sign on\
+        \ Akuna Bay Marina car park from 7am\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Akuna West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20130215T184500Z\r\nDTEND:20130215T231500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:lvk0btbl2gg5oribusofh3ocr0@google.com\r\nCREATED:20130131T040914Z\r\n\
+        DESCRIPTION:Looking for something a bit different? 5:45am and head south to\r\
+        \n  Waterfall and then down returning through the National Park. Returning\
+        \ to \r\n Kirribilli about 10am. Pace will be steady. Distance about 115km\
+        \ -120km\r\nLAST-MODIFIED:20130131T041126Z\r\nLOCATION:5:45am at the Northern\
+        \ Harbour Bridge Steps\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:Waterfall/National\
+        \ Park Ride\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20130112T200000Z\r\
+        \nDTEND:20130112T230000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:uplsv3fggv3chmtv3qn6qo3od0@google.com\r\
+        \nCREATED:20121116T013959Z\r\nDESCRIPTION:RACE CONFIRMED. Grades A-D. All\
+        \ clubs and riders welcome. Pleas\r\n e ensure that you have a 2013 Gold racing\
+        \ licence. Entry $10\\, one day lice\r\n nce can be purchased for an additional\
+        \ $30.\r\nLAST-MODIFIED:20130108T230419Z\r\nLOCATION:Sign on D'Albora Marina\\\
+        , Akuna Bay\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna-West Head RR\r\
+        \nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20121222T190000Z\r\
+        \nDTEND:20121222T210000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:br9upu1jsrsgbfahqr95uq4na8@google.com\r\
+        \nCREATED:20121213T030121Z\r\nDESCRIPTION:Christmas Eve eve Crit. $15 entry\
+        \ - Grades A-C All grades start\r\n  6:50am. Sign on from 6:20am. All clubs\
+        \ and riders welcome.\r\nLAST-MODIFIED:20121213T030438Z\r\nLOCATION:HART Driver\
+        \ Training - 451 Mona Vale Road St Ives\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Easy Read Time Teacher Crit\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20121209T040000Z\r\nDTEND:20121209T080000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:clddelmf0k18o4crnd7pj35vkg@google.com\r\nCREATED:20121116T014157Z\r\n\
+        DESCRIPTION:One for all the family. Just a casual Sunday afternoon barbie\
+        \ d\r\n own at the Dam\\, suitable for the whole family. The club will be\
+        \ set up at \r\n Table 33 which is around near the Boat Ramp.\\n\\nClub will\
+        \ put on some food \r\n and snacks. BYO alcohol and smiles.\\n\\nhttp://www.warringah.nsw.gov.au/comm\r\
+        \n unity/documents/TableBookings_Mar2011.pdf\\n\r\nLAST-MODIFIED:20121204T041354Z\r\
+        \nLOCATION:Manly Dam\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC Christmas\
+        \ BBQ\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20121216T050000Z\r\
+        \nDTEND:20121216T060000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:o7ivelo7evk4jefbtnc8krkbvs@google.com\r\
+        \nCREATED:20121116T014053Z\r\nDESCRIPTION:Annual AGM Meeting. Election of\
+        \ all committee members and discu\r\n ssion about issues facing the club.\r\
+        \nLAST-MODIFIED:20121116T014053Z\r\nLOCATION:Bacino\\, Manly - Upstairs\r\n\
+        SEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:MWCC AGM\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20121208T200000Z\r\nDTEND:20121208T230000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:p70hnahcn1hpb9vq2qofom8tio@google.com\r\nCREATED:20121002T053254Z\r\n\
+        DESCRIPTION:Sign on from 7:00am. Grades A-D. All female racers will race fo\r\
+        \n r free. Entry fee for all other riders is $10 with a GOLD 2012 licence.\
+        \ If \r\n you don't have a gold licence\\, then you will be required to purchase\
+        \ a one\r\n  day licence for $30 in addition to the normal entry fee. \r\n\
+        LAST-MODIFIED:20121116T013820Z\r\nLOCATION:Sign On at the D'Albora Marina\\\
+        , Akuna Bay\r\nSEQUENCE:3\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna Bay / West\
+        \ Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VFREEBUSY\r\nDTSTART:20121026T210000Z\r\
+        \nDTEND:20121026T220000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:cs8v8mbfsqdk1bm5stp8vp0r64@google.com\r\
+        \nATTENDEE;X-NUM-GUESTS=0:mailto:account@manlywarringahcc.org.au\r\nSUMMARY:Busy\r\
+        \nEND:VFREEBUSY\r\nBEGIN:VEVENT\r\nDTSTART:20121102T190000Z\r\nDTEND:20121103T063000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:o9is8h0n7nqodfpe9qq1pi2ov4@google.com\r\n\
+        CREATED:20121018T025253Z\r\nDESCRIPTION:A day of riding around Kangaroo Valley\\\
+        , Berry and potentially \r\n Macquarie Pass if you have the legs for it.\\\
+        nPlan is to drive from Neutral \r\n Bay at 6am\\, with riding time of about\
+        \ 4-5 hours\\, before the drive back. B\r\n ook out the day.\r\nLAST-MODIFIED:20121018T025253Z\r\
+        \nLOCATION:Meeting Place - Robertson Pie Shop\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Big Ride Down South - Kangaoo Valley\\, Macquarie Pass\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VFREEBUSY\r\nDTSTART:20121013T200000Z\r\nDTEND:20121013T230000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:g2ve7real90c2aqllkde0ad6ko@google.com\r\n\
+        ATTENDEE;X-NUM-GUESTS=0:mailto:account@manlywarringahcc.org.au\r\nSUMMARY:Busy\r\
+        \nEND:VFREEBUSY\r\nBEGIN:VEVENT\r\nDTSTART:20120825T210000Z\r\nDTEND:20120825T233000Z\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:4gqodmdnvc96bufhs2llkcca0g@google.com\r\n\
+        CREATED:20120810T020632Z\r\nDESCRIPTION:The annual Energize Gym Akuna Bay\
+        \ Hill Climb Challenge. Will yo\r\n u be the Strava Champ?\\nAll clubs and\
+        \ riders welcome.\r\nLAST-MODIFIED:20120815T051456Z\r\nLOCATION:D'Albora Marina\
+        \ Carpark\\, Akuna  Bay\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna\
+        \ Bay Hill Climb Challenge\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120811T210000Z\r\nDTEND:20120812T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:3gn4eso9k0gf163hiupdji5kp4@google.com\r\nCREATED:20120111T042233Z\r\n\
+        DESCRIPTION:Sign on from 7am in the Marina Carpark. Race finishes up at the\r\
+        \n  Elvina Walking Track Carpark $10 Entry\r\nLAST-MODIFIED:20120810T043734Z\r\
+        \nLOCATION:D'Albora Marina\\, Akuna Bay\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART;VALUE=DATE:20120930\r\nDTEND;VALUE=DATE:20121001\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:b0u7g4c5nk03h86bi4k06trl84@google.com\r\nCREATED:20120810T021007Z\r\n\
+        DESCRIPTION:National Series Round of Cyclo Cross. Support events open to al\r\
+        \n l riders\\, of all abilities. Register on the day for the support events.\r\
+        \nLAST-MODIFIED:20120810T021007Z\r\nLOCATION:JJ Melbourne Memorial Reserve\\\
+        , Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:National Series\
+        \ Cyclo Cross Day 2\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\n\
+        DTSTART;VALUE=DATE:20120929\r\nDTEND;VALUE=DATE:20120930\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:j3vp0eksbalici7vhbulukf5qo@google.com\r\nCREATED:20120810T020929Z\r\n\
+        DESCRIPTION:National Series Round of Cyclo Cross. Support events open to al\r\
+        \n l riders\\, of all abilities. Register on the day for the support events.\r\
+        \nLAST-MODIFIED:20120810T020929Z\r\nLOCATION:JJ Melbourne Memorial Reserve\\\
+        , Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:National Series\
+        \ Cyclo Cross\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120908T211500Z\r\
+        \nDTEND:20120909T001500Z\r\nDTSTAMP:20150419T120223Z\r\nUID:aelj43vfd8vub185ukflkr8jvk@google.com\r\
+        \nCREATED:20120111T042304Z\r\nDESCRIPTION:Sign on from 7am in the Marina Carpark.\
+        \ Race finishes up at the\r\n  Elvina Walking Track Carpark $10 Entry\r\n\
+        LAST-MODIFIED:20120810T020705Z\r\nLOCATION:D'Albora Marina carpark \\, Akuna\
+        \ Bay\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:West Head Road Race\r\n\
+        TRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120824T223000Z\r\n\
+        DTEND:20120825T010000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:7qbr0e9ifn3ns7i9ivd1uhs23k@google.com\r\
+        \nCREATED:20120522T050550Z\r\nDESCRIPTION:The club runs a short course mountain\
+        \ bike race from 8:30am wit\r\n h the cyclo cross starting from 9:30am. Entry\
+        \ for these events is $10 with \r\n day licences available for those that\
+        \ don\u2019t have a racing licence.\r\nLAST-MODIFIED:20120522T050550Z\r\n\
+        LOCATION:JJ Melbourne Memorial Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Cyclocross Winter Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120727T223000Z\r\nDTEND:20120728T010000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:4cj1l77e73mlj4n0d8841e9mc4@google.com\r\nCREATED:20120522T050531Z\r\n\
+        DESCRIPTION:The club runs a short course mountain bike race from 8:30am wit\r\
+        \n h the cyclo cross starting from 9:30am. Entry for these events is $10 with\
+        \ \r\n day licences available for those that don\u2019t have a racing licence.\r\
+        \nLAST-MODIFIED:20120522T050531Z\r\nLOCATION:JJ Melbourne Memorial Reserve\\\
+        , Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Cyclocross Winter\
+        \ Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120622T223000Z\r\
+        \nDTEND:20120623T010000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:gt0lomadd4jdlmm09t2dgik9a4@google.com\r\
+        \nCREATED:20120522T050503Z\r\nDESCRIPTION:The club runs a short course mountain\
+        \ bike race from 8:30am wit\r\n h the cyclo cross starting from 9:30am. Entry\
+        \ for these events is $10 with \r\n day licences available for those that\
+        \ don\u2019t have a racing licence.\r\nLAST-MODIFIED:20120522T050503Z\r\n\
+        LOCATION:JJ Melbourne Memorial Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Cyclocross Winter Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120525T223000Z\r\nDTEND:20120526T010000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:onnd7n8hl3av0lcuqbi7rvbum4@google.com\r\nCLASS:PUBLIC\r\nCREATED:20120522T050436Z\r\
+        \nDESCRIPTION:The club runs a short course mountain bike race from 8:30am\
+        \ wit\r\n h the cyclo cross starting from 9:30am. Entry for these events is\
+        \ $10 with \r\n day licences available for those that don\u2019t have a racing\
+        \ licence.\r\nLAST-MODIFIED:20120522T050436Z\r\nLOCATION:JJ Melbourne Memorial\
+        \ Reserve\\, Terrey Hills\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Cyclocross\
+        \ Winter Series\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120120T210000Z\r\
+        \nDTEND:20120121T000000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:f5th0l9t884fsejh9t1dl792cg@google.com\r\
+        \nCREATED:20111205T232443Z\r\nDESCRIPTION:Sign on from 8:00am Racing from\
+        \ 8:30am\r\nLAST-MODIFIED:20120118T234521Z\r\nLOCATION:JJ Melbourne Hills\
+        \ Memorial Reserve\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Manly Warringah\
+        \ Cyclocross Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120707T211500Z\r\
+        \nDTEND:20120708T001500Z\r\nDTSTAMP:20150419T120223Z\r\nUID:uf7svros4hpjq9mhhatmmpbu68@google.com\r\
+        \nCREATED:20120111T042206Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T042206Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120609T211500Z\r\nDTEND:20120610T001500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:q6ht6d3e5j7rcqhh0fd5hitmss@google.com\r\nCREATED:20120111T042145Z\r\n\
+        DESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T042146Z\r\nLOCATION:Elvina\
+        \ Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:West Head\
+        \ Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120512T211500Z\r\
+        \nDTEND:20120513T001500Z\r\nDTSTAMP:20150419T120223Z\r\nUID:dn1fgfrnk52iddu0sprgr653ic@google.com\r\
+        \nCREATED:20120111T042122Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T042122Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120407T211500Z\r\nDTEND:20120408T001500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:j28n66qaqdqu82u1ei94cqb67k@google.com\r\nCREATED:20120111T042054Z\r\n\
+        DESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T042054Z\r\nLOCATION:Elvina\
+        \ Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:West Head\
+        \ Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20120310T201500Z\r\
+        \nDTEND:20120310T231500Z\r\nDTSTAMP:20150419T120223Z\r\nUID:ddahflt2ftlo14k0tosc2ll7bg@google.com\r\
+        \nCREATED:20120111T042023Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T042023Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:West Head Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120211T201500Z\r\nDTEND:20120211T231500Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:nsqfcfrqgogtpcu9pbpejb5o8o@google.com\r\nCREATED:20120111T041954Z\r\n\
+        DESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T041954Z\r\nLOCATION:Elvina\
+        \ Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:West Head\
+        \ Road Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20111210T201500Z\r\
+        \nDTEND:20111210T231500Z\r\nDTSTAMP:20150419T120223Z\r\nUID:0fmuiolst6miim8csoh6rbm488@google.com\r\
+        \nCREATED:20111024T042923Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20120111T041850Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:West Head Road Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\
+        \nDTSTART:20120106T210000Z\r\nDTEND:20120107T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:hd0srf1j9ohepmkt5h0op4ulf8@google.com\r\nCREATED:20111205T232425Z\r\n\
+        DESCRIPTION:Sign on from 8:00am Racing from 8:45am\r\nLAST-MODIFIED:20111205T232425Z\r\
+        \nLOCATION:JJ Melbourne Hills Memorial Reserve\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Manly Warringah Cyclocross Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20111216T210000Z\r\nDTEND:20111217T000000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:8a4oatare553hnrpl5l871diq4@google.com\r\nCREATED:20111205T232404Z\r\n\
+        DESCRIPTION:Sign on from 8:00am Racing from 8:45am\r\nLAST-MODIFIED:20111205T232404Z\r\
+        \nLOCATION:JJ Melbourne Hills Memorial Reserve\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Manly Warringah Cyclocross Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART:20111203T193000Z\r\nDTEND:20111203T233000Z\r\nDTSTAMP:20150419T120223Z\r\
+        \nUID:9fg13s32ncg6r1c24e47gv8dm0@google.com\r\nCLASS:PUBLIC\r\nCREATED:20110628T055554Z\r\
+        \nDESCRIPTION:6:30am sign on for a 7am start\r\nLAST-MODIFIED:20111116T221104Z\r\
+        \nLOCATION:North Head\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:North Head\
+        \ Criterium\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110925\r\
+        \nDTEND;VALUE=DATE:20110926\r\nDTSTAMP:20150419T120223Z\r\nUID:lfi76aejftnks2nsqn6kg2tsg0@google.com\r\
+        \nCREATED:20110628T055514Z\r\nDESCRIPTION:Sign on from 7am - Race start at\
+        \ 7:30am\r\nLAST-MODIFIED:20110919T000803Z\r\nLOCATION:North Head\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:North Head Criterium\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20111113\r\nDTEND;VALUE=DATE:20111114\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:g78om3oam8e7cj7s496r41vdmo@google.com\r\n\
+        CREATED:20110905T033706Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110905T033706Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20111009\r\nDTEND;VALUE=DATE:20111010\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:m8ms05o49tj7m3n4qf3a7m6mjo@google.com\r\n\
+        CREATED:20110905T033645Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110905T033646Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110911\r\nDTEND;VALUE=DATE:20110912\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:2anls475q95v76klg2avj2sh20@google.com\r\n\
+        CREATED:20110905T014440Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110905T014441Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110814\r\nDTEND;VALUE=DATE:20110815\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:808ivn38d7q8390p1alihl0e24@google.com\r\n\
+        CREATED:20110328T020154Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110727T095018Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:3\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110828\r\nDTEND;VALUE=DATE:20110829\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:jpiqj0rorqd3pumrp5nak2hij8@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110718T002723Z\r\nDESCRIPTION:http://www.manlywarringahcc.org.au/racing/akuna-bay-hill-climb-\r\
+        \n tt/\r\nLAST-MODIFIED:20110718T002723Z\r\nLOCATION:8am Illawong Bay Car\
+        \ Park\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Akuna Bay Hill Climb TT\
+        \ \r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20110723T204500Z\r\
+        \nDTEND:20110724T010000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:g6a5b2tmdkugt0a0fhl00n0lr4@google.com\r\
+        \nCREATED:20110628T055423Z\r\nDESCRIPTION:\r\nLAST-MODIFIED:20110712T004722Z\r\
+        \nLOCATION:North Head\r\nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:North Head\
+        \ Criterium\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART:20110716T100000Z\r\
+        \nDTEND:20110716T170000Z\r\nDTSTAMP:20150419T120223Z\r\nUID:dd54kkebtjgtg82ggia76847m8@google.com\r\
+        \nCLASS:PUBLIC\r\nCREATED:20110711T045036Z\r\nDESCRIPTION:http://tdfatbacino.eventbrite.com/\
+        \ \r\nLAST-MODIFIED:20110711T045036Z\r\nLOCATION:Bacino Manly\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:TDF @ Bacino\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110522\r\nDTEND;VALUE=DATE:20110523\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:n0sl7e2c5d5aqt4lg4f97fpfok@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110502T000651Z\r\nDESCRIPTION:$85 JM19\\n$85 JW19\\\
+        n$85 U/23\\n$85 Elite Men\\n$85 Elite Women\\n$\r\n 85 Men Masters\\n$85 Women\
+        \ Masters\\n$240 Team\\n\\nThe Great Hunter Cycling Cl\r\n assic is open to\
+        \ Cycling NSW members and the general public catering to rid\r\n ers 18 years\
+        \ and over.\\n\\nEntry includes a competitors T-Shirt and a bottle\r\n  of\
+        \ wine.\\n\\nApprox 100km long course will be 5 laps of a approx 19km circu\r\
+        \n it around wineries.\\n\\nNSW Road Series points on offer. -Elite Men\\\
+        , Women/\r\n U19 Women\\, U/23 Men \\, U/19 Men (Juniors will participate\
+        \ in the short cou\r\n rse)\\n\\n3 Team classifications- Sport Club\\, Race\
+        \ Club and Corporate Teams.\r\n \\nTeam members will not be eligible for individual\
+        \ prizes.\\n\\nAll riders wh\r\n o finish will receive a certificate including\
+        \ their finish time.\\nAge Categ\r\n ories will be:\\n\\n18-22 years\\n23-34\
+        \ years\\n35-49 years\\n50-64 years\\n65+ y\r\n ears\\n\\n\\nOnline Entries\\\
+        n\\nStart Times\\n7:30am Family Fun Ride\\n8:20am Lon\r\n g Course\\n8:30am\
+        \ Short Course\\n\\nRegistration will be at the rotunda in fro\r\n nt of Oscars\
+        \ Caf\uFFFD at Hunter Valley Gardens\\, Broke Rd\\, Pokolbin\\n\\nAll par\r\
+        \n ticipants must be registered 30 minutes prior to their event start time.\\\
+        n\\\r\n n\\nhttp://www.nsw.cycling.org.au/cy_nsw/races/?f=2011/11078/11078.htm\
+        \ \r\nLAST-MODIFIED:20110502T000651Z\r\nLOCATION:Pokolbin\r\nSEQUENCE:0\r\n\
+        STATUS:CONFIRMED\r\nSUMMARY:The Xstrata Great Hunter Cycling Classic 100km\
+        \ Long Course\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110515\r\
+        \nDTEND;VALUE=DATE:20110516\r\nDTSTAMP:20150419T120223Z\r\nUID:msbk6r1c9p1uq713pr03u7o7i4@google.com\r\
+        \nCLASS:PUBLIC\r\nCREATED:20110502T000500Z\r\nDESCRIPTION:o M9+: 8.30am \\\
+        , 30min + 3 laps\\no M8 : 9.10am\\no M7 : 9.50am\\n\r\n o M6 : 10.30am\\no\
+        \ W4+ : 11.10am\\no W1-3 : 11.50am\\no M5 : 12.30pm\\no M4 : 1\r\n .10pm \\\
+        , 40min + 3 laps \\no M3 : 2.00pm \\no M2 : 2.50pm\\no M1 : 3.40pm\r\nLAST-MODIFIED:20110502T000500Z\r\
+        \nLOCATION:Marulan Driver Training Centre. Prairie Oak Rd Marulan\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters Criterium Championships\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110514\r\nDTEND;VALUE=DATE:20110515\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:muh1pdn6ss9ksvqjd34vpemjmc@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110502T000346Z\r\nDESCRIPTION:o M6: 9.00am - 57k\\\
+        no M7: 9.15am - 57k\\no W1-3: 9.30am - 57k\\no\r\n  W4+ : 9.45am - 57k\\no\
+        \ M8: 10.00am - 57k\\no M9+: 10.15am - 57k\\no M3: 12noo\r\n n - 84k\\no M4:\
+        \ 12.15pm - 84k\\no M5: 12.30pm - 84k\\no M2: 12.45pm - 102k\\no \r\n M1:\
+        \ 1.00pm - 102k\\n\\nFree Car parking - off Forbes Street in Eastgrove Park\r\
+        \n  North \\n\\nRoad Race Entry Fee - includes a Dinner Ticket to the Masters\
+        \ Ch\r\n ampions Dinner at the Goulburn Workers Club. Drinks at the Golburn\
+        \ workers \r\n club are from 6:00pm in the first floor function room\\, with\
+        \ dinner service\r\n  commencing at 7pm sharp.\r\nLAST-MODIFIED:20110502T000346Z\r\
+        \nLOCATION:Park Rd & Forbes St Goulburn (Eastgrove Park North)\r\nSEQUENCE:0\r\
+        \nSTATUS:CONFIRMED\r\nSUMMARY:NSW Masters Road Race Championships\r\nTRANSP:TRANSPARENT\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110619\r\nDTEND;VALUE=DATE:20110620\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ucnvnkdai39n37f5igg3j07910@google.com\r\n\
+        CREATED:20110328T034733Z\r\nDESCRIPTION:\r\nLAST-MODIFIED:20110427T010744Z\r\
+        \nLOCATION:http://www.manlywarringahcc.org.au/racing/nsw-team-time-trials/\r\
+        \nSEQUENCE:1\r\nSTATUS:CONFIRMED\r\nSUMMARY:NSW Team Time Trials\r\nTRANSP:OPAQUE\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110710\r\nDTEND;VALUE=DATE:20110711\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:vthn9p1nlpbt7f49sq72nmafj0@google.com\r\n\
+        CREATED:20110328T020005Z\r\nDESCRIPTION:Sign on at 7:15am\r\nLAST-MODIFIED:20110427T010743Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110508\r\nDTEND;VALUE=DATE:20110509\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ub472bfhnicos11t1gkuiurqps@google.com\r\n\
+        CREATED:20110328T015710Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110427T010743Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah West Head Race\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110410\r\nDTEND;VALUE=DATE:20110411\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:ipiiupv5vg2r4lnil3st6co27c@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110405T054702Z\r\nDESCRIPTION:Blayney to Bathurst\\\
+        nCyclo Sportif Challenge \\n\\nhttp://www.b2b\r\n .asn.au/\r\nLAST-MODIFIED:20110427T010743Z\r\
+        \nLOCATION:Blaney to Bathurst\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\nSUMMARY:Blayney\
+        \ to Bathurst Cyclo Sportif Challenge\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110403\r\nDTEND;VALUE=DATE:20110404\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:g6luq26p886p3tcjjm1l8561g0@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110328T014713Z\r\nDESCRIPTION:Sign on from 7:15am\r\
+        \nLAST-MODIFIED:20110427T010743Z\r\nLOCATION:Elvina Track\\, West Head\r\n\
+        SEQUENCE:2\r\nSTATUS:CONFIRMED\r\nSUMMARY:Manly Warringah West Head Race -\
+        \ Handicap Format\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110612\r\
+        \nDTEND;VALUE=DATE:20110613\r\nDTSTAMP:20150419T120223Z\r\nUID:pmbuojqcued4ce7bmhfb8gjuu0@google.com\r\
+        \nCREATED:20110328T015857Z\r\nDESCRIPTION:Sign on from 7:15am\r\nLAST-MODIFIED:20110427T010743Z\r\
+        \nLOCATION:Elvina Track\\, West Head\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\n\
+        SUMMARY:Manly Warringah Cycling Club Race\r\nTRANSP:OPAQUE\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nDTSTART;VALUE=DATE:20110429\r\nDTEND;VALUE=DATE:20110502\r\
+        \nDTSTAMP:20150419T120223Z\r\nUID:s48ndduvoui2gvuvoequcet8ns@google.com\r\n\
+        CLASS:PUBLIC\r\nCREATED:20110405T055020Z\r\nDESCRIPTION:http://canberratour.org.au/\r\
+        \nLAST-MODIFIED:20110427T010743Z\r\nLOCATION:Canberra\r\nSEQUENCE:0\r\nSTATUS:CONFIRMED\r\
+        \nSUMMARY:Canberra Tour\r\nTRANSP:TRANSPARENT\r\nEND:VEVENT\r\nEND:VCALENDAR\r\
+        \n"}
+    headers:
+      accept-ranges: [none]
+      alternate-protocol: ['443:quic,p=1']
+      cache-control: ['no-cache, no-store, max-age=0, must-revalidate']
+      connection: [close]
+      content-type: [text/calendar; charset=UTF-8]
+      date: ['Sun, 19 Apr 2015 12:02:23 GMT']
+      expires: ['Fri, 01 Jan 1990 00:00:00 GMT']
+      pragma: [no-cache]
+      server: [GSE]
+      vary: [Accept-Encoding]
+      x-content-type-options: [nosniff]
+      x-frame-options: [SAMEORIGIN]
+      x-xss-protection: [1; mode=block]
+    status: {code: 200, message: OK}
+version: 1

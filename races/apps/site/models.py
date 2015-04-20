@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from importlib import import_module
 
 import icalendar
+import pytz
 from urllib2 import urlopen, HTTPError, URLError, Request
 import datetime
 import hashlib
@@ -92,6 +93,7 @@ class Club(models.Model):
             return ([], "Error reading icalendar file")
         
         patterns = [p.strip() for p in self.icalpatterns.split(',')]
+        tz = pytz.timezone('Australia/Sydney')
 
         races = []
         for component in cal.walk():  
@@ -122,6 +124,8 @@ class Club(models.Model):
                         
                         if type(start) == datetime.datetime:
                         
+                            start = start.astimezone(tz)
+                            
                             startdate = start.date().isoformat()
                             starttime = start.time().isoformat()
                         elif type(start) == datetime.date:

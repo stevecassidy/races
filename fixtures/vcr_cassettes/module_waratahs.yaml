@@ -1,0 +1,1488 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [www.waratahmasters.com.au]
+      User-Agent: [Python-urllib/2.7]
+    method: GET
+    uri: http://www.waratahmasters.com.au/eventsmenu.cfm
+  response:
+    body: {string: !!python/unicode "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0\
+        \ Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"\
+        >\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"\
+        Content-Type\" content=\"text/html; charset=utf-8\" />\r\n\r\n<link rel=\"\
+        stylesheet\" href=\"ASSETS/CSS/reset.css\"  />\r\n<link rel=\"stylesheet\"\
+        \ href=\"ASSETS/CSS/default.css\"  />\r\n<script>\r\nfunction popup(url) {\r\
+        \n\tnewwindow=window.open(url,'tempoWin','height=750,width=750,scrollbars=yes');\r\
+        \n\tif (window.focus) {newwindow.focus()}\r\n\treturn false;\r\n}\r\n\r\n\
+        function initializeMaps() {\r\n    var latlng = new google.maps.LatLng(-33.92,\
+        \ 151.25);\r\n    var myOptions = {\r\n        zoom: 10,\r\n        center:\
+        \ latlng,\r\n        mapTypeId: google.maps.MapTypeId.ROADMAP,\r\n       \
+        \ mapTypeControl: false\r\n    };\r\n    var map = new google.maps.Map(document.getElementById(\"\
+        map_canvas\"),myOptions);\r\n    var infowindow = new google.maps.InfoWindow(),\
+        \ marker, i;\r\n    for (i = 0; i < markers.length; i++) {  \r\n        marker\
+        \ = new google.maps.Marker({\r\n            position: new google.maps.LatLng(markers[i][1],\
+        \ markers[i][2]),\r\n            map: map\r\n        });\r\n        google.maps.event.addListener(marker,\
+        \ 'click', (function(marker, i) {\r\n            return function() {\r\n \
+        \               infowindow.setContent(markers[i][0]);\r\n                infowindow.open(map,\
+        \ marker);\r\n            }\r\n        })(marker, i));\r\n    }\r\n}\r\n\r\
+        \n</script>\r\n\r\n<script>\r\n (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\r\
+        \n (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\r\
+        \n m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\r\
+        \n })(window,document,'script','//www.google-analytics.com/analytics.js','ga');\r\
+        \n\r\n ga('create', 'UA-53121677-1', 'auto');\r\n ga('send', 'pageview', {\r\
+        \n  'page': '/eventsmenu.cfm',\r\n  'title': 'eventsmenu.cfm'\r\n});\r\n\r\
+        \n</script>\r\n\r\n<title>Club Info</title>\r\n</head>\r\n<body>\r\n  <div\
+        \ id=\"container\"   >\r\n     \r\n\t\r\n\r\n\r\n     <div id=\"header\" >\r\
+        \n          <span id=\"contactsLogin\"><a href=\"contacts.cfm\">contacts</a>&nbsp;|&nbsp;<a\
+        \ href=\"loginform.cfm\">login</a></span>\r\n          <img style=\"margin-top:15px;\"\
+        src=\"ASSETS/Images/logo_text.png\"  />     \r\n      </div><!-- end header\
+        \ -->\r\n      \r\n      <div id=\"main\">\r\n         <div id=\"nav\">\r\n\
+        \          \r\n             <ul id=\"awesome-menu\">\r\n                <li><a\
+        \ href=\"index.cfm\" class=\"home\"   >Home</a></li>\r\n                <li><a\
+        \ href=\"aboutus.cfm\" class=\"clubinfo\"  >Club Info</a></li>\r\n       \
+        \         <li><a href=\"eventsmenu.cfm\" class=\"raceroster\"  style=\"background-position:\
+        \ -204px -31px;\">Race Roster</a></li>\r\n                <li><a href=\"results.cfm\"\
+        \ class=\"results\"  >Race Results</a></li>\r\n                <li><a href=\"\
+        news.cfm\" class=\"news\"  >News</a></li>\r\n                <li><a href=\"\
+        racerules.cfm\" class=\"rules\"  >Rules</a></li>\r\n                <li><a\
+        \ href=\"newmembers.cfm\" class=\"newmembers\"  >New Members</a></li>\r\n\
+        \                <li><a href=\"sponsors.cfm\" class=\"sponsors\"  >Sponsors</a></li>\r\
+        \n                <li><a href=\"http://www.youtube.com/user/waratahmasters\"\
+        \ target=\"_blank\" class=\"youtube\"  >YouTube</a></li>\r\n             \
+        \ <li><a href=\"http://www.facebook.com/waratahmasters\" target=\"_blank\"\
+        \ class=\"facebook\"  >Facebook</a></li>\r\n            </ul>\r\n        \
+        \    <br /><br />\r\n   \r\n         </div><!-- end nav --> \r\n         \r\
+        \n\r\n\r\n<ul id=\"secondaryMenu\">\r\n\r\n      <li id=\"li_firstItem\" \
+        \ ><a href=\"/eventsmenu.cfm?page=raceroster\" class=\"selected\" >Race Schedule\
+        \ & Roster </a></li>\r\n      <li id=\"li_secondItem\" ><a href=\"/eventsmenu.cfm?page=wherewerace\"\
+        \  >Where We Race </a></li>\r\n                 \r\n    \r\n</ul>  \r\n\r\n\
+        \      <br />\r\n     \r\n     \r\n       <div id=\"primaryContentWide\">\r\
+        \n      \r\n    <div id=\"raceroster\">\r\n              \r\n            \
+        \   <div id=\"raceroster_head\">\r\n                   <span id=\"showRosterDuties\"\
+        \ class=\"thirtypercent\">\r\n                      <p><strong>Show Roster\
+        \ Duties</strong><br /> \r\n                         \r\n                \
+        \       <form name=\"fmShowDuties\" action=\"/eventsmenu.cfm\" method=\"post\"\
+        \ >\r\n                       <input type=\"hidden\" name=\"view\" value=\"\
+        showDuties\"  />\r\n                        \r\n                       <select\
+        \ name=\"rosteredUser\" id=\"rosteredUser\" onchange=\"this.form.submit();\"\
+        >\r\n                       <option   value=\"\">Choose Name</option>\r\n\
+        \                      \r\n                      <option   value=\"100832\"\
+        \  >Adams, Stephen</option>\r\n                      \r\n                \
+        \      <option   value=\"1112\"  >Bailey, Paul</option>\r\n              \
+        \        \r\n                      <option   value=\"102158\"  >Baird, Ian</option>\r\
+        \n                      \r\n                      <option   value=\"1113\"\
+        \  >Baldwin, Philip</option>\r\n                      \r\n               \
+        \       <option   value=\"1114\"  >Ballantine, David</option>\r\n        \
+        \              \r\n                      <option   value=\"100484\"  >Barnes,\
+        \ Rodney</option>\r\n                      \r\n                      <option\
+        \   value=\"100318\"  >Bernard, Daniel</option>\r\n                      \r\
+        \n                      <option   value=\"100679\"  >Blomfield-Brown, Chris</option>\r\
+        \n                      \r\n                      <option   value=\"100876\"\
+        \  >Blomfield-Brown, Geraldine</option>\r\n                      \r\n    \
+        \                  <option   value=\"102109\"  >Bolger, Rob</option>\r\n \
+        \                     \r\n                      <option   value=\"1764\" \
+        \ >Bolzan, David</option>\r\n                      \r\n                  \
+        \    <option   value=\"100974\"  >Boroczky, Leslie</option>\r\n          \
+        \            \r\n                      <option   value=\"1518\"  >Bourne,\
+        \ Roger</option>\r\n                      \r\n                      <option\
+        \   value=\"102434\"  >Boyd, Ben</option>\r\n                      \r\n  \
+        \                    <option   value=\"1123\"  >Bradshaw, Gordon</option>\r\
+        \n                      \r\n                      <option   value=\"101121\"\
+        \  >Broughton, John</option>\r\n                      \r\n               \
+        \       <option   value=\"102198\"  >Broughton, Tony</option>\r\n        \
+        \              \r\n                      <option   value=\"2187\"  >Bull,\
+        \ Les</option>\r\n                      \r\n                      <option\
+        \   value=\"1125\"  >Bush, Ray</option>\r\n                      \r\n    \
+        \                  <option   value=\"101936\"  >Cameron, Joanne</option>\r\
+        \n                      \r\n                      <option   value=\"1002\"\
+        \  >Candido, Gil</option>\r\n                      \r\n                  \
+        \    <option   value=\"100520\"  >Carruthers, Andrew</option>\r\n        \
+        \              \r\n                      <option   value=\"100894\"  >Cassidy,\
+        \ Steve</option>\r\n                      \r\n                      <option\
+        \   value=\"100875\"  >Cassidy, Gary R</option>\r\n                      \r\
+        \n                      <option   value=\"102384\"  >Cayabyab, Oscar</option>\r\
+        \n                      \r\n                      <option   value=\"101824\"\
+        \  >Chee, David</option>\r\n                      \r\n                   \
+        \   <option   value=\"1237\"  >Cole, Christopher</option>\r\n            \
+        \          \r\n                      <option   value=\"1130\"  >Conaty, Gary</option>\r\
+        \n                      \r\n                      <option   value=\"102159\"\
+        \  >Cox, Kenneth</option>\r\n                      \r\n                  \
+        \    <option   value=\"101140\"  >Crozier, John</option>\r\n             \
+        \         \r\n                      <option   value=\"1132\"  >Dabrowski,\
+        \ Ludwik</option>\r\n                      \r\n                      <option\
+        \   value=\"102018\"  >Douce, Brett</option>\r\n                      \r\n\
+        \                      <option   value=\"100214\"  >Downes, Mark</option>\r\
+        \n                      \r\n                      <option   value=\"1136\"\
+        \  >Drury, Rob</option>\r\n                      \r\n                    \
+        \  <option   value=\"1005\"  >Dyer, Fred</option>\r\n                    \
+        \  \r\n                      <option   value=\"1467\"  >Fisher, Greg</option>\r\
+        \n                      \r\n                      <option   value=\"102308\"\
+        \  >Flory, George</option>\r\n                      \r\n                 \
+        \     <option   value=\"100661\"  >Fowler, Chris</option>\r\n            \
+        \          \r\n                      <option   value=\"1144\"  >Freshwater,\
+        \ Terry</option>\r\n                      \r\n                      <option\
+        \   value=\"1018\"  >Garrett, John</option>\r\n                      \r\n\
+        \                      <option   value=\"1019\"  >Gatt, Joe</option>\r\n \
+        \                     \r\n                      <option   value=\"1035\" \
+        \ >Gilbert, Alan</option>\r\n                      \r\n                  \
+        \    <option   value=\"101654\"  >Gilkes, Alan</option>\r\n              \
+        \        \r\n                      <option   value=\"100960\"  >Goodair, Glenn</option>\r\
+        \n                      \r\n                      <option   value=\"1038\"\
+        \  >Gray, James</option>\r\n                      \r\n                   \
+        \   <option   value=\"2031\"  >Greenwood, Ian</option>\r\n               \
+        \       \r\n                      <option   value=\"101189\"  >Grogan, Terry</option>\r\
+        \n                      \r\n                      <option   value=\"102388\"\
+        \  >Haas, Damian</option>\r\n                      \r\n                  \
+        \    <option   value=\"101353\"  >Haskis, John</option>\r\n              \
+        \        \r\n                      <option   value=\"100313\"  >Hayes, Clifford</option>\r\
+        \n                      \r\n                      <option   value=\"1416\"\
+        \  >Heath, Ron</option>\r\n                      \r\n                    \
+        \  <option   value=\"101594\"  >Hemmings, Shelley</option>\r\n           \
+        \           \r\n                      <option   value=\"1043\"  >Henwood,\
+        \ Murray</option>\r\n                      \r\n                      <option\
+        \   value=\"102160\"  >Hind, Mark</option>\r\n                      \r\n \
+        \                     <option   value=\"1050\"  >Hutchings, Peter</option>\r\
+        \n                      \r\n                      <option   value=\"1150\"\
+        \  >Jackson, Ian</option>\r\n                      \r\n                  \
+        \    <option   value=\"102295\"  >James, Greg</option>\r\n               \
+        \       \r\n                      <option   value=\"1023\"  >Jones, Graham</option>\r\
+        \n                      \r\n                      <option   value=\"100227\"\
+        \  >Jorgensen, Ian</option>\r\n                      \r\n                \
+        \      <option   value=\"100614\"  >King, Paul</option>\r\n              \
+        \        \r\n                      <option   value=\"101249\"  >Kleiner, Gary</option>\r\
+        \n                      \r\n                      <option   value=\"102382\"\
+        \  >Lam, Johnny</option>\r\n                      \r\n                   \
+        \   <option   value=\"1032\"  >Lazich, Alec</option>\r\n                 \
+        \     \r\n                      <option   value=\"101963\"  >Leslie, David</option>\r\
+        \n                      \r\n                      <option   value=\"1067\"\
+        \  >Lollato, Luigi</option>\r\n                      \r\n                \
+        \      <option   value=\"100009\"  >Lowes, Jeremy</option>\r\n           \
+        \           \r\n                      <option   value=\"100863\"  >Lywood,\
+        \ Barry</option>\r\n                      \r\n                      <option\
+        \   value=\"1020\"  >Mangioni, Peter</option>\r\n                      \r\n\
+        \                      <option   value=\"101178\"  >Marinello, Michael</option>\r\
+        \n                      \r\n                      <option   value=\"102125\"\
+        \  >Mastrobattista, John</option>\r\n                      \r\n          \
+        \            <option   value=\"102078\"  >McDonald, Anthony</option>\r\n \
+        \                     \r\n                      <option   value=\"101726\"\
+        \  >McGregor, Granger</option>\r\n                      \r\n             \
+        \         <option   value=\"100517\"  >McGuigan, Chris</option>\r\n      \
+        \                \r\n                      <option   value=\"100713\"  >McMurtrie,\
+        \ Brett</option>\r\n                      \r\n                      <option\
+        \   value=\"102201\"  >Miller, Sean</option>\r\n                      \r\n\
+        \                      <option   value=\"101782\"  >Miller, Anthony</option>\r\
+        \n                      \r\n                      <option   value=\"1228\"\
+        \  >Moir, Jack</option>\r\n                      \r\n                    \
+        \  <option   value=\"100224\"  >Morelli, Adriano</option>\r\n            \
+        \          \r\n                      <option   value=\"102138\"  >Mort, Duncan</option>\r\
+        \n                      \r\n                      <option   value=\"1516\"\
+        \  >Moy, Trent</option>\r\n                      \r\n                    \
+        \  <option   value=\"1086\"  >Murray, Tim</option>\r\n                   \
+        \   \r\n                      <option   value=\"101870\"  >Music, Dragan</option>\r\
+        \n                      \r\n                      <option   value=\"101788\"\
+        \  >New, Andrew</option>\r\n                      \r\n                   \
+        \   <option   value=\"100320\"  >Nielsen, Brian</option>\r\n             \
+        \         \r\n                      <option   value=\"100914\"  >Norton, Trevor</option>\r\
+        \n                      \r\n                      <option   value=\"1090\"\
+        \  >Nyland, Graeme</option>\r\n                      \r\n                \
+        \      <option   value=\"1160\"  >Owen, Gary</option>\r\n                \
+        \      \r\n                      <option   value=\"101076\"  >Parle, Phillip\
+        \ J</option>\r\n                      \r\n                      <option  \
+        \ value=\"101739\"  >Pearson, David</option>\r\n                      \r\n\
+        \                      <option   value=\"101015\"  >Pellizzeri, Joe</option>\r\
+        \n                      \r\n                      <option   value=\"1094\"\
+        \  >Perram, Terry</option>\r\n                      \r\n                 \
+        \     <option   value=\"1097\"  >Picello, Alf</option>\r\n               \
+        \       \r\n                      <option   value=\"102423\"  >Pichler, Franz</option>\r\
+        \n                      \r\n                      <option   value=\"1162\"\
+        \  >Pike, Ian</option>\r\n                      \r\n                     \
+        \ <option   value=\"1098\"  >Piper, Robert</option>\r\n                  \
+        \    \r\n                      <option   value=\"1100\"  >Price, Stephen</option>\r\
+        \n                      \r\n                      <option   value=\"1101\"\
+        \  >Pugh, Michael</option>\r\n                      \r\n                 \
+        \     <option   value=\"1029\"  >Regattieri, Paul</option>\r\n           \
+        \           \r\n                      <option   value=\"1104\"  >Rennie, Gregor</option>\r\
+        \n                      \r\n                      <option   value=\"100286\"\
+        \  >Richardson, Steven</option>\r\n                      \r\n            \
+        \          <option   value=\"100816\"  >Rourke, Harry</option>\r\n       \
+        \               \r\n                      <option   value=\"1167\"  >Rule,\
+        \ Tony</option>\r\n                      \r\n                      <option\
+        \   value=\"101152\"  >Ryder, Christopher</option>\r\n                   \
+        \   \r\n                      <option   value=\"101546\"  >Sainsbury, Aaron</option>\r\
+        \n                      \r\n                      <option   value=\"1259\"\
+        \  >Scott-Logan, Malcolm</option>\r\n                      \r\n          \
+        \            <option   value=\"2197\"  >Scragg, Greg</option>\r\n        \
+        \              \r\n                      <option   value=\"101416\"  >Shelley,\
+        \ Graeme</option>\r\n                      \r\n                      <option\
+        \   value=\"1657\"  >Simmons, Annie</option>\r\n                      \r\n\
+        \                      <option   value=\"100885\"  >Smith, Lisa May</option>\r\
+        \n                      \r\n                      <option   value=\"100997\"\
+        \  >Somerfield, Matt</option>\r\n                      \r\n              \
+        \        <option   value=\"1028\"  >South, David</option>\r\n            \
+        \          \r\n                      <option   value=\"1183\"  >Staley, Timothy</option>\r\
+        \n                      \r\n                      <option   value=\"1185\"\
+        \  >Stubbs, Kevin</option>\r\n                      \r\n                 \
+        \     <option   value=\"100458\"  >Sullivan, Denis</option>\r\n          \
+        \            \r\n                      <option   value=\"100716\"  >Thompson,\
+        \ William</option>\r\n                      \r\n                      <option\
+        \   value=\"2210\"  >Tillett, John</option>\r\n                      \r\n\
+        \                      <option   value=\"1031\"  >Tonkin, Max</option>\r\n\
+        \                      \r\n                      <option   value=\"102019\"\
+        \  >Trovato, Robert</option>\r\n                      \r\n               \
+        \       <option   value=\"1190\"  >Tunnicliff, Paul</option>\r\n         \
+        \             \r\n                      <option   value=\"102169\"  >Valois,\
+        \ Nigel</option>\r\n                      \r\n                      <option\
+        \   value=\"1025\"  >Vertsonis, Harry</option>\r\n                      \r\
+        \n                      <option   value=\"101976\"  >Watson, Richard</option>\r\
+        \n                      \r\n                      <option   value=\"100717\"\
+        \  >Werry, Lorraine</option>\r\n                      \r\n               \
+        \       <option   value=\"101557\"  >Wiersma, Derek</option>\r\n         \
+        \             \r\n                      <option   value=\"100862\"  >Willis,\
+        \ Bob</option>\r\n                      \r\n                      <option\
+        \   value=\"1003\"  >Wilson, Michael</option>\r\n                      \r\n\
+        \                      <option   value=\"100899\"  >Wong, Geoffrey</option>\r\
+        \n                      \r\n                      <option   value=\"1201\"\
+        \  >Wood, Brian</option>\r\n                      \r\n                   \
+        \   <option   value=\"1006\"  >Yuen, Jack</option>\r\n                   \
+        \   \r\n                       </select>\r\n                       </form></p>\
+        \                  \r\n                  </span><!-- end nextRaceHeader -->\r\
+        \n<span id=\"introTextLeft\" >\r\n                  <h2> Race Schedule &amp;\
+        \ Roster</h2>\r\n                   Please check for last-minute race changes\
+        \ on <a href=\"http://twitter.com/waratahmasters\" target=\"_blank\">Twitter\
+        \ Race Info</a> or the hotline <strong>1902 261 007</strong><br />\r\n   \
+        \                   OFFICIALS: Please arrange your own swaps and notify the\
+        \ Race Manager of any changes by <a href=\"mailto:value1st@bigpond.net.au\"\
+        \ >email</a><br />\r\n               </span>\r\n                      \r\n\
+        \     </div><!--raceroster_head--> \r\n                  \r\n\r\n    \r\n\t\
+        \t\t\t\t\t\t\t\t\r\n      <table width=\"100%\" class=\"raceroster_table\"\
+        \ >\r\n         <tr  >\r\n             <th width=\"15%\" style=\"width:15%;\"\
+        \  >Date</th>\r\n             <th width=\"20%\" style=\"width:20%;\">Event\
+        \ Name / Format</th>\r\n             <th width=\"25%\" style=\"width:25%;\"\
+        >Location</th>\r\n             <th width=\"30%\" style=\"width:30%;\" >Officials\
+        \ <span style=\"float:right;padding-right:15px;font-style:italic;\"><italic>contact</italic></span></th>\r\
+        \n         </tr>\r\n       \r\n         <tr  >\r\n             <td  >11 Jan\
+        \ 2015<br />\r\n               7:00am all grades\r\n             </td>\r\n\
+        \             <td><strong>Graded Scratch Race</strong><br /><span class=\"\
+        italic\">201502</span> </td><td>SMSP Full GP Circuit, Eastern Creek</td>\r\
+        \n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph: 02 9871 8018 / 0414 814 830   Email: rbarnes@paksmart.com.au\"\
+        >Duty Officer: Rodney Barnes<br /></span> Helpers: Ludwik Dabrowski,Gary Conaty<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >18 Jan 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201503</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030\
+        \ 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Murray Henwood,Terry Grogan<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >25 Jan 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Aged\
+        \ Based Graded Scratch Race</strong><br /><span class=\"italic\">201504</span>\
+        \ </td><td>SMSP North Circuit, Eastern Creek</td>\r\n             <td ><span\
+        \ title=\"Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\"\
+        >Commissaire: Jack Yuen<br /></span> <span title=\"Ph: 02 9874 2382 / 0412\
+        \ 097 042   Email: tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br /></span>\
+        \ Helpers: Mark Downes,Steven Richardson<br /></td>\r\n         </tr>\r\n\
+        \      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr \
+        \ >\r\n             <td  >26 Jan 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race (Monday)</strong><br\
+        \ /><span class=\"italic\">201505</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 9997 2280 / 0425 252\
+        \ 012   Email: joan.lazich@gmail.com\">Commissaire: Alec Lazich<br /></span>\
+        \ <span title=\"Ph: 02 9428 1248 / 0418 476 344   Email: tim@smurray.com.au\"\
+        >Duty Officer: Tim Murray<br /></span> Helpers: Barry Lywood,Glenn Goodair<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Feb 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201506</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: Harry\
+        \ Vertsonis<br /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877   Email:\
+        \ gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br /></span> Helpers:\
+        \ John Crozier,Christopher Ryder<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >8 Feb 2015<br />\r\n               E/F-7.30am B/D-8.15am\
+        \ A/C-9.15am\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201507</span> </td><td>Heffron Park</td>\r\n  \
+        \           <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 0419 004 580\
+        \ / 02 9799 9257   Email: paulregattieri@internode.on.net\">Duty Officer:\
+        \ Paul Regattieri<br /></span> Helpers: John Haskis,Alan Gilkes<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >14 Feb 2015<br />\r\n       \
+        \        9.00am-2.00pm\r\n             </td>\r\n             <td><strong>Waratah\
+        \ Masters Track Championships</strong><br /><span class=\"italic\">201508</span>\
+        \ </td><td>Dunc Gray Velodrome</td>\r\n             <td ><span title=\"Ph:\
+        \ 0407 922 937   Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: <br /></span> Helpers: <br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >15 Feb 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201509</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 0438 167 889   Email:\
+        \ mwilson@exemail.com.au\">Commissaire: Michael Wilson<br /></span> <span\
+        \ title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Graeme Shelley,Derek Wiersma<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >22 Feb 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201510</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph:  0412 949 885   Email:\
+        \ grahamjones@live.com\">Commissaire: Graham Jones<br /></span> <span title=\"\
+        Ph: 0418 115 145 / 02 9363 0460   Email: stephen.price@corrs.com.au\">Duty\
+        \ Officer: Stephen Price<br /></span> Helpers: Shelley Hemmings,Andrew New<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Mar 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Erik\
+        \ Mather-Colnago Cup/Graded Scratch Race</strong><br /><span class=\"italic\"\
+        >201511</span> </td><td>SMSP Full GP Circuit, Eastern Creek</td>\r\n     \
+        \        <td ><span title=\"Ph: 02 9590 3892 / 0410 334 506   Email: vdsouth@optusnet.com.au\"\
+        >Commissaire: David South<br /></span> <span title=\"Ph: 02 9958 8302 / 0411\
+        \ 215 088   Email: cmcguig@bigpond.net.au\">Duty Officer: Chris McGuigan<br\
+        \ /></span> Helpers: John Garrett,David Chee,David Leslie<br /></td>\r\n \
+        \        </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\
+        \n         <tr  >\r\n             <td  >8 Mar 2015<br />\r\n             \
+        \  E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201512</span>\
+        \ </td><td>Heffron Park</td>\r\n             <td ><span title=\"Ph: 0450 167\
+        \ 188 / 02 8212 5480   Email: joanne.cameron@cycling.org.au\">Commissaire:\
+        \ Joanne Cameron<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Richard Watson,Robert\
+        \ Trovato<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >15 Mar\
+        \ 2015<br />\r\n               7.45am C/F-9am A/B\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201513</span> </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire:\
+        \ Jack Yuen<br /></span> <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\"\
+        >Duty Officer: John Broughton<br /></span> Helpers: John Mastrobattista,Ian\
+        \ Baird<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >22 Mar 2015<br />\r\
+        \n               7.45am C/F-9am A/B\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201514</span>\
+        \ </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"Ph: 02 8068\
+        \ 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br\
+        \ /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901   Email: g.cassidy@desert-oak.com.au\"\
+        >Duty Officer: Gary R Cassidy<br /></span> Helpers: Kenneth Cox,Mark Hind<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >29 Mar 2015<br />\r\n\
+        \               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201515</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830 \
+        \  Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Tony Broughton,Sean Miller<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >6 Apr 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race (Monday)</strong><br\
+        \ /><span class=\"italic\">201516</span> </td><td>SMSP Full GP Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: Harry\
+        \ Vertsonis<br /></span> <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email:\
+        \ value1st@bigpond.net.au\">Duty Officer: Denis Sullivan<br /></span> Helpers:\
+        \ Alan Gilbert,James Gray<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >12 Apr 2015<br />\r\n               7:00am all grades\r\n            \
+        \ </td>\r\n             <td><strong>Graded Scratch Race</strong><br /><span\
+        \ class=\"italic\">201517</span> </td><td>SMSP North Circuit, Eastern Creek</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 02 9874 2382\
+        \ / 0412 097 042   Email: tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br\
+        \ /></span> Helpers: Peter Hutchings,Robert Piper<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >19 Apr 2015<br />\r\n               7.45am C/F-9am\
+        \ A/B\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201518</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\"\
+        >Commissaire: Michael Wilson<br /></span> <span title=\"Ph: 02 9428 1248 /\
+        \ 0418 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span>\
+        \ Helpers: Michael Pugh,Gregor Rennie<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >26 Apr 2015<br />\r\n               E/F-7.30am B/D-8.15am\
+        \ A/C-9.15am\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201519</span> </td><td>Heffron Park</td>\r\n  \
+        \           <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 02 9799 8883 / 0400\
+        \ 828 877   Email: gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br\
+        \ /></span> Helpers: Ray Bush,Gary Owen<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >3 May 2015<br />\r\n               7.45am C/F-9am A/B\r\
+        \n             </td>\r\n             <td><strong>Criterium Race / Club TT\
+        \ Championships</strong><br /><span class=\"italic\">201520</span> </td><td>Lansdowne\
+        \ Park / Calga</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 /\
+        \ 0410 334 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Ian Pike,Tony Rule<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >10 May 2015<br />\r\n\
+        \               8.00am All Grades\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201521</span> </td><td>Dragway\
+        \ Short Course</td>\r\n             <td ><span title=\"Ph: 0407 922 937  \
+        \ Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br /></span>\
+        \ <span title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Kevin Stubbs,Ron Heath<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >17 May 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201522</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 8068 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire:\
+        \ Ian Jackson<br /></span> <span title=\"Ph: 0418 115 145 / 02 9363 0460 \
+        \  Email: stephen.price@corrs.com.au\">Duty Officer: Stephen Price<br /></span>\
+        \ Helpers: Jeremy Lowes,Adriano Morelli<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >24 May 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201523</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 02 9763 1944 / 0416 264 681   Email:\
+        \ jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br /></span> <span title=\"\
+        Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\">Duty Officer:\
+        \ Chris McGuigan<br /></span> Helpers: Ian Jorgensen,Clifford Hayes<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >31 May 2015<br />\r\n       \
+        \        7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201524</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Daniel Bernard,Brian\
+        \ Nielsen<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >7 Jun 2015<br\
+        \ />\r\n               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\
+        \n             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201525</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9772 4647 / 0419 691 048 / B 02 8741 5200   Email: harryrta@hotmail.com\"\
+        >Commissaire: Harry Vertsonis<br /></span> <span title=\"Ph:  0416 217 272\
+        \   Email: jpb173@icloud.com\">Duty Officer: John Broughton<br /></span> Helpers:\
+        \ Fred Dyer,Andrew Carruthers<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >14 Jun 2015<br />\r\n               8.00am All Grades\r\n            \
+        \ </td>\r\n             <td><strong>Criterium Race</strong><br /><span class=\"\
+        italic\">201527</span> </td><td>Dragway Short Course</td>\r\n            \
+        \ <td ><span title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830\
+        \   Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Chris Fowler,Brett McMurtrie<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >21 Jun 2015<br />\r\n               7.45am C/F-9am A/B\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201528</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 02 9896 0359 / 0417\
+        \ 265 200   Email: value1st@bigpond.net.au\">Duty Officer: Denis Sullivan<br\
+        \ /></span> Helpers: William Thompson,Lorraine Werry<br /></td>\r\n      \
+        \   </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n \
+        \        <tr  >\r\n             <td  >28 Jun 2015<br />\r\n              \
+        \ 7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201529</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 / 0410 334\
+        \ 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br /></span>\
+        \ <span title=\"Ph: 02 9874 2382 / 0412 097 042   Email: tonkin3@optusnet.com.au\"\
+        >Duty Officer: Max Tonkin<br /></span> Helpers: Harry Rourke,Stephen Adams<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >5 Jul 2015<br />\r\n\
+        \               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201530</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 0450 167 188 / 02 8212 5480   Email: joanne.cameron@cycling.org.au\">Commissaire:\
+        \ Joanne Cameron<br /></span> <span title=\"Ph: 02 9428 1248 / 0418 476 344\
+        \   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span> Helpers:\
+        \ Bob Willis,Geraldine Blomfield-Brown<br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >12 Jul 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201531</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030 855   Email:\
+        \ iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span> <span title=\"\
+        Ph: 02 9799 8883 / 0400 828 877   Email: gil@candidoassociates.com.au\">Duty\
+        \ Officer: Gil Candido<br /></span> Helpers: Lisa May Smith,Steve Cassidy<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >19 Jul 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201532</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9763 1944 / 0416 264\
+        \ 681   Email: jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br /></span>\
+        \ <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Geoffrey Wong,Trevor\
+        \ Norton<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >26 Jul 2015<br />\r\
+        \n               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201533</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982 \
+        \  Email: mangioni@iinet.net.au\">Duty Officer: Peter Mangioni<br /></span>\
+        \ Helpers: Leslie Boroczky,Matt Somerfield<br /></td>\r\n         </tr>\r\n\
+        \      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr \
+        \ >\r\n             <td  >2 Aug 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201534</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 0418 115 145\
+        \ / 02 9363 0460   Email: stephen.price@corrs.com.au\">Duty Officer: Stephen\
+        \ Price<br /></span> Helpers: Joe Pellizzeri,Phillip J Parle<br /></td>\r\n\
+        \         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n        \
+        \ \r\n         <tr  >\r\n             <td  >9 Aug 2015<br />\r\n         \
+        \      E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n        \
+        \     <td><strong>Criterium Race</strong><br /><span class=\"italic\">201535</span>\
+        \ </td><td>Heffron Park</td>\r\n             <td ><span title=\"Ph:  0412\
+        \ 949 885   Email: grahamjones@live.com\">Commissaire: Graham Jones<br /></span>\
+        \ <span title=\"Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\"\
+        >Duty Officer: Chris McGuigan<br /></span> Helpers: Michael Marinello,Gary\
+        \ Kleiner<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >16 Aug\
+        \ 2015<br />\r\n               8.00am All Grades\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201536</span> </td><td>Dragway Short Course</td>\r\n             <td ><span\
+        \ title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Aaron Sainsbury,Granger\
+        \ McGregor<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >23 Aug\
+        \ 2015<br />\r\n               7.45am MAS1-5 Women<45/9am MAS6-11 Women>45\r\
+        \n             </td>\r\n             <td><strong>Club Road Championships/Criterium</strong><br\
+        \ /><span class=\"italic\">201537</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\">Duty Officer:\
+        \ John Broughton<br /></span> Helpers: David Pearson,Anthony Miller<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >30 Aug 2015<br />\r\n       \
+        \        7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201538</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9590 3892 / 0410 334 506   Email: vdsouth@optusnet.com.au\">Commissaire:\
+        \ David South<br /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901 \
+        \  Email: g.cassidy@desert-oak.com.au\">Duty Officer: Gary R Cassidy<br /></span>\
+        \ Helpers: Dragan Music,Joe Gatt<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >6 Sep 2015<br />\r\n               7.45am C/F-9am A/B\r\n\
+        \             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201539</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 0450 167 188 / 02 8212 5480   Email:\
+        \ joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br /></span>\
+        \ <span title=\"Ph: 02 9871 8018 / 0414 814 830   Email: rbarnes@paksmart.com.au\"\
+        >Duty Officer: Rodney Barnes<br /></span> Helpers: Brett Douce,Anthony McDonald<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >13 Sep 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Ashfield\
+        \ Cycles/Specialized Southern Hemisphere Cup/Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201540</span> </td><td>SMSP Full GP Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030\
+        \ 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Duncan Mort,Nigel Valois,Luigi\
+        \ Lollato<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >20 Sep\
+        \ 2015<br />\r\n               7.45am C/F-9am A/B\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201541</span> </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire:\
+        \ Jack Yuen<br /></span> <span title=\"Ph: 02 9874 2382 / 0412 097 042   Email:\
+        \ tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br /></span> Helpers:\
+        \ Rob Bolger,Graeme Nyland<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >27 Sep 2015<br />\r\n               7.45am C/F-9am A/B\r\n           \
+        \  </td>\r\n             <td><strong>Criterium Race</strong><br /><span class=\"\
+        italic\">201542</span> </td><td>Lansdowne Park</td>\r\n             <td ><span\
+        \ title=\"Ph: 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\"\
+        >Commissaire: Alec Lazich<br /></span> <span title=\"Ph: 02 9428 1248 / 0418\
+        \ 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span>\
+        \ Helpers: Terry Perram,Alf Picello<br /></td>\r\n         </tr>\r\n     \
+        \ <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n\
+        \             <td  >4 Oct 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Aged Based Graded Scratch\
+        \ Race</strong><br /><span class=\"italic\">201543</span> </td><td>SMSP North\
+        \ Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph: 02 9772\
+        \ 4647 / 0419 691 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire:\
+        \ Harry Vertsonis<br /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877\
+        \   Email: gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br /></span>\
+        \ Helpers: Paul Bailey,Philip Baldwin<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >5 Oct 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201544</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek (Monday)</td>\r\n             <td ><span title=\"Ph: 0407 922 937\
+        \   Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br /></span>\
+        \ <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: David Ballantine,Gordon\
+        \ Bradshaw<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >11 Oct\
+        \ 2015<br />\r\n               8.00am All Grades\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201545</span> </td><td>Dragway Short Course</td>\r\n             <td ><span\
+        \ title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982\
+        \   Email: mangioni@iinet.net.au\">Duty Officer: Peter Mangioni<br /></span>\
+        \ Helpers: Rob Drury,Johnny Lam<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >18 Oct 2015<br />\r\n               7.45am C/F-9am A/B\r\n\
+        \             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201546</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 0418 115 145 / 02\
+        \ 9363 0460   Email: stephen.price@corrs.com.au\">Duty Officer: Stephen Price<br\
+        \ /></span> Helpers: Timothy Staley,Paul Tunnicliff<br /></td>\r\n       \
+        \  </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n  \
+        \       <tr  >\r\n             <td  >25 Oct 2015<br />\r\n               7.45am\
+        \ C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201547</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 / 0410 334\
+        \ 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br /></span>\
+        \ <span title=\"Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\"\
+        >Duty Officer: Chris McGuigan<br /></span> Helpers: Brian Wood,Jack Moir<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Nov 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201548</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 0450 167 188 / 02 8212\
+        \ 5480   Email: joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br\
+        \ /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Greg Fisher,George\
+        \ Flory<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >8 Nov 2015<br />\r\
+        \n               7.45am C/F-9am A/B\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201549</span>\
+        \ </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"Ph: 02 8068\
+        \ 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br\
+        \ /></span> <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\">Duty\
+        \ Officer: John Broughton<br /></span> Helpers: Trent Moy,Oscar Cayabyab<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >15 Nov 2015<br />\r\n\
+        \               8.00am All Grades\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201550</span> </td><td>Dragway\
+        \ Short Course</td>\r\n             <td ><span title=\"Ph: 02 9763 1944 /\
+        \ 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br\
+        \ /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901   Email: g.cassidy@desert-oak.com.au\"\
+        >Duty Officer: Gary R Cassidy<br /></span> Helpers: David Bolzan,Damian Haas<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >22 Nov 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201551</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830 \
+        \  Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Malcolm Scott-Logan,Franz Pichler<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >29 Nov 2015<br />\r\n               7.45am C/F-9am\
+        \ A/B\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201552</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Ian Greenwood,Les Bull<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >4 Dec 2015<br />\r\n\
+        \               1830 for 1900 Sit down dinner\r\n             </td>\r\n  \
+        \           <td><strong>Waratah Masters Christmas Party</strong><br /><span\
+        \ class=\"italic\">0</span> </td><td>Ryde-Eastwood Leagues Club Ryedale/Denistone\
+        \ rooms</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: <br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: <br /></span> Helpers: <br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >6 Dec 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201553</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 02 9428 1248\
+        \ / 0418 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br\
+        \ /></span> Helpers: Greg Scragg,John Tillett<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >13 Dec 2015<br />\r\n               7:00am all\
+        \ grades\r\n             </td>\r\n             <td><strong>Graded Scratch\
+        \ Race</strong><br /><span class=\"italic\">201554</span> </td><td>SMSP North\
+        \ Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph: 0438\
+        \ 167 889   Email: mwilson@exemail.com.au\">Commissaire: Michael Wilson<br\
+        \ /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877   Email: gil@candidoassociates.com.au\"\
+        >Duty Officer: Gil Candido<br /></span> Helpers: Paul King,Christopher Cole<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >20 Dec 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201555</span> </td><td>SMSP\
+        \ Full GP Circuit, Eastern Creek</td>\r\n             <td ><span title=\"\
+        Ph:  0412 949 885   Email: grahamjones@live.com\">Commissaire: Graham Jones<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Greg James,Roger Bourne<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >27 Dec 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201556</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 0450 167 188 / 02 8212\
+        \ 5480   Email: joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br\
+        \ /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Ben Boyd,Annie Simmons<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n               \r\n    </table>\r\n           <br />      \
+        \   \r\n        For past events, please see the <a  id=\"raceLink\" href=\"\
+        results.cfm?page=searchresults\">Race Results ></a> <span class=\"copyrightRight\"\
+        >&copy; 2011 Waratah Masters Cycling Club &nbsp;&nbsp;<span class=\"studioLink\"\
+        >&nbsp;&nbsp;Design <a href=\"http://www.signale.com\" target=\"_blank\">&nbsp;Signale</a></span></span>\r\
+        \n              \r\n    </div><!-- end raceroster -->\r\n       \r\n     \
+        \ </div><!-- end primaryContent -->\r\n\r\n          \r\n      </div><!--\
+        \ end main  -->\r\n      <br style=\"clear:both\" /> \r\n      <div id=\"\
+        footer\">\r\n      <br />\r\n      <br />\r\n      </div>\r\n\t</div><!--\
+        \ end container -->\r\n\r\n\r\n</body>\r\n</html>\r\n"}
+    headers:
+      connection: [close]
+      content-type: [text/html; charset=UTF-8]
+      date: ['Sat, 10 Jan 2015 10:01:33 GMT']
+      expires: ['Sat, 10 Jan 2015 10:01:34 GMT']
+      server: [Microsoft-IIS/6.0]
+      set-cookie: ['CFID=77489535;expires=Mon, 02-Jan-2045 10:01:34 GMT;path=/', 'CFTOKEN=99a1e90f3e9640cc-40719004-5056-A32D-AD9C1FB228E0A967;expires=Mon,
+          02-Jan-2045 10:01:34 GMT;path=/', JSESSIONID=8430752dda282016bb577b1e175f7f6ab472;path=/,
+        'CFGLOBALS=urltoken%3DCFID%23%3D77489535%26CFTOKEN%23%3D99a1e90f3e9640cc%2D40719004%2D5056%2DA32D%2DAD9C1FB228E0A967%26jsessionid%23%3D8430752dda282016bb577b1e175f7f6ab472%23lastvisit%3D%7Bts%20%272015%2D01%2D10%2004%3A01%3A34%27%7D%23timecreated%3D%7Bts%20%272015%2D01%2D10%2004%3A01%3A34%27%7D%23hitcount%3D2%23cftoken%3D99a1e90f3e9640cc%2D40719004%2D5056%2DA32D%2DAD9C1FB228E0A967%23cfid%3D77489535%23;expires=Mon,
+          02-Jan-2045 10:01:34 GMT;path=/']
+      x-powered-by: [ASP.NET]
+    status: {code: 200, message: OK}
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [www.waratahmasters.com.au]
+      User-Agent: [Python-urllib/2.7]
+    method: GET
+    uri: http://www.waratahmasters.com.au/eventsmenu.cfm
+  response:
+    body: {string: !!python/unicode "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0\
+        \ Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\"\
+        >\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n<head>\r\n<meta http-equiv=\"\
+        Content-Type\" content=\"text/html; charset=utf-8\" />\r\n\r\n<link rel=\"\
+        stylesheet\" href=\"ASSETS/CSS/reset.css\"  />\r\n<link rel=\"stylesheet\"\
+        \ href=\"ASSETS/CSS/default.css\"  />\r\n<script>\r\nfunction popup(url) {\r\
+        \n\tnewwindow=window.open(url,'tempoWin','height=750,width=750,scrollbars=yes');\r\
+        \n\tif (window.focus) {newwindow.focus()}\r\n\treturn false;\r\n}\r\n\r\n\
+        function initializeMaps() {\r\n    var latlng = new google.maps.LatLng(-33.92,\
+        \ 151.25);\r\n    var myOptions = {\r\n        zoom: 10,\r\n        center:\
+        \ latlng,\r\n        mapTypeId: google.maps.MapTypeId.ROADMAP,\r\n       \
+        \ mapTypeControl: false\r\n    };\r\n    var map = new google.maps.Map(document.getElementById(\"\
+        map_canvas\"),myOptions);\r\n    var infowindow = new google.maps.InfoWindow(),\
+        \ marker, i;\r\n    for (i = 0; i < markers.length; i++) {  \r\n        marker\
+        \ = new google.maps.Marker({\r\n            position: new google.maps.LatLng(markers[i][1],\
+        \ markers[i][2]),\r\n            map: map\r\n        });\r\n        google.maps.event.addListener(marker,\
+        \ 'click', (function(marker, i) {\r\n            return function() {\r\n \
+        \               infowindow.setContent(markers[i][0]);\r\n                infowindow.open(map,\
+        \ marker);\r\n            }\r\n        })(marker, i));\r\n    }\r\n}\r\n\r\
+        \n</script>\r\n\r\n<script>\r\n (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){\r\
+        \n (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),\r\
+        \n m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)\r\
+        \n })(window,document,'script','//www.google-analytics.com/analytics.js','ga');\r\
+        \n\r\n ga('create', 'UA-53121677-1', 'auto');\r\n ga('send', 'pageview', {\r\
+        \n  'page': '/eventsmenu.cfm',\r\n  'title': 'eventsmenu.cfm'\r\n});\r\n\r\
+        \n</script>\r\n\r\n<title>Club Info</title>\r\n</head>\r\n<body>\r\n  <div\
+        \ id=\"container\"   >\r\n     \r\n\t\r\n\r\n\r\n     <div id=\"header\" >\r\
+        \n          <span id=\"contactsLogin\"><a href=\"contacts.cfm\">contacts</a>&nbsp;|&nbsp;<a\
+        \ href=\"loginform.cfm\">login</a></span>\r\n          <img style=\"margin-top:15px;\"\
+        src=\"ASSETS/Images/logo_text.png\"  />     \r\n      </div><!-- end header\
+        \ -->\r\n      \r\n      <div id=\"main\">\r\n         <div id=\"nav\">\r\n\
+        \          \r\n             <ul id=\"awesome-menu\">\r\n                <li><a\
+        \ href=\"index.cfm\" class=\"home\"   >Home</a></li>\r\n                <li><a\
+        \ href=\"aboutus.cfm\" class=\"clubinfo\"  >Club Info</a></li>\r\n       \
+        \         <li><a href=\"eventsmenu.cfm\" class=\"raceroster\"  style=\"background-position:\
+        \ -204px -31px;\">Race Roster</a></li>\r\n                <li><a href=\"results.cfm\"\
+        \ class=\"results\"  >Race Results</a></li>\r\n                <li><a href=\"\
+        news.cfm\" class=\"news\"  >News</a></li>\r\n                <li><a href=\"\
+        racerules.cfm\" class=\"rules\"  >Rules</a></li>\r\n                <li><a\
+        \ href=\"newmembers.cfm\" class=\"newmembers\"  >New Members</a></li>\r\n\
+        \                <li><a href=\"sponsors.cfm\" class=\"sponsors\"  >Sponsors</a></li>\r\
+        \n                <li><a href=\"http://www.youtube.com/user/waratahmasters\"\
+        \ target=\"_blank\" class=\"youtube\"  >YouTube</a></li>\r\n             \
+        \ <li><a href=\"http://www.facebook.com/waratahmasters\" target=\"_blank\"\
+        \ class=\"facebook\"  >Facebook</a></li>\r\n            </ul>\r\n        \
+        \    <br /><br />\r\n   \r\n         </div><!-- end nav --> \r\n         \r\
+        \n\r\n\r\n<ul id=\"secondaryMenu\">\r\n\r\n      <li id=\"li_firstItem\" \
+        \ ><a href=\"/eventsmenu.cfm?page=raceroster\" class=\"selected\" >Race Schedule\
+        \ & Roster </a></li>\r\n      <li id=\"li_secondItem\" ><a href=\"/eventsmenu.cfm?page=wherewerace\"\
+        \  >Where We Race </a></li>\r\n                 \r\n    \r\n</ul>  \r\n\r\n\
+        \      <br />\r\n     \r\n     \r\n       <div id=\"primaryContentWide\">\r\
+        \n      \r\n    <div id=\"raceroster\">\r\n              \r\n            \
+        \   <div id=\"raceroster_head\">\r\n                   <span id=\"showRosterDuties\"\
+        \ class=\"thirtypercent\">\r\n                      <p><strong>Show Roster\
+        \ Duties</strong><br /> \r\n                         \r\n                \
+        \       <form name=\"fmShowDuties\" action=\"/eventsmenu.cfm\" method=\"post\"\
+        \ >\r\n                       <input type=\"hidden\" name=\"view\" value=\"\
+        showDuties\"  />\r\n                        \r\n                       <select\
+        \ name=\"rosteredUser\" id=\"rosteredUser\" onchange=\"this.form.submit();\"\
+        >\r\n                       <option   value=\"\">Choose Name</option>\r\n\
+        \                      \r\n                      <option   value=\"100832\"\
+        \  >Adams, Stephen</option>\r\n                      \r\n                \
+        \      <option   value=\"1112\"  >Bailey, Paul</option>\r\n              \
+        \        \r\n                      <option   value=\"102158\"  >Baird, Ian</option>\r\
+        \n                      \r\n                      <option   value=\"1113\"\
+        \  >Baldwin, Philip</option>\r\n                      \r\n               \
+        \       <option   value=\"1114\"  >Ballantine, David</option>\r\n        \
+        \              \r\n                      <option   value=\"100484\"  >Barnes,\
+        \ Rodney</option>\r\n                      \r\n                      <option\
+        \   value=\"100318\"  >Bernard, Daniel</option>\r\n                      \r\
+        \n                      <option   value=\"100679\"  >Blomfield-Brown, Chris</option>\r\
+        \n                      \r\n                      <option   value=\"100876\"\
+        \  >Blomfield-Brown, Geraldine</option>\r\n                      \r\n    \
+        \                  <option   value=\"102109\"  >Bolger, Rob</option>\r\n \
+        \                     \r\n                      <option   value=\"1764\" \
+        \ >Bolzan, David</option>\r\n                      \r\n                  \
+        \    <option   value=\"100974\"  >Boroczky, Leslie</option>\r\n          \
+        \            \r\n                      <option   value=\"1518\"  >Bourne,\
+        \ Roger</option>\r\n                      \r\n                      <option\
+        \   value=\"102434\"  >Boyd, Ben</option>\r\n                      \r\n  \
+        \                    <option   value=\"1123\"  >Bradshaw, Gordon</option>\r\
+        \n                      \r\n                      <option   value=\"101121\"\
+        \  >Broughton, John</option>\r\n                      \r\n               \
+        \       <option   value=\"102198\"  >Broughton, Tony</option>\r\n        \
+        \              \r\n                      <option   value=\"2187\"  >Bull,\
+        \ Les</option>\r\n                      \r\n                      <option\
+        \   value=\"1125\"  >Bush, Ray</option>\r\n                      \r\n    \
+        \                  <option   value=\"101936\"  >Cameron, Joanne</option>\r\
+        \n                      \r\n                      <option   value=\"1002\"\
+        \  >Candido, Gil</option>\r\n                      \r\n                  \
+        \    <option   value=\"100520\"  >Carruthers, Andrew</option>\r\n        \
+        \              \r\n                      <option   value=\"100894\"  >Cassidy,\
+        \ Steve</option>\r\n                      \r\n                      <option\
+        \   value=\"100875\"  >Cassidy, Gary R</option>\r\n                      \r\
+        \n                      <option   value=\"102384\"  >Cayabyab, Oscar</option>\r\
+        \n                      \r\n                      <option   value=\"101824\"\
+        \  >Chee, David</option>\r\n                      \r\n                   \
+        \   <option   value=\"1237\"  >Cole, Christopher</option>\r\n            \
+        \          \r\n                      <option   value=\"1130\"  >Conaty, Gary</option>\r\
+        \n                      \r\n                      <option   value=\"102159\"\
+        \  >Cox, Kenneth</option>\r\n                      \r\n                  \
+        \    <option   value=\"101140\"  >Crozier, John</option>\r\n             \
+        \         \r\n                      <option   value=\"1132\"  >Dabrowski,\
+        \ Ludwik</option>\r\n                      \r\n                      <option\
+        \   value=\"102018\"  >Douce, Brett</option>\r\n                      \r\n\
+        \                      <option   value=\"100214\"  >Downes, Mark</option>\r\
+        \n                      \r\n                      <option   value=\"1136\"\
+        \  >Drury, Rob</option>\r\n                      \r\n                    \
+        \  <option   value=\"1005\"  >Dyer, Fred</option>\r\n                    \
+        \  \r\n                      <option   value=\"1467\"  >Fisher, Greg</option>\r\
+        \n                      \r\n                      <option   value=\"102308\"\
+        \  >Flory, George</option>\r\n                      \r\n                 \
+        \     <option   value=\"100661\"  >Fowler, Chris</option>\r\n            \
+        \          \r\n                      <option   value=\"1144\"  >Freshwater,\
+        \ Terry</option>\r\n                      \r\n                      <option\
+        \   value=\"1018\"  >Garrett, John</option>\r\n                      \r\n\
+        \                      <option   value=\"1019\"  >Gatt, Joe</option>\r\n \
+        \                     \r\n                      <option   value=\"1035\" \
+        \ >Gilbert, Alan</option>\r\n                      \r\n                  \
+        \    <option   value=\"101654\"  >Gilkes, Alan</option>\r\n              \
+        \        \r\n                      <option   value=\"100960\"  >Goodair, Glenn</option>\r\
+        \n                      \r\n                      <option   value=\"1038\"\
+        \  >Gray, James</option>\r\n                      \r\n                   \
+        \   <option   value=\"2031\"  >Greenwood, Ian</option>\r\n               \
+        \       \r\n                      <option   value=\"101189\"  >Grogan, Terry</option>\r\
+        \n                      \r\n                      <option   value=\"102388\"\
+        \  >Haas, Damian</option>\r\n                      \r\n                  \
+        \    <option   value=\"101353\"  >Haskis, John</option>\r\n              \
+        \        \r\n                      <option   value=\"100313\"  >Hayes, Clifford</option>\r\
+        \n                      \r\n                      <option   value=\"1416\"\
+        \  >Heath, Ron</option>\r\n                      \r\n                    \
+        \  <option   value=\"101594\"  >Hemmings, Shelley</option>\r\n           \
+        \           \r\n                      <option   value=\"1043\"  >Henwood,\
+        \ Murray</option>\r\n                      \r\n                      <option\
+        \   value=\"102160\"  >Hind, Mark</option>\r\n                      \r\n \
+        \                     <option   value=\"1050\"  >Hutchings, Peter</option>\r\
+        \n                      \r\n                      <option   value=\"1150\"\
+        \  >Jackson, Ian</option>\r\n                      \r\n                  \
+        \    <option   value=\"102295\"  >James, Greg</option>\r\n               \
+        \       \r\n                      <option   value=\"1023\"  >Jones, Graham</option>\r\
+        \n                      \r\n                      <option   value=\"100227\"\
+        \  >Jorgensen, Ian</option>\r\n                      \r\n                \
+        \      <option   value=\"100614\"  >King, Paul</option>\r\n              \
+        \        \r\n                      <option   value=\"101249\"  >Kleiner, Gary</option>\r\
+        \n                      \r\n                      <option   value=\"102382\"\
+        \  >Lam, Johnny</option>\r\n                      \r\n                   \
+        \   <option   value=\"1032\"  >Lazich, Alec</option>\r\n                 \
+        \     \r\n                      <option   value=\"101963\"  >Leslie, David</option>\r\
+        \n                      \r\n                      <option   value=\"1067\"\
+        \  >Lollato, Luigi</option>\r\n                      \r\n                \
+        \      <option   value=\"100009\"  >Lowes, Jeremy</option>\r\n           \
+        \           \r\n                      <option   value=\"100863\"  >Lywood,\
+        \ Barry</option>\r\n                      \r\n                      <option\
+        \   value=\"1020\"  >Mangioni, Peter</option>\r\n                      \r\n\
+        \                      <option   value=\"101178\"  >Marinello, Michael</option>\r\
+        \n                      \r\n                      <option   value=\"102125\"\
+        \  >Mastrobattista, John</option>\r\n                      \r\n          \
+        \            <option   value=\"102078\"  >McDonald, Anthony</option>\r\n \
+        \                     \r\n                      <option   value=\"101726\"\
+        \  >McGregor, Granger</option>\r\n                      \r\n             \
+        \         <option   value=\"100517\"  >McGuigan, Chris</option>\r\n      \
+        \                \r\n                      <option   value=\"100713\"  >McMurtrie,\
+        \ Brett</option>\r\n                      \r\n                      <option\
+        \   value=\"102201\"  >Miller, Sean</option>\r\n                      \r\n\
+        \                      <option   value=\"101782\"  >Miller, Anthony</option>\r\
+        \n                      \r\n                      <option   value=\"1228\"\
+        \  >Moir, Jack</option>\r\n                      \r\n                    \
+        \  <option   value=\"100224\"  >Morelli, Adriano</option>\r\n            \
+        \          \r\n                      <option   value=\"102138\"  >Mort, Duncan</option>\r\
+        \n                      \r\n                      <option   value=\"1516\"\
+        \  >Moy, Trent</option>\r\n                      \r\n                    \
+        \  <option   value=\"1086\"  >Murray, Tim</option>\r\n                   \
+        \   \r\n                      <option   value=\"101870\"  >Music, Dragan</option>\r\
+        \n                      \r\n                      <option   value=\"101788\"\
+        \  >New, Andrew</option>\r\n                      \r\n                   \
+        \   <option   value=\"100320\"  >Nielsen, Brian</option>\r\n             \
+        \         \r\n                      <option   value=\"100914\"  >Norton, Trevor</option>\r\
+        \n                      \r\n                      <option   value=\"1090\"\
+        \  >Nyland, Graeme</option>\r\n                      \r\n                \
+        \      <option   value=\"1160\"  >Owen, Gary</option>\r\n                \
+        \      \r\n                      <option   value=\"101076\"  >Parle, Phillip\
+        \ J</option>\r\n                      \r\n                      <option  \
+        \ value=\"101739\"  >Pearson, David</option>\r\n                      \r\n\
+        \                      <option   value=\"101015\"  >Pellizzeri, Joe</option>\r\
+        \n                      \r\n                      <option   value=\"1094\"\
+        \  >Perram, Terry</option>\r\n                      \r\n                 \
+        \     <option   value=\"1097\"  >Picello, Alf</option>\r\n               \
+        \       \r\n                      <option   value=\"102423\"  >Pichler, Franz</option>\r\
+        \n                      \r\n                      <option   value=\"1162\"\
+        \  >Pike, Ian</option>\r\n                      \r\n                     \
+        \ <option   value=\"1098\"  >Piper, Robert</option>\r\n                  \
+        \    \r\n                      <option   value=\"1100\"  >Price, Stephen</option>\r\
+        \n                      \r\n                      <option   value=\"1101\"\
+        \  >Pugh, Michael</option>\r\n                      \r\n                 \
+        \     <option   value=\"1029\"  >Regattieri, Paul</option>\r\n           \
+        \           \r\n                      <option   value=\"1104\"  >Rennie, Gregor</option>\r\
+        \n                      \r\n                      <option   value=\"100286\"\
+        \  >Richardson, Steven</option>\r\n                      \r\n            \
+        \          <option   value=\"100816\"  >Rourke, Harry</option>\r\n       \
+        \               \r\n                      <option   value=\"1167\"  >Rule,\
+        \ Tony</option>\r\n                      \r\n                      <option\
+        \   value=\"101152\"  >Ryder, Christopher</option>\r\n                   \
+        \   \r\n                      <option   value=\"101546\"  >Sainsbury, Aaron</option>\r\
+        \n                      \r\n                      <option   value=\"1259\"\
+        \  >Scott-Logan, Malcolm</option>\r\n                      \r\n          \
+        \            <option   value=\"2197\"  >Scragg, Greg</option>\r\n        \
+        \              \r\n                      <option   value=\"101416\"  >Shelley,\
+        \ Graeme</option>\r\n                      \r\n                      <option\
+        \   value=\"1657\"  >Simmons, Annie</option>\r\n                      \r\n\
+        \                      <option   value=\"100885\"  >Smith, Lisa May</option>\r\
+        \n                      \r\n                      <option   value=\"100997\"\
+        \  >Somerfield, Matt</option>\r\n                      \r\n              \
+        \        <option   value=\"1028\"  >South, David</option>\r\n            \
+        \          \r\n                      <option   value=\"1183\"  >Staley, Timothy</option>\r\
+        \n                      \r\n                      <option   value=\"1185\"\
+        \  >Stubbs, Kevin</option>\r\n                      \r\n                 \
+        \     <option   value=\"100458\"  >Sullivan, Denis</option>\r\n          \
+        \            \r\n                      <option   value=\"100716\"  >Thompson,\
+        \ William</option>\r\n                      \r\n                      <option\
+        \   value=\"2210\"  >Tillett, John</option>\r\n                      \r\n\
+        \                      <option   value=\"1031\"  >Tonkin, Max</option>\r\n\
+        \                      \r\n                      <option   value=\"102019\"\
+        \  >Trovato, Robert</option>\r\n                      \r\n               \
+        \       <option   value=\"1190\"  >Tunnicliff, Paul</option>\r\n         \
+        \             \r\n                      <option   value=\"102169\"  >Valois,\
+        \ Nigel</option>\r\n                      \r\n                      <option\
+        \   value=\"1025\"  >Vertsonis, Harry</option>\r\n                      \r\
+        \n                      <option   value=\"101976\"  >Watson, Richard</option>\r\
+        \n                      \r\n                      <option   value=\"100717\"\
+        \  >Werry, Lorraine</option>\r\n                      \r\n               \
+        \       <option   value=\"101557\"  >Wiersma, Derek</option>\r\n         \
+        \             \r\n                      <option   value=\"100862\"  >Willis,\
+        \ Bob</option>\r\n                      \r\n                      <option\
+        \   value=\"1003\"  >Wilson, Michael</option>\r\n                      \r\n\
+        \                      <option   value=\"100899\"  >Wong, Geoffrey</option>\r\
+        \n                      \r\n                      <option   value=\"1201\"\
+        \  >Wood, Brian</option>\r\n                      \r\n                   \
+        \   <option   value=\"1006\"  >Yuen, Jack</option>\r\n                   \
+        \   \r\n                       </select>\r\n                       </form></p>\
+        \                  \r\n                  </span><!-- end nextRaceHeader -->\r\
+        \n<span id=\"introTextLeft\" >\r\n                  <h2> Race Schedule &amp;\
+        \ Roster</h2>\r\n                   Please check for last-minute race changes\
+        \ on <a href=\"http://twitter.com/waratahmasters\" target=\"_blank\">Twitter\
+        \ Race Info</a> or the hotline <strong>1902 261 007</strong><br />\r\n   \
+        \                   OFFICIALS: Please arrange your own swaps and notify the\
+        \ Race Manager of any changes by <a href=\"mailto:value1st@bigpond.net.au\"\
+        \ >email</a><br />\r\n               </span>\r\n                      \r\n\
+        \     </div><!--raceroster_head--> \r\n                  \r\n\r\n    \r\n\t\
+        \t\t\t\t\t\t\t\t\r\n      <table width=\"100%\" class=\"raceroster_table\"\
+        \ >\r\n         <tr  >\r\n             <th width=\"15%\" style=\"width:15%;\"\
+        \  >Date</th>\r\n             <th width=\"20%\" style=\"width:20%;\">Event\
+        \ Name / Format</th>\r\n             <th width=\"25%\" style=\"width:25%;\"\
+        >Location</th>\r\n             <th width=\"30%\" style=\"width:30%;\" >Officials\
+        \ <span style=\"float:right;padding-right:15px;font-style:italic;\"><italic>contact</italic></span></th>\r\
+        \n         </tr>\r\n       \r\n         <tr  >\r\n             <td  >11 Jan\
+        \ 2015<br />\r\n               7:00am all grades\r\n             </td>\r\n\
+        \             <td><strong>Graded Scratch Race</strong><br /><span class=\"\
+        italic\">201502</span> </td><td>SMSP Full GP Circuit, Eastern Creek</td>\r\
+        \n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph: 02 9871 8018 / 0414 814 830   Email: rbarnes@paksmart.com.au\"\
+        >Duty Officer: Rodney Barnes<br /></span> Helpers: Ludwik Dabrowski,Gary Conaty<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >18 Jan 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201503</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030\
+        \ 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Murray Henwood,Terry Grogan<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >25 Jan 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Aged\
+        \ Based Graded Scratch Race</strong><br /><span class=\"italic\">201504</span>\
+        \ </td><td>SMSP North Circuit, Eastern Creek</td>\r\n             <td ><span\
+        \ title=\"Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\"\
+        >Commissaire: Jack Yuen<br /></span> <span title=\"Ph: 02 9874 2382 / 0412\
+        \ 097 042   Email: tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br /></span>\
+        \ Helpers: Mark Downes,Steven Richardson<br /></td>\r\n         </tr>\r\n\
+        \      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr \
+        \ >\r\n             <td  >26 Jan 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race (Monday)</strong><br\
+        \ /><span class=\"italic\">201505</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 9997 2280 / 0425 252\
+        \ 012   Email: joan.lazich@gmail.com\">Commissaire: Alec Lazich<br /></span>\
+        \ <span title=\"Ph: 02 9428 1248 / 0418 476 344   Email: tim@smurray.com.au\"\
+        >Duty Officer: Tim Murray<br /></span> Helpers: Barry Lywood,Glenn Goodair<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Feb 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201506</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: Harry\
+        \ Vertsonis<br /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877   Email:\
+        \ gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br /></span> Helpers:\
+        \ John Crozier,Christopher Ryder<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >8 Feb 2015<br />\r\n               E/F-7.30am B/D-8.15am\
+        \ A/C-9.15am\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201507</span> </td><td>Heffron Park</td>\r\n  \
+        \           <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 0419 004 580\
+        \ / 02 9799 9257   Email: paulregattieri@internode.on.net\">Duty Officer:\
+        \ Paul Regattieri<br /></span> Helpers: John Haskis,Alan Gilkes<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >14 Feb 2015<br />\r\n       \
+        \        9.00am-2.00pm\r\n             </td>\r\n             <td><strong>Waratah\
+        \ Masters Track Championships</strong><br /><span class=\"italic\">201508</span>\
+        \ </td><td>Dunc Gray Velodrome</td>\r\n             <td ><span title=\"Ph:\
+        \ 0407 922 937   Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: <br /></span> Helpers: <br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >15 Feb 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201509</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 0438 167 889   Email:\
+        \ mwilson@exemail.com.au\">Commissaire: Michael Wilson<br /></span> <span\
+        \ title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Graeme Shelley,Derek Wiersma<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >22 Feb 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201510</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph:  0412 949 885   Email:\
+        \ grahamjones@live.com\">Commissaire: Graham Jones<br /></span> <span title=\"\
+        Ph: 0418 115 145 / 02 9363 0460   Email: stephen.price@corrs.com.au\">Duty\
+        \ Officer: Stephen Price<br /></span> Helpers: Shelley Hemmings,Andrew New<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Mar 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Erik\
+        \ Mather-Colnago Cup/Graded Scratch Race</strong><br /><span class=\"italic\"\
+        >201511</span> </td><td>SMSP Full GP Circuit, Eastern Creek</td>\r\n     \
+        \        <td ><span title=\"Ph: 02 9590 3892 / 0410 334 506   Email: vdsouth@optusnet.com.au\"\
+        >Commissaire: David South<br /></span> <span title=\"Ph: 02 9958 8302 / 0411\
+        \ 215 088   Email: cmcguig@bigpond.net.au\">Duty Officer: Chris McGuigan<br\
+        \ /></span> Helpers: John Garrett,David Chee,David Leslie<br /></td>\r\n \
+        \        </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\
+        \n         <tr  >\r\n             <td  >8 Mar 2015<br />\r\n             \
+        \  E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201512</span>\
+        \ </td><td>Heffron Park</td>\r\n             <td ><span title=\"Ph: 0450 167\
+        \ 188 / 02 8212 5480   Email: joanne.cameron@cycling.org.au\">Commissaire:\
+        \ Joanne Cameron<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Richard Watson,Robert\
+        \ Trovato<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >15 Mar\
+        \ 2015<br />\r\n               7.45am C/F-9am A/B\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201513</span> </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire:\
+        \ Jack Yuen<br /></span> <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\"\
+        >Duty Officer: John Broughton<br /></span> Helpers: John Mastrobattista,Ian\
+        \ Baird<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >22 Mar 2015<br />\r\
+        \n               7.45am C/F-9am A/B\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201514</span>\
+        \ </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"Ph: 02 8068\
+        \ 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br\
+        \ /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901   Email: g.cassidy@desert-oak.com.au\"\
+        >Duty Officer: Gary R Cassidy<br /></span> Helpers: Kenneth Cox,Mark Hind<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >29 Mar 2015<br />\r\n\
+        \               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201515</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830 \
+        \  Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Tony Broughton,Sean Miller<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >6 Apr 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race (Monday)</strong><br\
+        \ /><span class=\"italic\">201516</span> </td><td>SMSP Full GP Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: Harry\
+        \ Vertsonis<br /></span> <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email:\
+        \ value1st@bigpond.net.au\">Duty Officer: Denis Sullivan<br /></span> Helpers:\
+        \ Alan Gilbert,James Gray<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >12 Apr 2015<br />\r\n               7:00am all grades\r\n            \
+        \ </td>\r\n             <td><strong>Graded Scratch Race</strong><br /><span\
+        \ class=\"italic\">201517</span> </td><td>SMSP North Circuit, Eastern Creek</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 02 9874 2382\
+        \ / 0412 097 042   Email: tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br\
+        \ /></span> Helpers: Peter Hutchings,Robert Piper<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >19 Apr 2015<br />\r\n               7.45am C/F-9am\
+        \ A/B\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201518</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\"\
+        >Commissaire: Michael Wilson<br /></span> <span title=\"Ph: 02 9428 1248 /\
+        \ 0418 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span>\
+        \ Helpers: Michael Pugh,Gregor Rennie<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >26 Apr 2015<br />\r\n               E/F-7.30am B/D-8.15am\
+        \ A/C-9.15am\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201519</span> </td><td>Heffron Park</td>\r\n  \
+        \           <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 02 9799 8883 / 0400\
+        \ 828 877   Email: gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br\
+        \ /></span> Helpers: Ray Bush,Gary Owen<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >3 May 2015<br />\r\n               7.45am C/F-9am A/B\r\
+        \n             </td>\r\n             <td><strong>Criterium Race / Club TT\
+        \ Championships</strong><br /><span class=\"italic\">201520</span> </td><td>Lansdowne\
+        \ Park / Calga</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 /\
+        \ 0410 334 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Ian Pike,Tony Rule<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >10 May 2015<br />\r\n\
+        \               8.00am All Grades\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201521</span> </td><td>Dragway\
+        \ Short Course</td>\r\n             <td ><span title=\"Ph: 0407 922 937  \
+        \ Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br /></span>\
+        \ <span title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Kevin Stubbs,Ron Heath<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >17 May 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201522</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 8068 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire:\
+        \ Ian Jackson<br /></span> <span title=\"Ph: 0418 115 145 / 02 9363 0460 \
+        \  Email: stephen.price@corrs.com.au\">Duty Officer: Stephen Price<br /></span>\
+        \ Helpers: Jeremy Lowes,Adriano Morelli<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >24 May 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201523</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 02 9763 1944 / 0416 264 681   Email:\
+        \ jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br /></span> <span title=\"\
+        Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\">Duty Officer:\
+        \ Chris McGuigan<br /></span> Helpers: Ian Jorgensen,Clifford Hayes<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >31 May 2015<br />\r\n       \
+        \        7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201524</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Daniel Bernard,Brian\
+        \ Nielsen<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >7 Jun 2015<br\
+        \ />\r\n               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\
+        \n             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201525</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9772 4647 / 0419 691 048 / B 02 8741 5200   Email: harryrta@hotmail.com\"\
+        >Commissaire: Harry Vertsonis<br /></span> <span title=\"Ph:  0416 217 272\
+        \   Email: jpb173@icloud.com\">Duty Officer: John Broughton<br /></span> Helpers:\
+        \ Fred Dyer,Andrew Carruthers<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >14 Jun 2015<br />\r\n               8.00am All Grades\r\n            \
+        \ </td>\r\n             <td><strong>Criterium Race</strong><br /><span class=\"\
+        italic\">201527</span> </td><td>Dragway Short Course</td>\r\n            \
+        \ <td ><span title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830\
+        \   Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Chris Fowler,Brett McMurtrie<br /></td>\r\n         </tr>\r\n \
+        \     <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >21 Jun 2015<br />\r\n               7.45am C/F-9am A/B\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201528</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 02 9896 0359 / 0417\
+        \ 265 200   Email: value1st@bigpond.net.au\">Duty Officer: Denis Sullivan<br\
+        \ /></span> Helpers: William Thompson,Lorraine Werry<br /></td>\r\n      \
+        \   </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n \
+        \        <tr  >\r\n             <td  >28 Jun 2015<br />\r\n              \
+        \ 7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201529</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 / 0410 334\
+        \ 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br /></span>\
+        \ <span title=\"Ph: 02 9874 2382 / 0412 097 042   Email: tonkin3@optusnet.com.au\"\
+        >Duty Officer: Max Tonkin<br /></span> Helpers: Harry Rourke,Stephen Adams<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >5 Jul 2015<br />\r\n\
+        \               E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201530</span> </td><td>Heffron Park</td>\r\n             <td ><span title=\"\
+        Ph: 0450 167 188 / 02 8212 5480   Email: joanne.cameron@cycling.org.au\">Commissaire:\
+        \ Joanne Cameron<br /></span> <span title=\"Ph: 02 9428 1248 / 0418 476 344\
+        \   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span> Helpers:\
+        \ Bob Willis,Geraldine Blomfield-Brown<br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >12 Jul 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201531</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030 855   Email:\
+        \ iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span> <span title=\"\
+        Ph: 02 9799 8883 / 0400 828 877   Email: gil@candidoassociates.com.au\">Duty\
+        \ Officer: Gil Candido<br /></span> Helpers: Lisa May Smith,Steve Cassidy<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >19 Jul 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201532</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9763 1944 / 0416 264\
+        \ 681   Email: jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br /></span>\
+        \ <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Geoffrey Wong,Trevor\
+        \ Norton<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >26 Jul 2015<br />\r\
+        \n               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201533</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982 \
+        \  Email: mangioni@iinet.net.au\">Duty Officer: Peter Mangioni<br /></span>\
+        \ Helpers: Leslie Boroczky,Matt Somerfield<br /></td>\r\n         </tr>\r\n\
+        \      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr \
+        \ >\r\n             <td  >2 Aug 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201534</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 0418 115 145\
+        \ / 02 9363 0460   Email: stephen.price@corrs.com.au\">Duty Officer: Stephen\
+        \ Price<br /></span> Helpers: Joe Pellizzeri,Phillip J Parle<br /></td>\r\n\
+        \         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n        \
+        \ \r\n         <tr  >\r\n             <td  >9 Aug 2015<br />\r\n         \
+        \      E/F-7.30am B/D-8.15am A/C-9.15am\r\n             </td>\r\n        \
+        \     <td><strong>Criterium Race</strong><br /><span class=\"italic\">201535</span>\
+        \ </td><td>Heffron Park</td>\r\n             <td ><span title=\"Ph:  0412\
+        \ 949 885   Email: grahamjones@live.com\">Commissaire: Graham Jones<br /></span>\
+        \ <span title=\"Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\"\
+        >Duty Officer: Chris McGuigan<br /></span> Helpers: Michael Marinello,Gary\
+        \ Kleiner<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >16 Aug\
+        \ 2015<br />\r\n               8.00am All Grades\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201536</span> </td><td>Dragway Short Course</td>\r\n             <td ><span\
+        \ title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Aaron Sainsbury,Granger\
+        \ McGregor<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >23 Aug\
+        \ 2015<br />\r\n               7.45am MAS1-5 Women<45/9am MAS6-11 Women>45\r\
+        \n             </td>\r\n             <td><strong>Club Road Championships/Criterium</strong><br\
+        \ /><span class=\"italic\">201537</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\">Duty Officer:\
+        \ John Broughton<br /></span> Helpers: David Pearson,Anthony Miller<br /></td>\r\
+        \n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n       \
+        \  \r\n         <tr  >\r\n             <td  >30 Aug 2015<br />\r\n       \
+        \        7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201538</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9590 3892 / 0410 334 506   Email: vdsouth@optusnet.com.au\">Commissaire:\
+        \ David South<br /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901 \
+        \  Email: g.cassidy@desert-oak.com.au\">Duty Officer: Gary R Cassidy<br /></span>\
+        \ Helpers: Dragan Music,Joe Gatt<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >6 Sep 2015<br />\r\n               7.45am C/F-9am A/B\r\n\
+        \             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201539</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 0450 167 188 / 02 8212 5480   Email:\
+        \ joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br /></span>\
+        \ <span title=\"Ph: 02 9871 8018 / 0414 814 830   Email: rbarnes@paksmart.com.au\"\
+        >Duty Officer: Rodney Barnes<br /></span> Helpers: Brett Douce,Anthony McDonald<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >13 Sep 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Ashfield\
+        \ Cycles/Specialized Southern Hemisphere Cup/Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201540</span> </td><td>SMSP Full GP Circuit, Eastern\
+        \ Creek</td>\r\n             <td ><span title=\"Ph: 02 8068 8280 / 0409 030\
+        \ 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Duncan Mort,Nigel Valois,Luigi\
+        \ Lollato<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >20 Sep\
+        \ 2015<br />\r\n               7.45am C/F-9am A/B\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201541</span> </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"\
+        Ph: 02 9763 1944 / 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire:\
+        \ Jack Yuen<br /></span> <span title=\"Ph: 02 9874 2382 / 0412 097 042   Email:\
+        \ tonkin3@optusnet.com.au\">Duty Officer: Max Tonkin<br /></span> Helpers:\
+        \ Rob Bolger,Graeme Nyland<br /></td>\r\n         </tr>\r\n      <tr class=\"\
+        whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td\
+        \  >27 Sep 2015<br />\r\n               7.45am C/F-9am A/B\r\n           \
+        \  </td>\r\n             <td><strong>Criterium Race</strong><br /><span class=\"\
+        italic\">201542</span> </td><td>Lansdowne Park</td>\r\n             <td ><span\
+        \ title=\"Ph: 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\"\
+        >Commissaire: Alec Lazich<br /></span> <span title=\"Ph: 02 9428 1248 / 0418\
+        \ 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br /></span>\
+        \ Helpers: Terry Perram,Alf Picello<br /></td>\r\n         </tr>\r\n     \
+        \ <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n\
+        \             <td  >4 Oct 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Aged Based Graded Scratch\
+        \ Race</strong><br /><span class=\"italic\">201543</span> </td><td>SMSP North\
+        \ Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph: 02 9772\
+        \ 4647 / 0419 691 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire:\
+        \ Harry Vertsonis<br /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877\
+        \   Email: gil@candidoassociates.com.au\">Duty Officer: Gil Candido<br /></span>\
+        \ Helpers: Paul Bailey,Philip Baldwin<br /></td>\r\n         </tr>\r\n   \
+        \   <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >5 Oct 2015<br />\r\n               7:00am all grades\r\
+        \n             </td>\r\n             <td><strong>Graded Scratch Race</strong><br\
+        \ /><span class=\"italic\">201544</span> </td><td>SMSP North Circuit, Eastern\
+        \ Creek (Monday)</td>\r\n             <td ><span title=\"Ph: 0407 922 937\
+        \   Email: freshwatert@ymail.com\">Commissaire: Terry Freshwater<br /></span>\
+        \ <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: David Ballantine,Gordon\
+        \ Bradshaw<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\"\
+        \ ></tr>\r\n\r\n         \r\n         <tr  >\r\n             <td  >11 Oct\
+        \ 2015<br />\r\n               8.00am All Grades\r\n             </td>\r\n\
+        \             <td><strong>Criterium Race</strong><br /><span class=\"italic\"\
+        >201545</span> </td><td>Dragway Short Course</td>\r\n             <td ><span\
+        \ title=\"Ph: 0438 167 889   Email: mwilson@exemail.com.au\">Commissaire:\
+        \ Michael Wilson<br /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982\
+        \   Email: mangioni@iinet.net.au\">Duty Officer: Peter Mangioni<br /></span>\
+        \ Helpers: Rob Drury,Johnny Lam<br /></td>\r\n         </tr>\r\n      <tr\
+        \ class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\n   \
+        \          <td  >18 Oct 2015<br />\r\n               7.45am C/F-9am A/B\r\n\
+        \             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201546</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph:  0412 949 885   Email: grahamjones@live.com\"\
+        >Commissaire: Graham Jones<br /></span> <span title=\"Ph: 0418 115 145 / 02\
+        \ 9363 0460   Email: stephen.price@corrs.com.au\">Duty Officer: Stephen Price<br\
+        \ /></span> Helpers: Timothy Staley,Paul Tunnicliff<br /></td>\r\n       \
+        \  </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n  \
+        \       <tr  >\r\n             <td  >25 Oct 2015<br />\r\n               7.45am\
+        \ C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201547</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 02 9590 3892 / 0410 334\
+        \ 506   Email: vdsouth@optusnet.com.au\">Commissaire: David South<br /></span>\
+        \ <span title=\"Ph: 02 9958 8302 / 0411 215 088   Email: cmcguig@bigpond.net.au\"\
+        >Duty Officer: Chris McGuigan<br /></span> Helpers: Brian Wood,Jack Moir<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >1 Nov 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201548</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 0450 167 188 / 02 8212\
+        \ 5480   Email: joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br\
+        \ /></span> <span title=\"Ph: 0405 489 113   Email: blomfieldbrown@hotmail.com\"\
+        >Duty Officer: Chris Blomfield-Brown<br /></span> Helpers: Greg Fisher,George\
+        \ Flory<br /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\
+        \n\r\n         \r\n         <tr  >\r\n             <td  >8 Nov 2015<br />\r\
+        \n               7.45am C/F-9am A/B\r\n             </td>\r\n            \
+        \ <td><strong>Criterium Race</strong><br /><span class=\"italic\">201549</span>\
+        \ </td><td>Lansdowne Park</td>\r\n             <td ><span title=\"Ph: 02 8068\
+        \ 8280 / 0409 030 855   Email: iejackson29@gmail.com\">Commissaire: Ian Jackson<br\
+        \ /></span> <span title=\"Ph:  0416 217 272   Email: jpb173@icloud.com\">Duty\
+        \ Officer: John Broughton<br /></span> Helpers: Trent Moy,Oscar Cayabyab<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >15 Nov 2015<br />\r\n\
+        \               8.00am All Grades\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201550</span> </td><td>Dragway\
+        \ Short Course</td>\r\n             <td ><span title=\"Ph: 02 9763 1944 /\
+        \ 0416 264 681   Email: jackyuen@optusnet.com.au\">Commissaire: Jack Yuen<br\
+        \ /></span> <span title=\"Ph: 0419 257 913 / 02 9969 4901   Email: g.cassidy@desert-oak.com.au\"\
+        >Duty Officer: Gary R Cassidy<br /></span> Helpers: David Bolzan,Damian Haas<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >22 Nov 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201551</span> </td><td>SMSP\
+        \ North Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph:\
+        \ 02 9997 2280 / 0425 252 012   Email: joan.lazich@gmail.com\">Commissaire:\
+        \ Alec Lazich<br /></span> <span title=\"Ph: 02 9871 8018 / 0414 814 830 \
+        \  Email: rbarnes@paksmart.com.au\">Duty Officer: Rodney Barnes<br /></span>\
+        \ Helpers: Malcolm Scott-Logan,Franz Pichler<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >29 Nov 2015<br />\r\n               7.45am C/F-9am\
+        \ A/B\r\n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201552</span> </td><td>Lansdowne Park</td>\r\n\
+        \             <td ><span title=\"Ph: 02 9772 4647 / 0419 691 048 / B 02 8741\
+        \ 5200   Email: harryrta@hotmail.com\">Commissaire: Harry Vertsonis<br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: Denis Sullivan<br /></span> Helpers: Ian Greenwood,Les Bull<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >4 Dec 2015<br />\r\n\
+        \               1830 for 1900 Sit down dinner\r\n             </td>\r\n  \
+        \           <td><strong>Waratah Masters Christmas Party</strong><br /><span\
+        \ class=\"italic\">0</span> </td><td>Ryde-Eastwood Leagues Club Ryedale/Denistone\
+        \ rooms</td>\r\n             <td ><span title=\"Ph: 02 9772 4647 / 0419 691\
+        \ 048 / B 02 8741 5200   Email: harryrta@hotmail.com\">Commissaire: <br /></span>\
+        \ <span title=\"Ph: 02 9896 0359 / 0417 265 200   Email: value1st@bigpond.net.au\"\
+        >Duty Officer: <br /></span> Helpers: <br /></td>\r\n         </tr>\r\n  \
+        \    <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr  >\r\
+        \n             <td  >6 Dec 2015<br />\r\n               8.00am All Grades\r\
+        \n             </td>\r\n             <td><strong>Criterium Race</strong><br\
+        \ /><span class=\"italic\">201553</span> </td><td>Dragway Short Course</td>\r\
+        \n             <td ><span title=\"Ph: 0407 922 937   Email: freshwatert@ymail.com\"\
+        >Commissaire: Terry Freshwater<br /></span> <span title=\"Ph: 02 9428 1248\
+        \ / 0418 476 344   Email: tim@smurray.com.au\">Duty Officer: Tim Murray<br\
+        \ /></span> Helpers: Greg Scragg,John Tillett<br /></td>\r\n         </tr>\r\
+        \n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\n         \r\n         <tr\
+        \  >\r\n             <td  >13 Dec 2015<br />\r\n               7:00am all\
+        \ grades\r\n             </td>\r\n             <td><strong>Graded Scratch\
+        \ Race</strong><br /><span class=\"italic\">201554</span> </td><td>SMSP North\
+        \ Circuit, Eastern Creek</td>\r\n             <td ><span title=\"Ph: 0438\
+        \ 167 889   Email: mwilson@exemail.com.au\">Commissaire: Michael Wilson<br\
+        \ /></span> <span title=\"Ph: 02 9799 8883 / 0400 828 877   Email: gil@candidoassociates.com.au\"\
+        >Duty Officer: Gil Candido<br /></span> Helpers: Paul King,Christopher Cole<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >20 Dec 2015<br />\r\n\
+        \               7:00am all grades\r\n             </td>\r\n             <td><strong>Graded\
+        \ Scratch Race</strong><br /><span class=\"italic\">201555</span> </td><td>SMSP\
+        \ Full GP Circuit, Eastern Creek</td>\r\n             <td ><span title=\"\
+        Ph:  0412 949 885   Email: grahamjones@live.com\">Commissaire: Graham Jones<br\
+        \ /></span> <span title=\"Ph: 0419 004 580 / 02 9799 9257   Email: paulregattieri@internode.on.net\"\
+        >Duty Officer: Paul Regattieri<br /></span> Helpers: Greg James,Roger Bourne<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n         <tr  >\r\n             <td  >27 Dec 2015<br />\r\n\
+        \               7.45am C/F-9am A/B\r\n             </td>\r\n             <td><strong>Criterium\
+        \ Race</strong><br /><span class=\"italic\">201556</span> </td><td>Lansdowne\
+        \ Park</td>\r\n             <td ><span title=\"Ph: 0450 167 188 / 02 8212\
+        \ 5480   Email: joanne.cameron@cycling.org.au\">Commissaire: Joanne Cameron<br\
+        \ /></span> <span title=\"Ph: 02 9745 2548 / 0402 110 982   Email: mangioni@iinet.net.au\"\
+        >Duty Officer: Peter Mangioni<br /></span> Helpers: Ben Boyd,Annie Simmons<br\
+        \ /></td>\r\n         </tr>\r\n      <tr class=\"whiteSpacer\" ></tr>\r\n\r\
+        \n         \r\n               \r\n    </table>\r\n           <br />      \
+        \   \r\n        For past events, please see the <a  id=\"raceLink\" href=\"\
+        results.cfm?page=searchresults\">Race Results ></a> <span class=\"copyrightRight\"\
+        >&copy; 2011 Waratah Masters Cycling Club &nbsp;&nbsp;<span class=\"studioLink\"\
+        >&nbsp;&nbsp;Design <a href=\"http://www.signale.com\" target=\"_blank\">&nbsp;Signale</a></span></span>\r\
+        \n              \r\n    </div><!-- end raceroster -->\r\n       \r\n     \
+        \ </div><!-- end primaryContent -->\r\n\r\n          \r\n      </div><!--\
+        \ end main  -->\r\n      <br style=\"clear:both\" /> \r\n      <div id=\"\
+        footer\">\r\n      <br />\r\n      <br />\r\n      </div>\r\n\t</div><!--\
+        \ end container -->\r\n\r\n\r\n</body>\r\n</html>\r\n"}
+    headers:
+      connection: [close]
+      content-type: [text/html; charset=UTF-8]
+      date: ['Sat, 10 Jan 2015 10:01:37 GMT']
+      expires: ['Sat, 10 Jan 2015 10:01:37 GMT']
+      server: [Microsoft-IIS/6.0]
+      set-cookie: ['CFID=77489536;expires=Mon, 02-Jan-2045 10:01:37 GMT;path=/', 'CFTOKEN=cd1c24f1fca7b8eb-4071EE3F-5056-A32D-ADFF126AA9FFCFD8;expires=Mon,
+          02-Jan-2045 10:01:37 GMT;path=/', JSESSIONID=8430e74b875bf2086e2b69142624363a141a;path=/,
+        'CFGLOBALS=urltoken%3DCFID%23%3D77489536%26CFTOKEN%23%3Dcd1c24f1fca7b8eb%2D4071EE3F%2D5056%2DA32D%2DADFF126AA9FFCFD8%26jsessionid%23%3D8430e74b875bf2086e2b69142624363a141a%23lastvisit%3D%7Bts%20%272015%2D01%2D10%2004%3A01%3A37%27%7D%23timecreated%3D%7Bts%20%272015%2D01%2D10%2004%3A01%3A37%27%7D%23hitcount%3D2%23cftoken%3Dcd1c24f1fca7b8eb%2D4071EE3F%2D5056%2DA32D%2DADFF126AA9FFCFD8%23cfid%3D77489536%23;expires=Mon,
+          02-Jan-2045 10:01:37 GMT;path=/']
+      x-powered-by: [ASP.NET]
+    status: {code: 200, message: OK}
+version: 1

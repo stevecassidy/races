@@ -23,10 +23,6 @@ class ModelTests(TestCase):
 		# this triggers ingest_by_module which fails because there is no module
 		self.assertEqual(club.ingest(), ([], 'No ingest module for club "test"'))
 		
-		# set the icalurl to an invalid url
-		club.icalurl = "http://example.com/"
-		self.assertEqual(club.ingest(), ([], 'Error reading icalendar file'))
-		
 		
 	def test_race(self):
 		"""Test creation of race and some methods"""

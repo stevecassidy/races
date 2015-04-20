@@ -1,0 +1,156 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [northernsydneycyclingclub.org.au]
+      User-Agent: ['cabici/1.0 event harvester http://cabici.net/']
+    method: GET
+    uri: http://northernsydneycyclingclub.org.au/calendar/ical
+  response:
+    body: {string: "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:\
+        \ Calendar | NSCC\r\nPRODID:-//Drupal iCal API//EN\r\nBEGIN:VEVENT\r\nUID:calendar.50409.field_when.0.0\r\
+        \nSUMMARY:Church Ride\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150411T203000Z\r\
+        \nDTEND:20150411T203000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50409\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50607.field_when.0.1\r\nSUMMARY:MWCC\
+        \ West Head Road Race\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150411T212000Z\r\
+        \nDTEND:20150411T212000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50607\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50252.field_when.0.2\r\nSUMMARY:Blayney\
+        \ to Bathurst\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150411T223000Z\r\n\
+        DTEND:20150411T223000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50252\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50226.field_when.0.3\r\nSUMMARY:Brooklyn\
+        \ Dash to Pizza\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150414T080000Z\r\n\
+        DTEND:20150414T080000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50226\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50262.field_when.0.4\r\nSUMMARY:El\
+        \ Presidente\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150417T201000Z\r\nDTEND:20150417T201000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50262\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50204.field_when.0.5\r\nSUMMARY:Le R\xEAve\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150417T202000Z\r\nDTEND:20150417T202000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50204\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50317.field_when.0.6\r\nSUMMARY:Guns & Roses\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150417T203000Z\r\nDTEND:20150417T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50317\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50410.field_when.0.7\r\nSUMMARY:Church Ride\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150418T203000Z\r\nDTEND:20150418T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50410\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50337.field_when.0.8\r\nSUMMARY:Beauie Worlds\
+        \ Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150418T221500Z\r\nDTEND:20150418T221500Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50337\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50479.field_when.0.9\r\nSUMMARY:Brooklyn Dash\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150421T080000Z\r\nDTEND:20150421T080000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50479\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50263.field_when.0.10\r\nSUMMARY:El Presidente\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150424T201000Z\r\nDTEND:20150424T201000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50263\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50205.field_when.0.11\r\nSUMMARY:Le R\xEAve\
+        \ (with optional Akuna Loop)\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150424T202000Z\r\
+        \nDTEND:20150424T202000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50205\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50318.field_when.0.12\r\nSUMMARY:Guns\
+        \ & Roses\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150424T203000Z\r\nDTEND:20150424T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50318\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50467.field_when.0.13\r\nSUMMARY:Somersby Loop(Handicap\
+        \ Training for Coota)\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150425T203000Z\r\
+        \nDTEND:20150425T203000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50467\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50483.field_when.0.14\r\nSUMMARY:Church\
+        \ Ride\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150425T203000Z\r\nDTEND:20150425T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50483\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49357.field_when.0.15\r\nSUMMARY:Waratah Masters\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150425T221500Z\r\nDTEND:20150425T221500Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49357\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50480.field_when.0.16\r\nSUMMARY:Brooklyn Dash\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150428T080000Z\r\nDTEND:20150428T080000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50480\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50493.field_when.0.17\r\nSUMMARY:Le R\xEAve\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150501T202000Z\r\nDTEND:20150501T202000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50493\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50484.field_when.0.18\r\nSUMMARY:Church Ride\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150502T203000Z\r\nDTEND:20150502T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50484\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49359.field_when.0.19\r\nSUMMARY:ATTA Calga\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150502T210000Z\r\nDTEND:20150502T210000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49359\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49358.field_when.0.20\r\nSUMMARY:Beauie Worlds\
+        \ Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150502T221500Z\r\nDTEND:20150502T221500Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49358\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50481.field_when.0.21\r\nSUMMARY:Brooklyn Dash\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150505T080000Z\r\nDTEND:20150505T080000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50481\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50494.field_when.0.22\r\nSUMMARY:Le R\xEAve\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150508T202000Z\r\nDTEND:20150508T202000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50494\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49375.field_when.0.23\r\nSUMMARY:Cootamundra\
+        \ Haycarters Handicap - Cycling NSW State Handicap\r\nDTSTAMP:20150419T145752Z\r\
+        \nDTSTART:20150509T033000Z\r\nDTEND:20150509T033000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49375\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50485.field_when.0.24\r\nSUMMARY:Church\
+        \ Ride\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150509T203000Z\r\nDTEND:20150509T203000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50485\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49376.field_when.0.25\r\nSUMMARY:Cootamundra\
+        \ Haycarters Recovery Handicap - Cycling NSW State Handicap\r\nDTSTAMP:20150419T145752Z\r\
+        \nDTSTART:20150510T000000Z\r\nDTEND:20150510T000000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49376\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50482.field_when.0.26\r\nSUMMARY:Brooklyn\
+        \ Dash to Pizza\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150512T080000Z\r\n\
+        DTEND:20150512T080000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50482\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50495.field_when.0.27\r\nSUMMARY:Le\
+        \ R\xEAve\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150515T202000Z\r\nDTEND:20150515T202000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50495\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.49360.field_when.0.28\r\nSUMMARY:Beauie Worlds\
+        \ Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150516T221500Z\r\nDTEND:20150516T221500Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49360\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50496.field_when.0.29\r\nSUMMARY:Le R\xEAve\r\
+        \nDTSTAMP:20150419T145752Z\r\nDTSTART:20150522T202000Z\r\nDTEND:20150522T202000Z\r\
+        \nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50496\r\nEND:VEVENT\r\
+        \nBEGIN:VEVENT\r\nUID:calendar.50497.field_when.0.30\r\nSUMMARY:Le R\xEAve\
+        \ (with optional Akuna Loop)\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150529T202000Z\r\
+        \nDTEND:20150529T202000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50497\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.49361.field_when.0.31\r\nSUMMARY:Beauie\
+        \ Worlds Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150530T221500Z\r\n\
+        DTEND:20150530T221500Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49361\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50498.field_when.0.32\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150605T205000Z\r\
+        \nDTEND:20150605T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50498\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50338.field_when.0.33\r\nSUMMARY:Beauie\
+        \ Worlds Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150607T221500Z\r\n\
+        DTEND:20150607T221500Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50338\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50499.field_when.0.34\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150612T205000Z\r\
+        \nDTEND:20150612T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50499\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50500.field_when.0.35\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150619T205000Z\r\
+        \nDTEND:20150619T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50500\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50501.field_when.0.36\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150626T205000Z\r\
+        \nDTEND:20150626T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50501\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50339.field_when.0.37\r\nSUMMARY:Beauie\
+        \ Worlds Crit\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150627T221500Z\r\n\
+        DTEND:20150627T221500Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50339\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50503.field_when.0.38\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150703T205000Z\r\
+        \nDTEND:20150703T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50503\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.49363.field_when.0.39\r\nSUMMARY:Beauie\
+        \ Worlds Crit including Women's and Juniors Special Event\r\nDTSTAMP:20150419T145752Z\r\
+        \nDTSTART:20150704T221500Z\r\nDTEND:20150704T221500Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/49363\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50504.field_when.0.40\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150710T205000Z\r\
+        \nDTEND:20150710T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50504\r\
+        \nEND:VEVENT\r\nBEGIN:VEVENT\r\nUID:calendar.50505.field_when.0.41\r\nSUMMARY:Le\
+        \ R\xEAve - Winter Timing\r\nDTSTAMP:20150419T145752Z\r\nDTSTART:20150717T205000Z\r\
+        \nDTEND:20150717T205000Z\r\nURL;VALUE=URI:http://northernsydneycyclingclub.org.au/node/50505\r\
+        \nEND:VEVENT\r\nEND:VCALENDAR\r\n"}
+    headers:
+      cache-control: ['store, no-cache, must-revalidate', 'post-check=0, pre-check=0']
+      connection: [close]
+      content-disposition: [attachment; filename="calendar.ics";]
+      content-type: [text/calendar; charset=utf-8]
+      date: ['Sun, 19 Apr 2015 04:57:51 GMT']
+      expires: ['Sun, 19 Nov 1978 05:00:00 GMT']
+      last-modified: ['Sun, 19 Apr 2015 04:57:51 GMT']
+      server: [Apache/2.2.15 (CentOS)]
+      set-cookie: ['SESS1a159f41acc0d69874d4d7ee818c24fd=2ehr792ehg9jf2h9fgl53dng55;
+          expires=Tue, 12-May-2015 08:31:11 GMT; path=/; domain=.northernsydneycyclingclub.org.au',
+        bb2_screener_=1429419471+27.253.121.43; path=/, bb2_screener_=1429419472+27.253.121.43;
+          path=/]
+      transfer-encoding: [chunked]
+      vary: [Accept-Encoding]
+      x-powered-by: [PHP/5.3.3]
+    status: {code: 200, message: OK}
+version: 1

@@ -1,0 +1,866 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Connection: [close]
+      Host: [lacc.org.au]
+      User-Agent: ['cabici/1.0 event harvester http://cabici.net/']
+    method: GET
+    uri: http://lacc.org.au/index.php?option=com_jevents&task=year.listevents&year=2015
+  response:
+    body: {string: " <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\"\
+        \ \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"\
+        http://www.w3.org/1999/xhtml\" xml:lang=\"en-gb\" lang=\"en-gb\" dir=\"ltr\"\
+        \ >\r\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=7\"/>\r\n<head>\r\
+        \n\r\n  <meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"\
+        \ />\n  <meta name=\"robots\" content=\"noindex, nofollow\" />\n  <meta name=\"\
+        keywords\" content=\"joomla, Joomla\" />\n  <meta name=\"description\" content=\"\
+        Joomla! - the dynamic portal engine and content management system\" />\n \
+        \ <meta name=\"generator\" content=\"Joomla! 1.5 - Open Source Content Management\"\
+        \ />\n  <title>Lacc</title>\n  <link href=\"/templates/theme676/favicon.ico\"\
+        \ rel=\"shortcut icon\" type=\"image/x-icon\" />\n  <link rel=\"stylesheet\"\
+        \ href=\"/components/com_jevents/views/geraint/assets/css/events_css.css\"\
+        \ type=\"text/css\" />\n  <link rel=\"stylesheet\" href=\"http://lacc.org.au/modules/mod_superfishmenu/tmpl/css/superfish.css\"\
+        \ type=\"text/css\" />\n  <script type=\"text/javascript\" src=\"/plugins/system/mtupgrade/mootools-uncompressed.js\"\
+        ></script>\n  <script type=\"text/javascript\" src=\"/components/com_jevents/assets/js/view_detail.js\"\
+        ></script>\n  <script type=\"text/javascript\" src=\"http://lacc.org.au/modules/mod_superfishmenu/tmpl/js/jquery.js\"\
+        ></script>\n  <script type=\"text/javascript\" src=\"http://lacc.org.au/modules/mod_superfishmenu/tmpl/js/superfish.js\"\
+        ></script>\n  <script type=\"text/javascript\">\njQuery.noConflict();\njQuery(function($){\
+        \ $(\"ul.sf-menu-drop\").superfish({hoverClass:'sfHover', pathClass:'active',\
+        \ pathLevels:0, delay:800, animation:{opacity:'show'}, speed:'def', autoArrows:0,\
+        \ dropShadows:1}) });\n\n  </script>\n  <link href=\"http://lacc.org.au/index.php?option=com_jevents&amp;task=modlatest.rss&amp;format=feed&amp;type=rss&amp;Itemid=0&amp;modid=0\"\
+        \  rel=\"alternate\"  type=\"application/rss+xml\" title=\"JEvents - RSS 2.0\
+        \ Feed\" />\n  <link href=\"http://lacc.org.au/index.php?option=com_jevents&amp;task=modlatest.rss&amp;format=feed&amp;type=atom&amp;Itemid=0&amp;modid=0\"\
+        \  rel=\"alternate\"  type=\"application/rss+xml\" title=\"JEvents - Atom\
+        \ Feed\" />\n\r\n<link rel=\"shortcut icon\" href=\"/templates/theme676/theme676/favicon.ico\"\
+        \ />\r\n<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js\"\
+        ></script>\r\n<script>!window.jQuery && document.write(unescape('%3Cscript\
+        \ src=\"/templates/theme676/scripts/jquery-1.4.2.js\"%3E%3C/script%3E'))</script>\r\
+        \n<script src=\"/templates/theme676/scripts/imagepreloader.js\" type=\"text/javascript\"\
+        ></script>\r\n<script type=\"text/javascript\">\r\n\tvar $j = jQuery.noConflict();\t\
+        \r\n\t\r\n</script>\r\n    <style>\r\n\t .border {\r\n\t\t \tbehavior:url(/templates/theme676/PIE.php)\r\
+        \n\t\t}\r\n\t</style>\r\n<!--[if IE 6]><script type=\"text/javascript\" src=\"\
+        http://info.template-help.com/files/ie6_warning/ie6_script_other.js\"></script><![endif]-->\r\
+        \n<link rel=\"stylesheet\" href=\"/templates/theme676/css/constant.css\" type=\"\
+        text/css\" />\r\n<link rel=\"stylesheet\" href=\"/templates/theme676/css/template.css\"\
+        \ type=\"text/css\" />\r\n\r\n</head>\r\n\t<body class=\"all \">\r\n    \r\
+        \n\t\r\n<div class=\"extra-top\">\r\n\t<div class=\"extra\">\r\n\t\t<div class=\"\
+        main\"> \r\n\t\t<!--header-->\r\n\t\t\t<div class=\"header\">\r\n\t\t\t\t\
+        <div class=\"head\">\r\n\t\t\t\t\t\r\n\t\t\t\t\t<h1 id=\"logo\"><a href=\"\
+        /index.php\" title=\"VERTEX\"><img title=\"VERTEX\" src=\"/templates/theme676/images/logo.png\"\
+        \ alt=\"VERTEX\" /></a></h1>\r\n\t\t\t\t\t\r\n\t\t\t\t\t<div class=\"header-block\"\
+        >\r\n\t\t\t\t\t\t<form action=\"index.php\" method=\"post\">\r\n\t<div class=\"\
+        search\">\r\n\t\t<div class=\"search-input\"><input name=\"searchword\" id=\"\
+        mod_search_searchword\" maxlength=\"20\" alt=\"Search\" class=\"inputbox\"\
+        \ type=\"text\" size=\"20\" value=\" \"  onblur=\"if(this.value=='') this.value='\
+        \ ';\" onfocus=\"if(this.value==' ') this.value='';\" /></div><div class=\"\
+        search-button\">\t</div></div>\r\n\t<input type=\"hidden\" name=\"task\" \
+        \  value=\"search\" />\r\n\t<input type=\"hidden\" name=\"option\" value=\"\
+        com_search\" />\r\n</form>\r\n\t\t\t\t\t\t<ul class=\"menu-user\"><li class=\"\
+        item132\"><a href=\"http://lacc.org.au/index.php?option=com_xmap&amp;sitemap=1\"\
+        ><span>Sitemap</span></a></li><li class=\"item130\"><a href=\"/index.php?option=com_user&amp;view=login&amp;Itemid=130\"\
+        ><span>Login</span></a></li></ul>\r\n\t\t\t\t\t</div>\t\t\t\t\r\n\t\t\t\t\t\
+        <div class=\"navigation\">\r\n\t\t\t\t\t\t\r\n\t\t\t\t\t\t<div class=\"nav-tail\"\
+        >\r\n\t\t\t\t\t\t\t<div class=\"nav-left\">\r\n\t\t\t\t\t\t\t\t<div class=\"\
+        nav-right\">\r\n\t\t\t\t\t\t\t\t\t    \t\t<ul class=\"menu-drop sf-menu-drop\
+        \ sf-horizontal\"><li class=\"parent item54\"><a href=\"http://lacc.org.au/\"\
+        ><span>Home</span></a><ul><li class=\"first-child item63\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=63\"\
+        ><span>About Us</span></a></li><li class=\"item64\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=53&amp;Itemid=64\"\
+        ><span>History</span></a></li><li class=\"item65\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=54&amp;Itemid=65\"\
+        ><span>Committee</span></a></li><li class=\"last-child item111\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=105&amp;Itemid=111\"\
+        ><span>Meetings</span></a></li></ul></li><li class=\"item129\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=52&amp;Itemid=129\"\
+        ><span>About Us</span></a></li><li class=\"parent item18\"><a href=\"/index.php?option=com_blog&amp;view=blog&amp;Itemid=18\"\
+        ><span>News</span></a><ul><li class=\"last-child first-child item67\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=56&amp;Itemid=67\"><span>Newsletters</span></a></li></ul></li><li\
+        \ class=\"item53\"><a href=\"/index.php?option=com_jevents&amp;view=month&amp;layout=calendar&amp;Itemid=53\"\
+        ><span>Event Calendar</span></a></li><li class=\"parent item69\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=58&amp;Itemid=69\"><span>Membership</span></a><ul><li\
+        \ class=\"first-child item70\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=59&amp;Itemid=70\"\
+        ><span>Why Join LACC</span></a></li><li class=\"item71\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=60&amp;Itemid=71\"\
+        ><span>Join/Renew/Transfer</span></a></li><li class=\"item73\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=62&amp;Itemid=73\"><span>Cycling\
+        \ Kit</span></a></li><li class=\"last-child item136\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=279&amp;Itemid=136\"\
+        ><span>Volunteering</span></a></li></ul></li><li class=\"parent item74\"><a\
+        \ href=\"/index.php?option=com_content&amp;view=article&amp;id=63&amp;Itemid=74\"\
+        ><span>Racing</span></a><ul><li class=\"first-child item75\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=64&amp;Itemid=75\"\
+        ><span>Road</span></a></li><li class=\"item76\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=65&amp;Itemid=76\"\
+        ><span>Track</span></a></li><li class=\"item78\"><a href=\"/index.php?option=com_content&amp;view=category&amp;id=29&amp;Itemid=78\"\
+        ><span>Results</span></a></li><li class=\"item80\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=69&amp;Itemid=80\"\
+        ><span>Grading</span></a></li><li class=\"item81\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=70&amp;Itemid=81\"\
+        ><span>Locations</span></a></li><li class=\"item82\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=71&amp;Itemid=82\"\
+        ><span>Approvals</span></a></li><li class=\"last-child item134\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=122&amp;Itemid=134\"\
+        ><span>Hall of Fame</span></a></li></ul></li><li class=\"parent item83\"><a\
+        \ href=\"/index.php?option=com_content&amp;view=article&amp;id=72&amp;Itemid=83\"\
+        ><span>Training</span></a><ul><li class=\"first-child item84\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=73&amp;Itemid=84\"><span>Training\
+        \ Rides</span></a></li><li class=\"item86\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=75&amp;Itemid=86\"\
+        ><span>Code of Conduct</span></a></li><li class=\"last-child item87\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=76&amp;Itemid=87\"><span>Rider\
+        \ Development</span></a></li></ul></li><li class=\"item88\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=77&amp;Itemid=88\"\
+        ><span>Women</span></a></li><li class=\"parent item62\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=51&amp;Itemid=62\"\
+        ><span>Juniors</span></a><ul><li class=\"first-child item118\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=86&amp;Itemid=118\"\
+        ><span>Racing</span></a></li><li class=\"item119\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=85&amp;Itemid=119\"\
+        ><span>Training</span></a></li><li class=\"item120\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=84&amp;Itemid=120\"\
+        ><span>Pixies Team</span></a></li><li class=\"last-child item121\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=83&amp;Itemid=121\"\
+        ><span>Hall of Fame</span></a></li></ul></li><li class=\"item57\"><a href=\"\
+        /index.php?option=com_content&amp;view=article&amp;id=128&amp;Itemid=57\"\
+        ><span>Sponsors</span></a></li><li class=\"item104\"><a href=\"/index.php?option=com_admirorgallery&amp;view=layout&amp;Itemid=104\"\
+        ><span>Gallery</span></a></li><li class=\"parent item105\"><a href=\"/index.php?option=com_content&amp;view=article&amp;id=91&amp;Itemid=105\"\
+        ><span>LACC Community</span></a><ul><li class=\"first-child item125\"><a href=\"\
+        /index.php?option=com_content&amp;view=category&amp;layout=blog&amp;id=38&amp;Itemid=125\"\
+        ><span>Classifieds</span></a></li><li class=\"item127\"><a href=\"/index.php?option=com_content&amp;view=category&amp;layout=blog&amp;id=37&amp;Itemid=127\"\
+        ><span>Member Services</span></a></li><li class=\"last-child item128\"><a\
+        \ href=\"/index.php?option=com_content&amp;view=article&amp;id=95&amp;Itemid=128\"\
+        ><span>Links</span></a></li></ul></li></ul>\n\t    \r\n\t\t\t\t\t\t\t\t</div>\r\
+        \n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\
+        \t\r\n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t\t\t\t\r\n\t\t\t<div class=\"\
+        box\">\r\n\t\t\t\t<div class=\"bottom-tail\">\r\n\t\t\t\t<div class=\"top-tail\"\
+        >\r\n\t\t\t\t<div class=\"left-tail\">\r\n\t\t\t\t<div class=\"right-tail\"\
+        >\r\n\t\t\t\t<div class=\"bottom-right\">\r\n\t\t\t\t<div class=\"bottom-left\"\
+        >\r\n\t\t\t\t<div class=\"top-right\">\r\n\t\t\t\t<div class=\"top-left\"\
+        >\r\n\t\t\t\t\t<div class=\"indent\">\t\t\t\r\n\t\t\t\t\t\t<!--content-->\r\
+        \n\t\t\t\t\t\t<div class=\"clear\">\r\n\t\t\t\t\t\t\t<!--right-->\r\n\t\t\t\
+        \t\t\t\t<div></div>\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<!--left-->\r\n\t\t\t\t\
+        \t\t\t\t\t\t\t\t\t\t<!--div id=\"left\">\r\n\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\
+        \t\t</div-->\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t<!--center-->\r\n            \
+        \                                            \r\n                        \
+        \    <div id=\"content\">\r\n\t\t\t\t\t\t\t\t<div class=\"container\" >\r\n\
+        \t\t\t\t\t\t\t\t\t<div class=\"clear\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\
+        \t\t\t\t\t\t\t\t\t\t\t\t\t\t\n<!-- JEvents v2.0.6 Stable, Copyright \xA9 2006-2011\
+        \ GWE Systems Ltd, JEvents Project Group, http://www.jevents.net -->\n\t<div\
+        \ class=\"componentheading\">\n\t\tLacc\t</div>\n\n<table class=\"contentpaneopen\
+        \ jeventpage  jeventslight\" id=\"jevents_header\">\n\t<tr>\n\t<td class=\"\
+        contentheading\" width=\"100%\">\n\tEvents Calendar\t</td>\n\t\t\t<td width=\"\
+        20\" class=\"buttonheading\" align=\"right\">\n\t\t\t<a href=\"javascript:void(0);\"\
+        \ onclick=\"javascript:window.open('/index.php?option=com_mailto&amp;tmpl=component&amp;link=06a639d11ab1e8471b7fb9066518d9e02795c04c','emailwin','width=400,height=350,menubar=yes,resizable=yes');\
+        \ return false;\" title=\"EMAIL\">\n\t\t\t\t<img src=\"/templates/theme676/images/emailButton.png\"\
+        \ alt=\"EMAIL\"  />\t\t\t</a>\n\t\t</td>\n\t\t<td class=\"buttonheading\"\
+        \ align=\"right\"><a href=\"http://www.jevents.net\" target=\"_blank\"><img\
+        \ src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/help.gif\"\
+        \ border=\"0\" alt=\"help\" class='jev_help' /></a></td>\t</tr>\n</table>\n\
+        <table class=\"contentpaneopen  jeventpagejeventslight\" id=\"jevents_body\"\
+        >\n\t<tr>\n\t<td width=\"100%\">\n    \t<div class=\"ev_navigation\">\n  \
+        \  \t\t<table  >\n    \t\t\t<tr align=\"center\" valign=\"top\">\n    \t \
+        \   \t\t    \t<td width=\"10\" align=\"center\" valign=\"middle\"><a href=\"\
+        /index.php?option=com_jevents&amp;task=year.listevents&amp;Itemid=53&amp;year=2014&amp;month=01&amp;day=10\"\
+        \ title=\"Previous year\"><img border='0' src='http://lacc.org.au/components/com_jevents/views/geraint/assets/images/gg_green.gif'\
+        \ alt='Previous year'/></a>\n</td>\n\t\t    \t<td width=\"10\" align=\"center\"\
+        \ valign=\"middle\"><a href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;Itemid=53&amp;year=2014&amp;month=01&amp;day=10\"\
+        \ title=\"Previous year\"><img border='0' src='http://lacc.org.au/components/com_jevents/views/geraint/assets/images/g_green.gif'\
+        \ alt='Previous year'/></a>\n</td>\n\t\t\t\t<td class=\"iconic_td\" align=\"\
+        center\" valign=\"middle\">\n    \t\t<div id=\"ev_icon_yearly\" class=\"nav_bar_cal\"\
+        ><a href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;month=01&amp;day=10&amp;Itemid=53\"\
+        \ title=\"See by year\"> \n    \t\t\t<img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"See by year\"/></a>\n    \t\t</div>\n        </td>\n            \t\
+        <td class=\"iconic_td\" align=\"center\" valign=\"middle\">\n    \t\t<div\
+        \ id=\"ev_icon_monthly\" class=\"nav_bar_cal\" ><a href=\"/index.php?option=com_jevents&amp;task=month.calendar&amp;year=2015&amp;month=01&amp;day=10&amp;Itemid=53\"\
+        \ title=\"See by month\">\n    \t\t\t<img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"See by month\"/></a>\n    \t\t</div>\n        </td>\n        \t\t\
+        <td class=\"iconic_td\" align=\"center\" valign=\"middle\">\n\t\t\t<div id=\"\
+        ev_icon_weekly\" class=\"nav_bar_cal\"><a href=\"/index.php?option=com_jevents&amp;task=week.listevents&amp;year=2015&amp;month=01&amp;day=10&amp;Itemid=53\"\
+        \ title=\"See by week\">\n\t\t\t<img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"See by week\"/></a>\n\t\t\t</div>\n        </td>\n        \t\t<td\
+        \ class=\"iconic_td\" align=\"center\" valign=\"middle\">\n\t\t\t<div id=\"\
+        ev_icon_daily\" class=\"nav_bar_cal\" ><a href=\"/index.php?option=com_jevents&amp;task=day.listevents&amp;year=2015&amp;month=01&amp;day=10&amp;Itemid=53\"\
+        \ title=\"See Today\"><img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"See by day\"/></a>\n\t\t\t</div>\n        </td>\n        \t\t<td class=\"\
+        iconic_td\" align=\"center\" valign=\"middle\">\n\t\t\t<div id=\"ev_icon_search\"\
+        \ class=\"nav_bar_cal\"><a href=\"/index.php?option=com_jevents&amp;task=search.form&amp;year=2015&amp;month=01&amp;day=10&amp;Itemid=53\"\
+        \ title=\"Search\"><img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"Search\"/></a>\n\t\t\t</div>\n        </td>                \n    \
+        \    \t\t<td class=\"iconic_td\" align=\"center\" valign=\"middle\">\n\t\t\
+        \t<div id=\"ev_icon_jumpto\" class=\"nav_bar_cal\"><a href=\"#\" onclick=\"\
+        jtdisp = document.getElementById('jumpto').style.display;document.getElementById('jumpto').style.display=(jtdisp=='none')?'block':'none';return\
+        \ false;\" title=\"Jump to month\"><img src=\"http://lacc.org.au/components/com_jevents/views/geraint/assets/images/transp.gif\"\
+        \ alt=\"Jump to month\"/></a>\n\t\t\t</div>\n        </td>               \
+        \ \n            \t<td width=\"10\" align=\"center\" valign=\"middle\"></td>\n\
+        \t\t    \t<td width=\"10\" align=\"center\" valign=\"middle\"></td>\n\t\t\
+        \                </tr>\n    \t\t\t<tr class=\"icon_labels\" align=\"center\"\
+        \ valign=\"top\">\n    \t\t\t\t\t        \t\t<td colspan=\"2\"></td>\n\t \
+        \       \t\t    \t\t\t\t<td>See by year</td>\n    \t\t\t\t<td>See by month</td>\n\
+        \    \t\t\t\t<td>See by week</td>\n    \t\t\t\t<td>See Today</td>\n    \t\t\
+        \t\t<td>Search</td>\n    \t\t\t\t<td>Jump to month</td>\n    \t\t\t\t\t  \
+        \      \t\t<td colspan=\"2\"></td>\n\t        \t\t                </tr>\n\
+        \                \t\t<tr align=\"center\" valign=\"top\">\n\t\t\t\t    \t\
+        <td colspan=\"10\" align=\"center\" valign=\"top\">\n\t    \t\t    \t<div\
+        \ id=\"jumpto\"  style=\"display:none\">\n\t\t\t<form name=\"BarNav\" action=\"\
+        /index.php?option=com_jevents\" method=\"get\">\n\t\t\t\t<input type=\"hidden\"\
+        \ name=\"option\" value=\"com_jevents\" />\n\t\t\t\t<input type=\"hidden\"\
+        \ name=\"task\" value=\"month.calendar\" />\n\t\t\t\t<select name=\"month\"\
+        \ id=\"month\" style=\"font-size:10px;\"><option value=\"01\"  selected=\"\
+        selected\">January</option><option value=\"02\" >February</option><option\
+        \ value=\"03\" >March</option><option value=\"04\" >April</option><option\
+        \ value=\"05\" >May</option><option value=\"06\" >June</option><option value=\"\
+        07\" >July</option><option value=\"08\" >August</option><option value=\"09\"\
+        \ >September</option><option value=\"10\" >October</option><option value=\"\
+        11\" >November</option><option value=\"12\" >December</option></select><select\
+        \ name=\"year\" id=\"year\" style=\"font-size:10px;\"><option value=\"2013\"\
+        \ >2013</option><option value=\"2014\" >2014</option><option value=\"2015\"\
+        \  selected=\"selected\">2015</option></select>\t\t\t\t<button onclick=\"\
+        submit(this.form)\">Jump to month</button>\n\t\t\t\t<input type=\"hidden\"\
+        \ name=\"Itemid\" value=\"53\" />\n\t\t\t</form>\n\t\t\t</div>\n\t\t\t</td>\n\
+        \t    </tr>\n\t\t            </table>\n        </div>\n\t\t<div id='cal_title'>Events\
+        \ for</div>\n<table align=\"center\" width=\"90%\" cellspacing=\"0\" cellpadding=\"\
+        0\" class=\"ev_table\">\n    <tr valign=\"top\">\n        <td colspan=\"2\"\
+        \  align=\"center\" class=\"cal_td_daysnames\">\n           <!-- <div class=\"\
+        cal_daysnames\"> -->\n            2015            <!-- </div> -->\n      \
+        \  </td>\n    </tr>\n<tr><td class='ev_td_left'>January 2015</td>\n<td class='ev_td_right'>\n\
+        <ul class='ev_ul'>\n<li class='ev_td_li' style=\"border-color:#CC33CC;\">\n\
+        Wednesday 14 January 2015 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1466&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=14&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 15 January 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1494&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=15&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 16 January 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1442&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=16&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 21 January 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1467&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=21&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 22 January 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1495&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=22&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 23 January 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1443&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=23&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 28 January 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1468&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=28&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 29 January 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1496&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=29&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 30 January 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1444&amp;Itemid=53&amp;year=2015&amp;month=01&amp;day=30&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n</ul>\n\
+        </td></tr>\n<tr><td class='ev_td_left'>February 2015</td>\n<td class='ev_td_right'>\n\
+        <ul class='ev_ul'>\n<li class='ev_td_li' style=\"border-color:#CC33CC;\">\n\
+        Wednesday 04 February 2015 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1469&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=04&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 05 February 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1497&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=05&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 06 February 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1445&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=06&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 11 February 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1470&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=11&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 12 February 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1498&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=12&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 13 February 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1446&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=13&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 18 February 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1471&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=18&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 19 February 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1499&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=19&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 20 February 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1447&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=20&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 25 February 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1472&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=25&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 26 February 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1500&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=26&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 27 February 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1448&amp;Itemid=53&amp;year=2015&amp;month=02&amp;day=27&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n</ul>\n\
+        </td></tr>\n<tr><td class='ev_td_left'>March 2015</td>\n<td class='ev_td_right'>\n\
+        <ul class='ev_ul'>\n<li class='ev_td_li' style=\"border-color:#CC33CC;\">\n\
+        Wednesday 04 March 2015 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"\
+        /index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1473&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=04&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 05 March 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1501&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=05&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 06 March 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1449&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=06&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 11 March 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1474&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=11&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 12 March 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1502&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=12&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 13 March 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1450&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=13&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 18 March 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1475&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=18&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 19 March 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1503&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=19&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 20 March 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1451&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=20&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#CC33CC;\">\nWednesday 25 March 2015 18:30 - 21:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1476&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=25&amp;title=seniors-track-training&amp;uid=41670570ce7c42fc8efc2494d2297a75\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Seniors Track Training\"\
+        >Seniors Track Training</a>\n\t\t\tby&nbsp;<i>\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n<li class='ev_td_li'\
+        \ style=\"border-color:#FFCC33;\">\nThursday 26 March 2015 17:15 - 19:30<br/>\t\
+        \t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1504&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=26&amp;title=newington-armory-twilight-crits&amp;uid=fa109cbdf900eff7b747a9c1535ab8ab\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Newington Armory Twilight\
+        \ Crits\">Newington Armory Twilight Crits</a>\n\t\t\tby&nbsp;<i>\n <script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n\
+        \ var suffix = '';\n var attribs = '';\n var path = 'hr' + 'ef' + '=';\n var\
+        \ addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n' + '&#64;';\n addy12523\
+        \ = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n var addy_text12523\
+        \ = 'colincheers';\n document.write( '<a ' + path + '\\'' + prefix + addy12523\
+        \ + suffix + '\\'' + attribs + '>' );\n document.write( addy_text12523 );\n\
+        \ document.write( '<\\/a>' );\n //-->\n </script><script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '<span style=\\'display:\
+        \ none;\\'>' );\n //-->\n </script>This e-mail address is being protected\
+        \ from spambots. You need JavaScript enabled to view it\n <script language='JavaScript'\
+        \ type='text/javascript'>\n <!--\n document.write( '</' );\n document.write(\
+        \ 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\t<a class=\"ev_link_cat\"\
+        \ href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=39\"\
+        \  style=\"color:inherit;\" title=\"Default\">Default</a>\n\t\t</li>\n<li\
+        \ class='ev_td_li' style=\"border-color:#CC33CC;\">\nFriday 27 March 2015\
+        \ 18:30 - 21:30<br/>\t\t\t<a class=\"ev_link_row\" href=\"/index.php?option=com_jevents&amp;task=icalrepeat.detail&amp;evid=1452&amp;Itemid=53&amp;year=2015&amp;month=03&amp;day=27&amp;title=six-week-trackanalia-track-series-friday-night&amp;uid=a1dc3cffdc25114fa589329c68d10c6e\"\
+        \  style=\"font-weight:bold;color:inherit;\" title=\"Six Week Trackanalia\
+        \ Track Series Friday Night\">Six Week Trackanalia Track Series Friday Night</a>\n\
+        \t\t\tby&nbsp;<i>\n <script language='JavaScript' type='text/javascript'>\n\
+        \ <!--\n var prefix = 'm&#97;&#105;lt&#111;:';\n var suffix = '';\n var attribs\
+        \ = '';\n var path = 'hr' + 'ef' + '=';\n var addy12523 = 'ch&#101;&#101;rsfr&#101;&#101;m&#97;n'\
+        \ + '&#64;';\n addy12523 = addy12523 + 'b&#105;gp&#111;nd' + '&#46;' + 'c&#111;m';\n\
+        \ var addy_text12523 = 'colincheers';\n document.write( '<a ' + path + '\\\
+        '' + prefix + addy12523 + suffix + '\\'' + attribs + '>' );\n document.write(\
+        \ addy_text12523 );\n document.write( '<\\/a>' );\n //-->\n </script><script\
+        \ language='JavaScript' type='text/javascript'>\n <!--\n document.write( '<span\
+        \ style=\\'display: none;\\'>' );\n //-->\n </script>This e-mail address is\
+        \ being protected from spambots. You need JavaScript enabled to view it\n\
+        \ <script language='JavaScript' type='text/javascript'>\n <!--\n document.write(\
+        \ '</' );\n document.write( 'span>' );\n //-->\n </script></i>\t\t&nbsp;::&nbsp;\t\
+        \t<a class=\"ev_link_cat\" href=\"/index.php?option=com_jevents&amp;task=year.listevents&amp;year=2015&amp;Itemid=&amp;catids=42\"\
+        \  style=\"color:inherit;\" title=\"Track\">Track</a>\n\t\t</li>\n</ul>\n\
+        </td></tr>\n</table><br />\n\t<div class=\"jev_pagination\">\n\t<form action=\"\
+        /index.php?option=com_jevents&amp;Itemid=0&amp;task=year.listevents\" method=\"\
+        post\">\n\t<div class=\"list-footer\">\n\n<div class=\"limit\">Display #<select\
+        \ name=\"limit\" id=\"limit\" class=\"inputbox\" size=\"1\" onchange=\"this.form.submit()\"\
+        ><option value=\"5\" >5</option><option value=\"10\" >10</option><option value=\"\
+        15\" >15</option><option value=\"20\" >20</option><option value=\"25\" >25</option><option\
+        \ value=\"30\" >30</option><option value=\"50\" >50</option><option value=\"\
+        100\" >100</option><option value=\"0\"  selected=\"selected\">All</option></select></div>\n\
+        <div class=\"counter\"></div>\n<input type=\"hidden\" name=\"limitstart\"\
+        \ value=\"0\" />\n</div>\t</form>\n\t</div>\n\t\t</td>\n\t</tr>\n</table>\n\
+        \r\n                                          \t\t\t\t\t\t\t\t\t\t\r\n\t\t\
+        \t\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t<!---->\r\n\t\t\t\t\t\t\t\t</div>\r\n\
+        </div>\r\n \r\n\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t\
+        \t\t<div class=\"wrapper top\">\r\n\t\t\t\t\t\t\t<div class=\"col_1 col-indent\"\
+        >\r\n\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t<div class=\"\
+        col_1 col-indent\">\r\n\t\t\t\t\t\t\t\t\r\n\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\
+        \t\t\t<!--<div class=\"col_1\">\r\n\t\t\t\t\t\t\t\t<div class=\"clear_fix\"\
+        ></div>\r\n\t\t\t\t\t\t\t</div>-->\r\n\t\t\t\t\t\t\t<div class=\"col_1\">\r\
+        \n\t\t\t\t\t\t\t\t<div class=\"clear_fix\"></div>\r\n\t\t\t\t\t\t\t</div>\r\
+        \n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"border-none\"\
+        \ style=\"margin-top: 20px;\" ></div>\r\n\t\t\t\t\t\t<div class=\"clear\"\
+        ></div>\r\n\t\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t\
+        </div>\r\n\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t</div>\r\n\t\t\t\t</div>\r\
+        \n\t\t\t\t</div>\r\n\t\t\t</div>\r\n\t\t\t\r\n\t\t\t<div class=\"cont_pad2\"\
+        >\r\n\t\t\t\t<!--footer--> \t\t\t\r\n\t\t\t\t<div class=\"footer\">\r\n\t\t\
+        \t\t\t<div class=\"foot\">\r\n\t\t\t\t\t\t\r\n\t\t\t\t\t\t<div class=\"copy\"\
+        >&copy; 2011 Lidcombe Auburn Cycle Club <a href=\"#\"></a>&nbsp; &nbsp; &nbsp;\
+        \ <!-- {%FOOTER_LINK} -->\r\n\t\t\t\t\t\t</div>\r\n\t\t\t\t\t</div>\r\n\t\t\
+        \t\t</div>\r\n\t\t\t</div>\r\n\t\t</div>\r\n\t</div>\r\n</div>\r\n<script\
+        \ type=\"text/javascript\">\r\n\r\n  var _gaq = _gaq || [];\r\n  _gaq.push(['_setAccount',\
+        \ 'UA-26108323-1']);\r\n  _gaq.push(['_trackPageview']);\r\n\r\n  (function()\
+        \ {\r\n    var ga = document.createElement('script'); ga.type = 'text/javascript';\
+        \ ga.async = true;\r\n    ga.src = ('https:' == document.location.protocol\
+        \ ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';\r\n   \
+        \ var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga,\
+        \ s);\r\n  })();\r\n\r\n</script>\r\n<script type=\"text/javascript\">\r\n\
+        \        function recordOutboundLink(link, category, action) {\r\n       \
+        \     try {\r\n                var pageTracker=_gat._getTracker(\"UA-26108323-1\"\
+        );\r\n                pageTracker._trackEvent(category, action);\r\n     \
+        \       }catch(err){}\r\n        }\r\n</script>\r\n</body>\r\n</html>"}
+    headers:
+      cache-control: ['post-check=0, pre-check=0']
+      connection: [close]
+      content-type: [text/html; charset=utf-8]
+      date: ['Sat, 10 Jan 2015 09:00:27 GMT']
+      expires: ['Mon, 1 Jan 2001 00:00:00 GMT']
+      last-modified: ['Sat, 10 Jan 2015 09:00:27 GMT']
+      p3p: [CP="NOI ADM DEV PSAi COM NAV OUR OTRo STP IND DEM"]
+      pragma: [no-cache]
+      server: [LiteSpeed]
+      set-cookie: [bfad88b321bc9fa5b3430ed31654c086=4s39kure0e1ii6cup3dapkb8p7; path=/]
+      transfer-encoding: [chunked]
+      x-powered-by: [PHP/5.3.29]
+    status: {code: 418, message: reauthentication required}
+version: 1

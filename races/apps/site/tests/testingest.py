@@ -14,7 +14,6 @@ class IngestTests(TestCase):
     def test_ical_ingest(self):
         """Ingest from an ical file"""
         
-        
         cccc = Club.objects.get(slug='CCCC')
         # modify the ical url to our local copy
         cccc.icalurl = "file:races/apps/site/tests/cccc.ical"
@@ -26,7 +25,6 @@ class IngestTests(TestCase):
         races_stored = Race.objects.filter(club=cccc)
         self.assertEqual(len(races_stored), 3)
         
-        
         # ingest from a second file should just add one race
         cccc.icalurl = "file:races/apps/site/tests/cccc2.ical"
         
@@ -37,21 +35,44 @@ class IngestTests(TestCase):
         races_stored = Race.objects.filter(club=cccc)
         self.assertEqual(len(races_stored), 4)
         
+    @vcr.use_cassette('fixtures/vcr_cassettes/manly.yaml')
     def test_ical_ingest_manly(self):
         """Ingest from an ical file - this time manly"""
         
         # we'll use CCCC again but point to the manly ics file this time
         cccc = Club.objects.get(slug='CCCC')
         # modify the ical url to our local copy
-        cccc.icalurl = "file:races/apps/site/tests/manly.ics"
+        cccc.icalurl = "https://www.google.com/calendar/ical/account%40manlywarringahcc.org.au/public/basic.ics"
         cccc.icalpatterns = "Race"
         
         (races, error) = cccc.ingest_ical()
         
-        self.assertEqual(len(races), 28)
+        self.assertEqual(len(races), 48)
         
         races_stored = Race.objects.filter(club=cccc)
-        self.assertEqual(len(races_stored), 28)
+        self.assertEqual(len(races_stored), 48)
+        
+    
+    @vcr.use_cassette('fixtures/vcr_cassettes/nscc.yaml')
+    def test_event_timezone(self):
+        
+        # we'll use CCCC again but point to the manly ics file this time
+        cccc = Club.objects.get(slug='CCCC')
+        # modify the ical url to our local copy
+        cccc.icalurl = "http://northernsydneycyclingclub.org.au/calendar/ical"
+        cccc.icalpatterns = "Worlds"
+        
+        (races, error) = cccc.ingest_ical()
+     
+        self.assertEqual(7, len(races))
+        
+        self.assertEqual("Beauie Worlds Crit", races[0].title)
+        # check date, should be converted to our timezone
+        self.assertEqual("2015-04-19", races[0].date)
+        self.assertEqual("08:15:00", races[0].time)
+        
+        
+                
         
     @vcr.use_cassette('fixtures/vcr_cassettes/nonical.yaml')
     def test_ical_ingest_for_non_ical_club(self):
