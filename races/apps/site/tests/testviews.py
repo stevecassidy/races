@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 
 from races.apps.site.models import Club, RaceCourse, Race
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 
@@ -13,9 +13,7 @@ class ViewTests(TestCase):
     fixtures = ['clubs', 'courses']
     
     def setUp(self):
-        
-        User.objects.create_user('test', password='test')
-        
+                
         today = datetime.today()
         yesterday = today - timedelta(1)
         tomorrow = today + timedelta(1)
@@ -117,11 +115,25 @@ class ViewTests(TestCase):
         self.assertNotContains(response, "Today 2 L")
         
         
+        
+class CreateViewTests(TestCase):
+    
+    fixtures = ['clubs', 'courses']
+    
+    def setUp(self):
+        User.objects.create_user('test', password='test')
+        
+        self.wmcc = Club.objects.get(slug='Waratahs')
+        self.lacc = Club.objects.get(slug='LACC')
+        
+        self.lansdowne = RaceCourse.objects.get(name='Lansdowne Park')
+        self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
+        
+        
+        
+                
     def test_create_race(self):
         """Test the creation of a new race"""
-        
-        # count races for wmcc
-        n = self.wmcc.race_set.count()
         
         # need to login first
         
@@ -141,6 +153,7 @@ class ViewTests(TestCase):
                 'title': 'Test Race',
                 'date': '2014-12-13',
                 'time': '08:00',
+                'repeat': 'none',
                 'status': 'd',
                 'url': 'http://example.org/'}
         
@@ -152,14 +165,11 @@ class ViewTests(TestCase):
         
         # should have one more race
         
-        self.assertEqual(n+1, self.wmcc.race_set.count())
+        self.assertEqual(1, self.wmcc.race_set.count())
         
         
-    def test_create_race_series(self):
-        """Test the creation of many new races"""
-    
-        # count races for wmcc
-        n = self.wmcc.race_set.count()
+    def test_create_race_series_weekly(self):
+        """Test the creation of many new races - weekly repeat"""
     
         # need to login first
     
@@ -180,7 +190,8 @@ class ViewTests(TestCase):
                 'date': '2014-12-13',
                 'time': '08:00',
                 'status': 'd',
-                'weekly': 'y',
+                'repeat': 'weekly',
+                'repeatN': '1',
                 'number': 6,
                 'url': 'http://example.org/'}
     
@@ -191,6 +202,119 @@ class ViewTests(TestCase):
         self.assertIn( 'Waratahs', response.get('Location'))
     
         # should have six more races    
-        self.assertEqual(n+6, self.wmcc.race_set.count())
+        self.assertEqual(6, self.wmcc.race_set.count())
+        
+        races = self.wmcc.race_set.all()
+        
+        # check the dates
+        self.assertEqual(races[0].date, date(2014, 12, 13))
+        self.assertEqual(races[1].date, date(2014, 12, 20))
+        self.assertEqual(races[2].date, date(2014, 12, 27))
+        self.assertEqual(races[3].date, date(2015, 1, 3))
+        self.assertEqual(races[4].date, date(2015, 1, 10))
+        self.assertEqual(races[5].date, date(2015, 1, 17))
+        
+        
+        
+        
+    def test_create_race_series_monthly(self):
+        """Test the creation of many new races - monthly repeat"""
+    
+        # need to login first
+    
+        response = self.client.login(username='test', password='test')
+        self.assertTrue(response, "Login failed in test, aborting")
+    
+        url = reverse('site:race_create')
+        # first get
+        response = self.client.get(url)
+    
+        self.assertContains(response, "form")
+        self.assertContains(response, 'name="club"')
+        self.assertContains(response, "Create New Race")
+    
+        data = {'club': self.wmcc.id, 
+                'location': self.lansdowne.id,
+                'title': 'Test Race',
+                'date': '2014-12-13',
+                'time': '08:00',
+                'status': 'd',
+                'repeat': 'monthly',
+                'repeatN': '1',
+                'repeatMonthN': 2,
+                'repeatDay': 5,
+                'number': 6,
+                'url': 'http://example.org/'}
+    
+        response = self.client.post(url, data)
+        # expect a redirect response to the race page
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(isinstance(response, HttpResponseRedirect))  
+        self.assertIn( 'Waratahs', response.get('Location'))
+    
+        # should have six more races    
+        self.assertEqual(6, self.wmcc.race_set.count())
+        
+        races = self.wmcc.race_set.all()
+    
+        # check the dates
+        self.assertEqual(races[0].date, date(2014, 12, 13))
+        self.assertEqual(races[1].date, date(2015, 1, 10))
+        self.assertEqual(races[2].date, date(2015, 2, 14))
+        self.assertEqual(races[3].date, date(2015, 3, 14))
+        self.assertEqual(races[4].date, date(2015, 4, 11))
+        self.assertEqual(races[5].date, date(2015, 5, 9))        
+        
+    def test_create_race_series_monthly_last(self):
+        """Test the creation of many new races - monthly repeat"""
+    
+        # need to login first
+    
+        response = self.client.login(username='test', password='test')
+        self.assertTrue(response, "Login failed in test, aborting")
+    
+        url = reverse('site:race_create')
+        # first get
+        response = self.client.get(url)
+    
+        self.assertContains(response, "form")
+        self.assertContains(response, 'name="club"')
+        self.assertContains(response, "Create New Race")
+    
+        data = {'club': self.wmcc.id, 
+                'location': self.lansdowne.id,
+                'title': 'Test Race',
+                'date': '2014-12-13',
+                'time': '08:00',
+                'status': 'd',
+                'repeat': 'monthly',
+                'repeatN': '1',
+                'repeatMonthN': -1,
+                'repeatDay': 0,
+                'number': 6,
+                'url': 'http://example.org/'}
+    
+        response = self.client.post(url, data)
+        # expect a redirect response to the race page
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(isinstance(response, HttpResponseRedirect))  
+        self.assertIn( 'Waratahs', response.get('Location'))
+    
+        # should have six more races    
+        self.assertEqual(6, self.wmcc.race_set.count())
+        
+        races = self.wmcc.race_set.all()
+    
+        # check the dates
+        self.assertEqual(races[0].date, date(2014, 12, 29))
+        self.assertEqual(races[1].date, date(2015, 1, 26))
+        self.assertEqual(races[2].date, date(2015, 2, 23))
+        self.assertEqual(races[3].date, date(2015, 3, 30))
+        self.assertEqual(races[4].date, date(2015, 4, 27))
+        self.assertEqual(races[5].date, date(2015, 5, 25))        
+        
+        
+    
+    
     
     
