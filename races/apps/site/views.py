@@ -16,6 +16,11 @@ from races.apps.site.models import Race, Club, RaceCourse
 from races.apps.site.forms import RaceCreateForm
 
 import datetime
+import calendar
+from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
+
+DAYS = [MO, TU, WE, TH, FR, SA, SU]
+
 
 class HomePage(ListView):
 
@@ -109,25 +114,40 @@ def create_races(request):
         form = RaceCreateForm(request.POST)
     else: 
         form = RaceCreateForm()
-    
+        
     if form.is_valid():
         # process it 
-        if form.cleaned_data['weekly']:
-            date = form.cleaned_data['date']
-            race = form.save()
-            # now make N more races one week apart
-            for n in range(form.cleaned_data['number']-1):
-                # force 'save as new'
-                race.pk = None
-                # modify date
-                date += datetime.timedelta(7)
-                race.date = date
-                race.save()
-            return HttpResponseRedirect(reverse('site:club', kwargs={'slug': race.club.slug}))
-        else:
+        if form.cleaned_data['repeat'] == 'none':
+
             race = form.save()
             return HttpResponseRedirect(reverse('site:race', kwargs={'slug': race.club.slug, 'pk': race.id}))
+            
+        else:
+            startdate = form.cleaned_data['date']
+                        
+            number = form.cleaned_data['number']
+            repeat = form.cleaned_data['repeat']
+            repeatMonthN = form.cleaned_data['repeatMonthN']
+            repeatDay = form.cleaned_data['repeatDay']
+            
+            if repeat == u'weekly':
+                rule = rrule(WEEKLY, count=number, dtstart=startdate)
+            elif repeat == u'monthly':
+                rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+                
+            race = form.save(commit=False)
+            
+            # now make N more races 
+            for date in rule:
+                # force 'save as new'
+                race.pk = None
+                
+                race.date = date
+                race.save()
+                
+            return HttpResponseRedirect(reverse('site:club', kwargs={'slug': race.club.slug}))
     else:
+        
         return render_to_response('race_create_form.html', 
                                   {'form': form},
                                   context_instance=RequestContext(request))
