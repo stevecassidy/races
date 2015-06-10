@@ -138,7 +138,6 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.webdesign',
 
-    'south',
 #    'debug_toolbar',
 #    'django_coverage',
 
@@ -182,7 +181,6 @@ LOGGING = {
     }
 }
 
-SOUTH_TESTS_MIGRATE = False
 
 CRISPY_TEMPLATE_PACK = "bootstrap"
 
