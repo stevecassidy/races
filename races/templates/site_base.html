@@ -1,0 +1,47 @@
+{% extends "theme_bootstrap/base.html" %}
+{% load flatpages %}
+{% get_flatpages as flatpages %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block style_base %}
+    <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
+    <link href="{% static "bootstrap/css/bootstrap-responsive.css" %}" rel="stylesheet">
+    <link href="{% static "css/site.css" %}" rel="stylesheet">
+    <link href="{% static "site.css" %}" rel="stylesheet">
+    {% block extra_style %}{% endblock %}
+{% endblock %}
+
+{% block navbar_class %}navbar-inverse{% endblock %}
+
+{% block nav %}
+<ul class="nav navbar-nav">
+  <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
+  <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
+  {% for page in flatpages %}
+    {% ifnotequal page.url '/' %}
+    <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+    {% endifnotequal %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_head_base %}
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block footer %}
+    {% include "_footer.html" %}
+{% endblock %}
+
+{% block body %}
+    <div id='masthead'></div>
+    <div id='feed'><a href="/feed">Subscribe <img src="{{STATIC_URL}}/feed-icon-14x14.png"></a></div>
+    {% block content %}{% endblock %}
+{% endblock %}
+
+{% block extra_body_base %}
+    
+{% endblock %}
+

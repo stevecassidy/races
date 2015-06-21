@@ -100,7 +100,7 @@ class RaceUpdateView(UpdateView):
     
 class RaceDeleteView(DeleteView):
     model = Race
-    success_url = reverse_lazy('site:races')
+    success_url = reverse_lazy('races')
     template_name = "race_confirm_delete.html"
     
     @method_decorator(login_required)
@@ -120,7 +120,7 @@ def create_races(request):
         if form.cleaned_data['repeat'] == 'none':
 
             race = form.save()
-            return HttpResponseRedirect(reverse('site:race', kwargs={'slug': race.club.slug, 'pk': race.id}))
+            return HttpResponseRedirect(reverse('race', kwargs={'slug': race.club.slug, 'pk': race.id}))
             
         else:
             startdate = form.cleaned_data['date']
@@ -145,7 +145,7 @@ def create_races(request):
                 race.date = date
                 race.save()
                 
-            return HttpResponseRedirect(reverse('site:club', kwargs={'slug': race.club.slug}))
+            return HttpResponseRedirect(reverse('club', kwargs={'slug': race.club.slug}))
     else:
         
         return render_to_response('race_create_form.html', 

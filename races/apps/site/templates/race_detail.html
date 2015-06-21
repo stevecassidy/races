@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 
 
 {% block title %}{{race.club.slug}} - {{race.title}}{% endblock %}
 
-{% block extrahead %}    
+{% block extra_head %}    
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs&sensor=false"></script>
     <script>
 function initialize() {
@@ -32,7 +32,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 {% block content %}
 <div id='buttons'>
 {% if user.is_authenticated %}
-<div id='editbutton'><a class='btn' href="{% url 'site:race_update' race.id %}">Edit</a></div>
+<div id='editbutton'><a class='btn' href="{% url 'race_update' race.id %}">Edit</a></div>
 {% endif %}
 </div>
 
@@ -43,7 +43,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
   <tr><th>Time</th><td>{{race.time}}</td></tr>
   <tr><th>Location</th><td>{{race.location}}</td></tr>
   <tr><th>Title</th><td>{{race.title}}</td></tr>
-  <tr><th>Club</th><td><a href='{{race.club.url}}'>{{race.club.name}}</a> [<a href="{% url 'site:club' race.club.slug %}">View all {{race.club}} Races</a>] </td></tr>
+  <tr><th>Club</th><td><a href='{{race.club.url}}'>{{race.club.name}}</a> [<a href="{% url 'club' race.club.slug %}">View all {{race.club}} Races</a>] </td></tr>
   {%if race.url %}
   <tr><th>More Detail</th><td>See race on <a href="{{race.url}}">{{race.club.name}} website</a></td></tr>
   {% else %}
@@ -60,7 +60,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <div id="map-canvas"></div>
 
-<p>Report a problem with this race listing: email <a href="mailto:steve@cabici.net?subject=Problem with race {{race.id}} on cabici.net&body=Reporting a problem with http://cabici.net{% url 'site:race' race.club.slug race.pk %}">steve@cabici.net</a></p>
+<p>Report a problem with this race listing: email <a href="mailto:steve@cabici.net?subject=Problem with race {{race.id}} on cabici.net&body=Reporting a problem with http://cabici.net{% url 'race' race.club.slug race.pk %}">steve@cabici.net</a></p>
 
 {% endblock %}
 

@@ -9,3 +9,6 @@ beautifulsoup4
 lxml
 ngram
 vcrpy
+django-social-auth
+django-user-accounts==1.0.2
+pinax-theme-bootstrap==5.7.5

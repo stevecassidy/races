@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^ical$', feeds.EventICALFeed(), name='ical'),
     url(r'^clubs/$', views.ClubListView.as_view(), name='clubs'),
     url(r'^clubs/(?P<slug>.*)/$', views.ClubDetailView.as_view(), name='club'),
-    
+
     url(r'^test.html$', views.TestPageView.as_view(), name='test'),
     
 )

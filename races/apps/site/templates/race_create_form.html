@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 
     {% block extrahead %}    
     <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
@@ -8,7 +8,7 @@
 }
     </style>
     {% endblock %}
-    {% block extrajs %}
+    {% block extra_script %}
     
     <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
     {% endblock %}   

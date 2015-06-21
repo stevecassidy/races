@@ -46,8 +46,8 @@
           <div class="nav-collapse collapse">
               {% block nav %}
                 <ul class="nav">
-                  <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'site:races' %}">Races</a></li>
-                  <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'site:clubs' %}">Clubs</a></li>
+                  <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
+                  <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
                   {% for page in flatpages %}
                     {% ifnotequal page.url '/' %}
                     <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
@@ -81,7 +81,7 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ STATIC_URL }}bootstrap/js/jquery.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap-collapse.js"></script>
-    {% block extrajs %}
+    {% block extra_script %}
     {% endblock %}    
     
     <script>

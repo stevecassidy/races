@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 
 {% block title %}{{club.name}}{% endblock %}
 
-    {% block extrahead %}    
+    {% block extra_head %}    
     <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
     <style type='text/css'>
 #id_description, #id_title, #id_url {
@@ -14,7 +14,7 @@ th label {
     </style>
     {% endblock %}
     
-    {% block extrajs %}
+    {% block extra_script %}
     <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
     <script>
         $(document).ready(
@@ -57,7 +57,7 @@ th label {
 
 
 {% if user.is_authenticated %}
-<form method='post' action='{% url 'site:race_create' %}'>
+<form method='post' action='{% url 'race_create' %}'>
     {% csrf_token %}
     <fieldset>
         <legend class='btn' id='formlegend'>Create New Race for {{club.name}}</legend>

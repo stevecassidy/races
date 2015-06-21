@@ -25,6 +25,11 @@ DATABASES = {
     }
 }
 
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, "templates"),
+]
+
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -89,7 +94,6 @@ SECRET_KEY = '^g=q21r_nnmbz49d!vs*2gvpll-y9b@&amp;t3k2r3c$*u&amp;2la5!%s'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -112,6 +116,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
+    "account.context_processors.account",
+    "pinax_theme_bootstrap.context_processors.theme",
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -121,8 +127,6 @@ ROOT_URLCONF = 'races.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'races.wsgi.application'
 
-TEMPLATE_DIRS = (
-)
 
 INSTALLED_APPS = (
 
@@ -137,6 +141,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.flatpages',
     'django.contrib.webdesign',
+
+    'social_auth',
+    'account',
+    "bootstrapform",
+    "pinax_theme_bootstrap",
+    
 
 #    'debug_toolbar',
 #    'django_coverage',
@@ -187,4 +197,33 @@ CRISPY_TEMPLATE_PACK = "bootstrap"
 # settings for django-easy-maps
 # default centre of maps
 EASY_MAPS_CENTER = (-41.3, 32)
+
+TWITTER_CONSUMER_KEY = 'gx3LnhtWJyFbyH3bt6wR18u2j'
+TWITTER_CONSUMER_SECRET = 'SQTGvdCnhopWW6nQiCB0GozOrQSB9dvBESjif6D5xq0FkVg2gM'
+
+AUTHENTICATION_BACKENDS = (
+    'social_auth.backends.twitter.TwitterBackend',
+    'social_auth.backends.facebook.FacebookBackend',
+    'social_auth.backends.google.GoogleOAuthBackend',
+    'social_auth.backends.google.GoogleOAuth2Backend',
+    'social_auth.backends.google.GoogleBackend',
+    
+#   'social_auth.backends.yahoo.YahooBackend',
+#   'social_auth.backends.browserid.BrowserIDBackend',
+#    'social_auth.backends.contrib.linkedin.LinkedinBackend',
+#    'social_auth.backends.contrib.disqus.DisqusBackend',
+#    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
+#    'social_auth.backends.contrib.orkut.OrkutBackend',
+#    'social_auth.backends.contrib.foursquare.FoursquareBackend',
+#    'social_auth.backends.contrib.github.GithubBackend',
+#    'social_auth.backends.contrib.vk.VKOAuth2Backend',
+#    'social_auth.backends.contrib.live.LiveBackend',
+#    'social_auth.backends.contrib.skyrock.SkyrockBackend',
+#    'social_auth.backends.contrib.yahoo.YahooOAuthBackend',
+#    'social_auth.backends.contrib.readability.ReadabilityBackend',
+#    'social_auth.backends.contrib.fedora.FedoraBackend',
+    'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 
