@@ -118,6 +118,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "account.context_processors.account",
     "pinax_theme_bootstrap.context_processors.theme",
+    'social.apps.django_app.context_processors.backends',
+    'social.apps.django_app.context_processors.login_redirect',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
@@ -142,11 +144,11 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     'django.contrib.webdesign',
 
-    'social_auth',
+    'social.apps.django_app.default',
     'account',
     "bootstrapform",
     "pinax_theme_bootstrap",
-    
+
 
 #    'debug_toolbar',
 #    'django_coverage',
@@ -198,32 +200,14 @@ CRISPY_TEMPLATE_PACK = "bootstrap"
 # default centre of maps
 EASY_MAPS_CENTER = (-41.3, 32)
 
-TWITTER_CONSUMER_KEY = 'gx3LnhtWJyFbyH3bt6wR18u2j'
-TWITTER_CONSUMER_SECRET = 'SQTGvdCnhopWW6nQiCB0GozOrQSB9dvBESjif6D5xq0FkVg2gM'
+ACCOUNT_OPEN_SIGNUP = False
+
 
 AUTHENTICATION_BACKENDS = (
-    'social_auth.backends.twitter.TwitterBackend',
-    'social_auth.backends.facebook.FacebookBackend',
-    'social_auth.backends.google.GoogleOAuthBackend',
-    'social_auth.backends.google.GoogleOAuth2Backend',
-    'social_auth.backends.google.GoogleBackend',
-    
-#   'social_auth.backends.yahoo.YahooBackend',
-#   'social_auth.backends.browserid.BrowserIDBackend',
-#    'social_auth.backends.contrib.linkedin.LinkedinBackend',
-#    'social_auth.backends.contrib.disqus.DisqusBackend',
-#    'social_auth.backends.contrib.livejournal.LiveJournalBackend',
-#    'social_auth.backends.contrib.orkut.OrkutBackend',
-#    'social_auth.backends.contrib.foursquare.FoursquareBackend',
-#    'social_auth.backends.contrib.github.GithubBackend',
-#    'social_auth.backends.contrib.vk.VKOAuth2Backend',
-#    'social_auth.backends.contrib.live.LiveBackend',
-#    'social_auth.backends.contrib.skyrock.SkyrockBackend',
-#    'social_auth.backends.contrib.yahoo.YahooOAuthBackend',
-#    'social_auth.backends.contrib.readability.ReadabilityBackend',
-#    'social_auth.backends.contrib.fedora.FedoraBackend',
+    'social.backends.twitter.TwitterOAuth',
+
+    'social.backends.facebook.FacebookOAuth2',
+    'social.backends.google.GoogleOAuth2',
     'social_auth.backends.OpenIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-
