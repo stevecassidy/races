@@ -60,7 +60,7 @@ class ViewTests(TestCase):
         weeks of races, starting from today"""
         
         
-        response = self.client.get(reverse('site:home'))
+        response = self.client.get(reverse('home'))
         self.assertNotContains(response, "Yesterday 1 W")
         self.assertContains(response, "Today 2 W")
         self.assertContains(response, "Tomorrow 3 W")
@@ -76,7 +76,7 @@ class ViewTests(TestCase):
         """Test that the race list page has all future
         races including today"""
         
-        response = self.client.get(reverse('site:races'))
+        response = self.client.get(reverse('races'))
         
         self.assertNotContains(response, "Yesterday 1 W")
         self.assertContains(response, "Today 2 W")
@@ -104,7 +104,7 @@ class ViewTests(TestCase):
         """Test that the club page has all future
         races for the club including today"""
         
-        response = self.client.get(reverse('site:club', kwargs={'slug': self.wmcc.slug}))
+        response = self.client.get(reverse('club', kwargs={'slug': self.wmcc.slug}))
         
         self.assertNotContains(response, "Yesterday 1 W")
         self.assertContains(response, "Today 2 W")
@@ -140,7 +140,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
         
-        url = reverse('site:race_create')
+        url = reverse('race_create')
         # first get
         response = self.client.get(url)
         
@@ -176,7 +176,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
     
-        url = reverse('site:race_create')
+        url = reverse('race_create')
         # first get
         response = self.client.get(url)
     
@@ -225,7 +225,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
     
-        url = reverse('site:race_create')
+        url = reverse('race_create')
         # first get
         response = self.client.get(url)
     
@@ -273,7 +273,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
     
-        url = reverse('site:race_create')
+        url = reverse('race_create')
         # first get
         response = self.client.get(url)
     

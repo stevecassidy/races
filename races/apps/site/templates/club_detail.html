@@ -1,8 +1,9 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
+{% load bootstrap %}
 
 {% block title %}{{club.name}}{% endblock %}
 
-    {% block extrahead %}    
+    {% block extra_head %}
     <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
     <style type='text/css'>
 #id_description, #id_title, #id_url {
@@ -13,23 +14,19 @@ th label {
 }
     </style>
     {% endblock %}
-    
-    {% block extrajs %}
+
+    {% block extra_script %}
     <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
     <script>
         $(document).ready(
             function() {
-                $('#formlegend').click(function(){
-                    $('#formdiv').toggle();
-                });
-                $('#formdiv').hide();
-                
+
                 // monthly disabled by default
                 $("#id_repeatMonthN").addClass("disabled").attr("disabled", true);
                 $("#id_repeatDay").addClass("disabled").attr("disabled", true);
                 $("#id_number").addClass("disabled").attr("disabled", true);
-                
-                
+
+
                 $("#id_repeat").change(function() {
                     if ($(this).val() == 'none') {
                         $("#id_number").addClass("disabled").attr("disabled", true);
@@ -44,10 +41,10 @@ th label {
                         $("#id_repeatDay").addClass("disabled").attr("disabled", true);
                     }
                 });
-                
+
             });
     </script>
-    {% endblock %}   
+    {% endblock %}
 
 {% block content %}
 
@@ -57,60 +54,61 @@ th label {
 
 
 {% if user.is_authenticated %}
-<form method='post' action='{% url 'site:race_create' %}'>
-    {% csrf_token %}
-    <fieldset>
-        <legend class='btn' id='formlegend'>Create New Race for {{club.name}}</legend>
-        <div id='formdiv' class='well'>
-        {{form.errors}}
-        <input type='hidden' name='club' value='{{club.id}}'>
-        <table class='table-condensed'>
-           
-            <tr><th><label for='id_title'>Title</label></th><td colspan=3>{{form.title}}</td></tr>
-            <tr>
-                <th><label for='id_date'>Date</label></th><td><input data-provide="datepicker" name='date' id='id_date'></td>
-                <th><label for='id_time'>Start Time</label></th><td>{{form.time}}</td>
-            </tr>
-            
-            <tr>
-                <th><label for='id_weekly'>Repeat</label></th>
-                <td>{{form.repeat}}</td>
-                <td>{{form.number}}</td>
-                <td><label for='id_number'>times</label></td>
-            </tr>
+<button class='btn' data-toggle='collapse' aria-expanded="false"
+        aria-controls="formdiv" data-target="#formdiv">Create New Race for {{club.name}}</button>
 
-            <tr>
-                <th><label for='id_repeat'>Repeat on the</label></th>
-                <td>{{form.repeatMonthN}}</td>
-                <td>{{form.repeatDay}}</td>
-                <td><label for='id_number'>of each month</label></td>
-            </tr>
-            
-            
-            <tr>
-                <th><label for='id_location'>Location</label></th><td>{{form.location}}</td>
-                <th><label for='id_status'>Status</label></th><td>{{form.status}}</td>
-            </tr>
-            <tr><th><label for='id_url'>URL</label></th><td colspan=3>{{form.url}}</td></tr>
-            
-            <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description}}</td></tr>
-        </table>        
-        
-        <div class="form-actions">  
-            <button type="submit" class="btn btn-primary">Create Race(s)</button>  
-        </div>  
+<form method='post' action='{% url 'race_create' %}'>
+    {% csrf_token %}
+        <div class='collapse' id='formdiv'>
+            <div class='well form-group'>
+                {{form.errors}}
+                <input type='hidden' name='club' value='{{club.id}}'>
+                <table class='table-condensed'>
+
+                    <tr><th><label for='id_title'>Title</label></th><td colspan=3>{{form.title|bootstrap_inline}}</td></tr>
+                    <tr>
+                        <th><label for='id_date'>Date</label></th><td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
+                        <th><label for='id_time'>Start Time</label></th><td>{{form.time|bootstrap_inline}}</td>
+                    </tr>
+
+                    <tr>
+                        <th><label for='id_weekly'>Repeat</label></th>
+                        <td>{{form.repeat|bootstrap_inline}}</td>
+                        <td>{{form.number|bootstrap_inline}}</td>
+                        <td><label for='id_number'>times</label></td>
+                    </tr>
+
+                    <tr>
+                        <th><label for='id_repeat'>Repeat on the</label></th>
+                        <td>{{form.repeatMonthN|bootstrap_inline}}</td>
+                        <td>{{form.repeatDay|bootstrap_inline}}</td>
+                        <td><label for='id_number'>of each month</label></td>
+                    </tr>
+
+
+                    <tr>
+                        <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
+                        <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
+                    </tr>
+                    <tr><th><label for='id_url'>URL</label></th><td colspan=3>{{form.url|bootstrap_inline}}</td></tr>
+
+                    <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
+                </table>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Race(s)</button>
+                </div>
+            </div>
         </div>
-    </fieldset>
-    
-    
+
+
 </form>
 {% endif %}
 
 {% regroup races by date as date_list %}
- 
+
 {% include 'race_table.html' %}
 
 
 
 {% endblock %}
-

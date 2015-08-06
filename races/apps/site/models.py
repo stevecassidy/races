@@ -267,7 +267,7 @@ class Race(models.Model):
         return unicode(self.club) + u": " + self.title + ", " + str(self.date)
     
     def get_absolute_url(self):
-        return reverse('site:race', kwargs={'pk': self.id, 'slug': self.club.slug})
+        return reverse('race', kwargs={'pk': self.id, 'slug': self.club.slug})
     
     def duplicate(self):
         """Create a race just like this one with a slightly modified title 

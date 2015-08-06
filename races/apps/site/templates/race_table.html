@@ -12,12 +12,12 @@
            {% for race in date.list %}
                   <tr>
                       <td class='racetime'>{{race.time}}</td>
-                      <td class='racetitle'>{{race.club.slug}}: <a href="{% url 'site:race' race.club.slug race.pk %}">{{ race.title }}</a></td>
+                      <td class='racetitle'>{{race.club.slug}}: <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a></td>
                       <td class='racelocation'>{{ race.location }}</td>
                       {% if user.is_authenticated %}
                       <td>
-                          <a href="{% url 'site:race_delete' race.id %}"><i class="icon-remove"></i></a>
-                          <a href="{% url 'site:race_update' race.id %}"><i class="icon-pencil"></i></a>
+                          <a href="{% url 'race_delete' race.id %}"><i class="icon-remove"></i></a>
+                          <a href="{% url 'race_update' race.id %}"><i class="icon-pencil"></i></a>
                       </td>
                       {% endif %}
                   </tr>

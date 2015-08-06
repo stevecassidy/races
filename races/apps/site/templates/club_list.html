@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+{% extends "site_base.html" %}
 {% block content %}
 
     <h2>Clubs</h2>
 
     <ul>
     {% for club in clubs %}
-       <li><a href="{% url 'site:club' club.slug %}">{{club.name}}</a></li>  
+       <li><a href="{% url 'club' club.slug %}">{{club.name}}</a></li>  
     {% endfor %}
     </ul>
 

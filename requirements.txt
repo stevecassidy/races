@@ -1,6 +1,5 @@
-django == 1.5
+django == 1.8.3
 django-pagination
-south
 django-coverage
 django-ical
 icalendar
@@ -10,3 +9,7 @@ beautifulsoup4
 lxml
 ngram
 vcrpy
+python-social-auth
+django-user-accounts
+pinax-theme-bootstrap==5.7.5
+django-bootstrap-form
