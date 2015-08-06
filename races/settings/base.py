@@ -205,9 +205,23 @@ ACCOUNT_OPEN_SIGNUP = False
 
 AUTHENTICATION_BACKENDS = (
     'social.backends.twitter.TwitterOAuth',
-
-    'social.backends.facebook.FacebookOAuth2',
-    'social.backends.google.GoogleOAuth2',
-    'social_auth.backends.OpenIDBackend',
+    'social.backends.strava.StravaOAuth',
+    #'social.backends.facebook.FacebookOAuth2',
+    #'social.backends.google.GoogleOAuth2',
+    #'social_auth.backends.OpenIDBackend',
     'django.contrib.auth.backends.ModelBackend',
+)
+
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.social_auth.associate_by_email',  # this allows linking social auth to existing account
+    'social.pipeline.user.create_user',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
 )

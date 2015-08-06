@@ -1,0 +1,12 @@
+<div>
+    <p>You have the option of signing in to Cabici.net with your
+        Strava or Twitter accounts.  This means you don't need a separate
+        username/password.   Cabici is not able to access any of your
+        personal data except for your email address.</p>
+
+    <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+        <img src="{{STATIC_URL}}/sign-in-with-twitter-gray.png" alt="Login with Twitter"></a>
+    <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
+         <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
+        </a>
+</div>
