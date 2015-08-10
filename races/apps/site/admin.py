@@ -48,7 +48,7 @@ class RaceCourseAdmin(admin.ModelAdmin):
 
 admin.site.register(RaceCourse, RaceCourseAdmin)
 
-from races.apps.site.usermodel import Rider
+from races.apps.site.usermodel import Rider, RaceResult
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
@@ -65,3 +65,9 @@ class UserAdmin(UserAdmin):
 # Re-register UserAdmin
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+
+class RaceResultAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(RaceResult, RaceResultAdmin)

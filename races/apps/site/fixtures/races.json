@@ -1,0 +1,47 @@
+[
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 5,
+        "url": "",
+        "location": 2,
+        "time": "08:00:00",
+        "date": "2015-08-08"
+    },
+    "model": "site.race",
+    "pk": 1
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 5,
+        "url": "",
+        "location": 2,
+        "time": "08:00:00",
+        "date": "2015-08-15"
+    },
+    "model": "site.race",
+    "pk": 2
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 5,
+        "url": "",
+        "location": 2,
+        "time": "08:00:00",
+        "date": "2015-08-22"
+    },
+    "model": "site.race",
+    "pk": 3
+}
+]
