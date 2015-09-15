@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
+import os
 
 from races.apps.site.usermodel import Rider, RaceResult
 from races.apps.site.models import Club, Race
@@ -33,10 +34,13 @@ class UserModelTests(TestCase):
         club = Club.objects.get(slug='Bankstown')
         race = Race.objects.get(pk=1)
 
-        result = RaceResult(race=race, rider=user, grade='A', number=12, place=1)
+        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider.save()
+        
+        result = RaceResult(race=race, rider=rider, grade='A', number=12, place=1)
         result.save()
 
-        self.assertEqual(result.rider.username, user.username)
+        self.assertEqual(result.rider.licenceno, rider.licenceno)
 
     def test_result_one_race_per_rider(self):
         """A rider can only appear once in a race"""
@@ -45,11 +49,14 @@ class UserModelTests(TestCase):
         club = Club.objects.get(slug='Bankstown')
         race = Race.objects.get(pk=1)
 
-        result1 = RaceResult(race=race, rider=user, grade='A', number=21, place=1)
+        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider.save()
+
+        result1 = RaceResult(race=race, rider=rider, grade='A', number=21, place=1)
         result1.save()
 
         with self.assertRaises(IntegrityError):
-            result2 = RaceResult(race=race, rider=user, grade='A', number=22, place=3)
+            result2 = RaceResult(race=race, rider=rider, grade='A', number=22, place=3)
             result2.save()
 
     def test_result_one_number_per_grade(self):
@@ -61,9 +68,22 @@ class UserModelTests(TestCase):
         club = Club.objects.get(slug='Bankstown')
         race = Race.objects.get(pk=1)
 
-        result1 = RaceResult(race=race, rider=user1, grade='A', number=21, place=1)
+        rider1 = Rider(user=user1, club=club, gender='M', licenceno='123456')
+        rider2 = Rider(user=user2, club=club, gender='M', licenceno='123457')
+        rider1.save()
+        rider2.save()
+
+        result1 = RaceResult(race=race, rider=rider1, grade='A', number=21, place=1)
         result1.save()
 
         with self.assertRaises(IntegrityError):
-            result2 = RaceResult(race=race, rider=user2, grade='A', number=21, place=3)
+            result2 = RaceResult(race=race, rider=rider2, grade='A', number=21, place=3)
             result2.save()
+
+
+    def test_load_results_csv(self):
+        """Load results from CSV creates riders and results"""
+
+        race = Race.objects.get(pk=1)
+
+        race.load_csv_results(os.path.join(os.path.dirname(__file__), 'waratah-racesheet-sample.csv'))

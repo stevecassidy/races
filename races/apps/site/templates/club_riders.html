@@ -1,0 +1,23 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block extra_script %}
+    {% endblock %}
+
+{% block content %}
+
+<h2>{{club.name}} Riders</h2>
+
+<ul>
+{% for rider in riders %}
+  <li><a href="/rider/{{rider.user.id}}">{{rider.user.first_name}} {{rider.user.last_name}}</a></li>
+{% endfor %}
+</ul>
+
+
+{% endblock %}

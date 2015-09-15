@@ -116,7 +116,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.contrib.auth.context_processors.auth",
     "django.contrib.messages.context_processors.messages",
-    "account.context_processors.account",
     "pinax_theme_bootstrap.context_processors.theme",
     'social.apps.django_app.context_processors.backends',
     'social.apps.django_app.context_processors.login_redirect',
@@ -145,7 +144,6 @@ INSTALLED_APPS = (
     'django.contrib.webdesign',
 
     'social.apps.django_app.default',
-    'account',
     "bootstrapform",
     "pinax_theme_bootstrap",
 
@@ -221,6 +219,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.get_username',
     'social.pipeline.social_auth.associate_by_email',  # this allows linking social auth to existing account
     'social.pipeline.user.create_user',
+    'races.apps.site.usermodel.save_rider',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'

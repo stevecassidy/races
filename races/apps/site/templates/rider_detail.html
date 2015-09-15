@@ -1,0 +1,16 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{user.first_name}} {{user.last_name}}</h2>
+
+<table>
+    <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
+    <tr><th>Licence</th><td>{{user.rider.licenceno}}</td></tr>
+</table>
+
+
+{% endblock %}

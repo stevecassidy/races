@@ -9,6 +9,5 @@ urlpatterns = patterns('',
 
     url('^', include('django.contrib.auth.urls')),
     url('', include('social.apps.django_app.urls', namespace='social')),
-    url(r"^account/", include("account.urls")),
 
 )
