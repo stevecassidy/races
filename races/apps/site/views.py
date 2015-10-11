@@ -55,8 +55,6 @@ class ListRacesView(ListView):
 
     def get_queryset(self):
 
-        print "Get_queryset"
-
         if self.kwargs.has_key('year') and self.kwargs.has_key('month'):
             month = int(self.kwargs['month'])
             year = int(self.kwargs['year'])

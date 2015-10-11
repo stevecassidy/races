@@ -17,8 +17,10 @@ class UserModelTests(TestCase):
     def test_rider(self):
         """Test creation of a rider"""
 
-        user = User.objects.get(username='user1')
-        club = Club.objects.get(slug='Bankstown')
+        user = User(username='user1')
+        user.save()
+
+        club = Club.objects.get(slug='OGE')
 
         rider = Rider(user=user, club=club, gender='M', licenceno='123456')
 
@@ -30,13 +32,14 @@ class UserModelTests(TestCase):
     def test_result(self):
         """Create a race result"""
 
-        user = User.objects.get(username='user1')
-        club = Club.objects.get(slug='Bankstown')
+        user = User(username='user1')
+        user.save()
+        club = Club.objects.get(slug='OGE')
         race = Race.objects.get(pk=1)
 
         rider = Rider(user=user, club=club, gender='M', licenceno='123456')
         rider.save()
-        
+
         result = RaceResult(race=race, rider=rider, grade='A', number=12, place=1)
         result.save()
 
@@ -45,8 +48,9 @@ class UserModelTests(TestCase):
     def test_result_one_race_per_rider(self):
         """A rider can only appear once in a race"""
 
-        user = User.objects.get(username='user1')
-        club = Club.objects.get(slug='Bankstown')
+        user = User(username='user1')
+        user.save()
+        club = Club.objects.get(slug='MOV')
         race = Race.objects.get(pk=1)
 
         rider = Rider(user=user, club=club, gender='M', licenceno='123456')
@@ -62,10 +66,12 @@ class UserModelTests(TestCase):
     def test_result_one_number_per_grade(self):
         """A number is used only once in a grade"""
 
-        user1 = User.objects.get(username='user1')
-        user2 = User.objects.get(username='user2')
+        user1 = User(username='user1')
+        user2 = User(username='user2')
+        user1.save()
+        user2.save()
 
-        club = Club.objects.get(slug='Bankstown')
+        club = Club.objects.get(slug='MOV')
         race = Race.objects.get(pk=1)
 
         rider1 = Rider(user=user1, club=club, gender='M', licenceno='123456')
@@ -84,6 +90,25 @@ class UserModelTests(TestCase):
     def test_load_results_csv(self):
         """Load results from CSV creates riders and results"""
 
+        user1 = User(username='user1')
+        user1.save()
+        club = Club.objects.get(slug='MOV')
+        # add rider info to match a row in the spreadsheet
+        rider1 = Rider(user=user1, club=club, gender='M', licenceno='169508')
+        rider1.save()
+
         race = Race.objects.get(pk=1)
 
-        race.load_csv_results(os.path.join(os.path.dirname(__file__), 'waratah-racesheet-sample.csv'))
+        with open(os.path.join(os.path.dirname(__file__), 'waratah-racesheet-sample.csv'), 'rU') as fd:
+            race.load_csv_results(fd)
+
+        self.assertEqual(race.raceresult_set.all().count(), 112)
+
+        # check result of our riders
+        results1 = RaceResult.objects.filter(rider__licenceno__exact=rider1.licenceno)
+
+        self.assertEqual(results1.count(), 1)
+        result1 = results1[0]
+
+        self.assertEqual(result1.grade, 'A')
+        self.assertEqual(result1.place, 3)

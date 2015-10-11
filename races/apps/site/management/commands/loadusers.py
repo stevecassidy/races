@@ -20,7 +20,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        unknown, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
+#        unknown, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
+        Club.objects.all().delete()
+
 
         for csvfile in options['csvfile']:
             with open(csvfile, 'rU') as fd:
@@ -39,9 +41,14 @@ class Command(BaseCommand):
                             user.rider = Rider()
                             user.rider.licenceno = row['licenceno']
                             user.rider.gender = row['gender']
-                            clubs = Club.objects.filter(slug=row['club'])
-                            if len(clubs) == 1:
-                                user.rider.club = clubs[0]
-                            else:
-                                user.rider.club = unknown
+
+                            club,created = Club.objects.get_or_create(slug=row['club'], name=row['clubslug'])
+                            user.rider.club = club
+
+                            if 0:
+                                clubs = Club.objects.filter(slug=row['club'])
+                                if len(clubs) == 1:
+                                    user.rider.club = clubs[0]
+                                else:
+                                    user.rider.club = unknown
                             user.rider.save()

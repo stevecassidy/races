@@ -92,7 +92,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <h2>Results</h2>
 
 {% for grade in grade_list %}
-<h3>{{grade.grouper}} Grade</h3>
+<h3>{{grade.grouper}} Grade ({{grade.list|length}} riders)</h3>
 
 <table class='table'>
     <thead>
@@ -104,12 +104,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
 <tr><th>{{result.number}}</th><td>{{result.place}}</td><td>{{result.rider}}</td><td>{{result.rider.club}}</tr>
     {% endif %}
 {% endfor %}
-
+{% if 0 %}
 {% for result in grade.list %}
     {% if not result.place %}
 <tr><th>{{result.number}}</th><td>-</td><td>{{result.rider}}</td><td>{{result.rider.club}}</tr>
     {% endif %}
 {% endfor %}
+{% endif %}
+
 </tbody>
 </table>
 

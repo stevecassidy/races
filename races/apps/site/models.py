@@ -122,7 +122,6 @@ class Club(models.Model):
                     # do we already have this race?
                     if Race.objects.filter(hash=racehash).count() == 0:
 
-
                         location = RaceCourse.objects.find_location(title)
 
                         if type(start) == datetime.datetime:
@@ -286,12 +285,12 @@ class Race(models.Model):
 
         # delete any existing results for this race
         RaceResult.objects.filter(race=self).delete()
-        
+
         reader = csv.DictReader(fd)
 
         for row in reader:
 
-            if row['LicenceNo'] == '0':
+            if not 'LicenceNo' in row or row['LicenceNo'] == '0':
                 continue
 
             riders = Rider.objects.filter(licenceno=row['LicenceNo'])
@@ -303,17 +302,18 @@ class Race(models.Model):
                     club = clubs[0]
                 else:
                     club = unknown_club
-                if row['LicenceNo'] != 0:
-                    rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
-                    rider.save()
+                rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
+                rider.save()
             else:
+                # take the first rider if we have them already (should be just one)
                 rider = riders[0]
-                # work out place from points - actually need to account for small grades (E, F)
-                points = int(row['Points'])
-                if points == 2:
-                    result = RaceResult(rider=rider, race=self,  grade=row['Grade'], number=row['ShirtNo'])
-                elif points > 0:
-                    place = 8-points
-                    result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
 
-                result.save()
+            # work out place from points - actually need to account for small grades (E, F)
+            points = int(row['Points'])
+            if points == 2:
+                result = RaceResult(rider=rider, race=self,  grade=row['Grade'], number=row['ShirtNo'])
+            elif points > 0:
+                place = 8-points
+                result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
+
+            result.save()
