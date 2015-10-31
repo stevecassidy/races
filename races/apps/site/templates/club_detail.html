@@ -50,7 +50,7 @@ th label {
 
 <h2>{{club.name}}</h2>
 
-<p></p><a href='{{club.url}}'>{{club.name}} Website</a></p>
+<p><a href='{{club.url}}'>{{club.name}} Website</a></p>
 
 
 {% if user.is_authenticated %}
@@ -64,6 +64,8 @@ th label {
                 {{form.errors}}
                 <input type='hidden' name='club' value='{{club.id}}'>
                 <table class='table-condensed'>
+                    <tr><th><label for='id_pointscore'>Pointscore</label></th>
+                           <td colspan=3>{{form.pointscore|bootstrap_inline}}</td></tr>
 
                     <tr><th><label for='id_title'>Title</label></th><td colspan=3>{{form.title|bootstrap_inline}}</td></tr>
                     <tr>
@@ -103,6 +105,15 @@ th label {
 
 
 </form>
+{% endif %}
+
+{% if club.pointscore_set.all %}
+<h2>Pointscores</h3>
+    <ul>
+    {% for ps in club.pointscore_set.all %}
+      <li><a href="{% url 'pointscore' club=club.slug pk=ps.pk %}">{{ps}}</a></li>
+    {% endfor %}
+    </ul>
 {% endif %}
 
 {% regroup races by date as date_list %}

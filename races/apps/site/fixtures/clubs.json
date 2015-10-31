@@ -1,122 +1,206 @@
 [
 {
-    "pk": 1, 
-    "model": "site.club", 
     "fields": {
-        "name": "Waratah Masters Cycling Club", 
-        "url": "http://www.waratahmasters.com.au/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "Waratahs"
-    }
+        "name": "MOVISTAR TEAM",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "MOV"
+    },
+    "model": "site.club",
+    "pk": 63
 },
 {
-    "pk": 2, 
-    "model": "site.club", 
     "fields": {
-        "name": "Lidcombe Auburn Cycling Club", 
-        "url": "http://www.lacc.org.au/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "LACC"
-    }
+        "name": "TEAM KATUSHA",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "KAT"
+    },
+    "model": "site.club",
+    "pk": 64
 },
 {
-    "pk": 3, 
-    "model": "site.club", 
     "fields": {
-        "name": "Parramatta Cycling Club", 
-        "url": "http://www.parramattacycling.com.au/", 
-        "icalurl": "http://www.parramattacycling.com.au/iCal", 
-        "contact": "", 
-        "icalpatterns": "race", 
-        "slug": "Parramatta"
-    }
+        "name": "ASTANA PRO TEAM",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "AST"
+    },
+    "model": "site.club",
+    "pk": 65
 },
 {
-    "pk": 4, 
-    "model": "site.club", 
     "fields": {
-        "name": "SUVelo", 
-        "url": "http://www.suvelo.com.au/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "SUVelo"
-    }
+        "name": "TEAM SKY",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "SKY"
+    },
+    "model": "site.club",
+    "pk": 66
 },
 {
-    "pk": 5, 
-    "model": "site.club", 
     "fields": {
-        "name": "Bankstown Sports Cycling Club", 
-        "url": "http://bankstownsportscycling.com/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "Bankstown"
-    }
+        "name": "TINKOFF - SAXO",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "TCS"
+    },
+    "model": "site.club",
+    "pk": 67
 },
 {
-    "pk": 6, 
-    "model": "site.club", 
     "fields": {
-        "name": "Penrith Cycling Club", 
-        "url": "http://www.penrithcyclingclub.com/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "Penrith"
-    }
+        "name": "BMC RACING TEAM",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "BMC"
+    },
+    "model": "site.club",
+    "pk": 68
 },
 {
-    "pk": 7, 
-    "model": "site.club", 
     "fields": {
-        "name": "St George Cycling Club", 
-        "url": "http://www.stgeorge.cycling.org.au/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "StGeorge"
-    }
+        "name": "LAMPRE - MERIDA",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "LAM"
+    },
+    "model": "site.club",
+    "pk": 69
 },
 {
-    "pk": 8, 
-    "model": "site.club", 
     "fields": {
-        "name": "Marconi Cycling Club", 
-        "url": "http://www.marconicyclingclub.com/", 
-        "icalurl": "", 
-        "contact": "", 
-        "icalpatterns": "", 
-        "slug": "Marconi"
-    }
+        "name": "FDJ",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "FDJ"
+    },
+    "model": "site.club",
+    "pk": 70
 },
 {
-    "pk": 9, 
-    "model": "site.club", 
     "fields": {
-        "name": "Central Coast Cycling Club", 
-        "url": "http://www.centralcoastcyclingclub.com.au/", 
-        "icalurl": "http://www.centralcoastcyclingclub.com.au/calendar/ical", 
-        "contact": "", 
-        "icalpatterns": "Racing, Race, Handicap", 
-        "slug": "CCCC"
-    }
+        "name": "TEAM GIANT - ALPECIN",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "TGA"
+    },
+    "model": "site.club",
+    "pk": 71
 },
 {
-    "pk": 10, 
-    "model": "site.club", 
     "fields": {
-        "name": "Manly Warringah Cycling Club", 
-        "url": "http://www.manlywarringahcc.org.au/", 
-        "icalurl": "https://www.google.com/calendar/ical/account%40manlywarringahcc.org.au/public/basic.ics", 
-        "contact": "", 
-        "icalpatterns": "Race", 
-        "slug": "MWCC"
-    }
+        "name": "ETIXX - QUICK STEP",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "EQS"
+    },
+    "model": "site.club",
+    "pk": 72
+},
+{
+    "fields": {
+        "name": "AG2R LA MONDIALE",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "ALM"
+    },
+    "model": "site.club",
+    "pk": 73
+},
+{
+    "fields": {
+        "name": "ORICA GREENEDGE",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "OGE"
+    },
+    "model": "site.club",
+    "pk": 74
+},
+{
+    "fields": {
+        "name": "TREK FACTORY RACING",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "TFR"
+    },
+    "model": "site.club",
+    "pk": 75
+},
+{
+    "fields": {
+        "name": "LOTTO SOUDAL",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "LTS"
+    },
+    "model": "site.club",
+    "pk": 76
+},
+{
+    "fields": {
+        "name": "TEAM LOTTO NL - JUMBO",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "TLJ"
+    },
+    "model": "site.club",
+    "pk": 77
+},
+{
+    "fields": {
+        "name": "TEAM CANNONDALE - GARMIN",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "TCG"
+    },
+    "model": "site.club",
+    "pk": 78
+},
+{
+    "fields": {
+        "name": "IAM CYCLING",
+        "url": "",
+        "icalurl": "",
+        "contact": "",
+        "icalpatterns": "",
+        "slug": "IAM"
+    },
+    "model": "site.club",
+    "pk": 79
 }
 ]

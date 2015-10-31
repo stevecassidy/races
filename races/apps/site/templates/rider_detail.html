@@ -1,0 +1,32 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{user.first_name}} {{user.last_name}}</h2>
+
+<table class=table>
+    <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
+    <tr><th>Licence</th><td>{{user.rider.licenceno}}</td></tr>
+</table>
+
+<table class=table>
+    <thead>
+        <tr><th>Race</th><th>Grade</th><th>Place</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for result in user.rider.raceresult_set.all %}
+    <tr>
+        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+        <td>{{result.grade}}</td>
+        <td>{{result.place}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

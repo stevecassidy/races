@@ -1,0 +1,12 @@
+{% extends "site_base.html" %}
+{% block content %}
+
+    <h2>Pointscores for {{club}}</h2>
+
+    <ul>
+    {% for ps in objects %}
+        <li>{{ps}}</li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}
