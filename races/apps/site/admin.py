@@ -6,6 +6,7 @@ Created on Apr 15, 2013
 from django.contrib import admin
 from django import forms
 from races.apps.site.models import Club, RaceCourse, Race, STATUS_CHOICES
+from races.apps.site.usermodel import PointScore
 
 admin.site.register(Club)
 
@@ -42,6 +43,12 @@ class RaceAdmin(admin.ModelAdmin):
         pass
 
 admin.site.register(Race, RaceAdmin)
+
+class PointScoreAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(PointScore, PointScoreAdmin)
+
 
 class RaceCourseAdmin(admin.ModelAdmin):
     pass

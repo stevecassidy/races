@@ -35,13 +35,13 @@ class Command(BaseCommand):
         for race in Race.objects.all():
             for grade in grades.keys():
                 who = random.sample(grades[grade], random.randint(k/2, k-1))
-                number = 0
+                numbers = range(100)
+                random.shuffle(numbers)
                 place = 0
                 for rider in who:
-                    number += 1
                     place += 1
                     if place <= 5:
-                        result = RaceResult(race=race, rider=rider, grade=grade, number=number, place=place)
+                        result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=place)
                     else:
-                        result = RaceResult(race=race, rider=rider, grade=grade, number=number, place=0)
+                        result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=0)
                     result.save()

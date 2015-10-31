@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from importlib import import_module
 from django.contrib.auth.models import User
 
-
 import icalendar
 import pytz
 from urllib2 import urlopen, HTTPError, URLError, Request
@@ -201,6 +200,11 @@ class Club(models.Model):
 
 
         return (racelist, errors)
+
+
+
+
+
 
 class RaceCourseManager(models.Manager):
 

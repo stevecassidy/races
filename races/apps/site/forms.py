@@ -1,6 +1,7 @@
 
 from django import forms
 from races.apps.site.models import Race
+from races.apps.site.usermodel import PointScore
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 
@@ -30,11 +31,9 @@ class RaceCreateForm(forms.ModelForm):
                                           choices=MONTH_N_CHOICES, coerce=int, empty_value=1)
     repeatDay = forms.TypedChoiceField(label="Repeat on day", required=False, choices=DAYS, coerce=int, empty_value=0)
     number = forms.IntegerField(initial=6, required=False)
-
+    pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all())
 
 class RaceCSVForm(forms.Form):
     """Form for uploading a CSV file with race results"""
 
     csvfile = forms.FileField(label="CSV File")
-
-    

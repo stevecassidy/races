@@ -13,6 +13,7 @@ from django.http import HttpResponseRedirect
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
+from races.apps.site.usermodel import PointScore
 from races.apps.site.forms import RaceCreateForm, RaceCSVForm
 
 import datetime
@@ -117,6 +118,35 @@ class ClubRidersView(ListView):
         context['riders'] = context['club'].rider_set.all().order_by('user__last_name')
         return context
 
+class ClubPointscoreView(DetailView):
+
+    model = PointScore
+    template_name = "pointscore_detail.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubPointscoreView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        club = self.kwargs['club']
+        context['club'] = Club.objects.get(slug=club)
+        context['races'] = Race.objects.filter(pointscore=self.object)
+
+        return context
+
+class ClubPointscoreList(ListView):
+
+    model = PointScore
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubPointscoreView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        club = self.kwargs['club']
+        context['club'] = Club.objects.get(slug=club)
+        context['races'] = Race.objects.filter(pointscore=self.object)
+
+        return context
+
 class RiderView(DetailView):
 
     model = User
@@ -164,8 +194,9 @@ class RaceDeleteView(DeleteView):
     def dispatch(self, *args, **kwargs):
         return super(RaceDeleteView, self).dispatch(*args, **kwargs)
 
-@login_required
-def create_races(request):
+
+def clubRaces(request):
+    """View to create one or more races for a club"""
 
     if request.POST:
         form = RaceCreateForm(request.POST)
@@ -174,9 +205,13 @@ def create_races(request):
 
     if form.is_valid():
         # process it
+        pointscore = form.cleaned_data['pointscore']
         if form.cleaned_data['repeat'] == 'none':
 
             race = form.save()
+            if pointscore:
+                pointscore.races.add(race)
+
             return HttpResponseRedirect(reverse('race', kwargs={'slug': race.club.slug, 'pk': race.id}))
 
         else:
@@ -201,6 +236,8 @@ def create_races(request):
 
                 race.date = date
                 race.save()
+                if pointscore:
+                    pointscore.races.add(race)
 
             return HttpResponseRedirect(reverse('club', kwargs={'slug': race.club.slug}))
     else:

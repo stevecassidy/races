@@ -43,7 +43,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">Upload Results Spreadsheet</h4>
       </div>
       <form method="POST" enctype="multipart/form-data" action="{% url 'race_results_csv' race.club.slug race.id %}">
           <div class="modal-body">
@@ -96,18 +96,30 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <table class='table'>
     <thead>
-    <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th></tr>
+    <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
+    {% for p in grade.list.0.pointscores %}
+        <th>{{p.pointscore.name}}</th>
+    {% endfor %}
+    </tr>
 </thead>
 <tbody>
 {% for result in grade.list %}
     {% if result.place %}
-<tr><th>{{result.number}}</th><td>{{result.place}}</td><td>{{result.rider}}</td><td>{{result.rider.club}}</tr>
+    <tr>
+        <th>{{result.number}}</th>
+        <td>{{result.place}}</td>
+        <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
+        <td>{{result.rider.club}}</td>
+        {% for p in result.pointscores %}
+        <td>{{p.points}}</td>
+        {% endfor %}
+    </tr>
     {% endif %}
 {% endfor %}
 {% if 0 %}
 {% for result in grade.list %}
     {% if not result.place %}
-<tr><th>{{result.number}}</th><td>-</td><td>{{result.rider}}</td><td>{{result.rider.club}}</tr>
+<tr><th>{{result.number}}</th><td>-</td><td><a href="{% url 'rider' pk=rider.user.pk %}">{{result.rider}}</a></td><td>{{result.rider.club}}</tr>
     {% endif %}
 {% endfor %}
 {% endif %}
