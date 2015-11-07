@@ -57,7 +57,7 @@ th label {
 <button class='btn' data-toggle='collapse' aria-expanded="false"
         aria-controls="formdiv" data-target="#formdiv">Create New Race for {{club.name}}</button>
 
-<form method='post' action='{% url 'race_create' %}'>
+<form method='post' action='{% url 'club_races' club.slug %}'>
     {% csrf_token %}
         <div class='collapse' id='formdiv'>
             <div class='well form-group'>

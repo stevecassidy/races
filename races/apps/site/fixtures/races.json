@@ -43,5 +43,20 @@
     },
     "model": "site.race",
     "pk": 3
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Another Race",
+        "club": 64,
+        "url": "",
+        "location": 1,
+        "time": "08:00:00",
+        "date": "2015-08-22"
+    },
+    "model": "site.race",
+    "pk": 4
 }
 ]

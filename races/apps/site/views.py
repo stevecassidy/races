@@ -195,7 +195,7 @@ class RaceDeleteView(DeleteView):
         return super(RaceDeleteView, self).dispatch(*args, **kwargs)
 
 
-def clubRaces(request):
+def clubRaces(request, slug):
     """View to create one or more races for a club"""
 
     if request.POST:

@@ -258,7 +258,7 @@ class Race(models.Model):
     title = models.CharField(max_length=100)
     date = models.DateField()
     time = models.TimeField()
-    club = models.ForeignKey(Club)
+    club = models.ForeignKey(Club, related_name='races')
     url  = models.URLField(blank=True, max_length=400)
     location = models.ForeignKey(RaceCourse)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d')
