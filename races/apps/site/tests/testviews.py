@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 
 from races.apps.site.models import Club, RaceCourse, Race
+from races.apps.site.usermodel import PointScore
 from datetime import datetime, timedelta, date
 
 
@@ -29,21 +30,21 @@ class ViewTests(TestCase):
         self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
 
         r = []
-        r.append(Race(title='Yesterday 1 W', date=yesterday, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Today 2 W', date=today, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Tomorrow 3 W', date=tomorrow, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Next Week 4 W', date=nextweek, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Fortnight 5 W', date=nextfortnight, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Three Weeks 6 W', date=nextthreeweeks, club=self.oge, time="7:00", status='p', url=self.oge.url, location=self.lansdowne))
-        r.append(Race(title='Not Published', date=tomorrow, club=self.oge, time="7:00", status='d', url=self.oge.url, location=self.lansdowne))
+        r.append(Race(title='Yesterday 1 W', date=yesterday, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Today 2 W', date=today, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Tomorrow 3 W', date=tomorrow, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Next Week 4 W', date=nextweek, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Fortnight 5 W', date=nextfortnight, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Three Weeks 6 W', date=nextthreeweeks, club=self.oge, time="7:00", status='p', website=self.oge.website, location=self.lansdowne))
+        r.append(Race(title='Not Published', date=tomorrow, club=self.oge, time="7:00", status='d', website=self.oge.website, location=self.lansdowne))
 
 
-        r.append(Race(title='Yesterday 1 L', date=yesterday, club=self.bmc, time="8:00", status='p', url=self.bmc.url, location=self.sop))
-        r.append(Race(title='Today 2 L', date=today, club=self.bmc, time="8:00", status='p', url=self.bmc.url, location=self.sop))
-        r.append(Race(title='Tomorrow 3 L', date=tomorrow, club=self.bmc, time="8:00", status='p', url=self.bmc.url, location=self.sop))
-        r.append(Race(title='Next Week 4 L', date=nextweek, club=self.bmc, time="8:00", status='p', url=self.bmc.url, location=self.sop))
-        r.append(Race(title='Fortnight 5 L', date=nextfortnight, club=self.bmc, time="8:00", status='p', url=self.bmc.url, location=self.sop))
-        r.append(Race(title='Three Weeks 6 L', date=nextthreeweeks, club=self.bmc, time="8:00", status='p',  url=self.bmc.url, location=self.sop))
+        r.append(Race(title='Yesterday 1 L', date=yesterday, club=self.bmc, time="8:00", status='p', website=self.bmc.website, location=self.sop))
+        r.append(Race(title='Today 2 L', date=today, club=self.bmc, time="8:00", status='p', website=self.bmc.website, location=self.sop))
+        r.append(Race(title='Tomorrow 3 L', date=tomorrow, club=self.bmc, time="8:00", status='p', website=self.bmc.website, location=self.sop))
+        r.append(Race(title='Next Week 4 L', date=nextweek, club=self.bmc, time="8:00", status='p', website=self.bmc.website, location=self.sop))
+        r.append(Race(title='Fortnight 5 L', date=nextfortnight, club=self.bmc, time="8:00", status='p', website=self.bmc.website, location=self.sop))
+        r.append(Race(title='Three Weeks 6 L', date=nextthreeweeks, club=self.bmc, time="8:00", status='p',  website=self.bmc.website, location=self.sop))
 
 
         for race in r:
@@ -129,7 +130,27 @@ class CreateViewTests(TestCase):
         self.lansdowne = RaceCourse.objects.get(name='Lansdowne Park')
         self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
 
+        self.pointscore = PointScore(club=self.oge, name="sample pointscore")
 
+        self.pointscore.save()
+
+
+    def test_club_view(self):
+        """Test the club page view"""
+
+        url = reverse('club', kwargs={'slug': self.oge.slug})
+        response = self.client.get(url)
+
+        self.assertContains(response, self.oge.name)
+        self.assertNotContains(response, 'raceform')
+
+        # logged in version has race form
+
+        self.client.login(username='test', password='test')
+        response = self.client.get(url)
+
+        self.assertContains(response, self.oge.name)
+        self.assertContains(response, 'raceform')
 
 
     def test_create_race(self):
@@ -140,7 +161,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
 
-        url = reverse('race_create')
+        url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
         response = self.client.get(url)
 
@@ -149,15 +170,17 @@ class CreateViewTests(TestCase):
         self.assertContains(response, "Create New Race")
 
         data = {'club': self.oge.id,
+                'pointscore': self.pointscore.id,
                 'location': self.lansdowne.id,
                 'title': 'Test Race',
                 'date': '2014-12-13',
                 'time': '08:00',
                 'repeat': 'none',
                 'status': 'd',
-                'url': 'http://example.org/'}
+                'website': 'http://example.org/'}
 
         response = self.client.post(url, data)
+        print response.content
         # expect a redirect response to the race page
         self.assertEqual(response.status_code, 302)
         self.assertTrue(isinstance(response, HttpResponseRedirect))
@@ -165,7 +188,7 @@ class CreateViewTests(TestCase):
 
         # should have one more race
 
-        self.assertEqual(1, self.oge.race_set.count())
+        self.assertEqual(1, self.oge.races.count())
 
 
     def test_create_race_series_weekly(self):
@@ -176,7 +199,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
 
-        url = reverse('race_create')
+        url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
         response = self.client.get(url)
 
@@ -185,6 +208,7 @@ class CreateViewTests(TestCase):
         self.assertContains(response, "Create New Race")
 
         data = {'club': self.oge.id,
+                'pointscore': self.pointscore.id,
                 'location': self.lansdowne.id,
                 'title': 'Test Race',
                 'date': '2014-12-13',
@@ -193,7 +217,7 @@ class CreateViewTests(TestCase):
                 'repeat': 'weekly',
                 'repeatN': '1',
                 'number': 6,
-                'url': 'http://example.org/'}
+                'website': 'http://example.org/'}
 
         response = self.client.post(url, data)
         # expect a redirect response to the race page
@@ -202,9 +226,9 @@ class CreateViewTests(TestCase):
         self.assertIn( 'OGE', response.get('Location'))
 
         # should have six more races
-        self.assertEqual(6, self.oge.race_set.count())
+        self.assertEqual(6, self.oge.races.count())
 
-        races = self.oge.race_set.all()
+        races = self.oge.races.all()
 
         # check the dates
         self.assertEqual(races[0].date, date(2014, 12, 13))
@@ -225,7 +249,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
 
-        url = reverse('race_create')
+        url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
         response = self.client.get(url)
 
@@ -234,6 +258,7 @@ class CreateViewTests(TestCase):
         self.assertContains(response, "Create New Race")
 
         data = {'club': self.oge.id,
+                'pointscore': self.pointscore.id,
                 'location': self.lansdowne.id,
                 'title': 'Test Race',
                 'date': '2014-12-13',
@@ -244,7 +269,7 @@ class CreateViewTests(TestCase):
                 'repeatMonthN': 2,
                 'repeatDay': 5,
                 'number': 6,
-                'url': 'http://example.org/'}
+                'website': 'http://example.org/'}
 
         response = self.client.post(url, data)
         # expect a redirect response to the race page
@@ -253,9 +278,9 @@ class CreateViewTests(TestCase):
         self.assertIn( 'OGE', response.get('Location'))
 
         # should have six more races
-        self.assertEqual(6, self.oge.race_set.count())
+        self.assertEqual(6, self.oge.races.count())
 
-        races = self.oge.race_set.all()
+        races = self.oge.races.all()
 
         # check the dates
         self.assertEqual(races[0].date, date(2014, 12, 13))
@@ -273,7 +298,7 @@ class CreateViewTests(TestCase):
         response = self.client.login(username='test', password='test')
         self.assertTrue(response, "Login failed in test, aborting")
 
-        url = reverse('race_create')
+        url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
         response = self.client.get(url)
 
@@ -282,6 +307,7 @@ class CreateViewTests(TestCase):
         self.assertContains(response, "Create New Race")
 
         data = {'club': self.oge.id,
+                'pointscore': self.pointscore.id,
                 'location': self.lansdowne.id,
                 'title': 'Test Race',
                 'date': '2014-12-13',
@@ -292,7 +318,7 @@ class CreateViewTests(TestCase):
                 'repeatMonthN': -1,
                 'repeatDay': 0,
                 'number': 6,
-                'url': 'http://example.org/'}
+                'website': 'http://example.org/'}
 
         response = self.client.post(url, data)
         # expect a redirect response to the race page
@@ -301,9 +327,9 @@ class CreateViewTests(TestCase):
         self.assertIn( 'OGE', response.get('Location'))
 
         # should have six more races
-        self.assertEqual(6, self.oge.race_set.count())
+        self.assertEqual(6, self.oge.races.count())
 
-        races = self.oge.race_set.all()
+        races = self.oge.races.all()
 
         # check the dates
         self.assertEqual(races[0].date, date(2014, 12, 29))

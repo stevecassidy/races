@@ -50,14 +50,14 @@ th label {
 
 <h2>{{club.name}}</h2>
 
-<p><a href='{{club.url}}'>{{club.name}} Website</a></p>
+<p><a href='{{club.website}}'>{{club.name}} Website</a></p>
 
 
 {% if user.is_authenticated %}
 <button class='btn' data-toggle='collapse' aria-expanded="false"
         aria-controls="formdiv" data-target="#formdiv">Create New Race for {{club.name}}</button>
 
-<form method='post' action='{% url 'club_races' club.slug %}'>
+<form method='post' action='{% url 'club_races' club.slug %}' name='raceform'>
     {% csrf_token %}
         <div class='collapse' id='formdiv'>
             <div class='well form-group'>
@@ -92,7 +92,7 @@ th label {
                         <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
                         <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
                     </tr>
-                    <tr><th><label for='id_url'>URL</label></th><td colspan=3>{{form.url|bootstrap_inline}}</td></tr>
+                    <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{form.website|bootstrap_inline}}</td></tr>
 
                     <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
                 </table>

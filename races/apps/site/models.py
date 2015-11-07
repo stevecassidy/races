@@ -17,7 +17,7 @@ import csv
 class Club(models.Model):
 
     name = models.CharField(max_length=100)
-    url = models.URLField(max_length=400)
+    website = models.URLField(max_length=400)
     slug = models.SlugField()  # short name eg. WVCC, MWCC for use in URL
     contact = models.EmailField(blank=True)
     icalurl = models.URLField(max_length=400, blank=True, default='')
@@ -104,7 +104,7 @@ class Club(models.Model):
                 start = component.decoded('DTSTART')
                 title = component.get('SUMMARY', '')
                 description = component.get('DESCRIPTION', '')
-                url = component.get('URL', '')
+                website = component.get('URL', '')
 
                 # CCCC at least has quoted chars in the description
                 # this removes them
@@ -113,7 +113,7 @@ class Club(models.Model):
 
                 if patterns == [''] or any([title.find(p) >- 0 for p in patterns]):
 
-                    calstring = "%s%s%s%s" % (str(start), title, description, url)
+                    calstring = "%s%s%s%s" % (str(start), title, description, website)
                     # need to fix encoding to ascii before calculating the hash
                     calstring = calstring.encode('ascii', errors='replace')
                     racehash = hashlib.sha1(calstring).hexdigest()
@@ -141,7 +141,7 @@ class Club(models.Model):
                         race = Race(date=startdate,
                                     time=starttime,
                                     title=str(title),
-                                    url=url,
+                                    website=website,
                                     description=unicode(description),
                                     location=location,
                                     club=self,
@@ -186,7 +186,7 @@ class Club(models.Model):
                                 time=r['time'],
                                 club=self,
                                 location=location,
-                                url=r['url'],
+                                website=r['url'],
                                 hash=r['hash'])
 
                     race.save()
@@ -259,7 +259,7 @@ class Race(models.Model):
     date = models.DateField()
     time = models.TimeField()
     club = models.ForeignKey(Club, related_name='races')
-    url  = models.URLField(blank=True, max_length=400)
+    website  = models.URLField(blank=True, max_length=400)
     location = models.ForeignKey(RaceCourse)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d')
     description = models.TextField(default="", blank=True)

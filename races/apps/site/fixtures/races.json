@@ -6,7 +6,7 @@
         "description": "",
         "title": "Sample Race",
         "club": 63,
-        "url": "",
+        "website": "",
         "location": 2,
         "time": "08:00:00",
         "date": "2015-08-08"
@@ -21,7 +21,7 @@
         "description": "",
         "title": "Sample Race",
         "club": 63,
-        "url": "",
+        "website": "",
         "location": 2,
         "time": "08:00:00",
         "date": "2015-08-15"
@@ -36,7 +36,7 @@
         "description": "",
         "title": "Sample Race",
         "club": 63,
-        "url": "",
+        "website": "",
         "location": 2,
         "time": "08:00:00",
         "date": "2015-08-22"
@@ -51,7 +51,7 @@
         "description": "",
         "title": "Another Race",
         "club": 64,
-        "url": "",
+        "website": "",
         "location": 1,
         "time": "08:00:00",
         "date": "2015-08-22"

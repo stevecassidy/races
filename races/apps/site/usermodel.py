@@ -60,7 +60,7 @@ class RaceResult(models.Model):
     dnf = models.BooleanField("DNF", default=False)
 
     def pointscores(self):
-        """Return a list of pointscore results"""
+        """Return a list of ResultPoints from all PointScores this race is part of"""
 
         return self.resultpoints_set.all()
 

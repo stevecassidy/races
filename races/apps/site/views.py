@@ -102,6 +102,7 @@ class ClubDetailView(DetailView):
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
 
         context['form'] = RaceCreateForm()
+
         return context
 
 class ClubRidersView(ListView):

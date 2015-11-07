@@ -22,5 +22,5 @@ class ResultViewTests(TestCase):
 
         # need to login first
 
-        response = self.client.login(username='user1', password='user1')
-        self.assertTrue(response, "Login failed in test, aborting")
+        #response = self.client.login(username='user1', password='user1')
+        #self.assertTrue(response, "Login failed in test, aborting")

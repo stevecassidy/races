@@ -8,11 +8,12 @@ from races.apps.site.usermodel import Rider, RaceResult, PointScore
 
 OGE = {
         u"name": u"ORICA GREENEDGE",
-        u"url": u"",
+        u"website": u"",
         u"icalurl": u"",
         u"contact": u"",
         u"icalpatterns": u"",
         u"slug": u"OGE",
+        u"url": u'http://testserver/api/clubs/74/',
         u"races": [],
     }
 

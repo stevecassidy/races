@@ -14,21 +14,21 @@ class ModelTests(TestCase):
         """Test creation of PointScore and some methods"""
 
         name = "test club"
-        url = "http://example.com/"
+        website = "http://example.com/"
         slug = "TEST"
-        club = Club(name=name, url=url, slug=slug)
+        club = Club(name=name, website=website, slug=slug)
         club.save()
 
         ps = PointScore(club=club, name="Test")
 
-        self.assertEqual([7, 5, 3], ps.get_points())
+        self.assertEqual([7, 6, 5, 4, 3], ps.get_points())
         self.assertEqual(2, ps.participation)
         self.assertEqual([5, 3], ps.get_smallpoints())
 
         self.assertEqual(7, ps.score(1, 20))
-        self.assertEqual(5, ps.score(2, 20))
-        self.assertEqual(3, ps.score(3, 20))
-        self.assertEqual(2, ps.score(4, 20))
+        self.assertEqual(6, ps.score(2, 20))
+        self.assertEqual(5, ps.score(3, 20))
+        self.assertEqual(4, ps.score(4, 20))
         self.assertEqual(2, ps.score(12, 20))
 
         self.assertEqual(7, ps.score(1, 12))
@@ -57,6 +57,9 @@ class ModelTests(TestCase):
 
         result = RaceResult(race=race, rider=rider, grade='A', number=12, place=1)
         result.save()
+
+        ps.calculate()
+        ps2.calculate()
 
         self.assertEqual([5, 5], [p.points for p in result.pointscores()])
 
