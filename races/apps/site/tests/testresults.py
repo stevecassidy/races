@@ -5,7 +5,7 @@ from django.db import IntegrityError
 
 import os
 
-from races.apps.site.usermodel import Rider, RaceResult
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
 from races.apps.site.models import Club, Race
 
 class UserModelTests(TestCase):
@@ -27,6 +27,25 @@ class UserModelTests(TestCase):
         # test we can get to the rider through the user
         self.assertEqual(user.rider.club, club)
         self.assertEqual(user.rider.gender, 'M')
+
+    def test_grade(self):
+        """Assigning riders to grades"""
+
+        user = User(username='user1')
+        user.save()
+
+        club = Club.objects.get(slug='OGE')
+
+        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider.save()
+
+        grading = ClubGrade(rider=rider, club=club, grade="A")
+        grading.save()
+
+        self.assertEqual("A", grading.grade)
+        self.assertIn(grading, rider.clubgrade_set.all())
+        self.assertIn(grading, club.clubgrade_set.all())
+        self.assertIn(rider, club.graded_riders())
 
 
     def test_result(self):

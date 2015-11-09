@@ -31,7 +31,7 @@ class RaceCreateForm(forms.ModelForm):
                                           choices=MONTH_N_CHOICES, coerce=int, empty_value=1)
     repeatDay = forms.TypedChoiceField(label="Repeat on day", required=False, choices=DAYS, coerce=int, empty_value=0)
     number = forms.IntegerField(initial=6, required=False)
-    pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all())
+    pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all(), required=False)
 
 class RaceCSVForm(forms.Form):
     """Form for uploading a CSV file with race results"""

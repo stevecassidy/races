@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 import csv
 import random
 
-from races.apps.site.usermodel import Rider, RaceResult
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
 from races.apps.site.models import Race
 
 class Command(BaseCommand):
@@ -22,6 +22,8 @@ class Command(BaseCommand):
         # for each grade, choose some riders to ride the grade
         # for each race, choose the first five riders, create results
 
+        RaceResult.objects.all().delete()
+
         riders = list(Rider.objects.all())
         random.shuffle(riders)
         k = len(riders)/4
@@ -29,7 +31,9 @@ class Command(BaseCommand):
 
         for grade in grades.keys():
             for i in range(k-1):
-                grades[grade].append(riders.pop())
+                rider = riders.pop()
+                grades[grade].append(rider)
+
 
 
         for race in Race.objects.all():
@@ -45,3 +49,5 @@ class Command(BaseCommand):
                     else:
                         result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=0)
                     result.save()
+
+                    grading, ignore = ClubGrade.objects.get_or_create(rider=rider, club=race.club, grade=grade)

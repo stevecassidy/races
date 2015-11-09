@@ -40,6 +40,18 @@ class Rider(models.Model):
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
 
+class ClubGrade(models.Model):
+    """A rider will be assigned a grade by a club, different
+    clubs might have different grading"""
+
+    club = models.ForeignKey(Club)
+    rider = models.ForeignKey(Rider)
+    grade = models.CharField("Grade", max_length=10)
+
+    def __unicode__(self):
+
+        return " - ".join((self.grade, unicode(self.rider), unicode(self.club)))
+
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""
 
@@ -76,7 +88,7 @@ class PointScore(models.Model):
     smallpoints = models.CommaSeparatedIntegerField("Points for small races", max_length=100, default="5,3")
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
-    races = models.ManyToManyField(Race)  # a pointscore contains many races and a race can be in many pointscores
+    races = models.ManyToManyField(Race, blank=True)  # a pointscore contains many races and a race can be in many pointscores
 
     def __unicode__(self):
         return unicode(unicode(self.club) + " " + self.name + " Pointscore")

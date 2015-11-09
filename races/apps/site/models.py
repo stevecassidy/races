@@ -29,6 +29,12 @@ class Club(models.Model):
     class Meta:
         ordering = ['name']
 
+    def graded_riders(self):
+        """Return a list of riders with grades assigned"""
+
+        clubgrades = self.clubgrade_set.all()
+        return [cg.rider for cg in clubgrades]
+
 
     def ingest(self):
         """Try a couple of ingest methods.

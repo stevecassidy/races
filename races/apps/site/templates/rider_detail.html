@@ -10,7 +10,12 @@
 <table class=table>
     <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
     <tr><th>Licence</th><td>{{user.rider.licenceno}}</td></tr>
+    {% for grading in user.rider.clubgrade_set.all %}
+        <tr><th>Grade ({{grading.club}})</th><td>{{grading.grade}}</td></tr>
+    {% endfor %}
 </table>
+
+
 
 <table class=table>
     <thead>

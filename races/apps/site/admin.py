@@ -55,12 +55,15 @@ class RaceCourseAdmin(admin.ModelAdmin):
 
 admin.site.register(RaceCourse, RaceCourseAdmin)
 
-from races.apps.site.usermodel import Rider, RaceResult
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-# Define an inline admin descriptor for Employee model
-# which acts a bit like a singleton
+class ClubGradeAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(ClubGrade, ClubGradeAdmin)
+
 class RiderInline(admin.StackedInline):
     model = Rider
     can_delete = False
