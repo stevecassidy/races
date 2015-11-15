@@ -14,6 +14,10 @@
 
 {% block navbar_class %}navbar-inverse{% endblock %}
 
+{% block topbar_base %}
+{% if iframe %}{% else %}{{block.super}}{% endif %}
+{% endblock %}
+
 {% block nav %}
 <ul class="nav navbar-nav">
   <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
@@ -31,12 +35,20 @@
 {% endblock %}
 
 {% block footer %}
+    {% if iframe %}
+    <ul>
+    <li>Content managed through <a href="/">cabici.net</a></li>
+    </ul>
+    {% else %}
     {% include "_footer.html" %}
+    {% endif %}
 {% endblock %}
 
 {% block body %}
+{% if not iframe %}
     <div id='masthead'></div>
     <div id='feed'><a href="/feed">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
+    {% endif %}
     {% block content %}{% endblock %}
 {% endblock %}
 

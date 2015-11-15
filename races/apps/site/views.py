@@ -76,6 +76,8 @@ class RaceDetailView(DetailView):
         context = super(RaceDetailView, self).get_context_data(**kwargs)
 
         context['csvform'] = RaceCSVForm()
+        if 'iframe' in self.request.GET:
+            context['iframe'] = True
 
         return context
 
@@ -102,6 +104,8 @@ class ClubDetailView(DetailView):
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
 
         context['form'] = RaceCreateForm()
+        if 'iframe' in self.request.GET:
+            context['iframe'] = True
 
         return context
 
