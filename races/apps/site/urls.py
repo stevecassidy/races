@@ -7,7 +7,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from races.apps.site import views, feeds, api
 
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^$', views.HomePage.as_view(), name='home'),
     url(r'^races/$', views.ListRacesView.as_view(), name='races'),
     url(r'^races/(?P<year>\d{4})/(?P<month>[0-9][1-9])/$', views.ListRacesView.as_view(), name='racesmonth'),
@@ -47,5 +47,4 @@ urlpatterns = patterns('',
     url(r'^api/raceresults/(?P<pk>[0-9]+)/$', api.RaceResultDetail.as_view(), name='raceresult-detail'),
 
     url(r'^test.html$', TemplateView.as_view(template_name="test.html"))
-
-)
+]

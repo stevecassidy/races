@@ -141,7 +141,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    'django.contrib.webdesign',
 
     'social.apps.django_app.default',
     "bootstrapform",
