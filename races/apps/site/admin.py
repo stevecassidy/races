@@ -5,11 +5,13 @@ Created on Apr 15, 2013
 '''
 from django.contrib import admin
 from django import forms
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import User
+
 from races.apps.site.models import Club, RaceCourse, Race, STATUS_CHOICES
-from races.apps.site.usermodel import PointScore
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole
 
 admin.site.register(Club)
-
 
 class RaceAdmin(admin.ModelAdmin):
 
@@ -55,9 +57,6 @@ class RaceCourseAdmin(admin.ModelAdmin):
 
 admin.site.register(RaceCourse, RaceCourseAdmin)
 
-from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
-from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
 
 class ClubGradeAdmin(admin.ModelAdmin):
     pass
@@ -68,9 +67,13 @@ class RiderInline(admin.StackedInline):
     model = Rider
     can_delete = False
 
+class UserRoleInline(admin.StackedInline):
+    model = UserRole
+    can_delete = True
+
 # Define a new User admin
 class UserAdmin(UserAdmin):
-    inlines = (RiderInline, )
+    inlines = (RiderInline, UserRoleInline)
 
 # Re-register UserAdmin
 admin.site.unregister(User)

@@ -31,14 +31,19 @@ class Rider(models.Model):
 
     official = models.BooleanField("Club Official", default=False)
 
-    # could be that these are club specific fields
-    #grade = models.CharField("Grade", max_length=2)
-    #handicap = models.CharField("Handicap", max_length=5)
-
     club = models.ForeignKey(Club, null=True)
 
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
+
+class UserRole(models.Model):
+    """A role held by a person in a club, eg. president, handicapper, duty officer
+    """
+
+    user = models.ForeignKey(User)
+    club = models.ForeignKey(Club)
+    role = models.CharField("Role", max_length=50)
+
 
 class ClubGrade(models.Model):
     """A rider will be assigned a grade by a club, different
@@ -65,7 +70,7 @@ class RaceResult(models.Model):
     race = models.ForeignKey(Race)
     rider = models.ForeignKey(Rider)
 
-    grade = models.CharField("Grade", max_length="10")
+    grade = models.CharField("Grade", max_length=10)
     number = models.IntegerField("Bib Number")  # unique together with grade
 
     place = models.IntegerField("Place", blank=True, null=True, help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")

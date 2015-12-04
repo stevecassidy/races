@@ -13,6 +13,9 @@
     {% for grading in user.rider.clubgrade_set.all %}
         <tr><th>Grade ({{grading.club}})</th><td>{{grading.grade}}</td></tr>
     {% endfor %}
+    {% for role in user.userrole_set.all %}
+        <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>
+    {% endfor %}
 </table>
 
 
