@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
@@ -19,6 +19,7 @@ from races.apps.site.forms import RaceCreateForm, RaceCSVForm
 import datetime
 import calendar
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
+import json
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
@@ -203,50 +204,51 @@ class RaceDeleteView(DeleteView):
 def clubRaces(request, slug):
     """View to create one or more races for a club"""
 
-    if request.POST:
+    if request.method == "POST":
+
         form = RaceCreateForm(request.POST)
-    else:
-        form = RaceCreateForm()
 
-    if form.is_valid():
-        # process it
-        pointscore = form.cleaned_data['pointscore']
-        if form.cleaned_data['repeat'] == 'none':
+        if request.is_ajax():
+            if form.is_valid():
+                # process it
+                pointscore = form.cleaned_data['pointscore']
+                if form.cleaned_data['repeat'] == 'none':
 
-            race = form.save()
-            if pointscore:
-                pointscore.races.add(race)
+                    race = form.save()
+                    if pointscore:
+                        pointscore.races.add(race)
 
-            return HttpResponseRedirect(reverse('race', kwargs={'slug': race.club.slug, 'pk': race.id}))
+                    data = json.dumps({'success': 1})
+                    return HttpResponse(data, content_type='application/json')
+                else:
+                    startdate = form.cleaned_data['date']
 
-        else:
-            startdate = form.cleaned_data['date']
+                    number = form.cleaned_data['number']
+                    repeat = form.cleaned_data['repeat']
+                    repeatMonthN = form.cleaned_data['repeatMonthN']
+                    repeatDay = form.cleaned_data['repeatDay']
 
-            number = form.cleaned_data['number']
-            repeat = form.cleaned_data['repeat']
-            repeatMonthN = form.cleaned_data['repeatMonthN']
-            repeatDay = form.cleaned_data['repeatDay']
+                    if repeat == u'weekly':
+                        rule = rrule(WEEKLY, count=number, dtstart=startdate)
+                    elif repeat == u'monthly':
+                        rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
 
-            if repeat == u'weekly':
-                rule = rrule(WEEKLY, count=number, dtstart=startdate)
-            elif repeat == u'monthly':
-                rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+                    race = form.save(commit=False)
 
-            race = form.save(commit=False)
+                    # now make N more races
+                    for date in rule:
+                        # force 'save as new'
+                        race.pk = None
 
-            # now make N more races
-            for date in rule:
-                # force 'save as new'
-                race.pk = None
+                        race.date = date
+                        race.save()
+                        if pointscore:
+                            pointscore.races.add(race)
 
-                race.date = date
-                race.save()
-                if pointscore:
-                    pointscore.races.add(race)
+                    data = json.dumps({'success': 1})
+                    return HttpResponse(data, content_type='application/json')
+            else:
+                data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
+                return HttpResponse(data, content_type='application/json')
 
-            return HttpResponseRedirect(reverse('club', kwargs={'slug': race.club.slug}))
-    else:
-
-        return render_to_response('race_create_form.html',
-                                  {'form': form},
-                                  context_instance=RequestContext(request))
+        return HttpError()

@@ -10,11 +10,16 @@
             <a id="account_logout" href="/logout/"><i class="glyphicon glyphicon-off"></i> {% trans "Log out" %}</a>
         </li>
     {% else %}
+    <li>
+        <a href="/login/">{% trans "Login" %}</a>
+    </li>
+    {% if 0 %}
     <form class="navbar-form navbar-left" role="search">
       <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
           <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
       </a>
      </form>
+     {% endif %}
     {% endif %}
 </ul>
 

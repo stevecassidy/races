@@ -1,12 +1,34 @@
-<div>
-    <p>You have the option of signing in to Cabici.net with your
-        Strava or Twitter accounts.  This means you don't need a separate
-        username/password.   Cabici is not able to access any of your
-        personal data except for your email address.</p>
+{% extends "site_base.html" %}
 
-    <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
-        <img src="{{STATIC_URL}}/sign-in-with-twitter-gray.png" alt="Login with Twitter"></a>
-    <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
-         <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
-        </a>
+{% load i18n %}
+{% load bootstrap %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <form method="POST" action="{% url "login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+            <legend>{% trans "Log in to an existing account" %}</legend>
+            {% csrf_token %}
+            {{ form|bootstrap }}
+            {% if redirect_field_value %}
+                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
+            <button type="submit" class="btn btn-primary">{% trans "Log in" %}</button>
+            <a href="{% url "password_reset" %}" class="btn btn-link">{% trans "Forgot your password?" %}</a>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <p>You have the option of signing in to Cabici.net with your
+            Strava or Twitter accounts.  This means you don't need a separate
+            username/password.   Cabici is not able to access any of your
+            personal data except for your email address.</p>
+
+        <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+            <img src="{{STATIC_URL}}/sign-in-with-twitter-gray.png" alt="Login with Twitter"></a>
+        <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
+             <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
+            </a>
+    </div>
 </div>
+
+{% endblock %}

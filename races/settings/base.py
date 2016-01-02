@@ -198,6 +198,10 @@ CRISPY_TEMPLATE_PACK = "bootstrap"
 # default centre of maps
 EASY_MAPS_CENTER = (-41.3, 32)
 
+
+LOGIN_REDIRECT_URL = '/'
+
+
 ACCOUNT_OPEN_SIGNUP = False
 
 

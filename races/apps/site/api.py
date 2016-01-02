@@ -21,6 +21,9 @@ def api_root(request, format=None):
 
     })
 
+
+# TODO: authentication for create/update/delete views
+
 #---------------Club------------------
 
 class ClubSerializer(serializers.HyperlinkedModelSerializer):

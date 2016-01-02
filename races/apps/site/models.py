@@ -260,15 +260,16 @@ STATUS_CHOICES = (
 )
 
 class Race(models.Model):
-
-    title = models.CharField(max_length=100)
-    date = models.DateField()
-    time = models.TimeField()
-    club = models.ForeignKey(Club, related_name='races')
-    website  = models.URLField(blank=True, max_length=400)
-    location = models.ForeignKey(RaceCourse)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d')
-    description = models.TextField(default="", blank=True)
+    
+    # empty help texts here to force help element in forms
+    title = models.CharField(max_length=100, help_text="Enter a title for the race")
+    date = models.DateField(help_text=" ")
+    time = models.TimeField(help_text="eg. 08:00, 18:30")
+    club = models.ForeignKey(Club, related_name='races', help_text=" ")
+    website  = models.URLField(blank=True, max_length=400, help_text=" ")
+    location = models.ForeignKey(RaceCourse, help_text=" ")
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d', help_text=" ")
+    description = models.TextField(default="", blank=True, help_text=" ")
     hash = models.CharField(max_length=100, blank=True)
 
     class Meta:

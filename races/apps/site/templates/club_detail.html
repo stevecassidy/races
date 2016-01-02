@@ -12,6 +12,7 @@
 th label {
     text-align: right;
 }
+.datepicker{z-index:1151 !important;}
     </style>
     {% endblock %}
 
@@ -25,7 +26,6 @@ th label {
                 $("#id_repeatMonthN").addClass("disabled").attr("disabled", true);
                 $("#id_repeatDay").addClass("disabled").attr("disabled", true);
                 $("#id_number").addClass("disabled").attr("disabled", true);
-
 
                 $("#id_repeat").change(function() {
                     if ($(this).val() == 'none') {
@@ -43,6 +43,28 @@ th label {
                 });
 
             });
+
+            $(function() {
+                $("#submitraceform").click(function(){
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url 'club_races' club.slug %}',
+                        data: $('#raceform').serialize(),
+                        success: function(msg){
+                            if (msg['success']) {
+                               $("#raceCreateModal").modal('hide');
+                               /* force a page refresh */
+                               window.location = window.location;
+                           } else {
+                                for (field in msg) {
+                                    $("#id_"+field).parent().addClass("has-error");
+                                    $("#id_"+field).parent().children(".help-block").text(msg[field]);
+                                }
+                            }
+                        }
+                    });
+                });
+            });
     </script>
     {% endblock %}
 
@@ -54,58 +76,74 @@ th label {
 <p><a href='{{club.website}}'>{{club.name}} Website</a></p>
 {% endif %}
 
-{% if user.is_authenticated %}
-<button class='btn' data-toggle='collapse' aria-expanded="false"
-        aria-controls="formdiv" data-target="#formdiv">Create New Race for {{club.name}}</button>
+{% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+    <button class='btn' data-toggle='modal' data-target="#raceCreateModal">Create New Race for {{club.name}}</button>
 
-<form method='post' action='{% url 'club_races' club.slug %}' name='raceform'>
-    {% csrf_token %}
-        <div class='collapse' id='formdiv'>
-            <div class='well form-group'>
-                {{form.errors}}
-                <input type='hidden' name='club' value='{{club.id}}'>
-                <table class='table-condensed'>
-                    <tr><th><label for='id_pointscore'>Pointscore</label></th>
-                           <td colspan=3>{{form.pointscore|bootstrap_inline}}</td></tr>
-
-                    <tr><th><label for='id_title'>Title</label></th><td colspan=3>{{form.title|bootstrap_inline}}</td></tr>
-                    <tr>
-                        <th><label for='id_date'>Date</label></th><td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
-                        <th><label for='id_time'>Start Time</label></th><td>{{form.time|bootstrap_inline}}</td>
-                    </tr>
-
-                    <tr>
-                        <th><label for='id_weekly'>Repeat</label></th>
-                        <td>{{form.repeat|bootstrap_inline}}</td>
-                        <td>{{form.number|bootstrap_inline}}</td>
-                        <td><label for='id_number'>times</label></td>
-                    </tr>
-
-                    <tr>
-                        <th><label for='id_repeat'>Repeat on the</label></th>
-                        <td>{{form.repeatMonthN|bootstrap_inline}}</td>
-                        <td>{{form.repeatDay|bootstrap_inline}}</td>
-                        <td><label for='id_number'>of each month</label></td>
-                    </tr>
-
-
-                    <tr>
-                        <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
-                        <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
-                    </tr>
-                    <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{form.website|bootstrap_inline}}</td></tr>
-
-                    <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
-                </table>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Create Race(s)</button>
-                </div>
+    <div class="modal fade" id="raceCreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Create Race</h4>
             </div>
+
+            <form method='post' action='{% url 'club_races' club.slug %}' name='raceform' id='raceform'>
+                {% csrf_token %}
+                <div class='well form-group'>
+                    {{form.errors}}
+                    <input type='hidden' name='club' value='{{club.id}}'>
+                    <table class='table-condensed'>
+                        <tr><th><label for='id_pointscore'>Pointscore</label></th>
+                            <td colspan=3>{{form.pointscore|bootstrap_inline}}
+                               <span id="help_pointscore" class='help-block'></span>
+                            </td>
+                        </tr>
+
+                        <tr><th><label for='id_title'>Title</label></th>
+                            <td colspan=3>{{form.title|bootstrap_inline}}</td>
+                        </tr>
+
+                        <tr>
+                            <th><label for='id_date'>Date</label></th>
+                                <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
+                            <th><label for='id_time'>Start Time</label></th>
+                                <td>{{form.time|bootstrap_inline}}</td>
+                        </tr>
+
+                        <tr>
+                            <th><label for='id_weekly'>Repeat</label></th>
+                            <td>{{form.repeat|bootstrap_inline}}</td>
+                            <td>{{form.number|bootstrap_inline}}</td>
+                            <td><label for='id_number'>times</label></td>
+                        </tr>
+
+                        <tr>
+                            <th><label for='id_repeat'>Repeat on the</label></th>
+                            <td>{{form.repeatMonthN|bootstrap_inline}}</td>
+                            <td>{{form.repeatDay|bootstrap_inline}}</td>
+                            <td><label for='id_number'>of each month</label></td>
+                        </tr>
+
+
+                        <tr>
+                            <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
+                            <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
+                        </tr>
+                        <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{form.website|bootstrap_inline}}</td></tr>
+
+                        <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
+                    </table>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <button type="button" id="submitraceform" class="btn btn-primary">Create Race(s)</button>
+                    </div>
+                </div>
+            </form>
+          </div>
         </div>
+    </div>
 
-
-</form>
 {% endif %}
 
 {% if club.pointscore_set.all %}
