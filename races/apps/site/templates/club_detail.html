@@ -144,7 +144,15 @@ th label {
         </div>
     </div>
 
+
+    <div>
+      <button class='btn' >
+       <a href="{% url 'club_riders_csv' slug=club.slug %}">Download Race CSV</a>
+      </button>
+    </div>
+
 {% endif %}
+
 
 {% if club.pointscore_set.all %}
 <h2>Pointscores</h3>

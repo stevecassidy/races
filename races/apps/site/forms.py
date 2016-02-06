@@ -1,7 +1,7 @@
 
 from django import forms
 from races.apps.site.models import Race
-from races.apps.site.usermodel import PointScore
+from races.apps.site.usermodel import PointScore, Rider
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 
@@ -17,6 +17,8 @@ MONTH_N_CHOICES = [(1, "first"),
 
 DAYS = [(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'),
         (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')]
+
+GRADE_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
 
 class RaceCreateForm(forms.ModelForm):
 
@@ -37,3 +39,11 @@ class RaceCSVForm(forms.Form):
     """Form for uploading a CSV file with race results"""
 
     csvfile = forms.FileField(label="CSV File")
+
+class RaceRiderForm(forms.Form):
+    """Form to add a rider to a race"""
+
+    rider = forms.ModelChoiceField(label="Rider", queryset=Rider.objects.all(), required=True)
+    race = forms.ModelChoiceField(queryset=Race.objects.all(), required=True, widget=forms.HiddenInput)
+    grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
+    number = forms.IntegerField(label="Bib Number")

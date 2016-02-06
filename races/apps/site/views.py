@@ -1,7 +1,7 @@
 # top-level views for the project, which don't belong in any specific app
 
 from django.views.generic.base import TemplateView
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
 from django.template import RequestContext
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -10,16 +10,18 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db import IntegrityError
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
-from races.apps.site.usermodel import PointScore
-from races.apps.site.forms import RaceCreateForm, RaceCSVForm
+from races.apps.site.usermodel import PointScore, Rider, RaceResult
+from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm
 
 import datetime
 import calendar
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
+import csv
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
@@ -153,6 +155,76 @@ class ClubPointscoreList(ListView):
 
         return context
 
+class CSVResponseMixin(object):
+    csv_filename = 'csvfile.csv'
+
+    def get_csv_filename(self):
+        return self.csv_filename
+
+    def render_to_csv(self, data):
+        response = HttpResponse(content_type='text/csv')
+        cd = 'attachment; filename="{0}"'.format(self.get_csv_filename())
+        response['Content-Disposition'] = cd
+
+        writer = csv.writer(response)
+        for row in data:
+            writer.writerow(row)
+
+        return response
+
+class ClubRidersCSVView(View):
+
+    def get(self, request, *args, **kwargs):
+
+        club = get_object_or_404(Club, slug=kwargs['slug'])
+
+        response = HttpResponse(content_type='text/csv')
+        cd = 'attachment; filename="{0}"'.format("race.csv")
+        response['Content-Disposition'] = cd
+
+        writer = csv.writer(response)
+        header = ('LastName',
+                  'FirstName',
+                  'Regd',  # U/R
+                  'Grade',
+                  'HCap',
+                  'Fee',
+                  'ShirtNo',
+                  'Points',
+                  'LicenceNo',
+                  'Club',
+                  'Email',
+                  'Id',
+                  'EventNo')
+
+        writer.writerow(header)
+        for r in Rider.objects.all():
+
+            grades = r.clubgrade_set.filter(club=club)
+            if grades.count() > 0:
+                grade = grades[0].grade
+            else:
+                grade = ''
+
+            row = (r.user.last_name,
+                   r.user.first_name,
+                   'U',
+                   grade,
+                   '2',
+                   'F',
+                   '',
+                   '2',
+                   r.licenceno,
+                   r.club.slug,
+                   r.user.email,
+                   r.pk,
+                   ''
+                  )
+            writer.writerow(row)
+
+        return response
+
+
 class RiderView(DetailView):
 
     model = User
@@ -181,8 +253,6 @@ class RaceUploadCSVView(FormView):
     template_name = ''
 
     def form_valid(self, form):
-        # This method is called when valid form data has been POSTed.
-        # It should return an HttpResponse.
 
         # need to work out what race we're in - from the URL pk
         race = get_object_or_404(Race, pk=self.kwargs['pk'])
@@ -199,6 +269,48 @@ class RaceDeleteView(DeleteView):
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         return super(RaceDeleteView, self).dispatch(*args, **kwargs)
+
+class RaceRidersView(ListView):
+    model = RaceResult
+    template_name = "raceresult_list.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(RaceRidersView, self).get_context_data(**kwargs)
+
+        club = self.kwargs['slug']
+        race = self.kwargs['pk']
+        context['club'] = Club.objects.get(slug=club)
+        context['race'] = Race.objects.get(pk=race)
+        context['form'] = RaceRiderForm(initial={'race': race})
+
+        return context
+
+    def get_queryset(self):
+
+        race = self.kwargs['pk']
+
+        return RaceResult.objects.filter(race__pk__exact=race)
+
+    def post(self, request, **kwargs):
+
+        form = RaceRiderForm(request.POST)
+
+        if form.is_valid():
+
+            entry = RaceResult(race=form.cleaned_data['race'],
+                               rider=form.cleaned_data['rider'],
+                               number=form.cleaned_data['number'],
+                               grade=form.cleaned_data['grade'])
+
+            # TODO: check for errors here
+            try:
+                entry.save()
+            except IntegrityError:
+                # rider/number or number/grade already registered
+                pass
+
+        return HttpResponseRedirect(reverse('race_riders', kwargs=kwargs))
 
 
 def clubRaces(request, slug):

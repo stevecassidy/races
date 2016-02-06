@@ -74,3 +74,22 @@ class RoleViewTests(TestCase):
         response = self.client.get(reverse('race', kwargs={'slug': 'KAT', 'pk': 4}))
         self.assertNotContains(response, "Edit")
         self.assertNotContains(response, "Upload Results")
+
+
+
+    def test_race_riders(self):
+        """as a club official, I want /races/<club>/<raceid>/riders/ to be a form to enter riders in a
+        race (and a list of already entered riders) if there are no results,
+        or a display of the results if they are available"""
+
+        # race with no riders or results, not a club official, I should get a
+        # page with a message
+        response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
+        self.assertContains(response, "No current entries for this race.")
+        self.assertNotContains(response, "Add Entry")
+
+        # login as a club official
+        self.client.force_login(user=self.movofficial)
+        response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
+        # page contains a form to enter riders names
+        self.assertContains(response, "Add Entry")
