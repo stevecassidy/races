@@ -34,6 +34,12 @@ class ClubSerializer(serializers.HyperlinkedModelSerializer):
         model = Club
         #fields = ('id', 'name', 'url', 'slug', 'contact', 'races')
 
+class ClubBriefSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Club
+        fields = ('name', 'url', 'slug')
+
 class ClubList(generics.ListCreateAPIView):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
@@ -82,7 +88,31 @@ class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #---------------Rider------------------
 
+
+
+from django.contrib.auth.models import User
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    #rider = serializers.HyperlinkedRelatedField(many=False, queryset=Rider.objects.all(), view_name='rider-detail')
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name')
+
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class RiderSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
+    club = ClubBriefSerializer(read_only=True)
+
     class Meta:
         model = Rider
 
@@ -94,23 +124,7 @@ class RiderDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
 
-from django.contrib.auth.models import User
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    rider = serializers.HyperlinkedRelatedField(many=False, queryset=Rider.objects.all(), view_name='rider-detail')
-
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'rider')
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 #---------------PointScore------------------
 
@@ -129,6 +143,9 @@ class PointScoreDetail(generics.RetrieveUpdateDestroyAPIView):
 #---------------RaceResult------------------
 
 class RaceResultSerializer(serializers.HyperlinkedModelSerializer):
+
+    rider = RiderSerializer(read_only=True)
+
     class Meta:
         model = RaceResult
 
