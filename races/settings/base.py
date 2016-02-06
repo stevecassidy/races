@@ -97,6 +97,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -160,6 +161,7 @@ INSTALLED_APPS = (
     'geoposition',
 
     'rest_framework',
+    'corsheaders',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -227,4 +229,15 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'
+)
+
+
+# CORS configuration (django-cors-headers)
+# anyone can make GET requests to the API
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_METHODS = (
+        'GET',
+        'HEAD',
+        'OPTIONS'
 )

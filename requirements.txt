@@ -14,3 +14,4 @@ django-user-accounts
 pinax-theme-bootstrap==5.7.5
 django-bootstrap-form
 djangorestframework
+django-cors-headers
