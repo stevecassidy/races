@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from races.apps.site.models import Club, Race
 import csv
@@ -49,13 +49,27 @@ class ClubGrade(models.Model):
     """A rider will be assigned a grade by a club, different
     clubs might have different grading"""
 
+    class Meta:
+        ordering = ['rider', 'grade']
+
     club = models.ForeignKey(Club)
     rider = models.ForeignKey(Rider)
     grade = models.CharField("Grade", max_length=10)
 
     def __unicode__(self):
-
         return " - ".join((self.grade, unicode(self.rider), unicode(self.club)))
+
+    def save(self, *args, **kwargs):
+        """A rider can only have one grade for each club"""
+
+        cg = ClubGrade.objects.filter(rider=self.rider, club=self.club)
+        if len(cg) > 0:
+            raise ValidationError("A rider can only have one grade for each club")
+
+        super(ClubGrade, self).save(*args, **kwargs)
+
+
+
 
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""

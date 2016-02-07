@@ -33,7 +33,8 @@ urlpatterns = [
     # get rider csv file for race entry front end
     url(r'^clubs/(?P<slug>[^/]*)/riders.csv$', views.ClubRidersCSVView.as_view(), name='club_riders_csv'),
 
-    url(r'^rider/(?P<pk>\d+)$', views.RiderView.as_view(), name='rider'),
+    url(r'^riders/$', views.RiderListView.as_view(), name='riders'),
+    url(r'^riders/(?P<pk>\d+)$', views.RiderView.as_view(), name='rider'),
 
     # api urls
     url(r'^api/$', api.api_root),

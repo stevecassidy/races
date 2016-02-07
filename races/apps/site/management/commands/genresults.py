@@ -23,6 +23,7 @@ class Command(BaseCommand):
         # for each race, choose the first five riders, create results
 
         RaceResult.objects.all().delete()
+        ClubGrade.objects.all().delete()
 
         riders = list(Rider.objects.all())
         random.shuffle(riders)

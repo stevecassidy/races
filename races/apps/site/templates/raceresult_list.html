@@ -22,46 +22,58 @@
 
 <h2>Registered Riders</h2>
 
+<ul class="nav nav-tabs">
 {% for grade in grade_list %}
-<h3>{{grade.grouper}} Grade ({{grade.list|length}} riders)</h3>
+  <li role="presentation" {% if forloop.first %}class="active"{% endif %} >
+   <a aria-controls="home" role="tab" data-toggle="tab" href="#grade{{grade.grouper}}" {% if forloop.first %}aria-expanded="true"{% endif %} >
+       {{grade.grouper}} Grade ({{grade.list|length}} riders)
+   </a>
+  </li>
+{% endfor %}
+</ul>
 
-<table class='table'>
-    <thead>
-    <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
-    {% for p in grade.list.0.pointscores %}
-        <th>{{p.pointscore.name}}</th>
-    {% endfor %}
-    </tr>
-</thead>
-<tbody>
-{% for result in grade.list %}
-    {% if result.place %}
-    <tr>
-        <th>{{result.number}}</th>
-        <td>{{result.place}}</td>
-        <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
-        <td>{{result.rider.club}}</td>
-        {% for p in result.pointscores %}
-        <td>{{p.points}}</td>
+
+<div class='tab-content'>
+{% for grade in grade_list %}
+<div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}" id="grade{{grade.grouper}}">
+
+    <table class='table'>
+        <thead>
+        <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
+        {% for p in grade.list.0.pointscores %}
+            <th>{{p.pointscore.name}}</th>
         {% endfor %}
-    </tr>
-    {% endif %}
-{% endfor %}
-{% for result in grade.list %}
-    {% if not result.place %}
-    <tr><th>{{result.number}}</th>
-        <td>-</td>
-        <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
-        <td>{{result.rider.club}}</td>
-    </tr>
-    {% endif %}
-{% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for result in grade.list %}
+        {% if result.place %}
+        <tr>
+            <th>{{result.number}}</th>
+            <td>{{result.place}}</td>
+            <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
+            <td>{{result.rider.club}}</td>
+            {% for p in result.pointscores %}
+            <td>{{p.points}}</td>
+            {% endfor %}
+        </tr>
+        {% endif %}
+    {% endfor %}
 
+    {% for result in grade.list %}
+        {% if not result.place %}
+    <tr><th>{{result.number}}</th><td>-</td><td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td><td>{{result.rider.club}}</tr>
+        {% endif %}
+    {% endfor %}
 
 </tbody>
 </table>
+</div>
 
 {% endfor %}
+
+
+
 
 {% else %}
 

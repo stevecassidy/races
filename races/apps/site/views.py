@@ -225,6 +225,12 @@ class ClubRidersCSVView(View):
         return response
 
 
+class RiderListView(ListView):
+    model = Rider
+    template_name = 'rider_list.html'
+    context_object_name = 'riders'
+
+
 class RiderView(DetailView):
 
     model = User

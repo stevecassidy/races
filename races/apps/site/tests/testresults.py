@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
 
 import os
 
@@ -31,7 +32,7 @@ class UserModelTests(TestCase):
     def test_grade(self):
         """Assigning riders to grades"""
 
-        user = User(username='user1')
+        user = User(username='user1', first_name='User', last_name='One')
         user.save()
 
         club = Club.objects.get(slug='OGE')
@@ -46,6 +47,12 @@ class UserModelTests(TestCase):
         self.assertIn(grading, rider.clubgrade_set.all())
         self.assertIn(grading, club.clubgrade_set.all())
         self.assertIn(rider, club.graded_riders())
+
+        # one grade per club
+
+        with self.assertRaises(ValidationError):
+            grading2 = ClubGrade(rider=rider, club=club, grade="B")
+            grading2.save()
 
 
     def test_result(self):
