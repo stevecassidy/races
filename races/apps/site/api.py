@@ -45,14 +45,33 @@ class ClubList(generics.ListCreateAPIView):
     serializer_class = ClubSerializer
 
 class ClubDetail(generics.RetrieveUpdateDestroyAPIView):
-        queryset = Club.objects.all()
-        serializer_class = ClubSerializer
+    queryset = Club.objects.all()
+    serializer_class = ClubSerializer
+
+#---------------RaceCourse------------------
+
+class RaceCourseSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = RaceCourse
+
+class RaceCourseList(generics.ListCreateAPIView):
+    queryset = RaceCourse.objects.all()
+    serializer_class = RaceCourseSerializer
+
+class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RaceCourse.objects.all()
+    serializer_class = RaceCourseSerializer
+
 
 #---------------Race------------------
 
 class RaceSerializer(serializers.HyperlinkedModelSerializer):
+    club = ClubBriefSerializer(read_only=True)
+    location = RaceCourseSerializer(read_only=True)
+
     class Meta:
         model = Race
+        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'time', 'website', 'status', 'description')
 
 
 class RaceList(generics.ListCreateAPIView):
@@ -71,20 +90,6 @@ class RaceList(generics.ListCreateAPIView):
 class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
-
-#---------------RaceCourse------------------
-
-class RaceCourseSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = RaceCourse
-
-class RaceCourseList(generics.ListCreateAPIView):
-    queryset = RaceCourse.objects.all()
-    serializer_class = RaceCourseSerializer
-
-class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = RaceCourse.objects.all()
-    serializer_class = RaceCourseSerializer
 
 #---------------Rider------------------
 
