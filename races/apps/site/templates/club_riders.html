@@ -15,7 +15,7 @@
 
 <ul>
 {% for rider in riders %}
-  <li><a href="/rider/{{rider.user.id}}">{{rider.user.first_name}} {{rider.user.last_name}}</a></li>
+  <li><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></li>
 {% endfor %}
 </ul>
 

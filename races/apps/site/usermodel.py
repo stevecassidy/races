@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+import datetime
 
 from races.apps.site.models import Club, Race
 import csv
@@ -35,6 +36,25 @@ class Rider(models.Model):
 
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
+
+    def performancereport(self):
+        """Generate a rider performance report"""
+
+        # number of races
+        # number of wins/places in last 12 months
+        # wins in grade
+        # places in grade
+
+        info = dict()
+
+        today = datetime.date.today()
+        startdate = today - datetime.timedelta(days=365)
+        info['recent'] = self.raceresult_set.filter(place__lt=5, race__date__gt=startdate)
+        info['wins'] = info['recent'].filter(place__exact=1).count()
+        info['places'] = info['recent'].count()
+
+        return info
+
 
 class UserRole(models.Model):
     """A role held by a person in a club, eg. president, handicapper, duty officer
@@ -79,13 +99,13 @@ class RaceResult(models.Model):
         ordering = ['race', 'grade', 'place', 'number']
 
     def __unicode__(self):
-        return "%s - %s-%d/%s, %s" % (str(self.race), self.grade, self.number, self.place or '-', str(self.rider))
+        return "%s - %s-%d/%s, %s" % (str(self.race), self.grade, self.number or 0, self.place or '-', str(self.rider))
 
     race = models.ForeignKey(Race)
     rider = models.ForeignKey(Rider)
 
     grade = models.CharField("Grade", max_length=10)
-    number = models.IntegerField("Bib Number")  # unique together with grade
+    number = models.IntegerField("Bib Number", blank=True, null=True)  # unique together with grade
 
     place = models.IntegerField("Place", blank=True, null=True, help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")
     dnf = models.BooleanField("DNF", default=False)

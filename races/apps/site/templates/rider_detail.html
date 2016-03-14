@@ -16,25 +16,68 @@
     {% for role in user.userrole_set.all %}
         <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>
     {% endfor %}
+    <tr><th colspan=2>In the last 12 months</th></tr>
+    <tr><th>Wins</th><td>{{user.rider.performancereport.wins}}</td></tr>
+    <tr><th>Places</th><td>{{user.rider.performancereport.wins}}</td></tr>
+
 </table>
 
 
+{% regroup user.rider.raceresult_set.all.reverse by race.date.year as year_list %}
 
-<table class=table>
-    <thead>
-        <tr><th>Race</th><th>Grade</th><th>Place</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for result in user.rider.raceresult_set.all %}
-    <tr>
-        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
-        <td>{{result.grade}}</td>
-        <td>{{result.place}}</td>
-    </tr>
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+        href="#recentplaces" aria-expanded="true">Recent Placings</a>
+    </li>
+{% for year in year_list %}
+    <li role="presentation">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+          href="#year{{year.grouper}}">
+           {{year.grouper}} ({{year.list|length}})
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<div class='tab-content'>
+    <div role="tabpanel" class="tab-pane active" id="recentplaces">
+        <table class=table>
+            <thead>
+                <tr><th>Race</th><th>Grade</th><th>Place</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in user.rider.performancereport.recent %}
+            <tr>
+                <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                <td>{{result.grade}}</td>
+                <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% for year in year_list %}
+    <div role="tabpanel" class="tab-pane" id="year{{year.grouper}}">
+        <table class=table>
+            <thead>
+                <tr><th>Race</th><th>Grade</th><th>Place</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in year.list %}
+            <tr>
+                <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                <td>{{result.grade}}</td>
+                <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% endfor %}
-    </tbody>
-</table>
-
+</div>
 
 {% endblock %}

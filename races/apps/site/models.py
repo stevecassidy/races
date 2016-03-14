@@ -14,7 +14,23 @@ import ngram
 import csv
 
 
+class ClubManager(models.Manager):
+
+    def closest(self, name):
+        """Find a RaceCourse using an approximate match to
+        the given name, return the best matching RaceCourse instance"""
+
+        clubs = self.all()
+
+        ng = ngram.NGram(clubs, key=str)
+
+        club = ng.finditem(name)
+
+        return club
+
 class Club(models.Model):
+
+    objects = ClubManager()
 
     name = models.CharField(max_length=100)
     website = models.URLField(max_length=400)
@@ -260,7 +276,7 @@ STATUS_CHOICES = (
 )
 
 class Race(models.Model):
-    
+
     # empty help texts here to force help element in forms
     title = models.CharField(max_length=100, help_text="Enter a title for the race")
     date = models.DateField(help_text=" ")

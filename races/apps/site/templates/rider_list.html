@@ -20,7 +20,7 @@
     <tbody>
     {% for rider in riders %}
       <tr>
-          <td><a href="/riders/{{rider.user.id}}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+          <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
           <td>{{rider.club.name}}</td>
       </tr>
     {% endfor %}

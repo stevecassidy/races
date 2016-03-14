@@ -66,7 +66,8 @@ class ListRacesView(ListView):
             return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
         else:
             # just pull races after today
-            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
+#            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
+            return Race.objects.filter()
 
 
 class RaceDetailView(DetailView):

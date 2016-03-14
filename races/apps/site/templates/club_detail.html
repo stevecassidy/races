@@ -74,6 +74,8 @@ th label {
 <h2>{{club.name}}</h2>
 
 <p><a href='{{club.website}}'>{{club.name}} Website</a></p>
+
+<p><a href="{% url 'club_riders' club.slug %}">Members</a></p>
 {% endif %}
 
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
@@ -163,7 +165,8 @@ th label {
     </ul>
 {% endif %}
 
-{% regroup races by date as date_list %}
+
+{% regroup club.races.all by date as date_list %}
 
 {% include 'race_table.html' %}
 

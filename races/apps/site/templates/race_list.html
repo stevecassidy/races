@@ -1,11 +1,29 @@
 {% extends "site_base.html" %}
 {% block content %}
 
-{% regroup object_list by date as date_list %}
 
-    <h2>Races</h2>
+{% regroup object_list.reverse by date.year as year_list %}
 
-    {% include 'race_table.html' %}
+<ul class="nav nav-tabs">
+{% for year in year_list %}
+    <li role="presentation" class="{% if forloop.first %} active{% endif %}">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+          href="#year{{year.grouper}}">
+           {{year.grouper}} ({{year.list|length}})
+        </a>
+    </li>
+{% endfor %}
+</ul>
 
+<div class='tab-content'>
+{% for year in year_list %}
+    <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="year{{year.grouper}}">
+
+        {% regroup year.list by date as date_list %}
+
+        {% include 'race_table.html' %}
+    </div>
+{% endfor %}
+</div>
 
 {% endblock %}
