@@ -207,6 +207,11 @@ class ClubRidersCSVView(View):
             else:
                 grade = ''
 
+            try:
+                clubslug = r.club.slug
+            except:
+                clubslug = 'Unknown'
+                
             row = (r.user.last_name,
                    r.user.first_name,
                    'U',
@@ -216,7 +221,7 @@ class ClubRidersCSVView(View):
                    '',
                    '2',
                    r.licenceno,
-                   r.club.slug,
+                   clubslug,
                    r.user.email,
                    r.pk,
                    ''

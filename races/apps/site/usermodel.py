@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 import datetime
+from djangoyearlessdate.models import YearField
 
 from races.apps.site.models import Club, Race
 import csv
@@ -22,6 +23,16 @@ def save_rider(backend, user, response, *args, **kwargs):
 
 
 
+STATE_CHOICES = (('ACT', 'Australian Capital Territory'),
+                 ('NSW', 'New South Wales'),
+                 ('NT', 'Northern Territory'),
+                 ('QLD', 'Queensland'),
+                 ('SA', 'South Australia'),
+                 ('TAS', 'Tasmania'),
+                 ('VIC', 'Victoria'),
+                 ('WA', 'Western Australia'))
+
+
 class Rider(models.Model):
     """Model for extra information associated with a club member (rider)
     minimal model with just enough information to support race results"""
@@ -29,6 +40,17 @@ class Rider(models.Model):
     user = models.OneToOneField(User)
     licenceno = models.CharField("Licence Number", max_length=20)
     gender = models.CharField("Gender", max_length=2, choices=(("M", "M"), ("F", "F")))
+    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1))
+    streetaddress = models.CharField("Address", max_length=100, default='')
+    suburb = models.CharField("Suburb", max_length=100, default='')
+    state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW')
+    postcode = models.CharField("Postcode", max_length=4, default='')
+    phone = models.CharField("Phone", max_length=20, default='')
+
+    emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
+    emergencyphone = models.CharField("Emergency Contact Phone", max_length=20, default='')
+    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
+
 
     official = models.BooleanField("Club Official", default=False)
 
@@ -54,6 +76,14 @@ class Rider(models.Model):
         info['places'] = info['recent'].count()
 
         return info
+
+
+class Membership(models.Model):
+    """Membership of a club in a given year"""
+
+    rider = models.ForeignKey(Rider)
+    club = models.ForeignKey(Club, null=True)
+    year = YearField(null=True, blank=True)
 
 
 class UserRole(models.Model):

@@ -11,6 +11,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
 import csv
 import os
+import datetime
 
 from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
 from races.apps.site.models import Club, Race, RaceCourse
@@ -122,6 +123,156 @@ CLUBMAP = {'ACT': 'ATTANSW',
  'Willesden CC (England)': 'None',
  'rbcc': 'RandwickBotanyCC'}
 
+
+def import_races(csvdir, waratahs):
+
+    Race.objects.all().delete()
+
+    # import races from events.csv
+    with open(os.path.join(csvdir, 'events.csv'), 'rU') as fd:
+        reader = csv.DictReader(fd)
+
+        # remember the race identifiers
+        racedict = dict()
+
+        for row in reader:
+            # csv fields
+            # id,"dd","mm","yyyy","eventname","eventno","eventdate","starttime",
+            # "venue","performancereport","mainpointscore","dutyofficer","dutyofficerother",
+            # "commissaire","commissaireother","helpers","helpersother","sponsor"
+
+            # model fields
+            # title, date, time, club, status=published
+            time = "08:00"
+            location = RaceCourse.objects.find_location(row['venue'])
+
+            race = Race(title=row['eventname'], date=row['eventdate'], club=waratahs, time=time, location=location)
+            race.save()
+
+            racedict[row['eventno']] = race
+
+        print "Imported %d races" % len(racedict)
+        return racedict
+
+def import_users(csvdir, waratahs):
+
+    User.objects.filter(is_staff__exact=False).delete()
+    ClubGrade.objects.all().delete()
+
+    usermap = dict()
+    # import riders from register.csv
+    with open(os.path.join(csvdir, 'register.csv'), 'rU') as fd:
+        reader = csv.DictReader(fd)
+
+        usercount = 0
+        for row in reader:
+            if row['email'] == '':
+                username = row['firstname']+row['lastname']+row['id'].replace(' ', '')
+            else:
+                username = row['email']
+
+            user, created = User.objects.get_or_create(email=row['email'], username=username)
+
+            if created:
+                user.first_name = row['firstname']
+                user.last_name = row['lastname']
+                user.save()
+
+            # add rider info
+            if not hasattr(user, 'rider') and row['licenceno'] != "":
+                user.rider = Rider()
+                user.rider.licenceno = row['licenceno']
+                user.rider.gender = row['gender']
+
+                if row['club'] in CLUBMAP:
+                    if CLUBMAP[row['club']] == 'None':
+                        row['club'] = None
+                    else:
+                        row['club'] = CLUBMAP[row['club']]
+
+                club = Club.objects.closest(row['club'])
+                user.rider.club = club
+                user.rider.streetaddress = row['streetaddress1']
+                user.rider.suburb = row['suburbtown']
+                user.rider.postcode = row['postcode']
+                user.rider.phone = row['phone']
+                user.rider.emergencyname = row['emergencyname']
+                user.rider.emergencyphone = row['emergencyphone']
+                user.rider.emergencyrelationship = row['emergencyrelationship']
+
+                try:
+                    user.rider.dob = datetime.date(day=int(row['dobdd']), month=int(row['dobmm']), year=int(row['dobyyyy']))
+                except:
+                    pass
+
+                user.rider.save()
+
+                #print "Rider: ", user.rider
+
+                # grade and state handicap
+                grade = ClubGrade(club=waratahs, rider=user.rider, grade=row['grade'])
+                grade.save()
+
+                # membership history
+
+            usermap[int(row['id'])] = user
+
+            usercount += 1
+
+        print "Imported %d riders" % usercount
+        return usermap
+
+def import_points(csvdir, waratahs, usermap, racedict):
+
+    RaceResult.objects.all().delete()
+
+    # import results from points.csv
+    with open(os.path.join(csvdir, 'points.csv'), 'rU') as fd:
+        reader = csv.DictReader(fd)
+
+        for row in reader:
+
+            if int(row['registerid']) not in usermap:
+                print "Unknown rider", row
+                continue
+
+            user = usermap[int(row['registerid'])]
+
+            race = racedict[row['eventno']]
+
+            # work out place from points - actually need to account for small grades (E, F)
+            points = int(row['points'])
+            if points == 2:
+                place = None
+            elif points > 0:
+                place = 8-points
+
+            try:
+                number = int(row['shirtno'])
+            except:
+                number = None
+
+            result = RaceResult(race=race, rider=user.rider, grade=row['grade'], number=number, place=place)
+
+            try:
+                result.save()
+            except django.db.utils.IntegrityError:
+                print "Duplicate result"
+                print row, race, number
+                print RaceResult.objects.filter(race=race, grade=row['grade'], number=number)
+
+    if False:
+        # fix up races with small fields - points/place calculation is incorrect
+        for race in Race.objects.all():
+            for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
+                if RaceResult.objects.filter(race=race, grade=grade, place__isnull=False).count() < 5:
+                    # subtract 2 from the places
+                    for result in RaceResult.objects.filter(race=race, grade=grade, place__isnull=False):
+                        print "Fixing result", result.place
+                        result.place -= 2
+                        result.save()
+
+
 class Command(BaseCommand):
 
 
@@ -130,11 +281,6 @@ class Command(BaseCommand):
 
 
     def handle(self, *args, **options):
-        # remove all users/riders (not admins) and races
-        User.objects.filter(is_staff__exact=False).delete()
-        Race.objects.all().delete()
-        RaceResult.objects.all().delete()
-        ClubGrade.objects.all().delete()
 
         csvdir = options['directory']
 
@@ -144,124 +290,8 @@ class Command(BaseCommand):
             print "You need to create the WMCC club first"
             exit()
 
-        # import races from events.csv
-        with open(os.path.join(csvdir, 'events.csv'), 'rU') as fd:
-            reader = csv.DictReader(fd)
+        racedict = import_races(csvdir, waratahs)
 
-            # remember the race identifiers
-            racedict = dict()
+        usermap = import_users(csvdir, waratahs)
 
-            for row in reader:
-                # csv fields
-                # id,"dd","mm","yyyy","eventname","eventno","eventdate","starttime",
-                # "venue","performancereport","mainpointscore","dutyofficer","dutyofficerother",
-                # "commissaire","commissaireother","helpers","helpersother","sponsor"
-
-                # model fields
-                # title, date, time, club, status=published
-                time = "08:00"
-                location = RaceCourse.objects.find_location(row['venue'])
-
-                race = Race(title=row['eventname'], date=row['eventdate'], club=waratahs, time=time, location=location)
-                race.save()
-
-                racedict[row['eventno']] = race
-
-            print "Imported %d races" % len(racedict)
-
-        usermap = dict()
-        # import riders from register.csv
-        with open(os.path.join(csvdir, 'register.csv'), 'rU') as fd:
-            reader = csv.DictReader(fd)
-
-            usercount = 0
-            for row in reader:
-                if row['email'] == '':
-                    username = row['firstname']+row['lastname']+row['id'].replace(' ', '')
-                else:
-                    username = row['email']
-
-                user, created = User.objects.get_or_create(email=row['email'], username=username)
-
-                if created:
-                    user.first_name = row['firstname']
-                    user.last_name = row['lastname']
-                    user.save()
-
-                # add rider info
-                if not hasattr(user, 'rider') and row['licenceno'] != "":
-                    user.rider = Rider()
-                    user.rider.licenceno = row['licenceno']
-                    user.rider.gender = row['gender']
-
-                    if row['club'] in CLUBMAP:
-                        if CLUBMAP[row['club']] == 'None':
-                            row['club'] = None
-                        else:
-                            row['club'] = CLUBMAP[row['club']]
-
-                    club = Club.objects.closest(row['club'])
-                    user.rider.club = club
-                    user.rider.save()
-
-                    # grade and state handicap
-                    grade = ClubGrade(club=waratahs, rider=user.rider, grade=row['grade'])
-                    grade.save()
-
-                usermap[int(row['id'])] = user
-
-                usercount += 1
-
-            print "Imported %d riders" % usercount
-
-        with open('foobar.dat', 'w') as out:
-            for x in usermap:
-                out.write("%s, %s\n" % (x, usermap[x].username))
-
-
-        # import results from points.csv
-        with open(os.path.join(csvdir, 'points.csv'), 'rU') as fd:
-            reader = csv.DictReader(fd)
-
-            for row in reader:
-
-                if int(row['registerid']) not in usermap:
-                    print "Unknown rider", row
-                    continue
-
-                user = usermap[int(row['registerid'])]
-
-                race = racedict[row['eventno']]
-
-                # work out place from points - actually need to account for small grades (E, F)
-                points = int(row['points'])
-                if points == 2:
-                    place = None
-                elif points > 0:
-                    place = 8-points
-
-                try:
-                    number = int(row['shirtno'])
-                except:
-                    number = None
-
-                result = RaceResult(race=race, rider=user.rider, grade=row['grade'], number=number, place=place)
-
-                try:
-                    result.save()
-                except django.db.utils.IntegrityError:
-                    print "Duplicate result"
-                    print row, race, number
-                    print RaceResult.objects.filter(race=race, grade=row['grade'], number=number)
-
-
-        if False:
-            # fix up races with small fields - points/place calculation is incorrect
-            for race in Race.objects.all():
-                for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
-                    if RaceResult.objects.filter(race=race, grade=grade, place__isnull=False).count() < 5:
-                        # subtract 2 from the places
-                        for result in RaceResult.objects.filter(race=race, grade=grade, place__isnull=False):
-                            print "Fixing result", result.place
-                            result.place -= 2
-                            result.save()
+        import_points(csvdir, waratahs, usermap, racedict)
