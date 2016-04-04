@@ -211,7 +211,7 @@ class ClubRidersCSVView(View):
                 clubslug = r.club.slug
             except:
                 clubslug = 'Unknown'
-                
+
             row = (r.user.last_name,
                    r.user.first_name,
                    'U',
@@ -242,6 +242,14 @@ class RiderView(DetailView):
     model = User
     template_name = 'rider_detail.html'
     context_object_name = 'user'
+
+class RiderUpdateView(UpdateView):
+
+    model = Rider
+    template_name = "rider_update.html"
+    fields = ['streetaddress', 'suburb', 'state', 'phone']
+    
+
 
 
 class RaceUpdateView(UpdateView):

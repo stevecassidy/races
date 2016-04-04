@@ -11,7 +11,7 @@
     <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
     <tr><th>Licence</th><td>{{user.rider.licenceno}}</td></tr>
     {% for grading in user.rider.clubgrade_set.all %}
-        <tr><th>Grade ({{grading.club}})</th><td>{{grading.grade}}</td></tr>
+        <tr><th>Grade ({{grading.club.name}})</th><td>{{grading.grade}}</td></tr>
     {% endfor %}
     {% for role in user.userrole_set.all %}
         <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>
@@ -19,12 +19,25 @@
     <tr><th colspan=2>In the last 12 months</th></tr>
     <tr><th>Wins</th><td>{{user.rider.performancereport.wins}}</td></tr>
     <tr><th>Places</th><td>{{user.rider.performancereport.wins}}</td></tr>
-
 </table>
+
+{% if request.user == user and request.user.rider %}
+<h4>Personal Details (<a href="{% url 'rider_update' user.rider.id %}">Update</a>)</h4>
+<div id='buttons'>
+    <div id='editbutton' class='btn btn-default'></div>
+</div>
+<table class=table>
+    <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
+    <tr><th>Phone</th><td>{{user.rider.phone}}</td></tr>
+    <tr><th>Email</th><td>{{user.email}}</td></tr>
+</table>
+{% endif %}
+
+
 
 
 {% regroup user.rider.raceresult_set.all.reverse by race.date.year as year_list %}
-
+<h4>Performance Report</h4>
 <ul class="nav nav-tabs">
     <li role="presentation" class="active">
         <a aria-controls="home" role="tab" data-toggle="tab"
@@ -42,40 +55,56 @@
 
 <div class='tab-content'>
     <div role="tabpanel" class="tab-pane active" id="recentplaces">
-        <table class=table>
-            <thead>
-                <tr><th>Race</th><th>Grade</th><th>Place</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for result in user.rider.performancereport.recent %}
-            <tr>
-                <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
-                <td>{{result.grade}}</td>
-                <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        {% if not user.rider.performancereport.recent %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>No recent placings.</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class=table>
+                    <thead>
+                        <tr><th>Race</th><th>Grade</th><th>Place</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in user.rider.performancereport.recent %}
+                    <tr>
+                        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                        <td>{{result.grade}}</td>
+                        <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
     </div>
 
     {% for year in year_list %}
     <div role="tabpanel" class="tab-pane" id="year{{year.grouper}}">
-        <table class=table>
-            <thead>
-                <tr><th>Race</th><th>Grade</th><th>Place</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for result in year.list %}
-            <tr>
-                <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
-                <td>{{result.grade}}</td>
-                <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class=table>
+                    <thead>
+                        <tr><th>Race</th><th>Grade</th><th>Place</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in year.list %}
+                    <tr>
+                        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                        <td>{{result.grade}}</td>
+                        <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     {% endfor %}
 </div>

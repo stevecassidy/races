@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.core.urlresolvers import reverse, reverse_lazy
+
 import datetime
 from djangoyearlessdate.models import YearField
 
@@ -51,10 +53,13 @@ class Rider(models.Model):
     emergencyphone = models.CharField("Emergency Contact Phone", max_length=20, default='')
     emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
 
-
     official = models.BooleanField("Club Official", default=False)
 
     club = models.ForeignKey(Club, null=True)
+
+    def get_absolute_url(self):
+
+        return reverse('rider', kwargs={'pk': self.user.pk})
 
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name

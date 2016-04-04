@@ -35,6 +35,7 @@ urlpatterns = [
 
     url(r'^riders/$', views.RiderListView.as_view(), name='riders'),
     url(r'^riders/(?P<pk>\d+)$', views.RiderView.as_view(), name='rider'),
+    url(r'^riders/(?P<pk>\d+)/update$', views.RiderUpdateView.as_view(), name='rider_update'),
 
     # api urls
     url(r'^api/$', api.api_root),
