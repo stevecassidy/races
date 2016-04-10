@@ -53,9 +53,10 @@ class TestPageView(TemplateView):
     template_name = "test.html"
 
 
-class ListRacesView(ListView):
+class RaceListDateView(ListView):
     model = Race
     template_name = 'race_list.html'
+    context_object_name = 'races'
 
     def get_queryset(self):
 
@@ -66,8 +67,7 @@ class ListRacesView(ListView):
             return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
         else:
             # just pull races after today
-#            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
-            return Race.objects.filter()
+            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
 
 
 class RaceDetailView(DetailView):
@@ -108,8 +108,19 @@ class ClubDetailView(DetailView):
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
 
         context['form'] = RaceCreateForm()
-        if 'iframe' in self.request.GET:
-            context['iframe'] = True
+
+        return context
+
+class ClubDashboardView(DetailView):
+
+    model = Club
+    template_name = 'club_dashboard.html'
+    context_object_name = 'club'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubDashboardView, self).get_context_data(**kwargs)
+        context['form'] = RaceCreateForm()
 
         return context
 
@@ -183,6 +194,11 @@ class ClubRidersCSVView(View):
         cd = 'attachment; filename="{0}"'.format("race.csv")
         response['Content-Disposition'] = cd
 
+        if 'eventno' in request.GET:
+            eventno = request.GET['eventno']
+        else:
+            eventno = '12345'
+
         writer = csv.writer(response)
         header = ('LastName',
                   'FirstName',
@@ -224,7 +240,7 @@ class ClubRidersCSVView(View):
                    clubslug,
                    r.user.email,
                    r.pk,
-                   ''
+                   eventno
                   )
             writer.writerow(row)
 
@@ -248,9 +264,6 @@ class RiderUpdateView(UpdateView):
     model = Rider
     template_name = "rider_update.html"
     fields = ['streetaddress', 'suburb', 'state', 'phone']
-    
-
-
 
 class RaceUpdateView(UpdateView):
     model = Race
@@ -333,54 +346,73 @@ class RaceRidersView(ListView):
         return HttpResponseRedirect(reverse('race_riders', kwargs=kwargs))
 
 
-def clubRaces(request, slug):
-    """View to create one or more races for a club"""
+class ClubRacesView(DetailView):
+    model = Club
+    template_name = "club_races.html"
+    context_object_name = 'club'
 
-    if request.method == "POST":
+    def get_context_data(self, **kwargs):
 
-        form = RaceCreateForm(request.POST)
+        context = super(ClubRacesView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
 
-        if request.is_ajax():
-            if form.is_valid():
-                # process it
-                pointscore = form.cleaned_data['pointscore']
-                if form.cleaned_data['repeat'] == 'none':
+        if self.request.user.is_authenticated():
+            context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club)
+        else:
+            context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club, status__exact='p')
 
-                    race = form.save()
-                    if pointscore:
-                        pointscore.races.add(race)
+        return context
 
-                    data = json.dumps({'success': 1})
-                    return HttpResponse(data, content_type='application/json')
-                else:
-                    startdate = form.cleaned_data['date']
+    def post(self, request, **kwargs):
+        """POST request handler to create new races for this club"""
 
-                    number = form.cleaned_data['number']
-                    repeat = form.cleaned_data['repeat']
-                    repeatMonthN = form.cleaned_data['repeatMonthN']
-                    repeatDay = form.cleaned_data['repeatDay']
+        if request.method == "POST":
 
-                    if repeat == u'weekly':
-                        rule = rrule(WEEKLY, count=number, dtstart=startdate)
-                    elif repeat == u'monthly':
-                        rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+            form = RaceCreateForm(request.POST)
 
-                    race = form.save(commit=False)
+            if request.is_ajax():
+                if form.is_valid():
+                    # process it
+                    pointscore = form.cleaned_data['pointscore']
+                    if form.cleaned_data['repeat'] == 'none':
 
-                    # now make N more races
-                    for date in rule:
-                        # force 'save as new'
-                        race.pk = None
-
-                        race.date = date
-                        race.save()
+                        race = form.save()
                         if pointscore:
                             pointscore.races.add(race)
 
-                    data = json.dumps({'success': 1})
-                    return HttpResponse(data, content_type='application/json')
-            else:
-                data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
-                return HttpResponse(data, content_type='application/json')
+                        data = json.dumps({'success': 1})
+                        return HttpResponse(data, content_type='application/json')
+                    else:
+                        startdate = form.cleaned_data['date']
 
-        return HttpError()
+                        number = form.cleaned_data['number']
+                        repeat = form.cleaned_data['repeat']
+                        repeatMonthN = form.cleaned_data['repeatMonthN']
+                        repeatDay = form.cleaned_data['repeatDay']
+
+                        if repeat == u'weekly':
+                            rule = rrule(WEEKLY, count=number, dtstart=startdate)
+                        elif repeat == u'monthly':
+                            rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+
+                        race = form.save(commit=False)
+
+                        # now make N more races
+                        for date in rule:
+                            # force 'save as new'
+                            race.pk = None
+
+                            race.date = date
+                            race.save()
+                            if pointscore:
+                                pointscore.races.add(race)
+
+                        data = json.dumps({'success': 1})
+                        return HttpResponse(data, content_type='application/json')
+                else:
+                    data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
+                    return HttpResponse(data, content_type='application/json')
+
+            return HttpError()

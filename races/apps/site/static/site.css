@@ -2,22 +2,37 @@ body {
         padding-top: 0px;
 }
 
+/*
+ #E8B730 yellow main colour
+ #256B94 blue contrast
+*/
+
+header .navbar {
+    background-color: #256B94;
+}
+
+header a:link {
+    color: #256B94;
+}
 #map-canvas {
     height: 300px;
     width: 100%;
  }
- 
+
 #map-canvas img {
     max-width: none;
 }
- 
+
 #masthead {
     margin-top: -40px;
     margin-left: -100px;
     margin-right: -100px;
     height: 75px;
+    /*
     background-image: url(header75.jpg);
     background-repeat: repeat-x;
+    */
+    background-color: #E8B730;
 }
 
 .navbar-toggle {
@@ -39,11 +54,11 @@ body {
 }
 
 @media (max-width: 480px) {
-    
+
     .racelocation {
         display: none;
     }
-    
+
 }
 
 footer {
@@ -68,5 +83,5 @@ footer a:link {
     float: right;
 }
 .fb-like {
-    overflow: hidden;   
+    overflow: hidden;
 }

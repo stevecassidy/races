@@ -70,91 +70,15 @@ th label {
 
 {% block content %}
 
-{% if not iframe %}
 <h2>{{club.name}}</h2>
 
-<p><a href='{{club.website}}'>{{club.name}} Website</a></p>
-
-<p><a href="{% url 'club_riders' club.slug %}">Members</a></p>
-{% endif %}
-
+<ul>
+    <li><a href='{{club.website}}'>{{club.name}} Website</a></li>
+    <li><a href="{% url 'club_races' slug=club.slug %}">Race Results</a></li>
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-    <button class='btn' data-toggle='modal' data-target="#raceCreateModal">Create New Race for {{club.name}}</button>
-
-    <div class="modal fade" id="raceCreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Create Race</h4>
-            </div>
-
-            <form method='post' action='{% url 'club_races' club.slug %}' name='raceform' id='raceform'>
-                {% csrf_token %}
-                <div class='well form-group'>
-                    {{form.errors}}
-                    <input type='hidden' name='club' value='{{club.id}}'>
-                    <table class='table-condensed'>
-                        <tr><th><label for='id_pointscore'>Pointscore</label></th>
-                            <td colspan=3>{{form.pointscore|bootstrap_inline}}
-                               <span id="help_pointscore" class='help-block'></span>
-                            </td>
-                        </tr>
-
-                        <tr><th><label for='id_title'>Title</label></th>
-                            <td colspan=3>{{form.title|bootstrap_inline}}</td>
-                        </tr>
-
-                        <tr>
-                            <th><label for='id_date'>Date</label></th>
-                                <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
-                            <th><label for='id_time'>Start Time</label></th>
-                                <td>{{form.time|bootstrap_inline}}</td>
-                        </tr>
-
-                        <tr>
-                            <th><label for='id_weekly'>Repeat</label></th>
-                            <td>{{form.repeat|bootstrap_inline}}</td>
-                            <td>{{form.number|bootstrap_inline}}</td>
-                            <td><label for='id_number'>times</label></td>
-                        </tr>
-
-                        <tr>
-                            <th><label for='id_repeat'>Repeat on the</label></th>
-                            <td>{{form.repeatMonthN|bootstrap_inline}}</td>
-                            <td>{{form.repeatDay|bootstrap_inline}}</td>
-                            <td><label for='id_number'>of each month</label></td>
-                        </tr>
-
-
-                        <tr>
-                            <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
-                            <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
-                        </tr>
-                        <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{form.website|bootstrap_inline}}</td></tr>
-
-                        <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
-                    </table>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                      <button type="button" id="submitraceform" class="btn btn-primary">Create Race(s)</button>
-                    </div>
-                </div>
-            </form>
-          </div>
-        </div>
-    </div>
-
-
-    <div>
-      <button class='btn' >
-       <a href="{% url 'club_riders_csv' slug=club.slug %}">Download Race CSV</a>
-      </button>
-    </div>
-
+    <li><a href="{% url 'club_dashboard' slug=club.slug %}">Club Dashboard</a></li>
 {% endif %}
-
+</ul>
 
 {% if club.pointscore_set.all %}
 <h2>Pointscores</h3>
@@ -166,9 +90,41 @@ th label {
 {% endif %}
 
 
-{% regroup club.races.all by date as date_list %}
+{% regroup races by date as date_list %}
 
-{% include 'race_table.html' %}
+<table class='table'>
+  <thead>
+   <tr>
+       <th>Date</th>
+       <th class='racetime'>Time</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+       {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+       <th>Status</th>
+       <th>&nbsp;</th>
+       {% endif %}
+   </tr>
+  </thead>
+{% for date in date_list %}
+   {% for race in date.list %}
+          <tr>
+              <th class='date'>{{race.date|date:"D d M"}}</td>
+              <td class='racetime'>{{race.time}}</td>
+              <td class='racetitle'>
+                  <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
+              <td class='racelocation'>{{ race.location }}</td>
+              {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+              <td class='racestatus'>{{ race.get_status_display }}</td>
+              <td>
+                  <a href="{% url 'race_delete' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+
+
+
+                  <a href="{% url 'race_update' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+              </td>
+              {% endif %}
+          </tr>
+   {% endfor %}
+ {% endfor %}
+</table>
 
 
 

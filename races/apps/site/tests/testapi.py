@@ -90,7 +90,7 @@ class APITests(TestCase):
         self.assertEqual(3, len(racelist))
         # club in each race should be this one
         for race in racelist:
-            self.assertEqual("http://testserver/api/clubs/63/", race['club'])
+            self.assertEqual("http://testserver/api/clubs/63/", race['club']['url'])
 
 
     def test_race_create(self):

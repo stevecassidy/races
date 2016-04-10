@@ -1,0 +1,46 @@
+{% extends "site_base.html" %}
+{% block content %}
+
+<h2>{{club.name}} Race Results</h2>
+
+{% regroup races.reverse by date.year as year_list %}
+
+<ul class="nav nav-tabs">
+{% for year in year_list %}
+    <li role="presentation" class="{% if forloop.first %} active{% endif %}">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+          href="#year{{year.grouper}}">
+           {{year.grouper}} ({{year.list|length}})
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<div class='tab-content'>
+{% for year in year_list %}
+    <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="year{{year.grouper}}">
+
+        {% regroup year.list by date as date_list %}
+
+        <table class='table'>
+          <thead>
+           <tr>
+               <th>Date</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+           </tr>
+          </thead>
+        {% for date in date_list %}
+           {% for race in date.list %}
+                  <tr>
+                      <th class='date'>{{race.date|date:"D d M"}}</td>
+                      <td class='racetitle'>
+                          <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
+                      <td class='racelocation'>{{ race.location }}</td>
+                  </tr>
+           {% endfor %}
+         {% endfor %}
+        </table>
+        </div>
+{% endfor %}
+</div>
+
+{% endblock %}

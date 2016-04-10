@@ -165,7 +165,7 @@ class PointScore(models.Model):
     races = models.ManyToManyField(Race, blank=True)  # a pointscore contains many races and a race can be in many pointscores
 
     def __unicode__(self):
-        return unicode(unicode(self.club) + " " + self.name + " Pointscore")
+        return unicode(unicode(self.club) + " " + self.name)
 
     def get_points(self):
         "Return a list of integers from the points field"
@@ -187,6 +187,9 @@ class PointScore(models.Model):
     def score(self, place, numberriders):
         """Return the points corresponding to this place in the race
         and this number of riders"""
+
+        if place is None:
+            return self.participation
 
         if numberriders < self.smallthreshold:
             if place-1 < len(self.get_smallpoints()):
@@ -214,12 +217,12 @@ class PointScore(models.Model):
                 else:
                     table[result.rider.pk] = points.points
         pointstable = []
-        for pk,points in table.items():
-            pointstable.append((Rider.objects.get(pk=pk), points))
+        for pk, points in table.items():
+            pointstable.append({'rider': Rider.objects.get(pk=pk), 'points': points})
 
         # sort by points
 
-        return sorted(pointstable, cmp=lambda a,b: cmp(b[1],a[1]))
+        return sorted(pointstable, cmp=lambda a,b: cmp(b['points'],a['points']))
 
     def calculate(self):
         """Calculate the points for all riders in all races we have results for"""

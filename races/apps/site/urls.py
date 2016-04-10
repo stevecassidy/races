@@ -9,8 +9,8 @@ from races.apps.site import views, feeds, api
 
 urlpatterns = [
     url(r'^$', views.HomePage.as_view(), name='home'),
-    url(r'^races/$', views.ListRacesView.as_view(), name='races'),
-    url(r'^races/(?P<year>\d{4})/(?P<month>[0-9][1-9])/$', views.ListRacesView.as_view(), name='racesmonth'),
+    url(r'^races/$', views.RaceListDateView.as_view(), name='races'),
+    url(r'^races/(?P<year>\d{4})/(?P<month>[0-9][1-9])/$', views.RaceListDateView.as_view(), name='racesmonth'),
     #url(r'^races/(?P<pk>\d+)/$', views.RaceDetailView.as_view(), name='race'),
 
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', xframe_options_exempt(views.RaceDetailView.as_view()), name='race'),
@@ -26,8 +26,9 @@ urlpatterns = [
 
     url(r'^clubs/$', views.ClubListView.as_view(), name='clubs'),
     url(r'^clubs/(?P<slug>[^/]*)/$', xframe_options_exempt(views.ClubDetailView.as_view()), name='club'),
-    url(r'^clubs/(?P<slug>[^/]*)/races$', views.clubRaces, name='club_races'),
-    url(r'^clubs/(?P<slug>[^/]*)/riders$', views.ClubRidersView.as_view(), name='club_riders'),
+    url(r'^clubs/(?P<slug>[^/]*)/dashboard/$', views.ClubDashboardView.as_view(), name='club_dashboard'),
+    url(r'^clubs/(?P<slug>[^/]*)/races/$', views.ClubRacesView.as_view(), name='club_races'),
+    url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
     url(r'^clubs/(?P<club>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
 
     # get rider csv file for race entry front end

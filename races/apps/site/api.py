@@ -66,6 +66,8 @@ class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
 #---------------Race------------------
 
 class RaceSerializer(serializers.HyperlinkedModelSerializer):
+    # TODO: we want these fields to be expanded when we read the data
+    # but we only want to specify the ID when we update/create
     club = ClubBriefSerializer(read_only=True)
     location = RaceCourseSerializer(read_only=True)
 

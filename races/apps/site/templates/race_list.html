@@ -2,6 +2,11 @@
 {% block content %}
 
 
+{% regroup races by date as date_list %}
+
+{% include 'race_table.html' %}
+
+
 {% regroup object_list.reverse by date.year as year_list %}
 
 <ul class="nav nav-tabs">

@@ -11,7 +11,11 @@
         </thead>
         <tbody>
     {% for pair in object.tabulate %}
-            <tr><td><a href="{% url 'rider' pk=pair.0.user.pk %}">{{pair.0}}</a></td><td>{{pair.0.club}}</td><td>{{pair.1}}</td></tr>
+            <tr>
+                <td><a href="{% url 'rider' pk=pair.rider.user.pk %}">{{pair.rider}}</a></td>
+                <td>{{pair.rider.club}}</td>
+                <td>{{pair.points}}</td>
+            </tr>
     {% endfor %}
         </tbody>
     </table>
