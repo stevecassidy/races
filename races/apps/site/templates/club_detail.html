@@ -107,7 +107,7 @@ th label {
    {% for race in date.list %}
           <tr>
               <th class='date'>{{race.date|date:"D d M"}}</td>
-              <td class='racetime'>{{race.time}}</td>
+              <td class='racetime'>{{race.starttime}}</td>
               <td class='racetitle'>
                   <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
               <td class='racelocation'>{{ race.location }}</td>

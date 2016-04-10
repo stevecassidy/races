@@ -143,10 +143,12 @@ def import_races(csvdir, waratahs):
 
             # model fields
             # title, date, time, club, status=published
-            time = "08:00"
+            time = "06:30"
             location = RaceCourse.objects.find_location(row['venue'])
 
-            race = Race(title=row['eventname'], date=row['eventdate'], club=waratahs, time=time, location=location, status='p')
+            race = Race(title=row['eventname'], date=row['eventdate'],
+                        club=waratahs, starttime=row['starttime'],
+                        signontime=time, location=location, status='p')
             race.save()
 
             racedict[row['eventno']] = race

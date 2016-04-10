@@ -12,7 +12,7 @@
            <tr><th colspan='5'>{{date.grouper|date:"D d M"}}</th></tr>
            {% for race in date.list %}
                   <tr>
-                      <td class='racetime'>{{race.time}}</td>
+                      <td class='racetime'>{{race.starttime}}</td>
                       <td class='racetitle'>{{race.club.slug}}:
                           <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
                       <td class='racelocation'>{{ race.location }}</td>

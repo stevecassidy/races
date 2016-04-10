@@ -48,7 +48,7 @@ th label {
                 $("#submitraceform").click(function(){
                     $.ajax({
                         type: "POST",
-                        url: '{% url 'club_create_races' club.slug %}',
+                        url: '{% url 'club_races' club.slug %}',
                         data: $('#raceform').serialize(),
                         success: function(msg){
                             if (msg['success']) {
@@ -114,7 +114,7 @@ th label {
               <h4 class="modal-title" id="myModalLabel">Create Race</h4>
             </div>
 
-            <form method='post' action="{% url 'club_create_races' club.slug %}" name='raceform' id='raceform'>
+            <form method='post' action="{% url 'club_races' club.slug %}" name='raceform' id='raceform'>
                 {% csrf_token %}
                 <div class='well form-group'>
                     {{form.errors}}
@@ -132,9 +132,15 @@ th label {
 
                         <tr>
                             <th><label for='id_date'>Date</label></th>
-                                <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
-                            <th><label for='id_time'>Start Time</label></th>
-                                <td>{{form.time|bootstrap_inline}}</td>
+                            <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
+                            
+                            <th><label for='id_time'>Sign On From</label></th>
+                            <td>{{form.signontime|bootstrap_inline}}</td>
+                        </tr>
+
+                        <tr>
+                            <th><label for='id_starttime'>Start Time</label></th>
+                            <td colspan=3>{{form.starttime|bootstrap_inline}}</td>
                         </tr>
 
                         <tr>

@@ -21,7 +21,7 @@
     <tr><th>Places</th><td>{{user.rider.performancereport.wins}}</td></tr>
 </table>
 
-{% if request.user == user and request.user.rider %}
+{% if request.user == user and request.user.rider or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
 <h4>Personal Details (<a href="{% url 'rider_update' user.rider.id %}">Update</a>)</h4>
 <div id='buttons'>
     <div id='editbutton' class='btn btn-default'></div>

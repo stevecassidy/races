@@ -67,7 +67,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 <table class='table'>
   <tr><th>Date</th><td>{{race.date}}</td></tr>
-  <tr><th>Time</th><td>{{race.time}}</td></tr>
+  <tr><th>Sign On Time</th><td>{{race.signontime}}</td></tr>
+  <tr><th>Start Time</th><td>{{race.starttime}}</td></tr>
   <tr><th>Location</th><td>{{race.location}}</td></tr>
   <tr><th>Title</th><td>{{race.title}}</td></tr>
   <tr><th>Club</th><td><a href='{{race.club.website}}'>{{race.club.name}}</a> [<a href="{% url 'club' race.club.slug %}">View all {{race.club}} Races</a>] </td></tr>

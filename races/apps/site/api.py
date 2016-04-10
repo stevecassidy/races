@@ -73,7 +73,7 @@ class RaceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Race
-        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'time', 'website', 'status', 'description')
+        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description')
 
 
 class RaceList(generics.ListCreateAPIView):

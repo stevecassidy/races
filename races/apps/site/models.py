@@ -205,7 +205,7 @@ class Club(models.Model):
                 try:
                     race = Race(title=r['title'],
                                 date=r['date'],
-                                time=r['time'],
+                                starttime=r['time'],
                                 club=self,
                                 location=location,
                                 website=r['url'],
@@ -280,16 +280,17 @@ class Race(models.Model):
     # empty help texts here to force help element in forms
     title = models.CharField(max_length=100, help_text="Enter a title for the race")
     date = models.DateField(help_text=" ")
-    time = models.TimeField(help_text="eg. 08:00, 18:30")
+    signontime = models.TimeField(help_text="")
+    starttime = models.CharField(max_length=100, help_text="")
     club = models.ForeignKey(Club, related_name='races', help_text=" ")
     website  = models.URLField(blank=True, max_length=400, help_text=" ")
     location = models.ForeignKey(RaceCourse, help_text=" ")
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='d', help_text=" ")
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='p', help_text=" ")
     description = models.TextField(default="", blank=True, help_text=" ")
     hash = models.CharField(max_length=100, blank=True)
 
     class Meta:
-        ordering = ['date', 'time']
+        ordering = ['date', 'signontime']
 
     def __unicode__(self):
         return unicode(self.club) + u": " + self.title + ", " + str(self.date)
