@@ -268,7 +268,7 @@ class RiderUpdateView(UpdateView):
 class RaceUpdateView(UpdateView):
     model = Race
     template_name = "race_form.html"
-    fields = ['title', 'date', 'time', 'url', 'location', 'status', 'description']
+    fields = ['title', 'date', 'signontime', 'starttime', 'website', 'location', 'status', 'description']
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
