@@ -23,9 +23,9 @@
             username/password.   Cabici is not able to access any of your
             personal data except for your email address.</p>
 
-        <a href="{% url 'social:begin' 'twitter' %}?next={{ request.path }}">
+        <a href="{% url 'social:begin' 'twitter' %}">
             <img src="{{STATIC_URL}}/sign-in-with-twitter-gray.png" alt="Login with Twitter"></a>
-        <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
+        <a href="{% url 'social:begin' 'strava' %}">
              <img src="{{STATIC_URL}}/LogInWithStrava.png" alt="Login with Strava">
             </a>
     </div>

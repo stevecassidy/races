@@ -3,6 +3,9 @@
 
 <ul class="nav navbar-nav pull-right">
     {% if request.user.is_authenticated %}
+        {% if request.user.rider.official %}
+        <li><a href="{% url 'club_dashboard' slug=request.user.rider.club.slug %}">{{request.user.rider.club.slug}} Dashboard</a></li>
+        {% endif %}
         <li>
             <a href="/riders/{{request.user.id}}"><i class="glyphicon glyphicon-user"></i> {{request.user.get_full_name}}</a>
         </li>
