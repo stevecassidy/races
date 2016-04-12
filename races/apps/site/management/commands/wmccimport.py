@@ -220,6 +220,8 @@ def import_users(csvdir, waratahs):
                 stategrade.save()
 
                 # membership history
+                for year in range(1995,2016):
+                    field = 'w'+str(year)[2:]
 
             usermap[int(row['id'])] = user
 

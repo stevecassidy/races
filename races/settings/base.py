@@ -209,14 +209,16 @@ ACCOUNT_OPEN_SIGNUP = False
 
 
 AUTHENTICATION_BACKENDS = (
-    'social.backends.twitter.TwitterOAuth',
+    #'social.backends.twitter.TwitterOAuth',
     'social.backends.strava.StravaOAuth',
-    #'social.backends.facebook.FacebookOAuth2',
+    'social.backends.facebook.FacebookOAuth2',
     #'social.backends.google.GoogleOAuth2',
     #'social_auth.backends.OpenIDBackend',
     'django.contrib.auth.backends.ModelBackend',
 )
 
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.social_details',

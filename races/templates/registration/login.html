@@ -19,15 +19,21 @@
     </div>
     <div class="col-md-4">
         <p>You have the option of signing in to Cabici.net with your
-            Strava or Twitter accounts.  This means you don't need a separate
+            Strava or Facebook accounts.  This means you don't need a separate
             username/password.   Cabici is not able to access any of your
             personal data except for your email address.</p>
-
-        <a href="{% url 'social:begin' 'twitter' %}">
-            <img src="{{STATIC_URL}}/sign-in-with-twitter-gray.png" alt="Login with Twitter"></a>
-        <a href="{% url 'social:begin' 'strava' %}">
-             <img src="{{STATIC_URL}}/LogInWithStrava.png" alt="Login with Strava">
+            <p>Strava is the preferred method of login. In future we may be able to offer
+                links between race results and Strava activities.</p>
+        <div>
+            <a href="{% url 'social:begin' 'strava' %}">
+                <img src="{{STATIC_URL}}/LogInWithStrava.png" alt="Login with Strava">
             </a>
+            <a href="{% url 'social:begin' 'facebook' %}">
+                <img src="{{STATIC_URL}}/facebook_login_button.png" alt="Login with Facebook">
+            </a>
+        </div>
+
+
     </div>
 </div>
 
