@@ -1,12 +1,15 @@
 """Serializers for the REST API"""
 
 from rest_framework import serializers, generics
-from models import Club, Race, RaceCourse
-from usermodel import Rider, PointScore, RaceResult
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+import datetime
+
+from models import Club, Race, RaceCourse
+from usermodel import Rider, PointScore, RaceResult
+
+
 
 
 @api_view(('GET',))
@@ -82,11 +85,17 @@ class RaceList(generics.ListCreateAPIView):
     def get_queryset(self):
 
         clubid = self.request.query_params.get('club', None)
+        scheduled = self.request.query_params.get('scheduled', None)
 
         if clubid is not None:
-            return Race.objects.filter(club__pk__exact=clubid)
+            races = Race.objects.filter(club__pk__exact=clubid)
         else:
-            return Race.objects.all()
+            races = Race.objects.all()
+
+        if scheduled is not None:
+            return races.filter(date__gte=datetime.date.today())
+        else:
+            return races
 
 
 class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
