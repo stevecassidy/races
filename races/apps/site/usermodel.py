@@ -77,8 +77,8 @@ class Rider(models.Model):
         today = datetime.date.today()
         startdate = today - datetime.timedelta(days=365)
         info['recent'] = self.raceresult_set.filter(place__lt=5, race__date__gt=startdate)
+        info['places'] = info['recent'].filter(place__gt=1).count()
         info['wins'] = info['recent'].filter(place__exact=1).count()
-        info['places'] = info['recent'].count()
 
         return info
 

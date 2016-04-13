@@ -18,7 +18,7 @@
     {% endfor %}
     <tr><th colspan=2>In the last 12 months</th></tr>
     <tr><th>Wins</th><td>{{user.rider.performancereport.wins}}</td></tr>
-    <tr><th>Places</th><td>{{user.rider.performancereport.wins}}</td></tr>
+    <tr><th>Places</th><td>{{user.rider.performancereport.places}}</td></tr>
 </table>
 
 {% if request.user == user and request.user.rider or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
