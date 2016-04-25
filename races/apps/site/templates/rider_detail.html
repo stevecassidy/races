@@ -9,7 +9,6 @@
 
 <table class=table>
     <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
-    <tr><th>Licence</th><td>{{user.rider.licenceno}}</td></tr>
     {% for grading in user.rider.clubgrade_set.all %}
         <tr><th>Grade ({{grading.club.name}})</th><td>{{grading.grade}}</td></tr>
     {% endfor %}
@@ -27,9 +26,23 @@
     <div id='editbutton' class='btn btn-default'></div>
 </div>
 <table class=table>
+    <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
     <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
     <tr><th>Phone</th><td>{{user.rider.phone}}</td></tr>
     <tr><th>Email</th><td>{{user.email}}</td></tr>
+    <tr><th>DOB</th><td>{{user.rider.dob}}</td></tr>
+    <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
+    <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
+    {% ifnotequal user.rider.commissaire "0" %}
+    <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
+    {% endifnotequal %}
+    <tr><th>Membership Status</th><td>
+    {% for m in user.rider.membership_set.all %}
+        {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
+    {% endfor %}
+    </td></tr>
+
+
 </table>
 {% endif %}
 

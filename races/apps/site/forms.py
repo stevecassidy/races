@@ -1,6 +1,6 @@
 
 from django import forms
-from races.apps.site.models import Race
+from races.apps.site.models import Race, Club
 from races.apps.site.usermodel import PointScore, Rider
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
@@ -39,6 +39,16 @@ class RaceCSVForm(forms.Form):
     """Form for uploading a CSV file with race results"""
 
     csvfile = forms.FileField(label="CSV File")
+
+MEMBER_FILE_FORMATS = (('IMG', 'IMG Sports'),)
+
+class MembershipUploadForm(forms.Form):
+    """Form for uploading a membership list file in various formats"""
+
+    club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
+    fileformat = forms.ChoiceField(label="File Format", required=True, choices=MEMBER_FILE_FORMATS)
+    memberfile = forms.FileField(label="Membership File")
+
 
 class RaceRiderForm(forms.Form):
     """Form to add a rider to a race"""

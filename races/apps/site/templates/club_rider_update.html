@@ -1,0 +1,68 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block extra_script %}
+    {% endblock %}
+
+{% block content %}
+
+<h2>{{club.name}} Riders Updated</h2>
+
+<h3>Riders Updated</h3>
+
+<table class='table'>
+    <thead>
+        <tr><th>Name</th><th>Grade</th><th>Phone</th><th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in changed.updated %}
+      <tr>
+          <td><a href="{% url 'rider' user.id %}">{{user.first_name}} {{user.last_name}}</a></td>
+          <td>
+              {% for grading in user.rider.clubgrade_set.all %}
+                  {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          {% if request.user.is_club_official %}
+          <td>{{user.rider.phone}}</td>
+          <td>{{user.email}}</td>
+          {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Riders Added</h3>
+
+<table class='table'>
+    <thead>
+        <tr><th>Name</th><th>Grade</th><th>Phone</th><th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for user in changed.added %}
+      <tr>
+          <td><a href="{% url 'rider' user.id %}">{{user.first_name}} {{user.last_name}}</a></td>
+          <td>
+              {% for grading in user.rider.clubgrade_set.all %}
+                  {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          {% if request.user.is_club_official %}
+          <td>{{user.rider.phone}}</td>
+          <td>{{user.email}}</td>
+          {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

@@ -2,12 +2,14 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.urlresolvers import reverse, reverse_lazy
+from django.utils.text import slugify
 
 import datetime
 from djangoyearlessdate.models import YearField
 
 from races.apps.site.models import Club, Race
 import csv
+from bs4 import BeautifulSoup
 
 def save_rider(backend, user, response, *args, **kwargs):
     """Create a rider object for a user, part of the
@@ -34,10 +36,163 @@ STATE_CHOICES = (('ACT', 'Australian Capital Territory'),
                  ('VIC', 'Victoria'),
                  ('WA', 'Western Australia'))
 
+def parse_img_members(fd):
+    """Parse the membership list downloaded from IMG Sports
+    which is an HTML table with one row per member.
+    Return an iterator over the rows, each row returned
+    as a dictionary."""
+
+    bs = BeautifulSoup(fd, "html.parser")
+    # get header
+    headers = []
+    for cell in bs.table.tr.find_all('td'):
+        headers.append(cell.string)
+
+    first = True
+    for row in bs.table.find_all('tr'):
+        if first:
+            first = False
+            continue
+        cells = row.find_all('td')
+        d = dict()
+        for i in range(len(cells)):
+            if headers[i] == None:
+                continue
+            value = cells[i].string
+            # turn date fields into datetimes
+            if value != None and ('Date' in headers[i] or headers[i] == "DOB"):
+                value = datetime.datetime.strptime(value, "%d-%b-%Y").date()
+            d[headers[i]] = value
+        yield d
+
+IMG_MAP = {
+     u'Address1': ('rider', 'streetaddress'),
+     u'DOB': ('rider', 'dob'),
+     u'Email Address': ('user', 'email'),
+     u'Emergency Contact Number': ('rider', 'emergencyphone'),
+     u'Emergency Contact Person': ('rider', 'emergencyname'),
+#     u'Financial Date': u'Financial Date',
+     u'First Name': ('user', 'first_name'),
+     u'Gender': ('rider', 'gender'),
+#     u'International Licence Code': u'International Licence Code',
+     u'Last Name': ('user', 'last_name'),
+     u'Member Number': ('rider', 'licenceno'),
+     u'Postcode': ('rider', 'postcode'),
+     u'State': ('rider', 'state'),
+     u'Suburb': ('rider', 'suburb'),
+     u'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
+     u'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
+}
+# phone = Private or Mobile or Direct
+# streetaddress = Address1 + Address2
+# membership category = Member Types, Financial Date
+# u'NSW Road Handicap Data'
+# u'NSW Track Handicap Data'
+
+class RiderManager(models.Manager):
+    """Manager for riders"""
+
+    def find_user(self, email, licenceno):
+        """Find an existing user with this email or licenceno
+        return the user or None if not found"""
+
+        # search by licenceno
+        users = User.objects.filter(rider__licenceno__exact=licenceno)
+        if len(users) == 1:
+            return users[0]
+
+        # search by email Address
+        users = User.objects.filter(email__exact=email)
+        if len(users) == 1:
+            return users[0]
+        else:
+            return None
+
+    def update_from_spreadsheet(self, club, rows):
+        """Update the membership list for a club,
+        return a list of updated riders"""
+
+        updated = []
+        added = []
+        for row in rows:
+            print row['Email Address'], row['Member Number']
+
+            # grab all values from row that are not None, map them
+            # to the keys via IMG_MAP
+            riderinfo = dict()
+            for key in row.keys():
+                if key in IMG_MAP:
+                    if row[key] != None and row[key] != '':
+                        riderinfo[IMG_MAP[key]] = row[key]
+
+            # riderinfo is our updated information
+
+            user = self.find_user(row['Email Address'], row['Member Number'])
+
+            if user != None:
+                try:
+                    user.rider
+                except ObjectDoesNotExist:
+                    user.rider = Rider()
+
+                updated.append(user)
+            else:
+                # new rider
+                username = slugify(row['First Name']+row['Last Name']+row['Member Number'])[:30]
+                if row['Email Address'] == None:
+                    email = ''
+                else:
+                    email = row['Email Address']
+                user = User(first_name=row['First Name'],
+                            last_name=row['Last Name'],
+                            email=email,
+                            username=username)
+                user.save()
+                user.rider = Rider()
+
+                added.append(user)
+
+            userchanges = []
+            # add data from spreadsheet only if current entry is empty
+            for key in riderinfo.keys():
+                if key[0] == 'user':
+                    if getattr(user, key[1]) == '':
+                        setattr(user, key[1], riderinfo[key])
+                        userchanges.append(key[1])
+                else:
+                    if getattr(user.rider, key[1]) in ['', None, datetime.date(1970, 1, 1)]:
+                        setattr(user.rider, key[1], riderinfo[key])
+                        userchanges.append(key[1])
+
+            # membership category = Member Types, Financial Date
+            # u'NSW Road Handicap Data'
+            # u'NSW Track Handicap Data'
+
+            # some special cases that need reformatting
+            if user.rider.phone == '':
+                user.rider.phone = row['Mobile'] or row['Direct'] or row['Private']
+                userchanges.append('phone')
+            if user.rider.streetaddress == '':
+                user.rider.streetaddress = ' '.join([row['Address1'] or '', row['Address2'] or ''])
+                userchanges.append('streetaddress')
+
+            if user.rider.gender == '':
+                user.rider.gender = row['Gender'][0]
+                userchanges.append('gender')
+
+            user.rider.club = club
+
+            user.save()
+            user.rider.save()
+
+        return {'added': added, 'updated': updated}
+
 
 class Rider(models.Model):
     """Model for extra information associated with a club member (rider)
     minimal model with just enough information to support race results"""
+
+    objects = RiderManager()
 
     user = models.OneToOneField(User)
     licenceno = models.CharField("Licence Number", max_length=20)
@@ -47,7 +202,10 @@ class Rider(models.Model):
     suburb = models.CharField("Suburb", max_length=100, default='')
     state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW')
     postcode = models.CharField("Postcode", max_length=4, default='')
-    phone = models.CharField("Phone", max_length=20, default='')
+    phone = models.CharField("Phone", max_length=50, default='')
+
+    commissaire = models.CharField("Commissaire Level", max_length=10, default='')
+    commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
     emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
     emergencyphone = models.CharField("Emergency Contact Phone", max_length=20, default='')
@@ -82,6 +240,7 @@ class Rider(models.Model):
 
         return info
 
+MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding', 'non-riding'))
 
 class Membership(models.Model):
     """Membership of a club in a given year"""
@@ -89,6 +248,7 @@ class Membership(models.Model):
     rider = models.ForeignKey(Rider)
     club = models.ForeignKey(Club, null=True)
     year = YearField(null=True, blank=True)
+    category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
 
 class UserRole(models.Model):

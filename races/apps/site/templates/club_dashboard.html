@@ -87,6 +87,12 @@ th label {
         </tr>
         <tr>
             <td>
+                <button class='btn' data-toggle='modal' data-target="#IMGUploadModal">
+                    Upload IMG Spreadsheet</button>
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <form action="{% url 'club_riders_csv' slug=club.slug %}" method='GET'>
                     <input class='btn' type='submit' name='submit' value='Download RACE CSV'>
                     <input type='text' name='eventno' placeholder='Event Number'>
@@ -105,6 +111,31 @@ th label {
         </tr>
     </table>
 
+    <div class="modal fade" id="IMGUploadModal" tabinces="-1" role="dialog" aria-labelledby="IMGUploadLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="IMGUploadLabel">Upload IMG Spreadsheet</h4>
+            </div>
+
+            <form method='post' action="{% url 'club_riders' club.slug %}" name='imgssform' id='imgssform' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class='well form-group'>
+                    {{memberuploadform.errors}}
+                    <input type='hidden' name='club' value='{{memberuploadform.club.value}}'>
+                    {{memberuploadform.fileformat|bootstrap}}
+                    {{memberuploadform.memberfile|bootstrap_inline}}
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <input type="submit" name="submituploadimg" class="btn btn-primary" value="Upload">
+                    </div>
+                </div>
+            </form>
+          </div>
+       </div>
+    </div>
 
     <div class="modal fade" id="raceCreateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
@@ -117,54 +148,54 @@ th label {
             <form method='post' action="{% url 'club_races' club.slug %}" name='raceform' id='raceform'>
                 {% csrf_token %}
                 <div class='well form-group'>
-                    {{form.errors}}
+                    {{racecreateform.errors}}
                     <input type='hidden' name='club' value='{{club.id}}'>
                     <table class='table-condensed'>
                         <tr><th><label for='id_pointscore'>Pointscore</label></th>
-                            <td colspan=3>{{form.pointscore|bootstrap_inline}}
+                            <td colspan=3>{{racecreateform.pointscore|bootstrap_inline}}
                                <span id="help_pointscore" class='help-block'></span>
                             </td>
                         </tr>
 
                         <tr><th><label for='id_title'>Title</label></th>
-                            <td colspan=3>{{form.title|bootstrap_inline}}</td>
+                            <td colspan=3>{{racecreateform.title|bootstrap_inline}}</td>
                         </tr>
 
                         <tr>
                             <th><label for='id_date'>Date</label></th>
                             <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
-                            
+
                             <th><label for='id_time'>Sign On From</label></th>
-                            <td>{{form.signontime|bootstrap_inline}}</td>
+                            <td>{{racecreateform.signontime|bootstrap_inline}}</td>
                         </tr>
 
                         <tr>
                             <th><label for='id_starttime'>Start Time</label></th>
-                            <td colspan=3>{{form.starttime|bootstrap_inline}}</td>
+                            <td colspan=3>{{racecreateform.starttime|bootstrap_inline}}</td>
                         </tr>
 
                         <tr>
                             <th><label for='id_weekly'>Repeat</label></th>
-                            <td>{{form.repeat|bootstrap_inline}}</td>
-                            <td>{{form.number|bootstrap_inline}}</td>
+                            <td>{{racecreateform.repeat|bootstrap_inline}}</td>
+                            <td>{{racecreateform.number|bootstrap_inline}}</td>
                             <td><label for='id_number'>times</label></td>
                         </tr>
 
                         <tr>
                             <th><label for='id_repeat'>Repeat on the</label></th>
-                            <td>{{form.repeatMonthN|bootstrap_inline}}</td>
-                            <td>{{form.repeatDay|bootstrap_inline}}</td>
+                            <td>{{racecreateform.repeatMonthN|bootstrap_inline}}</td>
+                            <td>{{racecreateform.repeatDay|bootstrap_inline}}</td>
                             <td><label for='id_number'>of each month</label></td>
                         </tr>
 
 
                         <tr>
-                            <th><label for='id_location'>Location</label></th><td>{{form.location|bootstrap_inline}}</td>
-                            <th><label for='id_status'>Status</label></th><td>{{form.status|bootstrap_inline}}</td>
+                            <th><label for='id_location'>Location</label></th><td>{{racecreateform.location|bootstrap_inline}}</td>
+                            <th><label for='id_status'>Status</label></th><td>{{racecreateform.status|bootstrap_inline}}</td>
                         </tr>
-                        <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{form.website|bootstrap_inline}}</td></tr>
+                        <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{racecreateform.website|bootstrap_inline}}</td></tr>
 
-                        <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{form.description|bootstrap_inline}}</td></tr>
+                        <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{racecreateform.description|bootstrap_inline}}</td></tr>
                     </table>
 
                     <div class="modal-footer">

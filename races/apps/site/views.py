@@ -9,13 +9,13 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.db import IntegrityError
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
-from races.apps.site.usermodel import PointScore, Rider, RaceResult
-from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, parse_img_members
+from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm
 
 import datetime
 import calendar
@@ -120,7 +120,10 @@ class ClubDashboardView(DetailView):
     def get_context_data(self, **kwargs):
 
         context = super(ClubDashboardView, self).get_context_data(**kwargs)
-        context['form'] = RaceCreateForm()
+        #slug = self.kwargs['slug']
+        #club = Club.objects.get(slug=slug)
+        context['racecreateform'] = RaceCreateForm()
+        context['memberuploadform'] = MembershipUploadForm(initial={'club': context['club']})
 
         return context
 
@@ -137,6 +140,25 @@ class ClubRidersView(ListView):
         context['club'] = Club.objects.get(slug=slug)
         context['riders'] = context['club'].rider_set.all().order_by('user__last_name')
         return context
+
+    def post(self, request, **kwargs):
+        """Handle upload of membership spreadsheets"""
+
+        form = MembershipUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            mf = request.FILES['memberfile']
+            club = form.cleaned_data['club']
+            fileformat = form.cleaned_data['fileformat']
+
+            if fileformat == 'IMG':
+                changed = Rider.objects.update_from_spreadsheet(club, parse_img_members(mf))
+
+            else:
+                # unknown format
+                pass
+
+            return render_to_response('club_rider_update.html', {'club': club, 'changed': changed})
+
 
 class ClubPointscoreView(DetailView):
 
@@ -368,51 +390,49 @@ class ClubRacesView(DetailView):
     def post(self, request, **kwargs):
         """POST request handler to create new races for this club"""
 
-        if request.method == "POST":
+        form = RaceCreateForm(request.POST)
 
-            form = RaceCreateForm(request.POST)
+        if request.is_ajax():
+            if form.is_valid():
+                # process it
+                pointscore = form.cleaned_data['pointscore']
+                if form.cleaned_data['repeat'] == 'none':
 
-            if request.is_ajax():
-                if form.is_valid():
-                    # process it
-                    pointscore = form.cleaned_data['pointscore']
-                    if form.cleaned_data['repeat'] == 'none':
+                    race = form.save()
+                    if pointscore:
+                        pointscore.races.add(race)
 
-                        race = form.save()
+                    data = json.dumps({'success': 1})
+                    return HttpResponse(data, content_type='application/json')
+                else:
+                    startdate = form.cleaned_data['date']
+
+                    number = form.cleaned_data['number']
+                    repeat = form.cleaned_data['repeat']
+                    repeatMonthN = form.cleaned_data['repeatMonthN']
+                    repeatDay = form.cleaned_data['repeatDay']
+
+                    if repeat == u'weekly':
+                        rule = rrule(WEEKLY, count=number, dtstart=startdate)
+                    elif repeat == u'monthly':
+                        rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+
+                    race = form.save(commit=False)
+
+                    # now make N more races
+                    for date in rule:
+                        # force 'save as new'
+                        race.pk = None
+
+                        race.date = date
+                        race.save()
                         if pointscore:
                             pointscore.races.add(race)
 
-                        data = json.dumps({'success': 1})
-                        return HttpResponse(data, content_type='application/json')
-                    else:
-                        startdate = form.cleaned_data['date']
-
-                        number = form.cleaned_data['number']
-                        repeat = form.cleaned_data['repeat']
-                        repeatMonthN = form.cleaned_data['repeatMonthN']
-                        repeatDay = form.cleaned_data['repeatDay']
-
-                        if repeat == u'weekly':
-                            rule = rrule(WEEKLY, count=number, dtstart=startdate)
-                        elif repeat == u'monthly':
-                            rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
-
-                        race = form.save(commit=False)
-
-                        # now make N more races
-                        for date in rule:
-                            # force 'save as new'
-                            race.pk = None
-
-                            race.date = date
-                            race.save()
-                            if pointscore:
-                                pointscore.races.add(race)
-
-                        data = json.dumps({'success': 1})
-                        return HttpResponse(data, content_type='application/json')
-                else:
-                    data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
+                    data = json.dumps({'success': 1})
                     return HttpResponse(data, content_type='application/json')
-
-            return HttpError()
+            else:
+                data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
+                return HttpResponse(data, content_type='application/json')
+        else:
+            return HttpResponseBadRequest("Only Ajax requests supported")

@@ -9,11 +9,13 @@ import django.db.utils
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
+from django.utils.text import slugify
+
 import csv
 import os
 import datetime
 
-from races.apps.site.usermodel import Rider, RaceResult, ClubGrade
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade, Membership
 from races.apps.site.models import Club, Race, RaceCourse
 
 CLUBMAP = {'ACT': 'ATTANSW',
@@ -160,6 +162,7 @@ def import_users(csvdir, waratahs):
 
     User.objects.filter(is_staff__exact=False).delete()
     ClubGrade.objects.all().delete()
+    Membership.objects.all().delete()
 
     stateclub, created = Club.objects.get_or_create(name='Cycling NSW', slug="CyclingNSW")
 
@@ -170,10 +173,8 @@ def import_users(csvdir, waratahs):
 
         usercount = 0
         for row in reader:
-            if row['email'] == '':
-                username = row['firstname']+row['lastname']+row['id'].replace(' ', '')
-            else:
-                username = row['email']
+            # make a username up to 30 chars
+            username = slugify(row['firstname']+row['lastname']+row['licenceno'])[:30]
 
             user, created = User.objects.get_or_create(email=row['email'], username=username)
 
@@ -211,7 +212,7 @@ def import_users(csvdir, waratahs):
 
                 user.rider.save()
 
-                #print "Rider: ", user.rider
+                print "Rider: ", user.rider
 
                 # grade and state handicap
                 grade = ClubGrade(club=waratahs, rider=user.rider, grade=row['grade'])
@@ -220,8 +221,12 @@ def import_users(csvdir, waratahs):
                 stategrade.save()
 
                 # membership history
-                for year in range(1995,2016):
+                for year in range(1995,2017):
                     field = 'w'+str(year)[2:]
+                    status = row[field].strip()
+                    if status == 'Y':
+                        memb = Membership(rider=user.rider, club=waratahs, year=year, category='race')
+                        memb.save()
 
             usermap[int(row['id'])] = user
 
@@ -302,4 +307,4 @@ class Command(BaseCommand):
 
         usermap = import_users(csvdir, waratahs)
 
-        import_points(csvdir, waratahs, usermap, racedict)
+        #import_points(csvdir, waratahs, usermap, racedict)
