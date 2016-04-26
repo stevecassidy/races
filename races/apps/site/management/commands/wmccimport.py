@@ -164,8 +164,6 @@ def import_users(csvdir, waratahs):
     ClubGrade.objects.all().delete()
     Membership.objects.all().delete()
 
-    stateclub, created = Club.objects.get_or_create(name='Cycling NSW', slug="CyclingNSW")
-
     usermap = dict()
     # import riders from register.csv
     with open(os.path.join(csvdir, 'register.csv'), 'rU') as fd:
@@ -212,13 +210,11 @@ def import_users(csvdir, waratahs):
 
                 user.rider.save()
 
-                print "Rider: ", user.rider
+                #print "Rider: ", user.rider
 
                 # grade and state handicap
                 grade = ClubGrade(club=waratahs, rider=user.rider, grade=row['grade'])
                 grade.save()
-                stategrade = ClubGrade(club=stateclub, rider=user.rider, grade=row['handicap'])
-                stategrade.save()
 
                 # membership history
                 for year in range(1995,2017):
@@ -307,4 +303,4 @@ class Command(BaseCommand):
 
         usermap = import_users(csvdir, waratahs)
 
-        #import_points(csvdir, waratahs, usermap, racedict)
+        import_points(csvdir, waratahs, usermap, racedict)

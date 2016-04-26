@@ -112,6 +112,7 @@ class RiderManager(models.Manager):
         """Update the membership list for a club,
         return a list of updated riders"""
 
+        cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
         updated = []
         added = []
         for row in rows:
@@ -164,10 +165,6 @@ class RiderManager(models.Manager):
                         setattr(user.rider, key[1], riderinfo[key])
                         userchanges.append(key[1])
 
-            # membership category = Member Types, Financial Date
-            # u'NSW Road Handicap Data'
-            # u'NSW Track Handicap Data'
-
             # some special cases that need reformatting
             if user.rider.phone == '':
                 user.rider.phone = row['Mobile'] or row['Direct'] or row['Private']
@@ -180,10 +177,46 @@ class RiderManager(models.Manager):
                 user.rider.gender = row['Gender'][0]
                 userchanges.append('gender')
 
+            # membership category = Member Types, Financial Date
+            memberdate = row['Financial Date']
+            # Member Types: RACING Membership, RIDE Membership, NON-RIDING Membership
+            if 'RACING' in row['Member Types']:
+                category = 'race'
+            elif 'RIDE' in row['Member Types']:
+                category = 'ride'
+            elif 'NON-RIDING' in row['Member Types']:
+                category = 'non-riding'
+
             user.rider.club = club
 
             user.save()
             user.rider.save()
+
+            # update membership if it is for this year
+            if memberdate is not None and memberdate > datetime.date.today():
+                mm = Membership.objects.filter(rider=user.rider, club=club, year=memberdate.year)
+                if len(mm) == 0:
+                    m = Membership(rider=user.rider, club=club, year=memberdate.year, category=category)
+                    m.save()
+                else:
+                    # check the category?
+                    m = mm[0]
+                    if m.category != category:
+                        m.category = category
+                    m.save()
+
+            # u'NSW Road Handicap Data'
+            if row['NSW Road Handicap Data'] != None:
+                try:
+                    grading = ClubGrade.objects.get(rider=user.rider, club=cyclingnsw)
+                    grading.grade = row['NSW Road Handicap Data']
+                except ObjectDoesNotExist:
+                    grading = ClubGrade(rider=user.rider, club=cyclingnsw, grade=row['NSW Road Handicap Data'])
+
+                grading.save()
+
+            # u'NSW Track Handicap Data'
+
 
         return {'added': added, 'updated': updated}
 
@@ -278,7 +311,9 @@ class ClubGrade(models.Model):
         """A rider can only have one grade for each club"""
 
         cg = ClubGrade.objects.filter(rider=self.rider, club=self.club)
-        if len(cg) > 0:
+        if self in cg:
+            cg = list(cg).remove(self)
+        if cg is not None and len(cg) > 0:
             raise ValidationError("A rider can only have one grade for each club")
 
         super(ClubGrade, self).save(*args, **kwargs)

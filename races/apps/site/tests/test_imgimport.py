@@ -56,6 +56,8 @@ class IMGTests(TestCase):
         """Update user data from a spreadsheet from IMG Sports"""
 
         club = Club.objects.get(slug="MOV")
+        cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
+
         valverde = User.objects.get(pk=2531)
         usernodob = User(first_name="No", last_name="DOB", username="NoDOB", email="nodob@example.com")
         usernodob.save()
@@ -86,7 +88,14 @@ class IMGTests(TestCase):
         anotherrider = User.objects.get(email='anotherrider@worldtour.com')
         self.assertEqual('1 R,T', anotherrider.rider.commissaire)
         self.assertEqual(datetime.date(datetime.date.today().year+1, 12, 31), anotherrider.rider.commissaire_valid)
-        
+
+        # membership should be updated
+        mems = anotherrider.rider.membership_set.filter(year=datetime.date.today().year)
+        self.assertEqual(1, len(mems))
+
+        # grading is updated
+        grade = valverde.rider.clubgrade_set.get(club=cyclingnsw)
+        self.assertEqual("A1", grade.grade)
 
 
 class IMGWebTests(WebTest):
