@@ -124,6 +124,7 @@ class ClubDashboardView(DetailView):
         #club = Club.objects.get(slug=slug)
         context['racecreateform'] = RaceCreateForm()
         context['memberuploadform'] = MembershipUploadForm(initial={'club': context['club']})
+        context['statistics'] = context['club'].statistics()
 
         return context
 

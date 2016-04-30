@@ -29,10 +29,8 @@
                   {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
               {% endfor %}
           </td>
-          {% if request.user.is_club_official %}
           <td>{{user.rider.phone}}</td>
           <td>{{user.email}}</td>
-          {% endif %}
       </tr>
     {% endfor %}
     </tbody>
@@ -54,10 +52,8 @@
                   {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
               {% endfor %}
           </td>
-          {% if request.user.is_club_official %}
           <td>{{user.rider.phone}}</td>
           <td>{{user.email}}</td>
-          {% endif %}
       </tr>
     {% endfor %}
     </tbody>

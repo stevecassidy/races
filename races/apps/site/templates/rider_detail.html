@@ -33,9 +33,9 @@
     <tr><th>DOB</th><td>{{user.rider.dob}}</td></tr>
     <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
     <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
-    {% ifnotequal user.rider.commissaire "0" %}
+    {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
     <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
-    {% endifnotequal %}
+    {% endif %}
     <tr><th>Membership Status</th><td>
     {% for m in user.rider.membership_set.all %}
         {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}

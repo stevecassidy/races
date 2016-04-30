@@ -59,9 +59,12 @@ def parse_img_members(fd):
             if headers[i] == None:
                 continue
             value = cells[i].string
-            # turn date fields into datetimes
+            # turn date fields into dates
             if value != None and ('Date' in headers[i] or headers[i] == "DOB"):
                 value = datetime.datetime.strptime(value, "%d-%b-%Y").date()
+            # capitalise names
+            if value != None and 'Name' in headers[i]:
+                value = value.capitalize()
             d[headers[i]] = value
         yield d
 
@@ -116,6 +119,11 @@ class RiderManager(models.Manager):
         updated = []
         added = []
         for row in rows:
+
+            if row['Financial Date'] == None or row['Financial Date'] < datetime.date.today():
+                # don't import old membership records
+                continue
+
             print row['Email Address'], row['Member Number']
 
             # grab all values from row that are not None, map them
@@ -130,13 +138,15 @@ class RiderManager(models.Manager):
 
             user = self.find_user(row['Email Address'], row['Member Number'])
 
+            updating = False
+
             if user != None:
                 try:
                     user.rider
                 except ObjectDoesNotExist:
                     user.rider = Rider()
 
-                updated.append(user)
+                updating = True
             else:
                 # new rider
                 username = slugify(row['First Name']+row['Last Name']+row['Member Number'])[:30]
@@ -177,6 +187,11 @@ class RiderManager(models.Manager):
                 user.rider.gender = row['Gender'][0]
                 userchanges.append('gender')
 
+            user.rider.club = club
+
+            user.save()
+            user.rider.save()
+
             # membership category = Member Types, Financial Date
             memberdate = row['Financial Date']
             # Member Types: RACING Membership, RIDE Membership, NON-RIDING Membership
@@ -187,33 +202,36 @@ class RiderManager(models.Manager):
             elif 'NON-RIDING' in row['Member Types']:
                 category = 'non-riding'
 
-            user.rider.club = club
-
-            user.save()
-            user.rider.save()
-
             # update membership if it is for this year
             if memberdate is not None and memberdate > datetime.date.today():
                 mm = Membership.objects.filter(rider=user.rider, club=club, year=memberdate.year)
                 if len(mm) == 0:
                     m = Membership(rider=user.rider, club=club, year=memberdate.year, category=category)
                     m.save()
+                    userchanges.append('membership')
                 else:
                     # check the category?
                     m = mm[0]
                     if m.category != category:
                         m.category = category
-                    m.save()
+                        userchanges.append('membership')
+                        m.save()
 
             # u'NSW Road Handicap Data'
             if row['NSW Road Handicap Data'] != None:
+                stategrade = row['NSW Road Handicap Data']
                 try:
                     grading = ClubGrade.objects.get(rider=user.rider, club=cyclingnsw)
-                    grading.grade = row['NSW Road Handicap Data']
+                    if grading.grade != stategrade:
+                        grading.grade = stategrade
+                        userchanges.append('stategrade')
                 except ObjectDoesNotExist:
-                    grading = ClubGrade(rider=user.rider, club=cyclingnsw, grade=row['NSW Road Handicap Data'])
-
+                    grading = ClubGrade(rider=user.rider, club=cyclingnsw, grade=stategrade)
+                    userchanges.append('stategrade')
                 grading.save()
+
+                if updating and userchanges != []:
+                    updated.append(user)
 
             # u'NSW Track Handicap Data'
 

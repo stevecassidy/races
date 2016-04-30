@@ -51,6 +51,21 @@ class Club(models.Model):
         clubgrades = self.clubgrade_set.all()
         return [cg.rider for cg in clubgrades]
 
+    def statistics(self):
+        """Return a dictionary of statistics for this club"""
+
+        from usermodel import Membership
+
+        thisyear = datetime.date.today().year
+
+        dd = dict()
+        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear).count()
+        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='race').count()
+        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='ride').count()
+        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='non-riding').count()
+
+        return dd
+
 
     def ingest(self):
         """Try a couple of ingest methods.
