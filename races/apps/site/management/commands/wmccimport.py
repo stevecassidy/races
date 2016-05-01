@@ -199,7 +199,8 @@ def import_users(csvdir, waratahs):
                 user.rider.club = club
                 user.rider.streetaddress = row['streetaddress1']
                 user.rider.suburb = row['suburbtown']
-                user.rider.postcode = row['postcode']
+                if len(row['postcode']) == 4:
+                    user.rider.postcode = row['postcode']
                 user.rider.phone = row['phone']
                 user.rider.emergencyname = row['emergencyname']
                 user.rider.emergencyphone = row['emergencyphone']
