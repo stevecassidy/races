@@ -25,7 +25,7 @@ class Command(BaseCommand):
         h = urlopen(NSW_CLUBS_URL)
         page = h.read()
         h.close()
-        bs = BeautifulSoup(page, 'lxml')
+        bs = BeautifulSoup(page, 'html.parser')
 
         clubs = [(a.text, a['href']) for a in bs.find(id='dnn_ctl03').find(class_='pane').find_all('a')]
 
