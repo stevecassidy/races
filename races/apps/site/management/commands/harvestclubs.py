@@ -33,7 +33,7 @@ class Command(BaseCommand):
             h = urlopen(url)
             page = h.read()
             h.close()
-            bs = BeautifulSoup(page, 'lxml')
+            bs = BeautifulSoup(page, 'html.parser')
 
             try:
                 jersey =  bs.find(class_='pane_layout_right_sidebar').find('img')['src']
