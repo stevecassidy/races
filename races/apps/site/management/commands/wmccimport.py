@@ -186,7 +186,8 @@ def import_users(csvdir, waratahs):
             if not hasattr(user, 'rider') and row['licenceno'] != "":
                 user.rider = Rider()
                 user.rider.licenceno = row['licenceno']
-                user.rider.gender = row['gender']
+                if row['gender'] in ['M', 'F']:
+                    user.rider.gender = row['gender']
 
                 if row['club'] in CLUBMAP:
                     if CLUBMAP[row['club']] == 'None':
