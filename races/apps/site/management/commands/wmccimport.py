@@ -202,7 +202,7 @@ def import_users(csvdir, waratahs):
                 user.rider.phone = row['phone']
                 user.rider.emergencyname = row['emergencyname']
                 user.rider.emergencyphone = row['emergencyphone']
-                user.rider.emergencyrelationship = row['emergencyrelationship']
+                user.rider.emergencyrelationship = row['emergencyrelationship'][:19]
 
                 try:
                     user.rider.dob = datetime.date(day=int(row['dobdd']), month=int(row['dobmm']), year=int(row['dobyyyy']))
