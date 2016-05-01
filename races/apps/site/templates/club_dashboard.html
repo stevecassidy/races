@@ -98,9 +98,13 @@ th label {
 
             {% for role in role_list %}
             <tr><th>{{role.grouper}}</th><td>
+                {% if role.list|length > 10 %}
+                   {{role.list|length}} members
+                {% else %}
                 {% for userrole in role.list %}
                 {{userrole.user.first_name}} {{userrole.user.last_name}}{% if not forloop.last %},{% endif %}
                 {% endfor %}
+                {% endif %}
             </td></tr>
             {% endfor %}
 
