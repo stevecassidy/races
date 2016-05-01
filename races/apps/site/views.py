@@ -15,7 +15,7 @@ from django.db import IntegrityError
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
 from races.apps.site.usermodel import PointScore, Rider, RaceResult, parse_img_members
-from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm
+from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm
 
 import datetime
 import calendar
@@ -125,6 +125,7 @@ class ClubDashboardView(DetailView):
         context['racecreateform'] = RaceCreateForm()
         context['memberuploadform'] = MembershipUploadForm(initial={'club': context['club']})
         context['statistics'] = context['club'].statistics()
+        context['searchform'] = RiderSearchForm()
 
         return context
 
@@ -135,11 +136,15 @@ class ClubRidersView(ListView):
 
     def get_context_data(self, **kwargs):
 
+        thisyear = datetime.date.today().year
+
         context = super(ClubRidersView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['riders'] = context['club'].rider_set.all().order_by('user__last_name')
+        context['members'] = context['club'].rider_set.filter(membership__year__gte=thisyear).distinct().order_by('user__last_name')
+        context['pastmembers'] = context['club'].rider_set.exclude(membership__year__gte=thisyear).distinct().order_by('user__last_name')
+
         return context
 
     def post(self, request, **kwargs):
@@ -158,7 +163,9 @@ class ClubRidersView(ListView):
                 # unknown format
                 pass
 
-            return render_to_response('club_rider_update.html', {'club': club, 'changed': changed})
+            return render_to_response('club_rider_update.html',
+                                      {'club': club, 'changed': changed},
+                                      context_instance=RequestContext(request))
 
 
 class ClubPointscoreView(DetailView):
@@ -276,6 +283,26 @@ class RiderListView(ListView):
     context_object_name = 'riders'
 
 
+    def get_context_data(self, **kwargs):
+
+        context = super(RiderListView, self).get_context_data(**kwargs)
+
+        context['searchform'] = RiderSearchForm(self.request.GET)
+
+        return context
+
+    def get_queryset(self):
+
+        if self.request.GET.has_key('name'):
+            name = self.request.GET['name']
+            return Rider.objects.filter(user__last_name__icontains=name)
+        else:
+            # just pull races after today
+            return Rider.objects.all()
+
+
+
+
 class RiderView(DetailView):
 
     model = User
@@ -286,7 +313,10 @@ class RiderUpdateView(UpdateView):
 
     model = Rider
     template_name = "rider_update.html"
-    fields = ['streetaddress', 'suburb', 'state', 'phone']
+    fields = ['streetaddress', 'suburb', 'state', 'postcode', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship']
+
+
+
 
 class RaceUpdateView(UpdateView):
     model = Race

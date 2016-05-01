@@ -76,14 +76,37 @@ th label {
 
     <div class='col-md-6'>
 
+        <div class='well'>
+            <form class="form-inline" action="{% url 'riders' %}">
+              <div class="form-group">
+                <input type="text" class="form-control" name="name" size=50 placeholder="Rider Name">
+              </div>
+              <button type="submit" class="btn btn-default">Search Riders</button>
+            </form>
+        </div>
+
+
         <table class='table'>
             <tbody>
             <tr><th>Current Members</th><td>{{statistics.currentmembers}}</td></tr>
             <tr><th>Race Members</th><td>{{statistics.racemembers}}</td></tr>
             <tr><th>Ride Members</th><td>{{statistics.ridemembers}}</td></tr>
             <tr><th>Non-Riding Members</th><td>{{statistics.nonridingmembers}}</td></tr>
+            <tr><th>Commissaires</th><td>{% for rider in statistics.commissaires %}{{rider.user.first_name}} {{rider.user.last_name}} ({{rider.commissaire}}) {% endfor %}</td></tr>
+
+            {% regroup statistics.roles by role.name as role_list %}
+
+            {% for role in role_list %}
+            <tr><th>{{role.grouper}}</th><td>
+                {% for userrole in role.list %}
+                {{userrole.user.first_name}} {{userrole.user.last_name}}{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            </td></tr>
+            {% endfor %}
+
         </tbody>
         </table>
+
 
         {% if club.pointscore_set.all %}
         <h2>Pointscores</h3>
@@ -101,12 +124,11 @@ th label {
 
             <ul id='dashboardActions'>
                 <li>
-                    <a href='{{club.website}}'><span class="glyphicon glyphicon-link" aria-hidden="true"></span>
-                        <br>Club Website</a>
+                    <a href='{{club.website}}'><span class="glyphicon glyphicon-link" aria-hidden="true"></span><br>Club Website</a>
                 </li>
                 <li>
                     <a href="#" data-toggle='modal' data-target="#IMGUploadModal">
-                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span><br>IMG Upload</a>
+                        <span class="glyphicon glyphicon-upload" aria-hidden="true"></span><br>IMG Upload</a>
                 </li>
                 <li>
                     <a href="#" data-toggle='modal' data-target="#raceCreateModal">
@@ -125,6 +147,10 @@ th label {
                 <li>
                     <a href="{% url 'club' club.slug %}">
                         <span class="glyphicon glyphicon-time" aria-hidden="true"></span><br>Race Schedule</a>
+                </li>
+                <li>
+                    <a href="{% url 'riders' %}">
+                        <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><br>All Riders</a>
                 </li>
             </ul>
 

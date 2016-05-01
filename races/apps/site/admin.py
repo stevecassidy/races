@@ -9,7 +9,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from races.apps.site.models import Club, RaceCourse, Race, STATUS_CHOICES
-from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole, ClubRole
 
 admin.site.register(Club)
 
@@ -62,6 +62,12 @@ class ClubGradeAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(ClubGrade, ClubGradeAdmin)
+
+class ClubRoleAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(ClubRole, ClubRoleAdmin)
+
 
 class RiderInline(admin.StackedInline):
     model = Rider

@@ -15,7 +15,7 @@ import csv
 import os
 import datetime
 
-from races.apps.site.usermodel import Rider, RaceResult, ClubGrade, Membership
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade, Membership, UserRole, ClubRole
 from races.apps.site.models import Club, Race, RaceCourse
 
 CLUBMAP = {'ACT': 'ATTANSW',
@@ -163,6 +163,7 @@ def import_users(csvdir, waratahs):
     User.objects.filter(is_staff__exact=False).delete()
     ClubGrade.objects.all().delete()
     Membership.objects.all().delete()
+    UserRole.objects.filter(club__exact=waratahs).delete()
 
     usermap = dict()
     # import riders from register.csv
@@ -224,12 +225,55 @@ def import_users(csvdir, waratahs):
                         memb = Membership(rider=user.rider, club=waratahs, year=year, category='race')
                         memb.save()
 
+                # duty officer
+                if row['dutyofficer']=='yes':
+                    dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
+                    role = UserRole(user=user, club=waratahs, role=dutyofficer)
+                    role.save()
+
+                # duty helper
+                if row['helper']=='yes':
+                    dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Helper")
+                    role = UserRole(user=user, club=waratahs, role=dutyofficer)
+                    role.save()
+
+
             usermap[int(row['id'])] = user
 
             usercount += 1
 
         print "Imported %d riders" % usercount
         return usermap
+
+def import_roles(csvdir, waratahs):
+
+    usermap = dict()
+    # import riders from register.csv
+    with open(os.path.join(csvdir, 'contacts.csv'), 'rU') as fd:
+        reader = csv.DictReader(fd)
+
+        for row in reader:
+            user = User.objects.get(email=row['email'])
+
+            if '/' in row['position']:
+                roles = row['position'].split('/')
+            else:
+                roles = row['position'].split('and')
+
+            for role in roles:
+                role = role.strip()
+                rolename, created = ClubRole.objects.get_or_create(name=role)
+                userrole = UserRole(user=user, club=waratahs, role=rolename)
+                userrole.save()
+
+                # also make this user an officer in the club
+                user.officer = True
+                user.save()
+
+                print "Role: ", rolename, user
+
+    print "Imported roles"
+
 
 def import_points(csvdir, waratahs, usermap, racedict):
 
@@ -302,5 +346,7 @@ class Command(BaseCommand):
         racedict = import_races(csvdir, waratahs)
 
         usermap = import_users(csvdir, waratahs)
+
+        import_roles(csvdir, waratahs)
 
         import_points(csvdir, waratahs, usermap, racedict)

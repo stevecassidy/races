@@ -57,3 +57,8 @@ class RaceRiderForm(forms.Form):
     race = forms.ModelChoiceField(queryset=Race.objects.all(), required=True, widget=forms.HiddenInput)
     grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
     number = forms.IntegerField(label="Bib Number")
+
+class RiderSearchForm(forms.Form):
+    """Form to search riders by various criteria"""
+
+    name = forms.CharField(label="Rider Name")

@@ -54,7 +54,7 @@ class Club(models.Model):
     def statistics(self):
         """Return a dictionary of statistics for this club"""
 
-        from usermodel import Membership
+        from usermodel import Membership, Rider, UserRole
 
         thisyear = datetime.date.today().year
 
@@ -63,6 +63,10 @@ class Club(models.Model):
         dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='race').count()
         dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='ride').count()
         dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='non-riding').count()
+
+        # roles
+        dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0)
+        dd['roles'] = UserRole.objects.filter(club__exact=self).order_by('role')
 
         return dd
 

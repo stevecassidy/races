@@ -74,10 +74,8 @@ IMG_MAP = {
      u'Email Address': ('user', 'email'),
      u'Emergency Contact Number': ('rider', 'emergencyphone'),
      u'Emergency Contact Person': ('rider', 'emergencyname'),
-#     u'Financial Date': u'Financial Date',
      u'First Name': ('user', 'first_name'),
      u'Gender': ('rider', 'gender'),
-#     u'International Licence Code': u'International Licence Code',
      u'Last Name': ('user', 'last_name'),
      u'Member Number': ('rider', 'licenceno'),
      u'Postcode': ('rider', 'postcode'),
@@ -86,11 +84,7 @@ IMG_MAP = {
      u'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
      u'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
 }
-# phone = Private or Mobile or Direct
-# streetaddress = Address1 + Address2
-# membership category = Member Types, Financial Date
-# u'NSW Road Handicap Data'
-# u'NSW Track Handicap Data'
+
 
 class RiderManager(models.Manager):
     """Manager for riders"""
@@ -118,6 +112,11 @@ class RiderManager(models.Manager):
         cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
         updated = []
         added = []
+
+        # get the current member list for this year, check that all are in the spreadsheet
+        thisyear = datetime.date.today().year
+        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__year__exact=thisyear))
+
         for row in rows:
 
             if row['Financial Date'] == None or row['Financial Date'] < datetime.date.today():
@@ -217,6 +216,11 @@ class RiderManager(models.Manager):
                         userchanges.append('membership')
                         m.save()
 
+                # remove this user from the currentmembers list
+                if user in currentmembers:
+                    currentmembers.remove(user)
+                print "MEM:", len(currentmembers)
+
             # u'NSW Road Handicap Data'
             if row['NSW Road Handicap Data'] != None:
                 stategrade = row['NSW Road Handicap Data']
@@ -235,8 +239,14 @@ class RiderManager(models.Manager):
 
             # u'NSW Track Handicap Data'
 
+        # check for any left over members in the currentmembers list
+        # we need to revoke the member record for these
+        revoked = currentmembers
+        for user in currentmembers:
+            m = user.rider.membership_set.get(year=thisyear)
+            m.delete()
 
-        return {'added': added, 'updated': updated}
+        return {'added': added, 'updated': updated, 'revoked': revoked}
 
 
 class Rider(models.Model):
@@ -259,7 +269,7 @@ class Rider(models.Model):
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
     emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
-    emergencyphone = models.CharField("Emergency Contact Phone", max_length=20, default='')
+    emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='')
     emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
 
     official = models.BooleanField("Club Official", default=False)
@@ -272,6 +282,26 @@ class Rider(models.Model):
 
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
+
+    @property
+    def member_category(self):
+        """Return the category from the most recent membership year"""
+
+        m = self.membership_set.all().order_by('-year')
+        if m:
+            return m[0].get_category_display() 
+        else:
+            return ''
+
+    @property
+    def member_year(self):
+        """Return the year from the most recent membership year"""
+
+        m = self.membership_set.all().order_by('-year')
+        if m:
+            return m[0].year
+        else:
+            return ''
 
     def performancereport(self):
         """Generate a rider performance report"""
@@ -301,6 +331,13 @@ class Membership(models.Model):
     year = YearField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
+class ClubRole(models.Model):
+    """The name of a role that someone can hold in a club"""
+
+    name = models.CharField("Name", max_length=100)
+
+    def __unicode__(self):
+        return self.name
 
 class UserRole(models.Model):
     """A role held by a person in a club, eg. president, handicapper, duty officer
@@ -308,7 +345,7 @@ class UserRole(models.Model):
 
     user = models.ForeignKey(User)
     club = models.ForeignKey(Club)
-    role = models.CharField("Role", max_length=50)
+    role = models.ForeignKey(ClubRole)
 
 
 class ClubGrade(models.Model):
