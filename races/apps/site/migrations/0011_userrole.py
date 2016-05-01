@@ -14,10 +14,17 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='ClubRole',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=100, verbose_name=b'Name')),
+            ],
+        ),
+        migrations.CreateModel(
             name='UserRole',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('role', models.CharField(max_length=50, verbose_name=b'Role')),
+                ('role', models.ForeignKey(on_delete=models.deletion.CASCADE, to='site.ClubRole')),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
