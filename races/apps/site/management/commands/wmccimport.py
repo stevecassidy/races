@@ -161,6 +161,7 @@ def import_races(csvdir, waratahs):
 def import_users(csvdir, waratahs):
 
     User.objects.filter(is_staff__exact=False).delete()
+    Rider.objects.all().delete()
     ClubGrade.objects.all().delete()
     Membership.objects.all().delete()
     UserRole.objects.filter(club__exact=waratahs).delete()
@@ -268,11 +269,11 @@ def import_roles(csvdir, waratahs):
                 userrole = UserRole(user=user, club=waratahs, role=rolename)
                 userrole.save()
 
-                # also make this user an officer in the club
-                user.officer = True
-                user.save()
+            # also make this user an officer in the club
+            user.rider.official = True
+            user.rider.save()
 
-                print "Role: ", rolename, user
+            print "Role: ", user, roles
 
     print "Imported roles"
 
