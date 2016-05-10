@@ -20,33 +20,35 @@
     <tr><th>Places</th><td>{{user.rider.performancereport.places}}</td></tr>
 </table>
 
-{% if request.user == user and request.user.rider or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
-<h4>Personal Details (<a href="{% url 'rider_update' user.rider.id %}">Update</a>)</h4>
-<div id='buttons'>
-    <div id='editbutton' class='btn btn-default'></div>
-</div>
-<table class=table>
-    <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
-    <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
-    <tr><th>Phone</th><td>{{user.rider.phone}}</td></tr>
-    <tr><th>Email</th><td>{{user.email}}</td></tr>
-    <tr><th>DOB</th><td>{{user.rider.dob}}</td></tr>
-    <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
-    <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
-    {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
-    <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
+{% if request.user.rider %}
+
+    {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
+    <h4>Personal Details (<a href="{% url 'rider_update' user.rider.id %}">Update</a>)</h4>
+    <div id='buttons'>
+        <div id='editbutton' class='btn btn-default'></div>
+    </div>
+    <table class=table>
+        <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
+        <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
+        <tr><th>Phone</th><td>{{user.rider.phone}}</td></tr>
+        <tr><th>Email</th><td>{{user.email}}</td></tr>
+        <tr><th>DOB</th><td>{{user.rider.dob}}</td></tr>
+        <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
+        <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
+        {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
+        <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
+        {% endif %}
+        <tr><th>Membership Status</th><td>
+        {% for m in user.rider.membership_set.all %}
+            {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+        </td></tr>
+
+
+    </table>
     {% endif %}
-    <tr><th>Membership Status</th><td>
-    {% for m in user.rider.membership_set.all %}
-        {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
-    {% endfor %}
-    </td></tr>
 
-
-</table>
 {% endif %}
-
-
 
 
 {% regroup user.rider.raceresult_set.all.reverse by race.date.year as year_list %}

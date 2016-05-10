@@ -265,7 +265,7 @@ class Rider(models.Model):
     postcode = models.CharField("Postcode", max_length=4, default='')
     phone = models.CharField("Phone", max_length=50, default='')
 
-    commissaire = models.CharField("Commissaire Level", max_length=10, default='')
+    commissaire = models.CharField("Commissaire Level", max_length=10, default='0')
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
     emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
@@ -289,7 +289,7 @@ class Rider(models.Model):
 
         m = self.membership_set.all().order_by('-year')
         if m:
-            return m[0].get_category_display() 
+            return m[0].get_category_display()
         else:
             return ''
 

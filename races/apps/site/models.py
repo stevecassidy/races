@@ -297,7 +297,7 @@ STATUS_CHOICES = (
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
-    title = models.CharField(max_length=100, help_text="Enter a title for the race")
+    title = models.CharField(max_length=100)
     date = models.DateField(help_text=" ")
     signontime = models.TimeField(help_text="")
     starttime = models.CharField(max_length=100, help_text="")
