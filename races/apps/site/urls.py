@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^races/(?P<year>\d{4})/(?P<month>[0-9][1-9])/$', views.RaceListDateView.as_view(), name='racesmonth'),
     #url(r'^races/(?P<pk>\d+)/$', views.RaceDetailView.as_view(), name='race'),
 
-    url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', xframe_options_exempt(views.RaceDetailView.as_view()), name='race'),
+    url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', views.RaceDetailView.as_view(), name='race'),
 
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
     url(r'^races/(?P<pk>\d+)/delete/$', views.RaceDeleteView.as_view(), name='race_delete'),
@@ -22,12 +22,15 @@ urlpatterns = [
 
 
     url(r'^feed', feeds.EventAtomFeed(), name='feed'),
-    url(r'^ical$', feeds.EventICALFeed(), name='ical'),
+    url(r'^clubs/(?P<slug>[^/]*)/feed', feeds.EventAtomFeed(), name='club_feed'),
+    url(r'^ical.ics$', feeds.EventICALFeed(), name='ical'),
+    url(r'^clubs/(?P<slug>[^/]*)/ical.ics', feeds.EventICALFeed(), name='club_ical'),
 
     url(r'^clubs/$', views.ClubListView.as_view(), name='clubs'),
     url(r'^clubs/(?P<slug>[^/]*)/$', xframe_options_exempt(views.ClubDetailView.as_view()), name='club'),
     url(r'^clubs/(?P<slug>[^/]*)/dashboard/$', views.ClubDashboardView.as_view(), name='club_dashboard'),
     url(r'^clubs/(?P<slug>[^/]*)/races/$', views.ClubRacesView.as_view(), name='club_races'),
+    url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
     url(r'^clubs/(?P<club>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
 

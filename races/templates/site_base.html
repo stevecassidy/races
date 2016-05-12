@@ -47,7 +47,7 @@
 {% block body %}
 {% if not iframe %}
     <div id='masthead'></div>
-    <div id='feed'><a href="/feed">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
+    <div id='feed'><a href="{% url "feed" %}">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
     {% endif %}
     {% block content %}{% endblock %}
 {% endblock %}

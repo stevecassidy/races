@@ -1,46 +1,92 @@
 {% extends "site_base.html" %}
 {% block content %}
 
-<h2>{{club.name}} Race Results</h2>
+<h2>{{club.name}} Race Schedule</h2>
 
-{% regroup races.reverse by date.year as year_list %}
+    <ul id='dashboardActions'>
+        <li>
+            <a href="#" data-toggle='modal' data-target="#raceCreateModal">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><br> Add Race(s)</a>
+        </li>
+    </ul>
 
-<ul class="nav nav-tabs">
-{% for year in year_list %}
-    <li role="presentation" class="{% if forloop.first %} active{% endif %}">
-        <a aria-controls="home" role="tab" data-toggle="tab"
-          href="#year{{year.grouper}}">
-           {{year.grouper}} ({{year.list|length}})
-        </a>
-    </li>
-{% endfor %}
-</ul>
+    <table class='table'>
+      <thead>
+       <tr>
+           <th>Date</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+           {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+           <th>Status</th>
+           <th>&nbsp;</th>
+           {% endif %}
+       </tr>
+      </thead>
+       {% for race in races %}
+              <tr>
+                  <th class='date'>{{race.date|date:"D d M"}}</td>
+                  <td class='racetitle'>
+                      <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
+                  <td class='racelocation'>{{ race.location }}</td>
+                  {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+                  <td class='racestatus'>{{ race.get_status_display }}</td>
+                  <td>
+                      <a href="{% url 'race_delete' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
 
-<div class='tab-content'>
-{% for year in year_list %}
-    <div role="tabpanel" class="tab-pane{% if forloop.first %} active{% endif %}" id="year{{year.grouper}}">
+                      <a href="{% url 'race_update' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
-        {% regroup year.list by date as date_list %}
+                      <a href="#" data-toggle='modal' data-target="#addPeopleModal"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                  </td>
+                  {% endif %}
+              </tr>
+       {% endfor %}
+    </table>
 
-        <table class='table'>
-          <thead>
-           <tr>
-               <th>Date</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
-           </tr>
-          </thead>
-        {% for date in date_list %}
-           {% for race in date.list %}
-                  <tr>
-                      <th class='date'>{{race.date|date:"D d M"}}</td>
-                      <td class='racetitle'>
-                          <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
-                      <td class='racelocation'>{{ race.location }}</td>
-                  </tr>
-           {% endfor %}
-         {% endfor %}
-        </table>
+    {% include "race_create_modal.html" %}
+
+
+    <div class='modal fade' id='addPeopleModal' tabindex='-2' role='dialog' aria-labelledby="addPeopleModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="addPeopleModalLabel">Add People to Race</h4>
+            </div>
+            <div class="modal-body">
+
+                <form action="" method='GET'>
+                    <div class='container'>
+                        <div class='row'>
+                            <div class='col-md-3'>
+                                <label for='commissaire'>Commissaire: </label>
+                            </div>
+                            <div class='col-md-3'>
+                                <input type='text' name='commissaire'>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3'>
+                                <label for='dutyofficer'>Duty Officer: </label>
+                            </div>
+                            <div class='col-md-3'>
+                                <input type='text' name='dutyofficer'>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-md-3'>
+                                <label for='dutyhelper'>Duty Helper: </label>
+                            </div>
+                            <div class='col-md-3'>
+                                <input type='text' name='dutyhelper'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <input type="submit" name="submit" class="btn btn-primary" value="Update">
+                    </div>
+                </form>
+            </div>
+          </div>
         </div>
-{% endfor %}
-</div>
+    </div>
 
 {% endblock %}

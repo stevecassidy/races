@@ -102,10 +102,7 @@ class ClubDetailView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        if self.request.user.is_authenticated():
-            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
-        else:
-            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
+        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')[:5]
 
         context['form'] = RaceCreateForm()
 
@@ -398,6 +395,22 @@ class RaceRidersView(ListView):
 
         return HttpResponseRedirect(reverse('race_riders', kwargs=kwargs))
 
+class ClubRaceResultsView(DetailView):
+    model = Club
+    template_name = "club_results.html"
+    context_object_name = 'club'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubRaceResultsView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the past races
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
+
+        context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club, status__exact='p')
+
+        return context
+
 
 class ClubRacesView(DetailView):
     model = Club
@@ -412,9 +425,11 @@ class ClubRacesView(DetailView):
         club = Club.objects.get(slug=slug)
 
         if self.request.user.is_authenticated():
-            context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club)
+            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
         else:
-            context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club, status__exact='p')
+            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
+
+        context['racecreateform'] = RaceCreateForm()
 
         return context
 

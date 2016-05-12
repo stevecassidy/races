@@ -144,18 +144,20 @@ th label {
                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span><br> Download Riders</a>
                     </li>
                     <li>
-                        <a href="#"  >
                         <a href="{% url 'club_riders' club.slug %}">
                             <span class="glyphicon glyphicon-user" aria-hidden="true"></span><br> Members</a>
-                    </a>
-                    </li>
-                    <li>
-                        <a href="{% url 'club' club.slug %}">
-                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span><br>Race Schedule</a>
                     </li>
                     <li>
                         <a href="{% url 'riders' %}">
                             <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><br>All Riders</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'club_races' club.slug %}">
+                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span><br>Race Schedule</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'club_results' club.slug %}">
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span><br>Race Results</a>
                     </li>
                 </ul>
 
