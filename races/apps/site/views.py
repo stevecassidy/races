@@ -266,7 +266,7 @@ class ClubRidersCSVView(View):
                    r.licenceno,
                    clubslug,
                    r.user.email,
-                   r.pk,
+                   '',  # needs to be the id from the old site or empty
                    eventno
                   )
             writer.writerow(row)
