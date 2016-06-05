@@ -17,7 +17,7 @@ urlpatterns = [
 
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
     url(r'^races/(?P<pk>\d+)/delete/$', views.RaceDeleteView.as_view(), name='race_delete'),
-    url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/results/$', views.RaceUploadCSVView.as_view(), name='race_results_csv'),
+    url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/results/$', views.RaceUploadExcelView.as_view(), name='race_results_excel'),
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/riders/$', views.RaceRidersView.as_view(), name='race_riders'),
 
 
@@ -32,10 +32,11 @@ urlpatterns = [
     url(r'^clubs/(?P<slug>[^/]*)/races/$', views.ClubRacesView.as_view(), name='club_races'),
     url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
-    url(r'^clubs/(?P<club>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
+    url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
 
     # get rider csv file for race entry front end
-    url(r'^clubs/(?P<slug>[^/]*)/riders.csv$', views.ClubRidersCSVView.as_view(), name='club_riders_csv'),
+    url(r'^clubs/(?P<slug>[^/]*)/riders.xlsx$', views.ClubRidersExcelView.as_view(), name='club_riders_excel'),
+
 
     url(r'^riders/$', views.RiderListView.as_view(), name='riders'),
     url(r'^riders/(?P<pk>\d+)$', views.RiderView.as_view(), name='rider'),

@@ -25,7 +25,6 @@ import csv
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
-
 class HomePage(ListView):
 
     model = Race
@@ -52,39 +51,6 @@ class TestPageView(TemplateView):
 
     template_name = "test.html"
 
-
-class RaceListDateView(ListView):
-    model = Race
-    template_name = 'race_list.html'
-    context_object_name = 'races'
-
-    def get_queryset(self):
-
-        if self.kwargs.has_key('year') and self.kwargs.has_key('month'):
-            month = int(self.kwargs['month'])
-            year = int(self.kwargs['year'])
-
-            return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
-        else:
-            # just pull races after today
-            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
-
-
-class RaceDetailView(DetailView):
-    model = Race
-    template_name = 'race_detail.html'
-    context_object_name = 'race'
-
-    def get_context_data(self, **kwargs):
-
-        context = super(RaceDetailView, self).get_context_data(**kwargs)
-
-        context['csvform'] = RaceCSVForm()
-        if 'iframe' in self.request.GET:
-            context['iframe'] = True
-
-        return context
-
 class ClubListView(ListView):
     model = Club
     template_name = 'club_list.html'
@@ -108,7 +74,13 @@ class ClubDetailView(DetailView):
 
         return context
 
-class ClubDashboardView(DetailView):
+class ClubOfficialRequiredMixin(object):
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(ClubOfficialRequiredMixin, self).dispatch(*args, **kwargs)
+
+class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
 
     model = Club
     template_name = 'club_dashboard.html'
@@ -164,7 +136,6 @@ class ClubRidersView(ListView):
                                       {'club': club, 'changed': changed},
                                       context_instance=RequestContext(request))
 
-
 class ClubPointscoreView(DetailView):
 
     model = PointScore
@@ -174,7 +145,7 @@ class ClubPointscoreView(DetailView):
 
         context = super(ClubPointscoreView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
-        club = self.kwargs['club']
+        club = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=club)
         context['races'] = Race.objects.filter(pointscore=self.object)
 
@@ -194,39 +165,23 @@ class ClubPointscoreList(ListView):
 
         return context
 
-class CSVResponseMixin(object):
-    csv_filename = 'csvfile.csv'
-
-    def get_csv_filename(self):
-        return self.csv_filename
-
-    def render_to_csv(self, data):
-        response = HttpResponse(content_type='text/csv')
-        cd = 'attachment; filename="{0}"'.format(self.get_csv_filename())
-        response['Content-Disposition'] = cd
-
-        writer = csv.writer(response)
-        for row in data:
-            writer.writerow(row)
-
-        return response
-
-class ClubRidersCSVView(View):
+class ClubRidersExcelView(View):
 
     def get(self, request, *args, **kwargs):
 
         club = get_object_or_404(Club, slug=kwargs['slug'])
 
-        response = HttpResponse(content_type='text/csv')
-        cd = 'attachment; filename="{0}"'.format("race.csv")
-        response['Content-Disposition'] = cd
+        from openpyxl import Workbook
+        from openpyxl.writer.excel import save_virtual_workbook
+
+        wb = Workbook(write_only=True)
+        ws = wb.create_sheet()
 
         if 'eventno' in request.GET:
             eventno = request.GET['eventno']
         else:
             eventno = '12345'
 
-        writer = csv.writer(response)
         header = ('LastName',
                   'FirstName',
                   'Regd',  # U/R
@@ -241,7 +196,8 @@ class ClubRidersCSVView(View):
                   'Id',
                   'EventNo')
 
-        writer.writerow(header)
+        ws.append(header)
+
         for r in Rider.objects.all():
 
             grades = r.clubgrade_set.filter(club=club)
@@ -259,20 +215,22 @@ class ClubRidersCSVView(View):
                    r.user.first_name,
                    'U',
                    grade,
-                   '2',
+                   2,
                    'F',
                    '',
-                   '2',
+                   2,
                    r.licenceno,
                    clubslug,
                    r.user.email,
                    '',  # needs to be the id from the old site or empty
                    eventno
                   )
-            writer.writerow(row)
+            ws.append(row)
+
+        response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd-ms.excel')
+        response['Content-Disposition'] = 'attachment; filename="riders-{0}.xlsx"'.format(eventno)
 
         return response
-
 
 class RiderListView(ListView):
     model = Rider
@@ -297,9 +255,6 @@ class RiderListView(ListView):
             # just pull races after today
             return Rider.objects.all()
 
-
-
-
 class RiderView(DetailView):
 
     model = User
@@ -312,10 +267,38 @@ class RiderUpdateView(UpdateView):
     template_name = "rider_update.html"
     fields = ['streetaddress', 'suburb', 'state', 'postcode', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship']
 
+class RaceListDateView(ListView):
+    model = Race
+    template_name = 'race_list.html'
+    context_object_name = 'races'
 
+    def get_queryset(self):
 
+        if self.kwargs.has_key('year') and self.kwargs.has_key('month'):
+            month = int(self.kwargs['month'])
+            year = int(self.kwargs['year'])
 
-class RaceUpdateView(UpdateView):
+            return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
+        else:
+            # just pull races after today
+            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
+
+class RaceDetailView(DetailView):
+    model = Race
+    template_name = 'race_detail.html'
+    context_object_name = 'race'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(RaceDetailView, self).get_context_data(**kwargs)
+
+        context['csvform'] = RaceCSVForm()
+        if 'iframe' in self.request.GET:
+            context['iframe'] = True
+
+        return context
+
+class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     model = Race
     template_name = "race_form.html"
     fields = ['title', 'date', 'signontime', 'starttime', 'website', 'location', 'status', 'description']
@@ -330,7 +313,7 @@ class RaceUpdateView(UpdateView):
         else:
             return HttpResponseRedirect('/login/?next=%s' % self.request.path)
 
-class RaceUploadCSVView(FormView):
+class RaceUploadExcelView(FormView):
 
     form_class = RaceCSVForm
     template_name = ''
@@ -340,11 +323,11 @@ class RaceUploadCSVView(FormView):
         # need to work out what race we're in - from the URL pk
         race = get_object_or_404(Race, pk=self.kwargs['pk'])
 
-        race.load_csv_results(self.request.FILES['csvfile'])
+        race.load_excel_results(self.request.FILES['excelfile'])
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
-class RaceDeleteView(DeleteView):
+class RaceDeleteView(ClubOfficialRequiredMixin, DeleteView):
     model = Race
     success_url = reverse_lazy('races')
     template_name = "race_confirm_delete.html"
@@ -437,6 +420,12 @@ class ClubRacesView(DetailView):
         """POST request handler to create new races for this club"""
 
         form = RaceCreateForm(request.POST)
+
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
+
+        if not request.user.rider or not request.user.rider.official or  request.user.rider.club != club:
+            return HttpResponseBadRequest("Only available for club officials")
 
         if request.is_ajax():
             if form.is_valid():

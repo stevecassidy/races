@@ -38,10 +38,8 @@ class ModelTests(TestCase):
 
 		title = "Race Title"
 		date = datetime.today()
-
-
-
-		race = Race(title=title, date=date, time=date, club=club, location=loc)
+		
+		race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
 		race.save()
 
 		self.assertTrue(unicode(race).startswith(slug))

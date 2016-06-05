@@ -307,7 +307,7 @@ rows = [
   u'Emergency Contact Person': u'Mary Valverde',
   u'Exclude from RTP': None,
   u'Facsimile': u' ',
-  u'Financial Date': datetime.date(datetime.date.today().year-1, 12, 31),
+  u'Financial Date': datetime.date(datetime.date.today().year, 12, 31),
   u'First Aid certificate expiry date': None,
   u'First Name': u'Alejandro',
   u'Gender': u'Male',

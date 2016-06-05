@@ -10,6 +10,33 @@ from races.apps.site.usermodel import Rider, parse_img_members
 
 TESTFILE = "races/apps/site/tests/imgsample.xls"
 
+def write_imgsample(outfile, rows):
+    """Write out a sample IMG import file from a row dictionary"""
+
+    with open(outfile, 'w') as fd:
+
+        fd.write('\n<table border="1">\n')
+        # header row
+        keys = rows[0].keys()
+        fd.write('\n<tr valign="top">\n')
+        for key in keys:
+            fd.write('\t<td valign="top">%s</td>\n' % key)
+        fd.write('</tr>\n\n')
+
+        for row in rows:
+            fd.write('\n<tr valign="top">\n')
+            for key in keys:
+                if isinstance(row[key], datetime.date):
+                    value = row[key].strftime('%d-%b-%Y')
+                elif row[key] is None:
+                    value = ''
+                else:
+                    value = row[key]
+
+                fd.write('\t<td valign="top">%s</td> <!-- %s -->\n' % (value, key))
+            fd.write('</tr>\n\n')
+
+        fd.write('</table>\n')
 
 class IMGTests(TestCase):
 
@@ -18,6 +45,9 @@ class IMGTests(TestCase):
     def test_readfile(self):
         """We can read a file downloaded from IMG
         and return an iterator over the rows"""
+
+        from imgsampledict import rows
+        write_imgsample(TESTFILE, rows)
 
         count = 0
         with open(TESTFILE, 'r') as fd:
@@ -32,7 +62,7 @@ class IMGTests(TestCase):
                     self.assertEqual('123457', row['Member Number'])
 
             # expect two rows
-            self.assertEqual(3, count)
+            self.assertEqual(6, count)
 
     def test_find_user(self):
         """Find a user from their email address or licence number"""
@@ -59,14 +89,15 @@ class IMGTests(TestCase):
         cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
 
         valverde = User.objects.get(pk=2531)
+
         usernodob = User(first_name="No", last_name="DOB", username="NoDOB", email="nodob@example.com")
         usernodob.save()
         usernodob.rider = Rider(user=usernodob, licenceno="1234567")
         usernodob.rider.save()
 
-        with open(TESTFILE, 'r') as fd:
-            from imgsampledict import rows
-            result = Rider.objects.update_from_spreadsheet(club, rows)
+        # use pre-parsed rows
+        from imgsampledict import rows
+        result = Rider.objects.update_from_spreadsheet(club, rows)
 
         self.assertEqual(dict, type(result))
         self.assertIn('updated', result)
@@ -80,7 +111,7 @@ class IMGTests(TestCase):
 
         self.assertIn(usernodob, result['updated'])
         # usernodob's DOB should now be set
-        # nee to requery so that we get the updated object
+        # need to requery so that we get the updated object
         usernodob = User.objects.get(username="NoDOB")
         self.assertEqual(datetime.date(1975, 6, 7), usernodob.rider.dob)
 
@@ -124,15 +155,18 @@ class IMGWebTests(WebTest):
         response = self.app.get(reverse('club_dashboard', kwargs={'slug': 'OGE'}), user=self.ogeofficial)
 
         # look for the button
-        buttons = response.html.find_all('button', attrs={'data-target': "#IMGUploadModal"})
+        buttons = response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})
         self.assertEqual(1, len(buttons))
-        self.assertIn("Upload IMG Spreadsheet", buttons[0].string)
+        self.assertIn("IMG Upload", str(buttons[0]))
 
         form = response.forms['imgssform']
         self.assertNotEqual(None, form)
         self.assertEqual(reverse('club_riders', kwargs={'slug': self.oge.slug}), form.action)
         self.assertEqual("IMG", form['fileformat'].value)
 
+
+        from imgsampledict import rows
+        write_imgsample(TESTFILE, rows)
 
         # fill the form to upload the file
         form['memberfile'] = Upload(TESTFILE)

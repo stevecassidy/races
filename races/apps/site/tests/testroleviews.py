@@ -29,31 +29,6 @@ class RoleViewTests(TestCase):
         rider2.save()
 
 
-    def test_club_official_club(self):
-        """Test view of club page as a club official"""
-
-        # get a club page, should not see any admin controls
-        response = self.client.get(reverse('club', kwargs={'slug': 'MOV'}))
-        self.assertNotContains(response, "Create New Race")
-
-        # now login as the OGE admin
-        self.client.force_login(user=self.ogeofficial)
-
-        response = self.client.get(reverse('home'))
-
-        # look for user name in the home page
-        self.assertContains(response, "OGE Official")
-        self.assertContains(response, "Log out")
-
-        # when we get the club page we should see the link to add a race
-        response = self.client.get(reverse('club', kwargs={'slug': 'OGE'}))
-
-        self.assertContains(response, "Create New Race")
-
-        # but for another club's page, it should not be there
-        response = self.client.get(reverse('club', kwargs={'slug': 'MOV'}))
-
-        self.assertNotContains(response, "Create New Race")
 
     def test_club_official_race(self):
         """Test view of a race as a club official"""
@@ -75,8 +50,6 @@ class RoleViewTests(TestCase):
         self.assertNotContains(response, "Edit")
         self.assertNotContains(response, "Upload Results")
 
-
-
     def test_race_riders(self):
         """as a club official, I want /races/<club>/<raceid>/riders/ to be a form to enter riders in a
         race (and a list of already entered riders) if there are no results,
@@ -85,11 +58,11 @@ class RoleViewTests(TestCase):
         # race with no riders or results, not a club official, I should get a
         # page with a message
         response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
-        self.assertContains(response, "No current entries for this race.")
-        self.assertNotContains(response, "Add Entry")
+        self.assertContains(response, "No riders registered for this race.")
+        self.assertNotContains(response, "Register")
 
         # login as a club official
         self.client.force_login(user=self.movofficial)
         response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
         # page contains a form to enter riders names
-        self.assertContains(response, "Add Entry")
+        self.assertContains(response, "Register")

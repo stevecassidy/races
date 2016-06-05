@@ -54,7 +54,6 @@ class UserModelTests(TestCase):
             grading2 = ClubGrade(rider=rider, club=club, grade="B")
             grading2.save()
 
-
     def test_result(self):
         """Create a race result"""
 
@@ -112,9 +111,8 @@ class UserModelTests(TestCase):
             result2 = RaceResult(race=race, rider=rider2, grade='A', number=21, place=3)
             result2.save()
 
-
-    def test_load_results_csv(self):
-        """Load results from CSV creates riders and results"""
+    def test_load_results_excel(self):
+        """Load results from Excel creates riders and results"""
 
         user1 = User(username='user1')
         user1.save()
@@ -125,10 +123,10 @@ class UserModelTests(TestCase):
 
         race = Race.objects.get(pk=1)
 
-        with open(os.path.join(os.path.dirname(__file__), 'waratah-racesheet-sample.csv'), 'rU') as fd:
-            race.load_csv_results(fd)
+        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xlsx'), 'rb') as fd:
+            race.load_excel_results(fd)
 
-        self.assertEqual(race.raceresult_set.all().count(), 112)
+        self.assertEqual(race.raceresult_set.all().count(), 116)
 
         # check result of our riders
         results1 = RaceResult.objects.filter(rider__licenceno__exact=rider1.licenceno)

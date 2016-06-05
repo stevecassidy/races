@@ -119,11 +119,11 @@ class RiderManager(models.Manager):
 
         for row in rows:
 
+            #print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
+
             if row['Financial Date'] == None or row['Financial Date'] < datetime.date.today():
                 # don't import old membership records
                 continue
-
-            print row['Email Address'], row['Member Number']
 
             # grab all values from row that are not None, map them
             # to the keys via IMG_MAP
@@ -132,11 +132,9 @@ class RiderManager(models.Manager):
                 if key in IMG_MAP:
                     if row[key] != None and row[key] != '':
                         riderinfo[IMG_MAP[key]] = row[key]
-
             # riderinfo is our updated information
 
             user = self.find_user(row['Email Address'], row['Member Number'])
-
             updating = False
 
             if user != None:
@@ -170,7 +168,7 @@ class RiderManager(models.Manager):
                         setattr(user, key[1], riderinfo[key])
                         userchanges.append(key[1])
                 else:
-                    if getattr(user.rider, key[1]) in ['', None, datetime.date(1970, 1, 1)]:
+                    if getattr(user.rider, key[1]) in ['', None, '0', datetime.date(1970, 1, 1)]:
                         setattr(user.rider, key[1], riderinfo[key])
                         userchanges.append(key[1])
 
@@ -219,7 +217,6 @@ class RiderManager(models.Manager):
                 # remove this user from the currentmembers list
                 if user in currentmembers:
                     currentmembers.remove(user)
-                print "MEM:", len(currentmembers)
 
             # u'NSW Road Handicap Data'
             if row['NSW Road Handicap Data'] != None:
@@ -234,8 +231,8 @@ class RiderManager(models.Manager):
                     userchanges.append('stategrade')
                 grading.save()
 
-                if updating and userchanges != []:
-                    updated.append(user)
+            if updating and userchanges != []:
+                updated.append(user)
 
             # u'NSW Track Handicap Data'
 

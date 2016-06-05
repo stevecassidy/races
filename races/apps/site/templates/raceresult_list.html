@@ -7,14 +7,19 @@
 
 <h2>{{race.club.slug}} - {{race.title}} ({{race.date}},  {{race.location}})</h2>
 
-<form method='POST'>
-    {% csrf_token %}
-{{form|bootstrap_inline}}
-<div class="">
-  <input type="submit" class="btn btn-primary" value="Register">
-</div>
-</form>
 
+{% if request.user.rider %}
+
+    {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
+        <form method='POST'>
+            {% csrf_token %}
+        {{form|bootstrap_inline}}
+        <div class="">
+          <input type="submit" class="btn btn-primary" value="Register">
+        </div>
+        </form>
+    {% endif %}
+{% endif %}
 
 {% if race.raceresult_set.all %}
 

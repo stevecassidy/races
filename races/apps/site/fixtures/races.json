@@ -8,7 +8,8 @@
         "club": 63,
         "website": "",
         "location": 2,
-        "time": "08:00:00",
+        "signontime": "08:00:00",
+        "starttime": "8am",
         "date": "2015-08-08"
     },
     "model": "site.race",
@@ -23,7 +24,8 @@
         "club": 63,
         "website": "",
         "location": 2,
-        "time": "08:00:00",
+        "signontime": "08:00:00",
+        "starttime": "8am",
         "date": "2015-08-15"
     },
     "model": "site.race",
@@ -38,7 +40,8 @@
         "club": 63,
         "website": "",
         "location": 2,
-        "time": "08:00:00",
+        "signontime": "08:00:00",
+        "starttime": "8am",
         "date": "2015-08-22"
     },
     "model": "site.race",
@@ -53,7 +56,8 @@
         "club": 64,
         "website": "",
         "location": 1,
-        "time": "08:00:00",
+        "signontime": "08:00:00",
+        "starttime": "8am",
         "date": "2015-08-22"
     },
     "model": "site.race",

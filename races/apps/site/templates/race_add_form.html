@@ -1,0 +1,60 @@
+
+<form method='post' action="{% url 'club_races' club.slug %}" name='raceform' id='raceform'>
+    {% csrf_token %}
+    <div class='well form-group'>
+        {{racecreateform.errors}}
+        <input type='hidden' name='club' value='{{club.id}}'>
+        <table class='table-condensed'>
+            <tr><th><label for='id_pointscore'>Pointscore</label></th>
+                <td colspan=3>{{racecreateform.pointscore|bootstrap_inline}}
+                   <span id="help_pointscore" class='help-block'></span>
+                </td>
+            </tr>
+
+            <tr><th><label for='id_title'>Title</label></th>
+                <td colspan=3>{{racecreateform.title|bootstrap_inline}}</td>
+            </tr>
+
+            <tr>
+                <th><label for='id_date'>Date</label></th>
+                <td><input class="form-control" data-provide="datepicker" name='date' id='id_date'></td>
+
+                <th><label for='id_time'>Sign On From</label></th>
+                <td>{{racecreateform.signontime|bootstrap_inline}}</td>
+            </tr>
+
+            <tr>
+                <th><label for='id_starttime'>Start Time</label></th>
+                <td colspan=3>{{racecreateform.starttime|bootstrap_inline}}</td>
+            </tr>
+
+            <tr>
+                <th><label for='id_weekly'>Repeat</label></th>
+                <td>{{racecreateform.repeat|bootstrap_inline}}</td>
+                <td>{{racecreateform.number|bootstrap_inline}}</td>
+                <td><label for='id_number'>times</label></td>
+            </tr>
+
+            <tr>
+                <th><label for='id_repeat'>Repeat on the</label></th>
+                <td>{{racecreateform.repeatMonthN|bootstrap_inline}}</td>
+                <td>{{racecreateform.repeatDay|bootstrap_inline}}</td>
+                <td><label for='id_number'>of each month</label></td>
+            </tr>
+
+
+            <tr>
+                <th><label for='id_location'>Location</label></th><td>{{racecreateform.location|bootstrap_inline}}</td>
+                <th><label for='id_status'>Status</label></th><td>{{racecreateform.status|bootstrap_inline}}</td>
+            </tr>
+            <tr><th><label for='id_url'>Website</label></th><td colspan=3>{{racecreateform.website|bootstrap_inline}}</td></tr>
+
+            <tr><th><label for='id_description'>Description</label></th><td colspan=3>{{racecreateform.description|bootstrap_inline}}</td></tr>
+        </table>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" id="submitraceform" class="btn btn-primary">Create Race(s)</button>
+        </div>
+    </div>
+</form>

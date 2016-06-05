@@ -36,9 +36,9 @@ class RaceCreateForm(forms.ModelForm):
     pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all(), required=False)
 
 class RaceCSVForm(forms.Form):
-    """Form for uploading a CSV file with race results"""
+    """Form for uploading a file with race results"""
 
-    csvfile = forms.FileField(label="CSV File")
+    excelfile = forms.FileField(label="Excel File")
 
 MEMBER_FILE_FORMATS = (('IMG', 'IMG Sports'),)
 

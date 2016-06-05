@@ -1,4 +1,26 @@
 {% extends "site_base.html" %}
+
+{% block extra_script %}
+<script>
+$(document).ready(
+    function() {
+
+    $('#addPeopleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var raceurl = button.data('raceurl'); // Extract info from data-* attributes
+
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this);
+      modal.find('.modal-title').text('Add People for Race ' + raceurl );
+      modal.find('form')[0].action = raceurl;  // TODO: find out how to do this
+    })
+})
+
+</script>
+{% endblock %}
+
+
 {% block content %}
 
 <h2>{{club.name}} Race Schedule</h2>
@@ -33,7 +55,7 @@
 
                       <a href="{% url 'race_update' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
-                      <a href="#" data-toggle='modal' data-target="#addPeopleModal"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                      <a href="#" data-toggle='modal' data-target="#addPeopleModal" data-raceurl='{% url 'race' race.club.slug race.pk %}'><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
                   </td>
                   {% endif %}
               </tr>
@@ -52,7 +74,9 @@
             </div>
             <div class="modal-body">
 
-                <form action="" method='GET'>
+                <form action="" method='POST'>
+                    {% csrf_token %}
+                    <input type='hidden' name='raceid' id='raceid'>
                     <div class='container'>
                         <div class='row'>
                             <div class='col-md-3'>

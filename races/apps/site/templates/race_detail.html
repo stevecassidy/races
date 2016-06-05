@@ -46,7 +46,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Upload Results Spreadsheet</h4>
       </div>
-      <form method="POST" enctype="multipart/form-data" action="{% url 'race_results_csv' race.club.slug race.id %}">
+      <form method="POST" enctype="multipart/form-data" action="{% url 'race_results_excel' race.club.slug race.id %}">
           <div class="modal-body">
               {% csrf_token %}
               {{csvform|bootstrap}}

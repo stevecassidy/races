@@ -117,7 +117,7 @@ th label {
             <h2>Pointscores</h3>
                 <ul>
                 {% for ps in club.pointscore_set.all %}
-                  <li><a href="{% url 'pointscore' club=club.slug pk=ps.pk %}">{{ps}}</a></li>
+                  <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
                 {% endfor %}
                 </ul>
             {% endif %}
@@ -177,7 +177,7 @@ th label {
         </div>
         <div class="modal-body">
 
-            <form action="{% url 'club_riders_csv' slug=club.slug %}" method='GET'>
+            <form action="{% url 'club_riders_excel' slug=club.slug %}" method='GET'>
                 <label for='eventno'>Event Number: </label>
                 <input type='text' name='eventno'> (optional, for old WMCC website)
 
