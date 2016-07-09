@@ -70,7 +70,6 @@ class Club(models.Model):
 
         return dd
 
-
     def ingest(self):
         """Try a couple of ingest methods.
         Return a tuple (races, errormsg) where races is a list

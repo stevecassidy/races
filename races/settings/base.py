@@ -164,6 +164,15 @@ INSTALLED_APPS = (
     'corsheaders',
 )
 
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -202,7 +211,7 @@ EASY_MAPS_CENTER = (-41.3, 32)
 
 
 LOGIN_URL = '/login/'
-
+LOGIN_REDIRECT_URL = '/'
 
 ACCOUNT_OPEN_SIGNUP = False
 

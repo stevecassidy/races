@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', views.RaceDetailView.as_view(), name='race'),
 
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
-    url(r'^races/(?P<pk>\d+)/delete/$', views.RaceDeleteView.as_view(), name='race_delete'),
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/results/$', views.RaceUploadExcelView.as_view(), name='race_results_excel'),
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/riders/$', views.RaceRidersView.as_view(), name='race_riders'),
 
@@ -48,6 +47,8 @@ urlpatterns = [
     url(r'^api/clubs/(?P<pk>[0-9]+)/$', api.ClubDetail.as_view(), name='club-detail'),
     url(r'^api/races/$', api.RaceList.as_view(), name='race-list'),
     url(r'^api/races/(?P<pk>[0-9]+)/$', api.RaceDetail.as_view(), name='race-detail'),
+    url(r'^api/racestaff/$', api.RaceStaffList.as_view(), name='racestaff-list'),
+    url(r'^api/racestaff/(?P<pk>[0-9]+)/$', api.RaceStaffDetail.as_view(), name='racestaff-detail'),
     url(r'^api/racecourses/$', api.RaceCourseList.as_view(), name='racecourse-list'),
     url(r'^api/racecourses/(?P<pk>[0-9]+)/$', api.RaceCourseDetail.as_view(), name='racecourse-detail'),
     url(r'^api/riders/$', api.RiderList.as_view(), name='rider-list'),

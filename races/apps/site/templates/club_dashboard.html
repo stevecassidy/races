@@ -6,65 +6,19 @@
     {% block extra_head %}
     <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
     <style type='text/css'>
-#id_description, #id_title, #id_url {
-    width: 100%;
-}
-th label {
-    text-align: right;
-}
 .datepicker{z-index:1151 !important;}
     </style>
     {% endblock %}
 
     {% block extra_script %}
+    <script src="{{ STATIC_URL }}cabici.js"></script>
     <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
     <script>
         $(document).ready(
             function() {
-
-                // monthly disabled by default
-                $("#id_repeatMonthN").addClass("disabled").attr("disabled", true);
-                $("#id_repeatDay").addClass("disabled").attr("disabled", true);
-                $("#id_number").addClass("disabled").attr("disabled", true);
-
-                $("#id_repeat").change(function() {
-                    if ($(this).val() == 'none') {
-                        $("#id_number").addClass("disabled").attr("disabled", true);
-                    } else {
-                        $("#id_number").removeClass("disabled").attr("disabled", false);
-                    }
-                    if ($(this).val() == 'monthly') {
-                        $("#id_repeatMonthN").removeClass("disabled").attr("disabled", false);
-                        $("#id_repeatDay").removeClass("disabled").attr("disabled", false);
-                    } else {
-                        $("#id_repeatMonthN").addClass("disabled").attr("disabled", true);
-                        $("#id_repeatDay").addClass("disabled").attr("disabled", true);
-                    }
-                });
-
-            });
-
-            $(function() {
-                $("#submitraceform").click(function(){
-                    $.ajax({
-                        type: "POST",
-                        url: '{% url 'club_races' club.slug %}',
-                        data: $('#raceform').serialize(),
-                        success: function(msg){
-                            if (msg['success']) {
-                               $("#raceCreateModal").modal('hide');
-                               /* force a page refresh */
-                               window.location = window.location;
-                           } else {
-                                for (field in msg) {
-                                    $("#id_"+field).parent().addClass("has-error");
-                                    $("#id_"+field).parent().children(".help-block").text(msg[field]);
-                                }
-                            }
-                        }
-                    });
-                });
-            });
+                race_create_form_init('{% url 'club_races' club.slug %}');
+            }
+        );
     </script>
     {% endblock %}
 

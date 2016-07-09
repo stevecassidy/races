@@ -1,43 +1,48 @@
 {% extends "site_base.html" %}
 
-{% block extra_script %}
-<script>
-$(document).ready(
-    function() {
 
-    $('#addPeopleModal').on('show.bs.modal', function (event) {
-      var button = $(event.relatedTarget); // Button that triggered the modal
-      var raceurl = button.data('raceurl'); // Extract info from data-* attributes
-
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-      var modal = $(this);
-      modal.find('.modal-title').text('Add People for Race ' + raceurl );
-      modal.find('form')[0].action = raceurl;  // TODO: find out how to do this
-    })
-})
-
-</script>
+{% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-select/css/bootstrap-select.min.css">
+<style type='text/css'>
+.datepicker{z-index:1151 !important;}
+</style>
 {% endblock %}
 
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}cabici.js"></script>
+<script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-typeahead.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-select/js/bootstrap-select.min.js"></script>
+<script>
+    $(document).ready(
+        function() {
+            race_create_form_init('{% url 'club_races' club.slug %}');
+            add_people_init();
+            delete_race_init();
+    });
+</script>
+{% endblock %}
 
 {% block content %}
 
 <h2>{{club.name}} Race Schedule</h2>
 
+{% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
     <ul id='dashboardActions'>
         <li>
             <a href="#" data-toggle='modal' data-target="#raceCreateModal">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><br> Add Race(s)</a>
         </li>
     </ul>
-
+{% endif %}
     <table class='table'>
       <thead>
        <tr>
            <th>Date</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+           <th>Officials</th>
            {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-           <th>Status</th>
            <th>&nbsp;</th>
            {% endif %}
        </tr>
@@ -48,22 +53,44 @@ $(document).ready(
                   <td class='racetitle'>
                       <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
                   <td class='racelocation'>{{ race.location }}</td>
+                  <td class='racesstaff'>
+                      <dl class='dl-horizontal'>
+                      <dt>Commissaire:</dt><dd>{% for staff in race.racestaff_set.all %}
+                         {% if staff.role.name == "Commissaire" %}
+                            {{staff.rider}}{% if not forloop.last %},{% endif %}
+                        {% endif %}
+                      {% endfor %}</dd>
+
+                      <dt>Duty Officer:</dt><dd>{% for staff in race.racestaff_set.all %}
+                         {% if staff.role.name == "Duty Officer" %}
+                             {{staff.rider}}{% if not forloop.last %},{% endif %}
+                        {% endif %}
+                      {% endfor %}</dd>
+
+                      <dt>Duty Helpers:</dt><dd>{% for staff in race.racestaff_set.all %}
+                         {% if staff.role.name == "Duty Helper" %}
+                             {{staff.rider}}{% if not forloop.last %},{% endif %}
+                        {% endif %}
+                      {% endfor %}</dd>
+                  </td>
                   {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-                  <td class='racestatus'>{{ race.get_status_display }}</td>
                   <td>
-                      <a href="{% url 'race_delete' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                      <a href="#" data-toggle='modal' data-target='#raceDeleteModal' data-raceurl="{% url 'race-detail' race.pk %}" data-racename="{{race.date}}, {{race.location}}"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
 
                       <a href="{% url 'race_update' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
-                      <a href="#" data-toggle='modal' data-target="#addPeopleModal" data-raceurl='{% url 'race' race.club.slug race.pk %}'><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                      <a href="#" data-toggle='modal' data-target="#addPeopleModal" data-raceurl='{% url 'race' race.club.slug race.pk %}' data-raceid="{{race.pk}}" data-racename="{{race.date}}, {{race.location}}"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
                   </td>
                   {% endif %}
               </tr>
        {% endfor %}
     </table>
 
+{% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+
     {% include "race_create_modal.html" %}
 
+    {% include "race_confirm_delete.html" %}
 
     <div class='modal fade' id='addPeopleModal' tabindex='-2' role='dialog' aria-labelledby="addPeopleModalLabel">
         <div class="modal-dialog" role="document">
@@ -83,7 +110,11 @@ $(document).ready(
                                 <label for='commissaire'>Commissaire: </label>
                             </div>
                             <div class='col-md-3'>
-                                <input type='text' name='commissaire'>
+                                <select class='selectpicker' id='commissaire' name='commissaire'>
+                                    {% for comm in commissaires %}
+                                    <option value='{{comm.pk}}'>{{comm}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class='row'>
@@ -91,7 +122,11 @@ $(document).ready(
                                 <label for='dutyofficer'>Duty Officer: </label>
                             </div>
                             <div class='col-md-3'>
-                                <input type='text' name='dutyofficer'>
+                                <select class='selectpicker' id='dutyofficer' name='dutyofficer'>
+                                    {% for do in dutyofficers %}
+                                    <option value='{{do.pk}}'>{{do}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                         <div class='row'>
@@ -99,7 +134,11 @@ $(document).ready(
                                 <label for='dutyhelper'>Duty Helper: </label>
                             </div>
                             <div class='col-md-3'>
-                                <input type='text' name='dutyhelper'>
+                                <select class='selectpicker' multiple id='dutyhelper' name='dutyhelper' data-live-search="true">
+                                    {% for dh in dutyhelpers %}
+                                    <option value='{{dh.pk}}'>{{dh}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -112,5 +151,7 @@ $(document).ready(
           </div>
         </div>
     </div>
+
+{% endif %}
 
 {% endblock %}

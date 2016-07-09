@@ -1,0 +1,23 @@
+[
+{
+    "model": "site.clubrole",
+    "pk": 1,
+    "fields": {
+        "name": "Duty Officer"
+    }
+},
+{
+    "model": "site.clubrole",
+    "pk": 2,
+    "fields": {
+        "name": "Duty Helper"
+    }
+},
+{
+    "model": "site.clubrole",
+    "pk": 3,
+    "fields": {
+        "name": "Commissaire"
+    }
+}
+]

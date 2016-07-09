@@ -15,7 +15,7 @@ import csv
 import os
 import datetime
 
-from races.apps.site.usermodel import Rider, RaceResult, ClubGrade, Membership, UserRole, ClubRole
+from races.apps.site.usermodel import Rider, RaceResult, ClubGrade, Membership, UserRole, ClubRole, RaceStaff
 from races.apps.site.models import Club, Race, RaceCourse
 
 CLUBMAP = {'ACT': 'ATTANSW',
@@ -126,7 +126,7 @@ CLUBMAP = {'ACT': 'ATTANSW',
  'rbcc': 'RandwickBotanyCC'}
 
 
-def import_races(csvdir, waratahs):
+def import_races(csvdir, waratahs, usermap):
 
     Race.objects.all().delete()
 
@@ -154,6 +154,35 @@ def import_races(csvdir, waratahs):
             race.save()
 
             racedict[row['eventno']] = race
+
+            role_comm, created = ClubRole.objects.get_or_create(name="Commissaire")
+            role_do, created = ClubRole.objects.get_or_create(name="Duty Officer")
+            role_dh, created = ClubRole.objects.get_or_create(name="Duty Helper")
+            # associate officials with the race
+            if row['commissaire'] is not '' and int(row['commissaire']) in usermap:
+                comm_rider = usermap[int(row['commissaire'])].rider
+                comm = RaceStaff(race=race, role=role_comm, rider=comm_rider)
+                comm.save()
+            elif row['commissaire'] is not '':
+                print "Commissaire not found", row['commissaire']
+
+            if row['dutyofficer'] is not '' and int(row['dutyofficer']) in usermap:
+                do_rider = usermap[int(row['dutyofficer'])].rider
+                do = RaceStaff(race=race, role=role_do, rider=do_rider)
+                do.save()
+            elif row['dutyofficer'] is not '':
+                print "Duty Officer not found: '%s'" % row['dutyofficer']
+
+            for dh_id in row['helpers'].split(','):
+                try:
+                    if int(dh_id) in usermap:
+                        dh_rider = usermap[int(dh_id)].rider
+                        dh = RaceStaff(race=race, role=role_dh, rider=dh_rider)
+                        dh.save()
+                    else:
+                        print "Duty Helper not found", dh_id
+                except:
+                    pass
 
         print "Imported %d races" % len(racedict)
         return racedict
@@ -346,10 +375,10 @@ class Command(BaseCommand):
             print "You need to create the WMCC club first"
             exit()
 
-        racedict = import_races(csvdir, waratahs)
-
         usermap = import_users(csvdir, waratahs)
 
-        import_roles(csvdir, waratahs)
+        racedict = import_races(csvdir, waratahs, usermap)
 
-        import_points(csvdir, waratahs, usermap, racedict)
+        #import_roles(csvdir, waratahs)
+
+        #import_points(csvdir, waratahs, usermap, racedict)

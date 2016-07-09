@@ -6,7 +6,7 @@
         "description": "",
         "title": "Sample Race",
         "club": 63,
-        "website": "",
+        "website": "http://example.org/race/today",
         "location": 2,
         "signontime": "08:00:00",
         "starttime": "8am",

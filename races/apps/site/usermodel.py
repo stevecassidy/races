@@ -345,6 +345,17 @@ class UserRole(models.Model):
     role = models.ForeignKey(ClubRole)
 
 
+class RaceStaff(models.Model):
+    """A person associated with a race in some role, eg. Commissaire, Duty Officer
+    """
+
+    rider = models.ForeignKey(Rider)
+    race = models.ForeignKey(Race, related_name='officials')
+    role = models.ForeignKey(ClubRole)
+
+    def __unicode__(self):
+        return "%s: %s" % (self.role.name, self.rider.user)
+
 class ClubGrade(models.Model):
     """A rider will be assigned a grade by a club, different
     clubs might have different grading"""

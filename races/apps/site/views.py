@@ -8,7 +8,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
 from django.db import IntegrityError
 
@@ -132,9 +132,7 @@ class ClubRidersView(ListView):
                 # unknown format
                 pass
 
-            return render_to_response('club_rider_update.html',
-                                      {'club': club, 'changed': changed},
-                                      context_instance=RequestContext(request))
+            return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
 
 class ClubPointscoreView(DetailView):
 
@@ -298,6 +296,15 @@ class RaceDetailView(DetailView):
 
         return context
 
+    def post(self, request, **kwargs):
+        """Handle the submission of a race update form to
+        add or modify """
+
+        pass
+
+
+
+
 class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     model = Race
     template_name = "race_form.html"
@@ -326,15 +333,6 @@ class RaceUploadExcelView(FormView):
         race.load_excel_results(self.request.FILES['excelfile'])
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
-
-class RaceDeleteView(ClubOfficialRequiredMixin, DeleteView):
-    model = Race
-    success_url = reverse_lazy('races')
-    template_name = "race_confirm_delete.html"
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(RaceDeleteView, self).dispatch(*args, **kwargs)
 
 class RaceRidersView(ListView):
     model = RaceResult
@@ -413,6 +411,10 @@ class ClubRacesView(DetailView):
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
 
         context['racecreateform'] = RaceCreateForm()
+
+        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name')
+        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name')
+        context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
 
         return context
 

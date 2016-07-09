@@ -6,7 +6,6 @@ icalendar
 python-dateutil
 django-geoposition
 beautifulsoup4
-lxml
 ngram
 vcrpy
 python-social-auth
@@ -16,4 +15,5 @@ djangorestframework
 django-cors-headers
 django-yearlessdate
 django-webtest
-psycopg2
+# for deployment with postgres
+# psycopg2

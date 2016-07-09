@@ -9,9 +9,15 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from races.apps.site.models import Club, RaceCourse, Race, STATUS_CHOICES
-from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole, ClubRole
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole, ClubRole, RaceStaff
 
 admin.site.register(Club)
+
+
+
+class RaceStaffAdmin(admin.StackedInline):
+    model = RaceStaff
+
 
 class RaceAdmin(admin.ModelAdmin):
 
@@ -22,6 +28,7 @@ class RaceAdmin(admin.ModelAdmin):
     list_editable = ['status', 'location']
     actions = ['make_published', 'make_draft', 'make_withdrawn']
     save_as = True
+    inlines = (RaceStaffAdmin,)
 
     def make_published(self, request, queryset):
         self.set_status(request, queryset, 'p')
@@ -45,6 +52,8 @@ class RaceAdmin(admin.ModelAdmin):
         pass
 
 admin.site.register(Race, RaceAdmin)
+
+
 
 class PointScoreAdmin(admin.ModelAdmin):
     pass
