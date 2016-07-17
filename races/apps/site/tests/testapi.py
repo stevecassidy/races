@@ -146,6 +146,9 @@ class APITests(TestCase):
         self.assertIn('Commissaire', officials)
         self.assertIn('Duty Officer', officials)
         self.assertIn('Duty Helper', officials)
+        # values should be lists
+        self.assertEqual(1, len(jsonresponse['officials']['Commissaire']))
+        self.assertEqual(2, len(jsonresponse['officials']['Duty Helper']))
 
 
         data = {'id': race.id,
@@ -167,15 +170,19 @@ class APITests(TestCase):
                 'status': 'd',
                 'website': 'http://example.org/',
                 "officials": {
-                    "commissaire": {
-                        "id": "16574",
-                        "name": "Joe Bloggs"
-                    },
-                    "dutyofficer": {
-                        "id": "1234",
-                        "name": "Jane Doe"
-                    },
-                    "dutyhelper": [
+                    "Commissaire": [
+                        {
+                            "id": "16574",
+                            "name": "Joe Bloggs"
+                        }
+                    ],
+                    "Duty Officer": [
+                        {
+                            "id": "1234",
+                            "name": "Jane Doe"
+                        }
+                    ],
+                    "Duty Helper": [
                                     {
                                         "id": "12345",
                                         "name": "Jane Boo"

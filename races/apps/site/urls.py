@@ -14,6 +14,7 @@ urlpatterns = [
     #url(r'^races/(?P<pk>\d+)/$', views.RaceDetailView.as_view(), name='race'),
 
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', views.RaceDetailView.as_view(), name='race'),
+    url(r'^races/(?P<pk>\d+)/officials/$', views.RaceOfficialUpdateView.as_view(), name='race_officials'),
 
     url(r'^races/(?P<pk>\d+)/update/$', views.RaceUpdateView.as_view(), name='race_update'),
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)/results/$', views.RaceUploadExcelView.as_view(), name='race_results_excel'),

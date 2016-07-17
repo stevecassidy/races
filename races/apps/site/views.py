@@ -9,12 +9,12 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
-from races.apps.site.usermodel import PointScore, Rider, RaceResult, parse_img_members
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members
 from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm
 
 import datetime
@@ -303,6 +303,46 @@ class RaceDetailView(DetailView):
         pass
 
 
+class RaceOfficialUpdateView(View):
+    """Update the officials associated with a race
+
+    Accept a POST request with a JSON payload and
+    replace any existing officials with those in the
+    JSON.
+
+    Eg:
+    {
+    "<rolename>": [{ "id": "16574", "name": "Joe Bloggs"}],
+    ...
+    }
+    """
+
+    def post(self, request, *args, **kwargs):
+
+        race = get_object_or_404(Race, **kwargs)
+
+        try:
+            officials = json.loads(request.body)
+            nofficials = dict()
+            for role in officials.keys():
+                clubrole, created = ClubRole.objects.get_or_create(name=role)
+                # find existing racestaff for this role
+                staff = RaceStaff.objects.filter(race=race, role__name__exact=role)
+                # remove them
+                staff.delete()
+                # create new ones corresponding to officials[role]
+                # and add to newofficials
+                nofficials[role] = []
+                for person in officials[role]:
+                    rider = get_object_or_404(Rider, id__exact=person['id'])
+                    newracestaff = RaceStaff(rider=rider, role=clubrole, race=race)
+                    newracestaff.save()
+                    nofficials[role].append({'id': rider.id, 'name': str(rider)})
+                    
+            return JsonResponse(nofficials)
+        except ValueError as e:
+            print e
+            return HttpResponseBadRequest("could not parse JSON body")
 
 
 class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
@@ -395,7 +435,7 @@ class ClubRaceResultsView(DetailView):
 
 class ClubRacesView(DetailView):
     model = Club
-    template_name = "club_races.html"
+    template_name = "club_races_ajax.html"
     context_object_name = 'club'
 
     def get_context_data(self, **kwargs):

@@ -4,12 +4,13 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 
 from races.apps.site.models import Club, RaceCourse, Race
-from races.apps.site.usermodel import PointScore, Rider
+from races.apps.site.usermodel import PointScore, Rider, RaceStaff
 from datetime import datetime, timedelta, date
+import json
 
 class CreateViewTests(TestCase):
 
-    fixtures = ['clubs', 'courses', 'users', 'riders']
+    fixtures = ['clubs', 'courses', 'users', 'riders', 'races']
 
     def setUp(self):
 
@@ -244,3 +245,56 @@ class CreateViewTests(TestCase):
         self.assertEqual(races[3].date, date(2015, 3, 30))
         self.assertEqual(races[4].date, date(2015, 4, 27))
         self.assertEqual(races[5].date, date(2015, 5, 25))
+
+
+    def test_set_race_officials(self):
+        """Test that we can set the officails for a race"""
+
+        race = self.mov.races.get(pk=1)
+
+        # check we have no race officials
+        off_stored = RaceStaff.objects.filter(race=race)
+        self.assertEqual(0, off_stored.count())
+
+        url = reverse('race_officials', kwargs={'pk': race.id})
+        officials = {
+            "Commissaire": [{"id": self.ogeofficial.rider.id, "name": str(self.ogeofficial.rider)}],
+            "Duty Officer": [{"id": self.ogeofficial.rider.id, "name": str(self.ogeofficial.rider)}],
+            "Duty Helper": [{"id": self.movofficial.rider.id, "name": str(self.movofficial.rider)},
+                            {"id": self.ogeofficial.rider.id, "name": str(self.ogeofficial.rider)}],
+            }
+
+        response = self.client.post(url, json.dumps(officials), content_type='application/json')
+
+        # response should be a 200 and contain JSON just like the
+        # payload we sent
+        self.assertEqual(200, response.status_code)
+
+        # response should be json with the same form as the posted data
+        self.assertEqual('application/json', response['Content-Type'])
+        resp_officials = json.loads(response.content)
+        self.assertListEqual(sorted(officials.keys()), sorted(resp_officials.keys()))
+        self.assertListEqual(officials['Commissaire'], resp_officials['Commissaire'])
+        self.assertListEqual(officials['Duty Officer'], resp_officials['Duty Officer'])
+        self.assertListEqual(officials['Duty Helper'], resp_officials['Duty Helper'])
+
+
+        off_stored = RaceStaff.objects.filter(race=race)
+        self.assertEqual(4, off_stored.count())
+
+        # commissaires
+        comms = RaceStaff.objects.filter(race=race, role__name__exact="Commissaire")
+        self.assertEqual(1, comms.count())
+        self.assertEqual(self.ogeofficial.rider, comms[0].rider)
+
+        # dutyofficer
+        do = RaceStaff.objects.filter(race=race, role__name__exact="Duty Officer")
+        self.assertEqual(1, do.count())
+        self.assertEqual(self.ogeofficial.rider, do[0].rider)
+
+        # duty helpers
+        dh = RaceStaff.objects.filter(race=race, role__name__exact="Duty Helper")
+        self.assertEqual(2, dh.count())
+        dh_riders = [r.rider for r in dh]
+        self.assertIn(self.ogeofficial.rider, dh_riders)
+        self.assertIn(self.movofficial.rider, dh_riders)

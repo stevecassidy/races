@@ -81,9 +81,14 @@ class RaceOfficialField(serializers.Field):
 
         result = dict()
         for role in obj.all():
-            result[role.role.name] = {'id': role.rider.user.id, 'name': role.rider.user.first_name + " " + role.rider.user.last_name}
+            entry = {'id': role.rider.id, 'name': role.rider.user.first_name + " " + role.rider.user.last_name}
+            if role.role.name not in result:
+                result[role.role.name] = [entry]
+            else:
+                result[role.role.name].append(entry)
 
         return result
+
 
 class RaceSerializer(serializers.ModelSerializer):
     # TODO: we want these fields to be expanded when we read the data

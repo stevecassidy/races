@@ -44,18 +44,42 @@ function race_create_form_init(slug) {
 function add_people_init() {
     $('#addPeopleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
-      var raceurl = button.data('raceurl'); // Extract info from data-* attributes
+      var raceurl = button.data('raceurl');
       var racename = button.data('racename');
       var raceid = button.data('raceid');
-
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
       var modal = $(this);
-      modal.find('.modal-title').text('Add People for Race on ' + racename );
-      form = modal.find('form')[0];
-      form.action = raceurl;
-      $(form).find("input[name='raceid']").val(raceid);
-      $(form).submit(submit_add_people);
+
+      console.log(raceurl);
+      // get the race details via ajax
+      $.ajax({
+          url: raceurl
+      }).done(function(data) {
+          console.log(data);
+          // set the default values in the form
+          modal.find('.modal-title').text('Add People for Race on ' + data.date );
+          form = modal.find('form')[0];
+          form.action = '/races/' + raceid + '/officials/';
+          $(form).find("input[name='raceid']").val(data.id);
+
+          if (data.officials.Commissaire) {
+              $('select[name=commissaire]').val(data.officials.Commissaire[0].id);
+          }
+          if (data.officials['Duty Officer']) {
+              $('select[name=dutyofficer]').val(data.officials['Duty Officer'][0].id);
+          }
+
+          if (data.officials['Duty Helper']) {
+              // need a list of ids for the multiple select widget
+              var helpers = [];
+              for (var i=0; i<data.officials['Duty Helper'].length; i++) {
+                  helpers.push(data.officials['Duty Helper'][i].id);
+              }
+              $('select[name=dutyhelper]').val(helpers);
+          }
+          // refresh the bootstrap seleect widget
+          $('.selectpicker').selectpicker('refresh');
+          $(form).submit(submit_add_people);
+      })
   });
 }
 
@@ -68,29 +92,40 @@ function submit_add_people(event) {
         raceid = $form.find( "input[name='raceid']").val(),
         url = $form.attr( "action" );
 
-    var prefix = $(location).attr('protocol') + "//" + $(location).attr('host');
-    var jj= {
-        'role': "Duty Officer",
-        'rider': prefix + '/api/riders/' + dutyofficer + '/',
-        'race': prefix + '/api/races/' + raceid + '/'
+    var comms = [{id: commissaire}];
+    var dos = [{id: dutyofficer}];
+    var dhs = [];
+    for (var i=0; i<dutyhelpers.length; i++) {
+        dhs.push({id: dutyhelpers[i]});
     }
-    console.log(jj);
+
+    var officials = {
+        'Commissaire': comms,
+        'Duty Officer': dos,
+        'Duty Helper': dhs
+    }
+
+    console.log(officials);
+    console.log(url);
     // post request to add the person to the race
-    $.post('/api/racestaff/', jj);
-
-    jj['role'] = "Commissaire";
-    jj['rider'] = prefix + '/api/riders/' + commissaire + '/',
-    $.post('/api/racestaff/', jj)
-    console.log(jj);
-
-    $.each(dutyhelpers, function(idx, dh) {
-        jj['role'] = "Duty Helper";
-        jj['rider'] = prefix + '/api/riders/' + dh + '/',
-        $.post('/api/racestaff/', jj);
-        console.log(jj);
+    $.ajax({
+        type: "POST",
+        url: url,
+        data: JSON.stringify(officials),
+        contentType: 'application/json',
+        processData: false,
+        success: function(msg) {
+                    console.log(msg);
+                    // update the page...
+                    raceinfo = $('#racetable').DataTable().row('#'+raceid).data();
+                    console.log(raceinfo);
+                    raceinfo.officials = msg;
+                    console.log(raceinfo);
+                    $('#racetable').DataTable().row('#'+raceid).data( raceinfo );
+                    $('#addPeopleModal').modal('hide');
+                 }
     });
 
-    $('#addPeopleModal').modal('hide');
 
 }
 
