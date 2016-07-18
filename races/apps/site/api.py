@@ -22,7 +22,6 @@ def api_root(request, format=None):
         'riders': reverse('rider-list', request=request, format=format),
         'pointscores': reverse('pointscore-list', request=request, format=format),
         'raceresults': reverse('raceresult-list', request=request, format=format),
-        'racestaff': reverse('racestaff-list', request=request, format=format),
     })
 
 
