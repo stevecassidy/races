@@ -75,7 +75,6 @@ IMG_MAP = {
      u'Emergency Contact Number': ('rider', 'emergencyphone'),
      u'Emergency Contact Person': ('rider', 'emergencyname'),
      u'First Name': ('user', 'first_name'),
-     u'Gender': ('rider', 'gender'),
      u'Last Name': ('user', 'last_name'),
      u'Member Number': ('rider', 'licenceno'),
      u'Postcode': ('rider', 'postcode'),
