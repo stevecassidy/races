@@ -379,6 +379,6 @@ class Command(BaseCommand):
 
         racedict = import_races(csvdir, waratahs, usermap)
 
-        #import_roles(csvdir, waratahs)
+        import_roles(csvdir, waratahs)
 
-        #import_points(csvdir, waratahs, usermap, racedict)
+        import_points(csvdir, waratahs, usermap, racedict)
