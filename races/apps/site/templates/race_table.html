@@ -2,10 +2,6 @@
           <thead>
            <tr>
                <th class='racetime'>Time</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
-               {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-               <th>Status</th>
-               <th>&nbsp;</th>
-               {% endif %}
            </tr>
           </thead>
         {% for date in date_list %}
@@ -14,18 +10,8 @@
                   <tr>
                       <td class='racetime'>{{race.starttime}}</td>
                       <td class='racetitle'>{{race.club.slug}}:
-                          <a href="{% url 'race' race.club.slug race.pk %}{% if iframe %}?iframe{% endif %}">{{ race.title }}</a></td>
+                          <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a></td>
                       <td class='racelocation'>{{ race.location }}</td>
-                      {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-                      <td class='racestatus'>{{ race.get_status_display }}</td>
-                      <td>
-                          <a href="{% url 'race_delete' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-
-
-
-                          <a href="{% url 'race_update' race.id %}"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                      </td>
-                      {% endif %}
                   </tr>
            {% endfor %}
          {% endfor %}

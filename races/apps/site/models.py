@@ -322,57 +322,47 @@ class Race(models.Model):
 
         pass
 
+
     def load_excel_results(self, fd):
         """Load race results from a file handle pointing to an Excel file"""
 
         from races.apps.site.usermodel import RaceResult, Rider
-        from openpyxl import load_workbook
+        import pyexcel
 
         unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
 
         # delete any existing results for this race
         RaceResult.objects.filter(race=self).delete()
 
-        wb = load_workbook(fd, read_only=True)
-        ws = wb.active
+        content = fd.read()
 
-        headers = [c.value for c in ws.rows.next()]
-        licence_idx = headers.index('LicenceNo')
-        firstname_idx = headers.index('FirstName')
-        lastname_idx = headers.index('LastName')
-        club_idx = headers.index('Club')
-        grade_idx = headers.index('Grade')
-        points_idx = headers.index('Points')
-        shirtno_idx = headers.index('ShirtNo')
+        rows = pyexcel.get_records(file_content=content, file_type='xls')
 
-        for row in ws.rows:
+        for row in rows:
 
-            # skip the header row
-            if row[licence_idx].value == 'LicenceNo':
-                continue
-
-            if row[licence_idx].value == '0':
-                continue
+            if row['LicenceNo'] == 0:
+                # create a temporary licence number so that we can record the result
+                row['LicenceNo'] = 'temp'+str(hash(str(row)))[1:10]
 
             try:
-                rider = Rider.objects.get(licenceno=row[licence_idx])
+                rider = Rider.objects.get(licenceno=row['LicenceNo'])
             except:
-                user, created = User.objects.get_or_create(first_name=row[firstname_idx].value, last_name=row[lastname_idx].value, username=row[firstname_idx].value+row[lastname_idx].value)
+                user, created = User.objects.get_or_create(first_name=row['FirstName'], last_name=row['LastName'], username=row['FirstName']+row['LastName'])
                 user.save()
-                clubs = Club.objects.filter(slug=row[club_idx].value)
+                clubs = Club.objects.filter(slug=row['Club'])
                 if len(clubs) == 1:
                     club = clubs[0]
                 else:
                     club = unknown_club
-                rider = Rider(licenceno=row[licence_idx].value, club=club, user=user)
+                rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
                 rider.save()
 
             # work out place from points - actually need to account for small grades (E, F)
-            points = int(row[points_idx].value)
+            points = int(row['Points'])
             if points == 2:
-                result = RaceResult(rider=rider, race=self,  grade=row[grade_idx].value, number=row[shirtno_idx].value)
+                result = RaceResult(rider=rider, race=self,  grade=row['Grade'], number=row['ShirtNo'])
             elif points > 0:
                 place = 8-points
-                result = RaceResult(rider=rider, race=self, place=place, grade=row[grade_idx].value, number=row[shirtno_idx].value)
+                result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
 
             result.save()

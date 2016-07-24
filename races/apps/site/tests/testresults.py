@@ -123,7 +123,7 @@ class UserModelTests(TestCase):
 
         race = Race.objects.get(pk=1)
 
-        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xlsx'), 'rb') as fd:
+        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
             race.load_excel_results(fd)
 
         self.assertEqual(race.raceresult_set.all().count(), 116)

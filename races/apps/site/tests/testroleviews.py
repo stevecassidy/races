@@ -29,6 +29,23 @@ class RoleViewTests(TestCase):
         rider2.save()
 
 
+    def test_club_official_race_list(self):
+        """Test view of a race list that includes edit links
+        for club officials"""
+
+        # get a race page, should not see any admin controls
+        response = self.client.get(reverse('races'))
+        self.assertNotContains(response, "Edit")
+
+        # now login as the MOV admin
+        self.client.force_login(user=self.movofficial)
+
+        # check we have the edit control on the page for a MOV race
+        response = self.client.get(reverse('races'))
+        self.assertEqual(200, response.status_code)
+        self.assertContains(response, "Edit")
+
+
 
     def test_club_official_race(self):
         """Test view of a race as a club official"""

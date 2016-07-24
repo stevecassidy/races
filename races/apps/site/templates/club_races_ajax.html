@@ -76,7 +76,11 @@
                                return val.substring(0,val.length-5);
                         }
                     },
-                    { data: "title" },
+                    { data: "title",
+                      render: function(data, type, row) {
+                          var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
+                          return val;
+                      }},
                     { data: "location.name" },
                     { data: "officials",
                       render: function(data, type, row) {

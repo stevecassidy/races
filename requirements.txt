@@ -17,3 +17,6 @@ django-yearlessdate
 django-webtest
 # for deployment with postgres
 # psycopg2
+openpyxl
+pyexcel
+pyexcel-xls
