@@ -130,14 +130,15 @@
           <h4 class="modal-title" id="downloadMembersLabel">Download Rider Spreadsheet</h4>
         </div>
         <div class="modal-body">
-
+            <p>Download an Excel spreasheet containing all rider details
+                for use in race-day registrations.</p>
             <form action="{% url 'club_riders_excel' slug=club.slug %}" method='GET'>
                 <label for='eventno'>Event Number: </label>
                 <input type='text' name='eventno'> (optional, for old WMCC website)
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  <input type="submit" name="submitdownloadmembers" class="btn btn-primary" value="Download Race CSV">
+                  <input type="submit" name="submitdownloadmembers" class="btn btn-primary" value="Download">
                 </div>
             </form>
         </div>

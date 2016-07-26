@@ -198,6 +198,9 @@ class APITests(TestCase):
 
     def test_create_race(self):
 
+        ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        ogeofficial.save()
+
         race = Race.objects.get(id=1)
 
         data = {'id': race.id,
@@ -215,9 +218,15 @@ class APITests(TestCase):
 
         url = '/api/races/%d' % race.id
 
+        # without login, we should get a redirect response
         response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 301, "Expect redirect without login for create race. Response text:\n" + str(response))
 
+        # login as a club official
+        self.client.force_login(user=ogeofficial)
 
+        # now it should work
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, 201, "Wrong status code. Response text:\n" + str(response))
 
         raceinfo = json.loads(response.content)

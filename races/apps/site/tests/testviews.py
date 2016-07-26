@@ -140,21 +140,22 @@ class ViewTests(TestCase):
 
         self.assertEqual(response['Content-Type'], 'application/vnd-ms.excel')
 
-        from openpyxl import load_workbook
+        import pyexcel
         from StringIO import StringIO
 
+        # should be able to read the response as an xls sheet
         buf = StringIO(response.content)
-        wb = load_workbook(buf, read_only=True)
-        ws = wb.active
+        ws = pyexcel.get_sheet(file_content=buf, file_type="xls")
+        ws.name_columns_by_row(0)
 
         # the spreadsheet contains all rider licence numbers
-        riderlicences = [row[8].value for row in ws.rows]
+        riderlicences = ws.column["LicenceNo"]
         for rider in Rider.objects.all():
             self.assertIn(rider.licenceno, riderlicences)
         # event number is present in every row (except the header)
-        for row in ws.rows:
-            if row[12].value != 'EventNo':
-                self.assertEqual('666', row[12].value)
+        for row in ws.rows():
+            if row[12] != 'EventNo':
+                self.assertEqual('666', row[12])
 
         buf.close()
 
@@ -169,7 +170,7 @@ class ViewTests(TestCase):
 
         url = reverse('race_results_excel',  kwargs={'slug': self.oge.slug, 'pk': race.id})
 
-        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xlsx'), 'rb') as fd:
+        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
             response = self.client.post(url, {'excelfile': fd})
 
         self.assertRedirects(response, reverse('race', kwargs={'slug': self.oge.slug, 'pk': race.id}))

@@ -323,7 +323,7 @@ class Race(models.Model):
         pass
 
 
-    def load_excel_results(self, fd):
+    def load_excel_results(self, fd, extension):
         """Load race results from a file handle pointing to an Excel file"""
 
         from races.apps.site.usermodel import RaceResult, Rider
@@ -336,7 +336,7 @@ class Race(models.Model):
 
         content = fd.read()
 
-        rows = pyexcel.get_records(file_content=content, file_type='xls')
+        rows = pyexcel.get_records(file_content=content, file_type=extension)
 
         for row in rows:
 

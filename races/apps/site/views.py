@@ -22,6 +22,9 @@ import calendar
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
+import os
+from StringIO import StringIO
+import pyexcel
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
@@ -169,11 +172,8 @@ class ClubRidersExcelView(View):
 
         club = get_object_or_404(Club, slug=kwargs['slug'])
 
-        from openpyxl import Workbook
-        from openpyxl.writer.excel import save_virtual_workbook
-
-        wb = Workbook(write_only=True)
-        ws = wb.create_sheet()
+        # worksheet is a list of row tuples
+        ws = []
 
         if 'eventno' in request.GET:
             eventno = request.GET['eventno']
@@ -225,10 +225,16 @@ class ClubRidersExcelView(View):
                   )
             ws.append(row)
 
-        response = HttpResponse(save_virtual_workbook(wb), content_type='application/vnd-ms.excel')
-        response['Content-Disposition'] = 'attachment; filename="riders-{0}.xlsx"'.format(eventno)
+        sheet = pyexcel.Sheet(ws)
+        io = StringIO()
+        sheet.save_to_memory("xls", io)
+
+        response = HttpResponse(io.getvalue(), content_type='application/vnd-ms.excel')
+        response['Content-Disposition'] = 'attachment; filename="riders-{0}.xls"'.format(eventno)
 
         return response
+
+
 
 class RiderListView(ListView):
     model = Rider
@@ -338,7 +344,7 @@ class RaceOfficialUpdateView(View):
                     newracestaff = RaceStaff(rider=rider, role=clubrole, race=race)
                     newracestaff.save()
                     nofficials[role].append({'id': rider.id, 'name': str(rider)})
-                    
+
             return JsonResponse(nofficials)
         except ValueError as e:
             print e
@@ -370,7 +376,12 @@ class RaceUploadExcelView(FormView):
         # need to work out what race we're in - from the URL pk
         race = get_object_or_404(Race, pk=self.kwargs['pk'])
 
-        race.load_excel_results(self.request.FILES['excelfile'])
+        name, filetype = os.path.splitext(self.request.FILES['excelfile'].name)
+
+        if filetype not in ['.xls', 'xlsx']:
+            return HttpResponseBadRequest('Unknown file type, please use .xls or .xlsx')
+
+        race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 

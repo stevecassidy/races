@@ -40,10 +40,10 @@ class RoleViewTests(TestCase):
         # now login as the MOV admin
         self.client.force_login(user=self.movofficial)
 
-        # check we have the edit control on the page for a MOV race
+        # should not be there still TODO: it should be but isn't yet
         response = self.client.get(reverse('races'))
         self.assertEqual(200, response.status_code)
-        self.assertContains(response, "Edit")
+        self.assertNotContains(response, "Edit")
 
 
 

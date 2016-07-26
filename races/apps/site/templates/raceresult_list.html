@@ -8,7 +8,7 @@
 <h2>{{race.club.slug}} - {{race.title}} ({{race.date}},  {{race.location}})</h2>
 
 
-{% if request.user.rider %}
+{% if 0 %} request.user.rider
 
     {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
         <form method='POST'>
