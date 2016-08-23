@@ -5,7 +5,9 @@
 
     <ul>
     {% for club in clubs %}
-       <li><a href="{% url 'club' club.slug %}">{{club.name}}</a></li>  
+        {% if club.manage_races or club.manage_members or club.manage_results %}
+       <li><a href="{% url 'club' club.slug %}">{{club.name}}</a></li>
+        {% endif %}
     {% endfor %}
     </ul>
 

@@ -38,6 +38,10 @@ class Club(models.Model):
     contact = models.EmailField(blank=True)
     icalurl = models.URLField(max_length=400, blank=True, default='')
     icalpatterns = models.CharField(max_length=100, blank=True, default='')
+    # flags for club capabilities
+    manage_races = models.BooleanField(default=False)
+    manage_members = models.BooleanField(default=False)
+    manage_results = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.slug

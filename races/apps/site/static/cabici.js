@@ -1,3 +1,86 @@
+function formatnames(data, title) {
+    var val = "";
+    if (typeof(data) != 'undefined') {
+        val += "<dt>" + title + "</dt><dd>"
+        for(var i=0; i<data.length; i++) {
+            val += data[i].name;
+            if (i<data.length-1) {
+                val += ", ";
+            }
+        }
+        val += "</dd>";
+    } else {
+        val += "<dt>" + title + "</dt><dd>Unknown</dd>";
+    }
+    return(val);
+};
+
+function deletemodalbutton(race) {
+    var val = "<div><a href='#' title='Delete Race' data-toggle='modal' data-target='#raceDeleteModal' data-raceurl='" + race.url + "' data-racename='" + race.title +"'><span aria-hidden='true' class='glyphicon glyphicon-trash'></span></a></div>";
+    return(val);
+}
+
+function addpeoplemodalbutton(race) {
+    var val = "<div><a href='#' title='Add Officials' data-toggle='modal' data-target='#addPeopleModal' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "'><span aria-hidden='true' class='glyphicon glyphicon-user'></span></a></div>";
+    return(val);
+}
+
+function editmodalbutton(race) {
+    var val = "<div><a href='#' data-toggle='modal' data-target='#raceEditModal' title='Edit Race' data-clubid='" + race.club.id + "' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
+    return(val);
+}
+
+
+function populate_race_table(clubid) {
+
+    $('#racetable').DataTable( {
+        processing: true,
+        destroy: true,
+        ajax: {
+                    url: "/api/races/?club="+ clubid +"&scheduled=true",
+                    dataSrc: ''
+                },
+        paging: false,
+        ordering: false,
+        rowId: 'id',
+        columns: [
+               {
+                   data: "date",
+                   render: function(data, type, row) {
+                       var val = new Date(data).toDateString();
+                       return val.substring(0,val.length-5);
+                }
+            },
+            { data: "title",
+              render: function(data, type, row) {
+                  var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
+                  return val;
+              }},
+            { data: "location.name" },
+            { data: "officials",
+              render: function(data, type, row) {
+                  var val = "<dl class='dl-horizontal'>";
+                  val += formatnames(data.Commissaire, "Commissaire");
+                  val += formatnames(data['Duty Officer'], "Duty Officer");
+                  val += formatnames(data['Duty Helper'], "Duty Helper");
+                  val += "</dl>";
+                  return val;
+              }
+            },
+            { data: "id",
+              render: function(data, type, row) {
+                  var val = "";
+                  val += editmodalbutton(row);
+                  val += deletemodalbutton(row);
+                  val += addpeoplemodalbutton(row);
+                  return(val);
+              }
+            }
+        ]
+    } );
+};
+
+
 function race_create_form_init(slug) {
 
     // monthly disabled by default
@@ -20,11 +103,11 @@ function race_create_form_init(slug) {
         }
     });
 
-    $("#submitraceform").click(function(){
+    $("#submitracecreateform").click(function(){
         $.ajax({
             type: "POST",
             url: slug,
-            data: $('#raceform').serialize(),
+            data: $('#racecreateform').serialize(),
             success: function(msg){
                 if (msg['success']) {
                    $("#raceCreateModal").modal('hide');
@@ -41,6 +124,57 @@ function race_create_form_init(slug) {
     });
 };
 
+function edit_race_modal_init() {
+    $('#raceEditModal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var raceurl = button.data('raceurl');
+        var racename = button.data('racename');
+        var raceid = button.data('raceid');
+        var clubid = button.data('clubid');
+        var modal = $(this);
+
+        modal.find('.modal-title').text('Edit Race' );
+
+        $.ajax({
+            url: raceurl
+        }).done(function(data) {
+            form = modal.find('form')[0];
+
+            // fill in form values from this race
+            $('input[id=id_date]').val(data.date);
+            $('input[id=id_starttime]').val(data.starttime);
+            $('input[id=id_signontime]').val(data.signontime);
+            $('input[id=id_title]').val(data.title);
+            $('input[id=id_website]').val(data.website);
+            $('select[id=id_location]').val(data.location.id);
+            $('select[id=id_status]').val(data.status);
+            $('input[id=id_website]').val(data.website);
+            $('textarea[id=id_description]').val(data.description);
+
+        });
+
+        $("#submitraceeditform").click(function(){
+            $.ajax({
+                type: "POST",
+                url: "/races/" + raceid + "/update/",
+                data: $('#raceeditform').serialize(),
+                success: function(msg){
+//                    if (msg['success']) {
+                       $("#raceEditModal").modal('hide');
+                       populate_race_table(clubid);
+//                   } else {
+//                        for (field in msg) {
+//                            $("#id_"+field).parent().addClass("has-error");
+//                            $("#id_"+field).parent().children(".help-block").text(msg[field]);
+//                        }
+//                    }
+                }
+            });
+        });
+    });
+};
+
+
 function add_people_init() {
     $('#addPeopleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
@@ -49,12 +183,10 @@ function add_people_init() {
       var raceid = button.data('raceid');
       var modal = $(this);
 
-      console.log(raceurl);
       // get the race details via ajax
       $.ajax({
           url: raceurl
       }).done(function(data) {
-          console.log(data);
           // set the default values in the form
           modal.find('.modal-title').text('Add People for Race on ' + data.date );
           form = modal.find('form')[0];

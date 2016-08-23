@@ -2,7 +2,7 @@
 {
     "fields": {
         "name": "MOVISTAR TEAM",
-        "website": "",
+        "website": "http://movistart.team/",
         "icalurl": "",
         "contact": "",
         "icalpatterns": "",
@@ -134,7 +134,7 @@
 {
     "fields": {
         "name": "ORICA GREENEDGE",
-        "website": "",
+        "website": "http://oge.team",
         "icalurl": "",
         "contact": "",
         "icalpatterns": "",

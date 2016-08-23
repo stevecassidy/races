@@ -134,7 +134,7 @@ class IMGWebTests(WebTest):
 
     fixtures = ['clubs', 'users', 'riders']
 
-    def test_uplaodfile(self):
+    def test_uploadfile(self):
         """The club dashboard page has a button
         to upload the IMG spreadsheet, doing so
         adds new riders to the database

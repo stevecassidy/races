@@ -2,13 +2,14 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
+from django_webtest import WebTest
 
 from races.apps.site.models import Club, RaceCourse, Race
 from races.apps.site.usermodel import Rider
 from datetime import datetime, timedelta, date
 
 
-class RoleViewTests(TestCase):
+class RoleViewTests(WebTest):
     """Tests of user roles and the things they are allowed to do"""
 
     fixtures = ['clubs', 'courses', 'users', 'races']
@@ -29,22 +30,105 @@ class RoleViewTests(TestCase):
         rider2.save()
 
 
-    def test_club_official_race_list(self):
-        """Test view of a race list that includes edit links
-        for club officials"""
+    def test_club_official_dashboard_blocked(self):
+        """Test that the club dashboard page view can't be
+        seen by someone who is not a club official"""
 
-        # get a race page, should not see any admin controls
-        response = self.client.get(reverse('races'))
-        self.assertNotContains(response, "Edit")
+        url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
+        response = self.app.get(url)
 
-        # now login as the MOV admin
-        self.client.force_login(user=self.movofficial)
+        # not logged in should be redirected to login page
+        self.assertRedirects(response, '/login/?next='+url)
 
-        # should not be there still TODO: it should be but isn't yet
-        response = self.client.get(reverse('races'))
-        self.assertEqual(200, response.status_code)
-        self.assertNotContains(response, "Edit")
+        # logged in as official in another club is also rejected
+        response = self.app.get(url, user=self.movofficial)
 
+        self.assertRedirects(response, '/login/?next='+url)
+
+
+
+    def test_club_official_dashboard(self):
+        """Test the club dashboard page view"""
+
+        url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
+        response = self.app.get(url)
+
+        # not logged in should be redirected to login page
+        self.assertRedirects(response, '/login/?next='+url)
+
+        # logged in version has race form
+        response = self.app.get(url, user=self.ogeofficial)
+
+        self.assertContains(response, self.oge.name)
+        self.assertContains(response, 'raceform')
+
+
+        # links to club website, race schedule and add race acction
+        self.assertEqual(1, len(response.html.find_all('a', href=self.oge.website)))
+        self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#raceCreateModal"})))
+        self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_races', kwargs={'slug': self.oge.slug}))))
+
+        # but we don't see membership actions
+        self.assertEqual(0, len(response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})))
+        self.assertEqual(0, len(response.html.find_all('a', attrs={'data-target': "#downloadMembersModal"})))
+        # or the member statistics
+        self.assertNotContains(response, 'Current Members')
+        self.assertNotContains(response, 'Race Members')
+
+        # or race result actions
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
+
+
+    def test_club_official_dashboard_membership(self):
+        """Test the club dashboard page view for a club that
+        has manage_members set"""
+
+        url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
+
+        # add membership management
+        self.oge.manage_members = True
+        self.oge.save()
+
+        response = self.app.get(url, user=self.ogeofficial)
+
+        # and we now see membership actions
+        self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})))
+        self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#downloadMembersModal"})))
+        # or the member statistics
+        self.assertContains(response, 'Current Members')
+        self.assertContains(response, 'Race Members')
+
+        # but we see no race result actions
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
+        self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
+
+
+    def test_club_official_dashboard_results(self):
+        """Test the club dashboard page view for a club that
+        has manage_results set"""
+
+        url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
+
+        # add membership management
+        self.oge.manage_results = True
+        self.oge.save()
+
+        response = self.app.get(url, user=self.ogeofficial)
+
+        # and we see race result actions
+        self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
+        self.assertEqual(1, len(response.html.find_all('a', href=reverse('riders'))))
+        self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
+
+        # but we don't see membership actions
+        self.assertEqual(0, len(response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})))
+        self.assertEqual(0, len(response.html.find_all('a', attrs={'data-target': "#downloadMembersModal"})))
+        # or the member statistics
+        self.assertNotContains(response, 'Current Members')
+        self.assertNotContains(response, 'Race Members')
 
 
     def test_club_official_race(self):

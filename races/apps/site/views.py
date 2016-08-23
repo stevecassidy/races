@@ -11,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
+from django.contrib.auth.mixins import AccessMixin
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
@@ -77,11 +78,25 @@ class ClubDetailView(DetailView):
 
         return context
 
-class ClubOfficialRequiredMixin(object):
+class ClubOfficialRequiredMixin(AccessMixin):
 
     @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(ClubOfficialRequiredMixin, self).dispatch(*args, **kwargs)
+    def dispatch(self, request, *args, **kwargs):
+
+        # user should be an official of the club referenced in the view
+        if not request.user.rider.official:
+            return self.handle_no_permission()
+
+        # if there is a club slug in the kwargs then verify that
+        # the official is a member of that club
+        if 'slug' in kwargs:
+            clublist = Club.objects.filter(slug=kwargs['slug'])
+            if len(clublist) == 1:
+                club = clublist[0]
+                if not request.user.rider.club == club:
+                    return self.handle_no_permission()
+
+        return super(ClubOfficialRequiredMixin, self).dispatch(request, *args, **kwargs)
 
 class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
 
@@ -504,7 +519,10 @@ class ClubRacesView(DetailView):
                         rule = rrule(WEEKLY, count=number, dtstart=startdate)
                     elif repeat == u'monthly':
                         rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
-
+                    else:
+                        # invalid option, raise an error
+                        return HttpResponseBadRequest("Invalid repeat option")
+                        
                     race = form.save(commit=False)
 
                     # now make N more races

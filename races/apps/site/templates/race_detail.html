@@ -31,14 +31,8 @@ google.maps.event.addDomListener(window, 'load', initialize);
 {% endblock %}
 
 {% block content %}
+
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
-<div id='buttons' class='btn-group' role='group'>
-    <button type='button' class='btn btn-default'><a href="{% url 'race_update' race.id %}">Edit Race Detail</a></button>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-        Upload Results
-    </button>
-</div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
@@ -63,102 +57,134 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 {% endif %}
 
-<h2>{{race.title}}</h2>
+<div class='container'>
 
-<table class='table'>
-  <tr><th>Date</th><td>{{race.date}}</td></tr>
-  <tr><th>Sign On Time</th><td>{{race.signontime}}</td></tr>
-  <tr><th>Start Time</th><td>{{race.starttime}}</td></tr>
-  <tr><th>Location</th><td>{{race.location}}</td></tr>
-  <tr><th>Title</th><td>{{race.title}}</td></tr>
-  <tr><th>Club</th><td><a href='{{race.club.website}}'>{{race.club.name}}</a> [<a href="{% url 'club' race.club.slug %}">View all {{race.club}} Races</a>] </td></tr>
-  {%if race.url %}
-  <tr><th>More Detail</th><td>See race on <a href="{{race.website}}">{{race.club.name}} website</a></td></tr>
-  {% else %}
-  <tr><th>More Detail</th><td>Refer to <a href="{{race.club.website}}">{{race.club.name}} website</a> (no direct race link)</td></tr>
-  {% endif %}
+    <ul class='breadcrumb'>
+        <li><a href="{% url 'clubs' %}">Clubs</a></li>
+        <li><a href="{% url 'club' race.club.slug %}">{{race.club}}</a></li>
+        <li>{{race.title}}</li>
+    </ul>
 
-</table>
-{% if race.description %}
-<pre id='description'>{{race.description}}</pre>
-{% endif %}
+    <div class='row'>
+        <div class='col-md-8'>
+            <h2>{{race.title}} <small>{{race.club}}</small></h2>
+        </div>
+        <div class='col-md-4'>
+        {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
 
-<div class="fb-like" data-href="http://cabici.net/race/{{race.id}}"
-     data-layout="button" data-send="true" data-width="450" data-show-faces="true"></div>
+            <div id='buttons' class='btn-group' role='group'>
+                <button type='button' class='btn btn-default'><a href="{% url 'race_update' race.id %}">Edit Race Detail</a></button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Upload Results
+                </button>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class='row'>
+
+        <div class='col-md-6'>
 
 
+            <table class='table'>
+              <tr><th>Date</th><td>{{race.date}}</td></tr>
+              <tr><th>Sign On Time</th><td>{{race.signontime}}</td></tr>
+              <tr><th>Start Time</th><td>{{race.starttime}}</td></tr>
+              <tr><th>Location</th><td>{{race.location}}</td></tr>
+              {%if race.url %}
+              <tr><th>More Detail</th><td>See race on <a href="{{race.website}}">{{race.club.name}} website</a></td></tr>
+              {% endif %}
+              {% for official in race.officials.all %}
+              <tr><th>{{official.role}}</th><td>{{official.rider}}</td></tr>
+              {% endfor %}
+
+            </table>
+            {% if race.description %}
+            <pre id='description'>{{race.description}}</pre>
+            {% endif %}
+
+        </div>
+        <div class='col-md-6'>
+            <div id="map-canvas"></div>
+        </div>
+    </div>
 
 {% if race.raceresult_set.all %}
+    <div class='row'>
 
-{% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
-<p class="alert alert-info" role="alert"><strong>NOTE:</strong> To modify results, update the result spreadsheet and re-upload.
-    All previous results will be
-    removed and replaced with those from the spreadsheet.</p>
-{% endif %}
+        <div class='col-md-12'>
+            <h2>Results</h2>
 
-
-{% regroup race.raceresult_set.all by grade as grade_list %}
-
-<h2>Results</h2>
-
-<ul class="nav nav-tabs">
-{% for grade in grade_list %}
-  <li role="presentation" {% if forloop.first %}class="active"{% endif %} >
-   <a aria-controls="home" role="tab" data-toggle="tab" href="#grade{{grade.grouper}}" {% if forloop.first %}aria-expanded="true"{% endif %} >
-       {{grade.grouper}} Grade ({{grade.list|length}} riders)
-   </a>
-  </li>
-{% endfor %}
-</ul>
-
-
-<div class='tab-content'>
-{% for grade in grade_list %}
-<div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}" id="grade{{grade.grouper}}">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <table class='table'>
-                <thead>
-                    <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
-                    {% for p in grade.list.0.pointscores %}
-                        <th>{{p.pointscore.name}}</th>
-                    {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for result in grade.list %}
-                        {% if result.place %}
-                        <tr>
-                            <th>{{result.number}}</th>
-                            <td>{{result.place}}</td>
-                            <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
-                            <td>{{result.rider.club}}</td>
-                            {% for p in result.pointscores %}
-                            <td>{{p.points}}</td>
-                            {% endfor %}
-                        </tr>
-                        {% endif %}
-                    {% endfor %}
-                    {% if 0 %}
-                    {% for result in grade.list %}
-                        {% if not result.place %}
-                    <tr><th>{{result.number}}</th><td>-</td><td><a href="{% url 'rider' pk=rider.user.pk %}">{{result.rider}}</a></td><td>{{result.rider.club}}</tr>
-                        {% endif %}
-                    {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+            {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
+            <p class="alert alert-info" role="alert"><strong>NOTE:</strong>
+                To modify results, update the result spreadsheet and re-upload.
+                All previous results will be
+                removed and replaced with those from the spreadsheet.</p>
+            {% endif %}
         </div>
+    </div>
+
+    <div class='row'>
+        {% regroup race.raceresult_set.all by grade as grade_list %}
+        <ul class="nav nav-tabs">
+        {% for grade in grade_list %}
+          <li role="presentation" {% if forloop.first %}class="active"{% endif %} >
+           <a aria-controls="home" role="tab" data-toggle="tab" href="#grade{{grade.grouper}}" {% if forloop.first %}aria-expanded="true"{% endif %} >
+               {{grade.grouper}} Grade ({{grade.list|length}} riders)
+           </a>
+          </li>
+        {% endfor %}
+        </ul>
+
+
+        <div class='tab-content'>
+            {% for grade in grade_list %}
+            <div role="tabpanel" class="tab-pane {% if forloop.first %}active{% endif %}" id="grade{{grade.grouper}}">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class='table'>
+                            <thead>
+                                <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
+                                {% for p in grade.list.0.pointscores %}
+                                    <th>{{p.pointscore.name}}</th>
+                                {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in grade.list %}
+                                    {% if result.place %}
+                                    <tr>
+                                        <th>{{result.number}}</th>
+                                        <td>{{result.place}}</td>
+                                        <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
+                                        <td>{{result.rider.club}}</td>
+                                        {% for p in result.pointscores %}
+                                        <td>{{p.points}}</td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if 0 %}
+                                {% for result in grade.list %}
+                                    {% if not result.place %}
+                                <tr><th>{{result.number}}</th><td>-</td><td><a href="{% url 'rider' pk=rider.user.pk %}">{{result.rider}}</a></td><td>{{result.rider.club}}</tr>
+                                    {% endif %}
+                                {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>
 
-{% endfor %}
-
-{% else %}
-
-<div id="map-canvas"></div>
-
 {% endif %}
+</div>
 
 
 <p>Report a problem with this race listing: email <a href="mailto:steve@cabici.net?subject=Problem with race {{race.id}} on cabici.net&body=Reporting a problem with http://cabici.net{% url 'race' race.club.slug race.pk %}">steve@cabici.net</a></p>

@@ -18,94 +18,17 @@
 <script src="{{ STATIC_URL }}bootstrap-select/js/bootstrap-select.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 <script>
-
-    function formatnames(data, title) {
-        var val = "";
-        if (typeof(data) != 'undefined') {
-            val += "<dt>" + title + "</dt><dd>"
-            for(var i=0; i<data.length; i++) {
-                val += data[i].name;
-                if (i<data.length-1) {
-                    val += ", ";
-                }
-            }
-            val += "</dd>";
-        } else {
-            val += "<dt>" + title + "</dt><dd>Unknown</dd>";
-        }
-        return(val);
-    };
-
-    function deletemodalbutton(race) {
-        var val = "<div><a href='#' title='Delete Race' data-toggle='modal' data-target='#raceDeleteModal' data-raceurl='" + race.url + "' data-racename='" + race.title +"'><span aria-hidden='true' class='glyphicon glyphicon-trash'></span></a></div>";
-        return(val);
+$(document).ready(
+    function() {
+        race_create_form_init('{% url 'club_races' club.slug %}');
+        add_people_init();
+        delete_race_init();
+        edit_race_modal_init();
+        {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+        {% endif %}
+        populate_race_table('{{club.id}}');
     }
-
-    function addpeoplemodalbutton(race) {
-        var val = "<div><a href='#' title='Add Officials' data-toggle='modal' data-target='#addPeopleModal' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "'><span aria-hidden='true' class='glyphicon glyphicon-user'></span></a></div>";
-        return(val);
-    }
-
-    function editmodalbutton(race) {
-        //var val = "<div><a href='#' data-toggle='modal' data-target='#raceCreateModal' title='Edit Race'><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
-        var val = "<div><a href='/races/"+race.id + "/update/' title='Edit Race'><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
-
-        return(val);
-    }
-
-    $(document).ready(
-        function() {
-            race_create_form_init('{% url 'club_races' club.slug %}');
-            add_people_init();
-            delete_race_init();
-
-            $('#racetable').DataTable( {
-                processing: true,
-                ajax: {
-                            url: "/api/races/?club={{club.id}}&scheduled=true",
-                            dataSrc: ''
-                        },
-                paging: false,
-                ordering: false,
-                rowId: 'id',
-                columns: [
-                       {
-                           data: "date",
-                           render: function(data, type, row) {
-                               var val = new Date(data).toDateString();
-                               return val.substring(0,val.length-5);
-                        }
-                    },
-                    { data: "title",
-                      render: function(data, type, row) {
-                          var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
-                          return val;
-                      }},
-                    { data: "location.name" },
-                    { data: "officials",
-                      render: function(data, type, row) {
-                          var val = "<dl class='dl-horizontal'>";
-                          val += formatnames(data.Commissaire, "Commissaire");
-                          val += formatnames(data['Duty Officer'], "Duty Officer");
-                          val += formatnames(data['Duty Helper'], "Duty Helper");
-                          val += "</dl>";
-                          return val;
-                      }
-                    }
-                    {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-                    ,{ data: "id",
-                      render: function(data, type, row) {
-                          var val = "";
-                          val += editmodalbutton(row);
-                          val += deletemodalbutton(row);
-                          val += addpeoplemodalbutton(row);
-                          return(val);
-                      }
-                    }
-                    {% endif %}
-                ]
-            } );
-    });
+);
 </script>
 {% endblock %}
 
@@ -138,7 +61,8 @@
 
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
 
-    {% include "race_create_modal.html" %}
+    {% include "race_create_modal.html" with mode="create" %}
+    {% include "race_create_modal.html" with mode="edit" %}
 
     {% include "race_confirm_delete.html" %}
 

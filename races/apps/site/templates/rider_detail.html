@@ -23,10 +23,8 @@
 {% if request.user.rider %}
 
     {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
-    <h4>Personal Details (<a href="{% url 'rider_update' user.rider.id %}">Update</a>)</h4>
-    <div id='buttons'>
-        <div id='editbutton' class='btn btn-default'></div>
-    </div>
+    <h4>Personal Details <a type='button' class='btn btn-default' href="{% url 'rider_update' user.rider.id %}">Update</a></h4>
+
     <table class=table>
         <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
         <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
