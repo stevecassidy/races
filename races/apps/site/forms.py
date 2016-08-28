@@ -62,3 +62,34 @@ class RiderSearchForm(forms.Form):
     """Form to search riders by various criteria"""
 
     name = forms.CharField(label="Rider Name")
+
+class RiderUpdateForm(forms.ModelForm):
+    """Form to edit a rider/user by user"""
+
+    class Meta:
+        model = Rider
+        fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
+                    'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship']
+
+    first_name = forms.CharField(label="First Name")
+    last_name = forms.CharField(label="Family Name")
+    email = forms.EmailField(label="Email", required=False)
+
+
+class RiderUpdateFormOfficial(forms.ModelForm):
+    """Form to edit a rider/user by a club official - more fields"""
+
+    class Meta:
+        model = Rider
+        fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
+                    'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship',
+                    'dutyofficer', 'dutyhelper', 'licenceno',
+                    #'grade',
+                    'commissaire', 'commissaire_valid', 'official']
+
+    first_name = forms.CharField(label="First Name")
+    last_name = forms.CharField(label="Family Name")
+    email = forms.EmailField(label="Email", required=False)
+    dutyofficer = forms.BooleanField(label="Duty Officer", required=False)
+    dutyhelper = forms.BooleanField(label="Duty Helper", required=False)
+    #grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)

@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, date
 class RoleViewTests(WebTest):
     """Tests of user roles and the things they are allowed to do"""
 
-    fixtures = ['clubs', 'courses', 'users', 'races']
+    fixtures = ['clubs', 'courses', 'users', 'riders', 'races']
 
     def setUp(self):
 
@@ -60,8 +60,6 @@ class RoleViewTests(WebTest):
         response = self.app.get(url, user=self.ogeofficial)
 
         self.assertContains(response, self.oge.name)
-        self.assertContains(response, 'raceform')
-
 
         # links to club website, race schedule and add race acction
         self.assertEqual(1, len(response.html.find_all('a', href=self.oge.website)))
@@ -151,19 +149,62 @@ class RoleViewTests(WebTest):
         self.assertNotContains(response, "Edit")
         self.assertNotContains(response, "Upload Results")
 
-    def test_race_riders(self):
-        """as a club official, I want /races/<club>/<raceid>/riders/ to be a form to enter riders in a
-        race (and a list of already entered riders) if there are no results,
-        or a display of the results if they are available"""
 
-        # race with no riders or results, not a club official, I should get a
-        # page with a message
-        response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
-        self.assertContains(response, "No riders registered for this race.")
-        self.assertNotContains(response, "Register")
+    def test_rider_update(self):
+        """Rider update form is only available to rider and club officials"""
 
-        # login as a club official
-        self.client.force_login(user=self.movofficial)
-        response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
-        # page contains a form to enter riders names
-        self.assertContains(response, "Register")
+        rider = Rider.objects.get(pk=2933)
+        otherrider = Rider.objects.get(pk=2934)
+
+        # get the update page as anonymous user, should get a redirect to login
+        response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
+        self.assertEqual(302, response.status_code)
+        self.assertEqual('/login/', response['Location'][:7])
+
+        # login as someone else, should be disallowed
+        self.client.force_login(user=otherrider.user)
+        response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
+        self.assertEqual(400, response.status_code)
+
+        # login as rider, should be ok
+        self.client.force_login(user=rider.user)
+        response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
+        self.assertEqual(200, response.status_code)
+        # should see some edit fields
+        self.assertContains(response, 'first_name')
+        self.assertContains(response, 'dob')
+        # but not others
+        self.assertNotContains(response, 'dutyofficer')
+        self.assertNotContains(response, 'licenseno')
+
+        # login as official, should be ok
+        self.client.force_login(user=self.ogeofficial)
+        response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
+        self.assertEqual(200, response.status_code)
+        # should see some edit fields
+        self.assertContains(response, 'first_name')
+        self.assertContains(response, 'dob')
+        # and also others
+        self.assertContains(response, 'dutyofficer')
+        self.assertContains(response, 'licenceno')
+
+
+
+
+
+    # def test_race_riders(self):
+    #     """as a club official, I want /races/<club>/<raceid>/riders/ to be a form to enter riders in a
+    #     race (and a list of already entered riders) if there are no results,
+    #     or a display of the results if they are available"""
+    #
+    #     # race with no riders or results, not a club official, I should get a
+    #     # page with a message
+    #     response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
+    #     self.assertContains(response, "No riders registered for this race.")
+    #     self.assertNotContains(response, "Register")
+    #
+    #     # login as a club official
+    #     self.client.force_login(user=self.movofficial)
+    #     response = self.client.get(reverse('race_riders', kwargs={'slug': 'MOV', 'pk': 1}))
+    #     # page contains a form to enter riders names
+    #     self.assertContains(response, "Register")

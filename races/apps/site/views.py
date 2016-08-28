@@ -15,8 +15,8 @@ from django.contrib.auth.mixins import AccessMixin
 
 from django.contrib.auth.models import User
 from races.apps.site.models import Race, Club, RaceCourse
-from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members
-from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm
+from races.apps.site.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole
+from races.apps.site.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial
 
 import datetime
 import calendar
@@ -280,11 +280,78 @@ class RiderView(DetailView):
     template_name = 'rider_detail.html'
     context_object_name = 'user'
 
-class RiderUpdateView(UpdateView):
+class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
+    """View to allow update of rider and user details as well
+    as grades and other associated objects"""
 
-    model = Rider
     template_name = "rider_update.html"
-    fields = ['streetaddress', 'suburb', 'state', 'postcode', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship']
+    model = User
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+
+        # only ok if logged in user is this rider or
+        # a club official
+        if str(self.request.user.pk) == kwargs['pk'] or self.request.user.rider.official:
+            return super(RiderUpdateView, self).dispatch(*args, **kwargs)
+        else:
+            return HttpResponseBadRequest()
+
+    def get_form_class(self):
+
+        if self.request.user.rider.official:
+            return RiderUpdateFormOfficial
+        else:
+            return RiderUpdateForm
+
+    def get_initial(self):
+        """Return a dictionary with the initial values for the
+        form, those for the rider, since the user fields are taken from
+        self.object"""
+
+        result = {
+            'dutyofficer': len(self.object.userrole_set.filter(role__name__exact="Duty Officer")) > 0,
+            'dutyhelper': len(self.object.userrole_set.filter(role__name__exact="Duty Helper")) > 0
+        }
+
+        riderdict = self.object.rider.__dict__
+
+        result.update(riderdict)
+        return result
+
+
+    def form_valid(self, form):
+        """Handle a valid form submission"""
+
+        # update the rider object
+
+        self.object.rider.__dict__.update(form.cleaned_data)
+        self.object.rider.save()
+
+        form.save()
+
+        # userroles
+        roles = UserRole.objects.filter(user=self.object, club=self.object.rider.club)
+        print roles
+        if form.cleaned_data['dutyofficer']:
+            if not roles.filter(role__name__exact="Duty Officier"):
+                dorole = ClubRole.objects.get(name="Duty Officer")
+                do = UserRole(user=self.object, club=self.object.rider.club, role=dorole)
+                do.save()
+        else:
+            if roles.filter(role__name__exact="Duty Officer"):
+                roles.filter(role__name__exact="Duty Officer").delete()
+
+        if form.cleaned_data['dutyhelper']:
+            if not roles.filter(role__name__exact="Duty Helper"):
+                dorole = ClubRole.objects.get(name="Duty Helper")
+                do = UserRole(user=self.object, club=self.object.rider.club, role=dorole)
+                do.save()
+        else:
+            if roles.filter(role__name__exact="Duty Helper"):
+                roles.filter(role__name__exact="Duty Helper").delete()
+
+        return HttpResponseRedirect(reverse('rider', kwargs={'pk': self.object.pk}))
 
 class RaceListDateView(ListView):
     model = Race
@@ -522,7 +589,7 @@ class ClubRacesView(DetailView):
                     else:
                         # invalid option, raise an error
                         return HttpResponseBadRequest("Invalid repeat option")
-                        
+
                     race = form.save(commit=False)
 
                     # now make N more races

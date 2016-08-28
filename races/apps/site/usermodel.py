@@ -261,14 +261,16 @@ class Rider(models.Model):
     postcode = models.CharField("Postcode", max_length=4, default='')
     phone = models.CharField("Phone", max_length=50, default='')
 
-    commissaire = models.CharField("Commissaire Level", max_length=10, default='0')
+    commissaire = models.CharField("Commissaire Level", max_length=10, default='0',
+                                   help_text="0 if not a Commissaire, otherwise eg. 1, RT")
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
     emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
     emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='')
     emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
 
-    official = models.BooleanField("Club Official", default=False)
+    official = models.BooleanField("Club Official", default=False,
+                                    help_text="Officials can view and edit member details, schedule races, upload results")
 
     club = models.ForeignKey(Club, null=True)
 
