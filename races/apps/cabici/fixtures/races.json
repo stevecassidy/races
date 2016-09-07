@@ -1,0 +1,66 @@
+[
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 63,
+        "website": "http://example.org/race/today",
+        "location": 2,
+        "signontime": "08:00:00",
+        "starttime": "8am",
+        "date": "2015-08-08"
+    },
+    "model": "cabici.race",
+    "pk": 1
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 63,
+        "website": "",
+        "location": 2,
+        "signontime": "08:00:00",
+        "starttime": "8am",
+        "date": "2015-08-15"
+    },
+    "model": "cabici.race",
+    "pk": 2
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Sample Race",
+        "club": 63,
+        "website": "",
+        "location": 2,
+        "signontime": "08:00:00",
+        "starttime": "8am",
+        "date": "2015-08-22"
+    },
+    "model": "cabici.race",
+    "pk": 3
+},
+{
+    "fields": {
+        "status": "d",
+        "hash": "",
+        "description": "",
+        "title": "Another Race",
+        "club": 64,
+        "website": "",
+        "location": 1,
+        "signontime": "08:00:00",
+        "starttime": "8am",
+        "date": "2015-08-22"
+    },
+    "model": "cabici.race",
+    "pk": 4
+}
+]

@@ -4,7 +4,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'', include('races.apps.site.urls')),
+    url(r'', include('races.apps.cabici.urls')),
     url(r'^admin/', include(admin.site.urls)),
 
     url('', include('django.contrib.auth.urls')),

@@ -135,9 +135,7 @@ INSTALLED_APPS = (
     # my apps
 
     # main app
-    'races.apps.site',
-
-    # django
+    'races.apps.cabici.apps.CabiciConfig',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -236,7 +234,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.user.get_username',
     'social.pipeline.social_auth.associate_by_email',  # this allows linking social auth to existing account
     'social.pipeline.user.create_user',
-    'races.apps.site.usermodel.save_rider',
+    'races.apps.cabici.usermodel.save_rider',
     'social.pipeline.social_auth.associate_user',
     'social.pipeline.social_auth.load_extra_data',
     'social.pipeline.user.user_details'

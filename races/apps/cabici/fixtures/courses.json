@@ -1,0 +1,98 @@
+[
+{
+    "pk": 1, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Sydney Dragway Full, Eastern Creek", 
+        "location": "-33.81086235686958,150.8698147148193"
+    }
+},
+{
+    "pk": 2, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Tennis Centre, SOP", 
+        "location": "-33.855707008065174,151.07144190611268"
+    }
+},
+{
+    "pk": 4, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Lansdowne Park", 
+        "location": "-33.89962929570353,150.97582697868347"
+    }
+},
+{
+    "pk": 6, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "SMSP Full GP Circuit, Eastern Creek", 
+        "location": "-33.80285688307698,150.86983617249143"
+    }
+},
+{
+    "pk": 8, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Oakville", 
+        "location": "-33.61994253666813,150.87109631960448"
+    }
+},
+{
+    "pk": 9, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Heffron Park Maroubra", 
+        "location": "-33.950293211393344,151.23741749814758"
+    }
+},
+{
+    "pk": 10, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Penrith Regatta Centre", 
+        "location": "-33.72282511677614,150.67079065751955"
+    }
+},
+{
+    "pk": 11, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Oatley Park", 
+        "location": "-33.97971494967099,151.06415358601384"
+    }
+},
+{
+    "pk": 12, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Unknown", 
+        "location": "-33.8674869,151.20699020000006"
+    }
+},
+{
+    "pk": 13, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Calga", 
+        "location": "-33.41555606327039,151.2222833016831"
+    }
+},
+{
+    "pk": 14, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "Akuna", 
+        "location": "-33.64598763692696,151.23529343782047"
+    }
+},
+{
+    "pk": 15, 
+    "model": "cabici.racecourse", 
+    "fields": {
+        "name": "HART ", 
+        "location": "-33.70886892624663,151.18815424473576"
+    }
+}
+]

@@ -1,0 +1,23 @@
+[
+{
+    "model": "cabici.clubrole",
+    "pk": 1,
+    "fields": {
+        "name": "Duty Officer"
+    }
+},
+{
+    "model": "cabici.clubrole",
+    "pk": 2,
+    "fields": {
+        "name": "Duty Helper"
+    }
+},
+{
+    "model": "cabici.clubrole",
+    "pk": 3,
+    "fields": {
+        "name": "Commissaire"
+    }
+}
+]
