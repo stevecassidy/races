@@ -372,6 +372,8 @@ class Race(models.Model):
 
             result.save()
 
+        self.fix_small_races()
+
         # once results are in place, we tally the pointscores for this race
         if previousresults > 0:
             # need to recalculate pointscores since we've deleted results
@@ -380,6 +382,24 @@ class Race(models.Model):
         else:
             # can just tally these results
             self.tally_pointscores()
+
+    def fix_small_races(self):
+        """fix up races with small fields after import
+        - points/place calculation is incorrect"""
+
+        for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
+            results = self.raceresult_set.filter(grade=grade, place__isnull=False)
+            ingrade = self.raceresult_set.filter(grade=grade).count()
+
+            if ingrade < 12:
+                # if the smallest place is not 1
+                places = [r.place for r in results]
+                if places != [] and min(places) > 1:
+                    fudge = min(places)-1
+                    for result in results:
+                        result.place -= fudge
+                        result.save()
+
 
     def tally_pointscores(self):
         """Tally all points for this race

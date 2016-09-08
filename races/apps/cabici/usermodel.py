@@ -417,7 +417,7 @@ class PointScore(models.Model):
     club = models.ForeignKey(Club)
     name = models.CharField(max_length=100)
     points = models.CommaSeparatedIntegerField("Points for larger races", max_length=100, default="7,6,5,4,3")
-    smallpoints = models.CommaSeparatedIntegerField("Points for small races", max_length=100, default="5,3")
+    smallpoints = models.CommaSeparatedIntegerField("Points for small races", max_length=100, default="5,4")
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
     races = models.ManyToManyField(Race, blank=True)  # a pointscore contains many races and a race can be in many pointscores
@@ -462,7 +462,7 @@ class PointScore(models.Model):
                 return self.participation
 
 
-    def tally(self, result):
+    def tally(self, result, reporton=None):
         """Add points for this result to the tally"""
 
         # check that this race is part of this pointscore
@@ -473,16 +473,25 @@ class PointScore(models.Model):
         points = self.score(result.place, number_in_grade)
 
         tally, created = PointscoreTally.objects.get_or_create(rider=result.rider, pointscore=self)
+
+        if result.grade == "Helper" and tally.eventcount > 0:
+            # points is average points so far for this rider
+            points = int(round(float(tally.points)/float(tally.eventcount)))
+            #print "Helper", result, "\t", points
+
         tally.add(points)
 
-    def recalculate(self):
+        if reporton != None and result.rider.id == reporton:
+            print result.race, ",\t", points
+
+    def recalculate(self, reporton=None):
         """Recalculate all points from scratch"""
 
         PointscoreTally.objects.filter(pointscore=self).delete()
 
-        for race in self.races.all():
+        for race in self.races.all().order_by('date'):
             for result in race.raceresult_set.all():
-                self.tally(result)
+                self.tally(result, reporton)
 
     def tabulate(self):
         """Generate a queryset of point tallys in order"""

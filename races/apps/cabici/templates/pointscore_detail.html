@@ -5,15 +5,17 @@
 
     <h3>Results</h3>
 
+    <p>Top 100 places shown.</p>
     <table class=table>
         <thead>
-            <tr><th>Place</th><th>Rider</th><th>Club</th><th>Points</th><th>Events</th></tr>
+            <tr><th>Place</th><th>Rider</th><th>Grade</th><th>Club</th><th>Points</th><th>Events</th></tr>
         </thead>
         <tbody>
-    {% for row in object.tabulate %}
+    {% for row in object.tabulate|slice:":100" %}
             <tr>
                 <td>{{forloop.counter}}
                 <td><a href="{% url 'rider' pk=row.rider.user.pk %}">{{row.rider}}</a></td>
+                <td>{{row.rider.clubgrade_set.all.0.grade}}</td>
                 <td>{{row.rider.club}}</td>
                 <td>{{row.points}}</td>
                 <td>{{row.eventcount}}</td>

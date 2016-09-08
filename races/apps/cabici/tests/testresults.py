@@ -129,10 +129,23 @@ class UserModelTests(TestCase):
         self.assertEqual(race.raceresult_set.all().count(), 116)
 
         # check result of our riders
-        results1 = RaceResult.objects.filter(rider__licenceno__exact=rider1.licenceno)
+        resultsA = RaceResult.objects.filter(race__exact=race, grade__exact="A").order_by("place")
 
-        self.assertEqual(results1.count(), 1)
-        result1 = results1[0]
+        # 11 riders in A grade
+        self.assertEqual(resultsA.count(), 11)
 
-        self.assertEqual(result1.grade, 'A')
-        self.assertEqual(result1.place, 3)
+        # highest place in A grade should be Moe Kanj at 1 (small group fix)
+        firstplace = resultsA.filter(place__isnull=False)[0]
+        self.assertEqual('169508', firstplace.rider.licenceno)
+        self.assertEqual(1, firstplace.place)
+
+        # Paul Lewis should win B Grade
+
+        # check result of our riders
+        resultsB = RaceResult.objects.filter(race__exact=race, grade__exact="B", place__isnull=False).order_by("place")
+
+        # highest place in A grade should be Moe Kanj at 1 (small group fix)
+
+        firstplace = resultsB[0]
+        self.assertEqual('161788', firstplace.rider.licenceno)
+        self.assertEqual(1, firstplace.place)

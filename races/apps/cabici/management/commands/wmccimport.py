@@ -312,7 +312,7 @@ def import_roles(csvdir, waratahs):
             user.rider.official = True
             user.rider.save()
 
-            print "Role: ", user, user.userrole_set.all()
+            print "Role: ", user, [r.role for r in user.userrole_set.all()]
 
     print "Imported roles"
 
@@ -361,26 +361,20 @@ def import_points(csvdir, waratahs, usermap, racedict):
 
                 result = RaceResult(race=race, rider=user.rider, grade=row['grade'], number=number, place=place)
 
-                try:
-                    result.save()
-                except django.db.utils.IntegrityError as e:
-                    # print "Duplicate result", e
-                    # print row
-                    # print race
-                    # print number
-                    # print RaceResult.objects.filter(race=race,  rider=user.rider)
-                    # print '---------------'
-                    pass
+            try:
+                result.save()
+            except django.db.utils.IntegrityError as e:
+                # print "Duplicate result", e
+                # print row
+                # print race
+                # print number
+                # print RaceResult.objects.filter(race=race,  rider=user.rider)
+                # print '---------------'
+                pass
 
     # fix up races with small fields - points/place calculation is incorrect
     for race in Race.objects.all():
-        for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
-            if RaceResult.objects.filter(race=race, grade=grade, place__isnull=False).count() < 5:
-                # subtract 2 from the places
-                for result in RaceResult.objects.filter(race=race, grade=grade, place__isnull=False):
-                    #print "Fixing result", result.place
-                    result.place -= 2
-                    result.save()
+        race.fix_small_races()
 
     ps, created = PointScore.objects.get_or_create(club=waratahs, name="2016 Pointscore")
     ps.recalculate()
