@@ -25,8 +25,11 @@ $(document).ready(
         delete_race_init();
         edit_race_modal_init();
         {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
+        var auth = true;
+        {% else %}
+        var auth = false;
         {% endif %}
-        populate_race_table('{{club.id}}');
+        populate_race_table('{{club.id}}', auth);
     }
 );
 </script>

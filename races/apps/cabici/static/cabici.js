@@ -31,7 +31,47 @@ function editmodalbutton(race) {
 }
 
 
-function populate_race_table(clubid) {
+function populate_race_table(clubid, auth) {
+
+    console.log("/api/races/?club="+ clubid +"&scheduled=true");
+
+    var edit_column = { data: "id",
+                          render: function(data, type, row) {
+                              var val = "";
+                              val += editmodalbutton(row);
+                              val += deletemodalbutton(row);
+                              val += addpeoplemodalbutton(row);
+                              return(val);
+                          }
+                      };
+
+    var columns = [{
+                       data: "date",
+                       render: function(data, type, row) {
+                           var val = new Date(data).toDateString();
+                           return val.substring(0,val.length-5);
+                    }
+                },
+                { data: "title",
+                  render: function(data, type, row) {
+                      var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
+                      return val;
+                  }},
+                { data: "location.name" },
+                { data: "officials",
+                  render: function(data, type, row) {
+                      var val = "<dl class='dl-horizontal'>";
+                      val += formatnames(data.Commissaire, "Commissaire");
+                      val += formatnames(data['Duty Officer'], "Duty Officer");
+                      val += formatnames(data['Duty Helper'], "Duty Helper");
+                      val += "</dl>";
+                      return val;
+                  }
+                }]
+
+    if (auth) {
+        columns.push(edit_column);
+    }
 
     $('#racetable').DataTable( {
         processing: true,
@@ -43,40 +83,7 @@ function populate_race_table(clubid) {
         paging: false,
         ordering: false,
         rowId: 'id',
-        columns: [
-               {
-                   data: "date",
-                   render: function(data, type, row) {
-                       var val = new Date(data).toDateString();
-                       return val.substring(0,val.length-5);
-                }
-            },
-            { data: "title",
-              render: function(data, type, row) {
-                  var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
-                  return val;
-              }},
-            { data: "location.name" },
-            { data: "officials",
-              render: function(data, type, row) {
-                  var val = "<dl class='dl-horizontal'>";
-                  val += formatnames(data.Commissaire, "Commissaire");
-                  val += formatnames(data['Duty Officer'], "Duty Officer");
-                  val += formatnames(data['Duty Helper'], "Duty Helper");
-                  val += "</dl>";
-                  return val;
-              }
-            },
-            { data: "id",
-              render: function(data, type, row) {
-                  var val = "";
-                  val += editmodalbutton(row);
-                  val += deletemodalbutton(row);
-                  val += addpeoplemodalbutton(row);
-                  return(val);
-              }
-            }
-        ]
+        columns: columns
     } );
 };
 
