@@ -37,6 +37,9 @@ class CreateViewTests(TestCase):
     def test_club_view(self):
         """Test the club dashboard page view"""
 
+        self.oge.manage_members = True
+        self.oge.save()
+
         url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
         response = self.client.get(url)
 
@@ -49,7 +52,6 @@ class CreateViewTests(TestCase):
         response = self.client.get(url)
 
         self.assertContains(response, self.oge.name)
-        self.assertContains(response, 'raceform')
 
         # and some statistics
         self.assertContains(response, 'Current Members')

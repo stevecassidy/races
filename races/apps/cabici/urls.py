@@ -42,6 +42,8 @@ urlpatterns = [
     url(r'^riders/(?P<pk>\d+)$', views.RiderView.as_view(), name='rider'),
     url(r'^riders/(?P<pk>\d+)/update$', views.RiderUpdateView.as_view(), name='rider_update'),
 
+    url(r'^club/(?P<slug>[^/]*)/ridergrade/(?P<pk>\d+)/$', views.ClubGradeView.as_view(), name='club_grade'),
+
     # api urls
     url(r'^api/$', api.api_root),
     url(r'^api/clubs/$', api.ClubList.as_view(), name='club-list'),
@@ -52,9 +54,12 @@ urlpatterns = [
     url(r'^api/racestaff/(?P<pk>[0-9]+)/$', api.RaceStaffDetail.as_view(), name='racestaff-detail'),
     url(r'^api/racecourses/$', api.RaceCourseList.as_view(), name='racecourse-list'),
     url(r'^api/racecourses/(?P<pk>[0-9]+)/$', api.RaceCourseDetail.as_view(), name='racecourse-detail'),
-    url(r'^api/riders/$', api.RiderList.as_view(), name='rider-list'),
-    url(r'^api/riders/(?P<pk>[0-9]+)/$', api.RiderDetail.as_view(), name='rider-detail'),
-    url(r'^api/users/(?P<pk>[0-9]+)/$', api.UserDetail.as_view(), name='user-detail'),
+
+# no need for rider details through the API yet and danger of leaking user information
+#    url(r'^api/riders/$', api.RiderList.as_view(), name='rider-list'),
+#    url(r'^api/riders/(?P<pk>[0-9]+)/$', api.RiderDetail.as_view(), name='rider-detail'),
+#    url(r'^api/users/(?P<pk>[0-9]+)/$', api.UserDetail.as_view(), name='user-detail'),
+
     url(r'^api/pointscores/$', api.PointScoreList.as_view(), name='pointscore-list'),
     url(r'^api/pointscores/(?P<pk>[0-9]+)/$', api.PointScoreDetail.as_view(), name='pointscore-detail'),
     url(r'^api/raceresults/$', api.RaceResultList.as_view(), name='raceresult-list'),

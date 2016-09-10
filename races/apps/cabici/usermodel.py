@@ -420,7 +420,7 @@ class PointScore(models.Model):
     smallpoints = models.CommaSeparatedIntegerField("Points for small races", max_length=100, default="5,4")
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
-    races = models.ManyToManyField(Race, blank=True)  # a pointscore contains many races and a race can be in many pointscores
+    races = models.ManyToManyField(Race, blank=True)
 
     def __unicode__(self):
         return unicode(unicode(self.club) + " " + self.name)
@@ -496,15 +496,17 @@ class PointScore(models.Model):
     def tabulate(self):
         """Generate a queryset of point tallys in order"""
 
-        rows = self.pointscoretally_set.all().order_by('-points')
+        return self.results.all()
 
-        return rows
 
 class PointscoreTally(models.Model):
     """An entry in the pointscore table for a rider"""
 
+    class Meta:
+        ordering = ['-points', 'eventcount']
+
     rider = models.ForeignKey(Rider)
-    pointscore = models.ForeignKey(PointScore)
+    pointscore = models.ForeignKey(PointScore, related_name='results')
     points = models.IntegerField(default=0)
     eventcount = models.IntegerField(default=0)
 

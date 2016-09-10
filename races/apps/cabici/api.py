@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse
 import datetime
 
 from models import Club, Race, RaceCourse
-from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole
+from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
 
 
 
@@ -19,7 +19,7 @@ def api_root(request, format=None):
         'clubs': reverse('club-list', request=request, format=format),
         'races': reverse('race-list', request=request, format=format),
         'racecourses': reverse('racecourse-list', request=request, format=format),
-        'riders': reverse('rider-list', request=request, format=format),
+        #'riders': reverse('rider-list', request=request, format=format),
         'pointscores': reverse('pointscore-list', request=request, format=format),
         'raceresults': reverse('raceresult-list', request=request, format=format),
     })
@@ -200,9 +200,39 @@ class RiderDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #---------------PointScore------------------
 
+class PointScoreResultSerializer(serializers.Serializer):
+
+    def to_representation(self, tally):
+
+        return {'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
+                'riderid': tally.rider.user.id,
+                'grade': tally.rider.clubgrade_set.get(club__exact=tally.pointscore.club).grade,
+                'points': tally.points,
+                'eventcount': tally.eventcount}
+
+
 class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
+
+    results = serializers.SerializerMethodField('result_list')
+    club = serializers.SerializerMethodField('club_name')
+
+    def club_name(self, ps):
+        return ps.club.name
+        
+    def result_list(self, ps):
+
+        queryset = ps.tabulate()[:100]
+
+        return [{'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
+                'riderid': tally.rider.user.id,
+                'grade': tally.rider.clubgrade_set.get(club__exact=tally.pointscore.club).grade,
+                'points': tally.points,
+                'eventcount': tally.eventcount}
+                for tally in queryset]
+
     class Meta:
         model = PointScore
+        fields = ('name', 'club', 'results')
 
 class PointScoreList(generics.ListCreateAPIView):
     queryset = PointScore.objects.all()
@@ -211,6 +241,10 @@ class PointScoreList(generics.ListCreateAPIView):
 class PointScoreDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PointScore.objects.all()
     serializer_class = PointScoreSerializer
+
+
+
+
 
 #---------------RaceResult------------------
 

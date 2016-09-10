@@ -58,4 +58,4 @@ class ResultViewTests(TestCase):
         result1 = results1[0]
 
         self.assertEqual(result1.grade, 'A')
-        self.assertEqual(result1.place, 3)
+        self.assertEqual(result1.place, 1)

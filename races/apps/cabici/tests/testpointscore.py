@@ -23,7 +23,7 @@ class ModelTests(TestCase):
 
         self.assertEqual([7, 6, 5, 4, 3], ps.get_points())
         self.assertEqual(2, ps.participation)
-        self.assertEqual([5, 3], ps.get_smallpoints())
+        self.assertEqual([5, 4], ps.get_smallpoints())
 
         self.assertEqual(7, ps.score(1, 20))
         self.assertEqual(6, ps.score(2, 20))
@@ -33,7 +33,7 @@ class ModelTests(TestCase):
 
         self.assertEqual(7, ps.score(1, 12))
         self.assertEqual(5, ps.score(1, 11))
-        self.assertEqual(3, ps.score(2, 11))
+        self.assertEqual(4, ps.score(2, 11))
         self.assertEqual(2, ps.score(3, 11))
 
 
@@ -66,9 +66,7 @@ class ModelTests(TestCase):
         result3.save()
 
         # tally them in first ps
-        #ps.tally(result)
-        #ps.tally(result2)
-        #ps.tally(result3)
+        ps.recalculate()
         table = ps.tabulate()
 
         self.assertEqual(1, table.count())
@@ -76,18 +74,16 @@ class ModelTests(TestCase):
         self.assertEqual(rider1, table[0].rider)
         self.assertEqual(5, table[0].points)
 
-        #ps2.tally(result)
-        #ps2.tally(result2)
-        #ps2.tally(result3)
+        ps2.recalculate()
         table = ps2.tabulate()
 
         self.assertEqual(2, table.count())
         # should be rider1 on 10 points (2x small race winner)
         self.assertEqual(rider1, table[0].rider)
         self.assertEqual(10, table[0].points)
-        # rider2 on 3 points
+        # rider2 on 4 points
         self.assertEqual(rider2, table[1].rider)
-        self.assertEqual(3, table[1].points)
+        self.assertEqual(4, table[1].points)
 
 
 

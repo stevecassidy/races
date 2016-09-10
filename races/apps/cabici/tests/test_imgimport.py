@@ -143,6 +143,8 @@ class IMGWebTests(WebTest):
 
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
+        self.oge.manage_members = True
+        self.oge.save()
 
         self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
         self.ogeofficial.save()

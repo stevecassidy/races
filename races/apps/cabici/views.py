@@ -15,7 +15,7 @@ from django.contrib.auth.mixins import AccessMixin
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
-from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole
+from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
 from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial
 
 import datetime
@@ -51,9 +51,9 @@ class HomePage(ListView):
             context['page'] = {'title': 'Content',}
         return context
 
-class TestPageView(TemplateView):
+#class TestPageView(TemplateView):
 
-    template_name = "test.html"
+#    template_name = "test.html"
 
 class ClubListView(ListView):
     model = Club
@@ -249,6 +249,23 @@ class ClubRidersExcelView(View):
 
         return response
 
+class ClubGradeView(UpdateView,ClubOfficialRequiredMixin):
+    model = ClubGrade
+    template_name = "rider_update.html"
+    context_object_name = "clubgrade"
+    fields = ['grade']
+
+    def get_object(self):
+
+        club = get_object_or_404(Club, slug=self.kwargs['slug'])
+        user = get_object_or_404(User, pk=self.kwargs['pk'])
+
+        clubgrade = ClubGrade.objects.get(rider=user.rider, club=club)
+        return clubgrade
+
+    def get_success_url(self):
+        # redirect to the rider view on success
+        return reverse('rider', kwargs={'pk': self.kwargs['pk']})
 
 
 class RiderListView(ListView):

@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django_webtest import WebTest
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider
+from races.apps.cabici.usermodel import Rider, ClubGrade
 from datetime import datetime, timedelta, date
 
 
@@ -188,6 +188,38 @@ class RoleViewTests(WebTest):
         self.assertContains(response, 'dutyofficer')
         self.assertContains(response, 'licenceno')
 
+
+    def test_rider_update_grade(self):
+        """Rider page contains a grade update form only for a club official"""
+
+        rider = Rider.objects.get(pk=2933)
+
+        # assign a grade for this rider in a couple of clubs
+        oge_grade = ClubGrade(rider=rider, club=self.oge, grade="OGE_X")
+        oge_grade.save()
+
+        mov_grade = ClubGrade(rider=rider, club=self.mov, grade="MOV_X")
+        mov_grade.save()
+
+
+        # login as rider
+        self.client.force_login(user=rider.user)
+        response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
+        self.assertEqual(200, response.status_code)
+        # should not see a grade update form
+        self.assertNotContains(response, 'grade-update')
+        self.assertContains(response, oge_grade.grade)
+        self.assertContains(response, mov_grade.grade)
+
+        # if we login as an official, we should see it
+        self.client.force_login(user=self.ogeofficial)
+        response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
+
+        self.assertContains(response, 'grade-update')
+        # grade should be inside an input
+        self.assertContains(response, "value='"+oge_grade.grade+"'")
+        # but mov grade should not be editable
+        self.assertNotContains(response, "value='"+mov_grade.grade+"'")
 
 
 
