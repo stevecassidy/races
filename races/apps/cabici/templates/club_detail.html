@@ -9,21 +9,18 @@
 
 <ul>
     <li><a href='{{club.website}}'>{{club.name}} Website</a></li>
+    <li><a href="{% url 'club_races' slug=club.slug %}">Full Race Schedule</a></li>
     <li><a href="{% url 'club_results' slug=club.slug %}">Race Results</a></li>
-</ul>
-
 {% if club.pointscore_set.all %}
-<h2>Pointscores</h3>
-    <ul>
     {% for ps in club.pointscore_set.all %}
       <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
     {% endfor %}
-    </ul>
 {% endif %}
+</ul>
 
 
 {% regroup races by date as date_list %}
-
+<h3>Upcoming Races</h3>
 <table class='table'>
   <thead>
    <tr>
@@ -43,7 +40,6 @@
    {% endfor %}
  {% endfor %}
 </table>
-<p><a href="{% url 'club_races' slug=club.slug %}">Full Race Schedule</a></p>
 
 
 {% endblock %}

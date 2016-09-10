@@ -8,7 +8,8 @@ body {
 */
 
 header .navbar {
-    background-color: #256B94;
+    /* background-color: #256B94; */
+    background-color: black;
 }
 
 header a:link {
@@ -28,10 +29,10 @@ header a:link {
     margin-left: -100px;
     margin-right: -100px;
     height: 75px;
-    /*
+
     background-image: url(header75.jpg);
     background-repeat: repeat-x;
-    */
+    
     background-color: #E8B730;
 }
 

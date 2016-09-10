@@ -30,12 +30,11 @@
 <h2>{{club.name}} Race Schedule</h2>
 
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
-    <ul id='dashboardActions'>
-        <li>
-            <a href="#" data-toggle='modal' data-target="#raceCreateModal">
+    <div class='btn-toolbar' role='toolbar' aria-label='Club Official Actions'>
+        <button type='button' class='btn btn-default'><a href="#" data-toggle='modal' data-target="#raceCreateModal">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><br> Add Race(s)</a>
-        </li>
-    </ul>
+            </button>
+    </div>
 {% endif %}
     <table class='table'>
       <thead>

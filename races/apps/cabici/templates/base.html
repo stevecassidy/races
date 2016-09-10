@@ -12,7 +12,9 @@
     <title>cabici.net - {% block title %}Where's your next race?{% endblock %}</title>
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-3.3.5-dist/css/bootstrap.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-3.3.5-dist/css/bootstrap-responsive.css" />
-    <link rel="stylesheet" href="{{ STATIC_URL }}site.css" />
+
+	<link rel="stylesheet" href="{{ STATIC_URL }}site.css" />
+
 
     {% block extrahead %}
     {% endblock %}
@@ -82,6 +84,7 @@
     <script src="{{ STATIC_URL }}bootstrap-3.3.5-dist/js/jquery.js"></script>
     <script src="{{ STATIC_URL }}bootstrap-3.3.5-dist/js/bootstrap-collapse.js"></script>
     {% block extra_script %}
+	$.material.init();
     {% endblock %}
 
     <script>
