@@ -83,18 +83,20 @@ class ClubOfficialRequiredMixin(AccessMixin):
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
 
-        # user should be an official of the club referenced in the view
-        if not request.user.rider.official:
-            return self.handle_no_permission()
+        # superuser can do anything
+        if not request.user.is_superuser:
+            # user should be an official of the club referenced in the view
+            if not request.user.rider.official:
+                return self.handle_no_permission()
 
-        # if there is a club slug in the kwargs then verify that
-        # the official is a member of that club
-        if 'slug' in kwargs:
-            clublist = Club.objects.filter(slug=kwargs['slug'])
-            if len(clublist) == 1:
-                club = clublist[0]
-                if not request.user.rider.club == club:
-                    return self.handle_no_permission()
+            # if there is a club slug in the kwargs then verify that
+            # the official is a member of that club
+            if 'slug' in kwargs:
+                clublist = Club.objects.filter(slug=kwargs['slug'])
+                if len(clublist) == 1:
+                    club = clublist[0]
+                    if not request.user.rider.club == club:
+                        return self.handle_no_permission()
 
         return super(ClubOfficialRequiredMixin, self).dispatch(request, *args, **kwargs)
 
@@ -538,7 +540,10 @@ class ClubRaceResultsView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        context['races'] = Race.objects.filter(date__lt=datetime.date.today(), club__exact=club, status__exact='p')
+        context['races'] = Race.objects.filter(date__lt=datetime.date.today(),
+                                               club__exact=club,
+                                               raceresult__rider__isnull=False,
+                                               status__exact='p').distinct()
 
         return context
 
@@ -576,7 +581,11 @@ class ClubRacesView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        if not request.user.rider or not request.user.rider.official or  request.user.rider.club != club:
+        # are we allowed to do this?
+        if not request.user.is_superuser and \
+           (not request.user.rider or \
+           not request.user.rider.official or \
+           request.user.rider.club != club):
             return HttpResponseBadRequest("Only available for club officials")
 
         if request.is_ajax():
