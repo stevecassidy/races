@@ -142,8 +142,6 @@ class RaceStaffDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #---------------Rider------------------
 
-
-
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -174,7 +172,6 @@ class RiderList(generics.ListCreateAPIView):
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
 
-
     def get_queryset(self):
 
         clubid = self.request.query_params.get('club', None)
@@ -189,8 +186,6 @@ class RiderList(generics.ListCreateAPIView):
             riders = Rider.objects.all()
 
         return riders
-
-
 
 class RiderDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rider.objects.all()
@@ -218,7 +213,7 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
     def club_name(self, ps):
         return ps.club.name
-        
+
     def result_list(self, ps):
 
         queryset = ps.tabulate()[:100]
@@ -242,15 +237,22 @@ class PointScoreDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PointScore.objects.all()
     serializer_class = PointScoreSerializer
 
-
-
-
-
 #---------------RaceResult------------------
 
-class RaceResultSerializer(serializers.HyperlinkedModelSerializer):
+class RaceResultSerializer(serializers.ModelSerializer):
 
-    rider = RiderSerializer(read_only=True)
+    rider = serializers.SerializerMethodField('rider_name')
+    riderid = serializers.SerializerMethodField('rider_id')
+    club = serializers.SerializerMethodField('club_name')
+
+    def club_name(self, result):
+        return result.rider.club.name
+
+    def rider_name(self, result):
+        return str(result.rider)
+
+    def rider_id(self, result):
+        return result.rider.id
 
     class Meta:
         model = RaceResult
@@ -262,9 +264,13 @@ class RaceResultList(generics.ListCreateAPIView):
     def get_queryset(self):
 
         raceid = self.request.query_params.get('race', None)
+        placed = self.request.query_params.get('placed', None)
 
         if raceid is not None:
-            return RaceResult.objects.filter(race__pk__exact=raceid)
+            if placed is not None:
+                return RaceResult.objects.filter(race__pk__exact=raceid, place__gt=0)
+            else:
+                return RaceResult.objects.filter(race__pk__exact=raceid)
         else:
             return RaceResult.objects.all()
 
