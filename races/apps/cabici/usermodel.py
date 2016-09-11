@@ -245,15 +245,19 @@ class RiderManager(models.Manager):
         return {'added': added, 'updated': updated, 'revoked': revoked}
 
 
+GENDER_CHOICES = (("M", "Male"),
+                  ("F", "Female"))
+
+
 class Rider(models.Model):
     """Model for extra information associated with a club member (rider)
-    minimal model with just enough information to support race results"""
+    """
 
     objects = RiderManager()
 
     user = models.OneToOneField(User)
     licenceno = models.CharField("Licence Number", max_length=20)
-    gender = models.CharField("Gender", max_length=2, choices=(("M", "M"), ("F", "F")))
+    gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES)
     dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1))
     streetaddress = models.CharField("Address", max_length=100, default='')
     suburb = models.CharField("Suburb", max_length=100, default='')
@@ -300,6 +304,48 @@ class Rider(models.Model):
             return m[0].year
         else:
             return ''
+
+    @property
+    def classification(self):
+        """Return the racing classification for this rider based
+        on their DOB"""
+
+        # classes with upper bound + 1 for each group in order
+        classes = (("Kidz", 7),
+                   ("U9", 9),
+                   ("U11", 11),
+                   ("U13 Boys", 13),
+                   ("U15 Men", 15),
+                   ("U17 Men", 17),
+                   ("U19 Men", 19),
+                   ("U23 Men", 23),
+                   ("Elite Men", 30),
+                   ("M1", 35),
+                   ("M2", 40),
+                   ("M3", 45),
+                   ("M4", 50),
+                   ("M5", 55),
+                   ("M6", 60),
+                   ("M7", 65),
+                   ("M8", 70),
+                   ("M9", 75),
+                   ("M10", 81))
+
+        age = datetime.datetime.now().year - self.dob.year
+
+        for cat, cutoff in classes:
+            if age < cutoff:
+                if self.gender == "F":
+                    if cat.startswith("M"):
+                        cat = cat.replace("M", "W")
+                    elif cat == "Elite Men":
+                        cat = cat.replace("Men", "Women")
+                    elif cat == "U23 Men":
+                        cat = "Elite Women"
+                    elif cat.startswith("U"):
+                        cat = cat.replace("Men", "Women")
+                        cat = cat.replace("Boys", "Girls")
+                return cat
 
     def performancereport(self):
         """Generate a rider performance report"""

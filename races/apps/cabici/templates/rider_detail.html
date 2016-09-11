@@ -9,6 +9,7 @@
 
 <table class=table>
     <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
+    <tr><th>Classification</th><td>{{user.rider.classification}}</td></tr>
     {% for grading in user.rider.clubgrade_set.all %}
         <tr><th>Grade ({{grading.club.name}})</th><td>
             {% if request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == grading.club %}

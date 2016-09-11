@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 
 import os
+import datetime
 
 from races.apps.cabici.usermodel import Rider, RaceResult, ClubGrade
 from races.apps.cabici.models import Club, Race
@@ -13,7 +14,7 @@ class UserModelTests(TestCase):
 
     # fixtures define some users (user1, user2, user3)
     # and some clubs
-    fixtures = ['users', 'clubs', 'courses', 'races']
+    fixtures = ['users', 'clubs', 'courses', 'races', 'riders']
 
     def test_rider(self):
         """Test creation of a rider"""
@@ -28,6 +29,46 @@ class UserModelTests(TestCase):
         # test we can get to the rider through the user
         self.assertEqual(user.rider.club, club)
         self.assertEqual(user.rider.gender, 'M')
+
+    def test_rider_classification(self):
+        """We can work out the classification of a rider from their DOB"""
+
+        rider = Rider.objects.get(id=2930)
+
+        thisyear = datetime.date.today().year
+
+        # try some different ages
+        rider.dob = datetime.date(thisyear-48, 1, 1)
+        self.assertEqual("M4", rider.classification)
+
+        rider.dob = datetime.date(thisyear-54, 1, 1)
+        self.assertEqual("M5", rider.classification)
+
+        rider.dob = datetime.date(thisyear-23, 1, 1)
+        self.assertEqual("Elite Men", rider.classification)
+
+        # females are a bit different
+        rider.gender="F"
+        rider.save()
+
+        # try some different ages
+        rider.dob = datetime.date(thisyear-48, 1, 1)
+        self.assertEqual("W4", rider.classification)
+
+        rider.dob = datetime.date(thisyear-54, 1, 1)
+        self.assertEqual("W5", rider.classification)
+
+        rider.dob = datetime.date(thisyear-23, 1, 1)
+        self.assertEqual("Elite Women", rider.classification)
+        # U23 is not for women
+        rider.dob = datetime.date(thisyear-22, 1, 1)
+        self.assertEqual("Elite Women", rider.classification)
+
+        # kiddies
+        rider.dob = datetime.date(thisyear-12, 1, 1)
+        self.assertEqual("U13 Girls", rider.classification)
+
+
 
     def test_grade(self):
         """Assigning riders to grades"""
