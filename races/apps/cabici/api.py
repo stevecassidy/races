@@ -246,7 +246,10 @@ class RaceResultSerializer(serializers.ModelSerializer):
     club = serializers.SerializerMethodField('club_name')
 
     def club_name(self, result):
-        return result.rider.club.name
+        if result.rider.club != None:
+            return result.rider.club.name
+        else:
+            return "Unknown"
 
     def rider_name(self, result):
         return str(result.rider)
