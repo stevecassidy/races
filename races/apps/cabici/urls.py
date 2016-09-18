@@ -47,7 +47,7 @@ urlpatterns = [
     # api urls
     url(r'^api/$', api.api_root),
     url(r'^api/clubs/$', api.ClubList.as_view(), name='club-list'),
-    url(r'^api/clubs/(?P<pk>[0-9]+)/$', api.ClubDetail.as_view(), name='club-detail'),
+    url(r'^api/clubs/(?P<slug>[^/]+)/$', api.ClubDetail.as_view(), name='club-detail'),
     url(r'^api/races/$', api.RaceList.as_view(), name='race-list'),
     url(r'^api/races/(?P<pk>[0-9]+)/$', api.RaceDetail.as_view(), name='race-detail'),
     url(r'^api/racestaff/$', api.RaceStaffList.as_view(), name='racestaff-list'),
