@@ -32,7 +32,7 @@ header a:link {
 
     background-image: url(header75.jpg);
     background-repeat: repeat-x;
-    
+
     background-color: #E8B730;
 }
 
@@ -114,4 +114,17 @@ footer a:link {
 }
 #dashboardActions a {
     color: black;
+}
+
+/* Race Listing styles */
+
+.statusd td:nth-child(2) {
+    background-image: url('draft.png');
+    background-size: contain;
+    background-repeat:no-repeat;
+}
+.statusc td:nth-child(2) {
+    background-image: url('cancelled.png');
+    background-size: contain;
+    background-repeat:no-repeat;
 }

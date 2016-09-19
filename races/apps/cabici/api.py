@@ -56,19 +56,24 @@ class ClubOfficialPermission(permissions.BasePermission):
         Return `True` if permission is granted, `False` otherwise.
         """
 
+        print "HAS_OBJECT_PERMISSION", request.method, request.user, type(view), obj
+
         if request.method in permissions.SAFE_METHODS:
             return True
 
         # anonymous user can't do anything unsafe
         if not request.user.is_authenticated():
+            print request.user, "not authenticated"
             return False
 
         # superuser can do anything
         if request.user.is_superuser:
+            print request.user, "is a superuser"
             return True
 
         # user should be an official of the club referenced in the view
         if not request.user.rider.official:
+            print request.user, "not an official"
             return False
 
         # if they are an official then they can operate on their club
@@ -78,8 +83,10 @@ class ClubOfficialPermission(permissions.BasePermission):
         elif isinstance(obj, RaceResult):
             club = obj.race.club
         else:
+            print request.user, "not whatever"
             return False
 
+        print "Here", request.user.rider.club, club
         return request.user.rider.club == club
 
 #---------------Club------------------
@@ -170,10 +177,16 @@ class RaceList(generics.ListCreateAPIView):
         clubid = self.request.query_params.get('club', None)
         scheduled = self.request.query_params.get('scheduled', None)
 
-        if clubid is not None:
-            races = Race.objects.filter(club__pk__exact=clubid)
+        races = Race.objects.all()
+        # if user is a club official, include draft races
+        if getattr(self.request.user, 'rider', None) != None and self.request.user.rider.official:
+            pass
         else:
-            races = Race.objects.all()
+            # no draft or withdrawn races
+            races = races.exclude(status__exact="d").exclude(status__exact="w")
+
+        if clubid is not None:
+            races = races.filter(club__pk__exact=clubid)
 
         if scheduled is not None:
             return races.filter(date__gte=datetime.date.today())

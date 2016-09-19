@@ -45,6 +45,9 @@ $(document).ready(
         <button type='button' class='btn btn-default' data-toggle='modal' data-target="#raceCreateModal">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Races
             </button>
+        <button type='button' class='btn btn-default' data-toggle='modal' data-target="#publishDraftModal">
+            Publish Draft Races
+        </button>
     </div>
 
 {% endif %}
@@ -129,6 +132,27 @@ $(document).ready(
           </div>
         </div>
     </div>
+
+
+    <div class='modal fade' id='publishDraftModal' tabindex='-2' role='dialog' aria-labelledby="publishDraftModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="publishDraftModalLabel">Publish Draft Races</h4>
+            </div>
+            <div class="modal-body">
+                <p>This will publish all DRAFT races.</p>
+
+                <form action="/clubs/{{club.slug}}/races/publish/" method='POST'>
+                    {% csrf_token %}
+                    <input type='hidden' name='club' id='club' value='{{club.pk}}'>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <input type="submit" name="submit" class="btn btn-primary" value="Publish">
+                    </div>
+                </form>
+            </div>
 
 {% endif %}
 

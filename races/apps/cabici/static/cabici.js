@@ -33,7 +33,7 @@ function editmodalbutton(race) {
 
 function populate_race_table(clubid, auth) {
 
-    console.log("/api/races/?club="+ clubid +"&scheduled=true");
+    console.log('populate_race_table ' + clubid );
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
@@ -83,7 +83,10 @@ function populate_race_table(clubid, auth) {
         paging: false,
         ordering: false,
         rowId: 'id',
-        columns: columns
+        columns: columns,
+        fnCreatedRow: function( nRow, aData, iDataIndex ) {
+             $(nRow).addClass('status'+aData['status']);
+        }
     } );
 };
 
@@ -118,8 +121,8 @@ function race_create_form_init(slug) {
             success: function(msg){
                 if (msg['success']) {
                    $("#raceCreateModal").modal('hide');
-                   /* force a page refresh */
-                   window.location = window.location;
+                   /* force a page refresh to race list page */
+                   window.location = slug;
                } else {
                     for (field in msg) {
                         $("#id_"+field).parent().addClass("has-error");
@@ -168,7 +171,7 @@ function edit_race_modal_init() {
                 success: function(msg){
 //                    if (msg['success']) {
                        $("#raceEditModal").modal('hide');
-                       populate_race_table(clubid);
+                       populate_race_table(clubid, true);
 //                   } else {
 //                        for (field in msg) {
 //                            $("#id_"+field).parent().addClass("has-error");
@@ -294,6 +297,10 @@ function delete_race_init() {
                      $("#raceDeleteModal").modal('hide');
                      /* force a page refresh */
                      window.location = window.location;
+              },
+              error: function(req, status, msg){
+                  $("#raceDeleteModal").modal('hide');
+                  alert("You don't have permission to delete this race.");
               }
           });
       });

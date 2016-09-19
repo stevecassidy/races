@@ -40,6 +40,11 @@ class RaceCSVForm(forms.Form):
 
     excelfile = forms.FileField(label="Excel File")
 
+class RacePublishDraftForm(forms.Form):
+    """Form for publish action"""
+
+    club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
+
 MEMBER_FILE_FORMATS = (('IMG', 'IMG Sports'),)
 
 class MembershipUploadForm(forms.Form):

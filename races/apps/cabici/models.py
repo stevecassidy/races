@@ -295,6 +295,7 @@ STATUS_CHOICES = (
     ('d', 'Draft'),
     ('p', 'Published'),
     ('w', 'Withdrawn'),
+    ('c', 'Cancelled')
 )
 
 class Race(models.Model):

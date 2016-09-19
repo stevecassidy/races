@@ -16,7 +16,7 @@ from django.contrib.auth.mixins import AccessMixin
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm
 
 import datetime
 import calendar
@@ -485,6 +485,31 @@ class RaceUploadExcelView(FormView):
         race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
+
+
+class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
+    """View to publish all draft races for a club"""
+
+    form_class = RacePublishDraftForm
+    template_name = 'index.html'
+
+    def form_valid(self, form):
+
+        club = get_object_or_404(Club, slug=self.kwargs['slug'])
+
+        # find all draft races and make them Published
+        for race in club.races.filter(status__exact='d'):
+            race.status = 'p'
+            race.save()
+
+        return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
+
+    def form_invalid(self, form):
+
+        print "INVALID", form
+
+        return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
+
 
 class RaceRidersView(ListView):
     model = RaceResult

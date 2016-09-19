@@ -300,3 +300,26 @@ class CreateViewTests(TestCase):
         dh_riders = [r.rider for r in dh]
         self.assertIn(self.ogeofficial.rider, dh_riders)
         self.assertIn(self.movofficial.rider, dh_riders)
+
+    def test_publish_drafts(self):
+        """Test the view to publish draft races for a club"""
+
+        races = self.mov.races.all()
+
+        # make them all draft
+        for race in races:
+            race.status = 'd'
+            race.save()
+
+        # need to login first
+        response = self.client.force_login(self.movofficial)
+
+        url = reverse('club_race_publish', kwargs={'slug': self.mov.slug})
+
+        data = {'club': self.mov.id}
+        response = self.client.post(url, data)
+
+        # all races should now be Published
+        races = self.mov.races.all()
+        for race in races:
+            self.assertEqual('p', race.status, "Status of race " + str(race) + " is not 'p'")
