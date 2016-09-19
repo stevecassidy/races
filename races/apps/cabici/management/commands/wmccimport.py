@@ -270,16 +270,11 @@ def import_users(csvdir, waratahs):
                     role = UserRole(user=user, club=waratahs, role=dutyofficer)
                     role.save()
 
-                # duty helper
-                if row['helper']=='yes':
-                    dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Helper")
-                    role = UserRole(user=user, club=waratahs, role=dutyofficer)
-                    role.save()
-
-
             usermap[int(row['id'])] = user
 
             usercount += 1
+
+        waratahs.create_duty_helpers()
 
         print "Imported %d riders" % usercount
         return usermap

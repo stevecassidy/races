@@ -110,8 +110,32 @@ class Club(models.Model):
         return (races, error)
 
     def recent_races(self):
+        """Return a list of the most recent races
+        most recent first"""
 
         return self.races.filter(date__lte=datetime.date.today()).order_by('-date')[:5]
+
+    def create_duty_helpers(self):
+        """Add all current race members as duty helpers"""
+
+        from .usermodel import ClubRole, Membership, UserRole
+
+        dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
+        thisyear = datetime.date.today().year
+
+        # remove all current helpers
+        self.userrole_set.filter(role=dutyhelper).delete()
+
+        # get the duty officers
+        dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
+        dofficers = [ur.user for ur in UserRole.objects.filter(club=self, role=dutyofficer)]
+
+        members = self.membership_set.filter(year__gte=thisyear, category='race')
+        for membership in members:
+            user = membership.rider.user
+            if not user in dofficers:
+                role = UserRole(user=user, club=self, role=dutyhelper)
+                role.save()
 
 
     def ingest_ical(self):

@@ -242,6 +242,9 @@ class RiderManager(models.Manager):
             m = user.rider.membership_set.get(year=thisyear)
             m.delete()
 
+        # update club duty helper roles
+        club.create_duty_helpers()
+
         return {'added': added, 'updated': updated, 'revoked': revoked}
 
 
