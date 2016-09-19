@@ -122,6 +122,25 @@
 
             </div>
 
+            <div>
+                {% regroup club.recent_races by date as date_list %}
+                <h3>Recent Races</h3>
+                <table class='table'>
+                  <thead>
+                   <tr>
+                       <th>Date</th><th class='racelocation'>Location</th>
+                   </tr>
+                  </thead>
+                    {% for date in date_list %}
+                       {% for race in date.list %}
+                          <tr>
+                              <th class='date'>{{race.date|date:"D d M"}}</td>
+                              <td class='racelocation'><a href="{% url 'race' race.club.slug race.pk %}">{{ race.location }}</a></td>
+                          </tr>
+                       {% endfor %}
+                     {% endfor %}
+                </table>            </div>
+
         </div>
 
     </div>
@@ -184,6 +203,7 @@
    </div>
 </div>
 {% endif %}
+
 
 {% include "race_create_modal.html" with mode="create" %}
 

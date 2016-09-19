@@ -109,7 +109,9 @@ class Club(models.Model):
 
         return (races, error)
 
+    def recent_races(self):
 
+        return self.races.filter(date__lte=datetime.date.today()).order_by('-date')[:5]
 
 
     def ingest_ical(self):
