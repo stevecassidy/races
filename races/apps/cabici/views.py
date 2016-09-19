@@ -72,7 +72,7 @@ class ClubDetailView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')[:5]
+        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club).exclude(status__exact='w')[:5]
 
         context['form'] = RaceCreateForm()
 
@@ -383,10 +383,10 @@ class RaceListDateView(ListView):
             month = int(self.kwargs['month'])
             year = int(self.kwargs['year'])
 
-            return Race.objects.filter(date__year=year, date__month=month, status__exact='p')
+            return Race.objects.filter(date__year=year, date__month=month).exclude(status__exact='w')
         else:
             # just pull races after today
-            return Race.objects.filter(date__gte=datetime.date.today(), status__exact='p')
+            return Race.objects.filter(date__gte=datetime.date.today()).exclude(status__exact='w')
 
 class RaceDetailView(DetailView):
     model = Race

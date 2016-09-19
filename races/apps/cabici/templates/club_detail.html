@@ -33,11 +33,13 @@
   </thead>
 {% for date in date_list %}
    {% for race in date.list %}
-      <tr>
+      <tr class="status{{race.status}}">
           <th class='date'>{{race.date|date:"D d M"}}</td>
           <td class='racetime'>{{race.starttime}}</td>
           <td class='racetitle'>
-              <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a></td>
+              <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a>
+              {% ifequal race.status 'c' %}CANCELLED{% endifequal %}
+          </td>
           <td class='racelocation'>{{ race.location }}</td>
       </tr>
    {% endfor %}

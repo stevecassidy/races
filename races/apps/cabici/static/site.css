@@ -128,3 +128,6 @@ footer a:link {
     background-size: contain;
     background-repeat:no-repeat;
 }
+h2.statusc {
+    text-decoration: line-through;
+}
