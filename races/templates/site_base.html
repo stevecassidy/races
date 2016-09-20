@@ -1,6 +1,5 @@
 {% extends "theme_bootstrap/base.html" %}
 {% load flatpages %}
-{% get_flatpages as flatpages %}
 
 {% load staticfiles %}
 {% load i18n %}
@@ -20,6 +19,7 @@
 {% endblock %}
 
 {% block nav %}
+{% get_flatpages as flatpages %}
 <ul class="nav navbar-nav">
   <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
   <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
