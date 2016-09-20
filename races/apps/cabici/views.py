@@ -288,10 +288,10 @@ class RiderListView(ListView):
 
         if self.request.GET.has_key('name'):
             name = self.request.GET['name']
-            return Rider.objects.filter(user__last_name__icontains=name)
+            return Rider.objects.filter(user__last_name__icontains=name).order_by('user__last_name')
         else:
             # just pull races after today
-            return Rider.objects.all()
+            return Rider.objects.all().order_by('user__last_name')
 
 class RiderView(DetailView):
 
