@@ -195,8 +195,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap"
 
 # settings for django-easy-maps
 # default centre of maps
-EASY_MAPS_CENTER = (-41.3, 32)
-
+#EASY_MAPS_CENTER = (-41.3, 32)
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
