@@ -1,0 +1,9 @@
+{% extends "site_base.html" %}
+{% block content %}
+
+
+{% regroup races by date as date_list %}
+
+{% include 'race_table.html' %}
+
+{% endblock %}

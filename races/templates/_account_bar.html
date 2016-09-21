@@ -1,0 +1,32 @@
+{% load i18n %}
+
+
+<ul class="nav navbar-nav pull-right">
+    {% if request.user.is_authenticated %}
+        {% if request.user.rider.official %}
+        <li><a href="{% url 'club_dashboard' slug=request.user.rider.club.slug %}">{{request.user.rider.club.slug}} Dashboard</a></li>
+        {% endif %}
+        <li>
+            <a href="/riders/{{request.user.id}}"><i class="glyphicon glyphicon-user"></i> {{request.user.get_full_name}}</a>
+        </li>
+        <li>
+            <a id="account_logout" href="/logout/"><i class="glyphicon glyphicon-off"></i> {% trans "Log out" %}</a>
+        </li>
+    {% else %}
+    <li>
+        <a href="/login/">{% trans "Login" %}</a>
+    </li>
+    {% if 0 %}
+    <form class="navbar-form navbar-left" role="search">
+      <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
+          <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
+      </a>
+     </form>
+     {% endif %}
+    {% endif %}
+</ul>
+
+<form id="accountLogOutForm" style="display: none;" action="/logout/" method="POST">
+    <input type='hidden' name='next' value='/'>
+    {% csrf_token %}
+</form>

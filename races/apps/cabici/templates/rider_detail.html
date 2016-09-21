@@ -1,0 +1,140 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{user.first_name}} {{user.last_name}}</h2>
+
+<table class=table>
+    <tr><th>Club</th><td>{{user.rider.club.name}}</td></tr>
+    <tr><th>Classification</th><td>{{user.rider.classification}}</td></tr>
+    {% for grading in user.rider.clubgrade_set.all %}
+        <tr><th>Grade ({{grading.club.name}})</th><td>
+            {% if request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == grading.club %}
+            <dic class='form-group'>
+                <form class='grade-update form-inline' method=POST action="{% url 'club_grade' grading.club.slug user.pk %}">
+                    {% csrf_token %}
+                    <input class='form-control' type='text' name='grade' value='{{grading.grade}}'>
+                    <button class="btn btn-default">Change Grade</button>
+                </form>
+            </div>
+            {% else %}
+            {{grading.grade}}
+            {% endif %}
+        </td>
+
+        </tr>
+    {% endfor %}
+    {% for role in user.userrole_set.all %}
+        <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>
+    {% endfor %}
+    <tr><th colspan=2>In the last 12 months</th></tr>
+    <tr><th>Wins</th><td>{{user.rider.performancereport.wins}}</td></tr>
+    <tr><th>Places</th><td>{{user.rider.performancereport.places}}</td></tr>
+</table>
+
+{% if request.user.rider %}
+
+    {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
+    <h4>Personal Details <a type='button' class='btn btn-default' href="{% url 'rider_update' user.id %}">Update</a></h4>
+
+    <table class=table>
+        <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
+        <tr><th>Address</th><td>{{user.rider.streetaddress}}, {{user.rider.suburb}}, {{user.rider.state}}, {{user.rider.postcode}}</td></tr>
+        <tr><th>Phone</th><td>{{user.rider.phone}}</td></tr>
+        <tr><th>Email</th><td>{{user.email}}</td></tr>
+        <tr><th>DOB</th><td>{{user.rider.dob}}</td></tr>
+        <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
+        <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
+        {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
+        <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
+        {% endif %}
+        <tr><th>Membership Status</th><td>
+        {% for m in user.rider.membership_set.all %}
+            {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
+        {% endfor %}
+        </td></tr>
+
+
+    </table>
+    {% endif %}
+
+{% endif %}
+
+
+{% regroup user.rider.raceresult_set.all.reverse by race.date.year as year_list %}
+<h4>Performance Report</h4>
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+        href="#recentplaces" aria-expanded="true">Recent Placings</a>
+    </li>
+{% for year in year_list %}
+    <li role="presentation">
+        <a aria-controls="home" role="tab" data-toggle="tab"
+          href="#year{{year.grouper}}">
+           {{year.grouper}} ({{year.list|length}})
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+<div class='tab-content'>
+    <div role="tabpanel" class="tab-pane active" id="recentplaces">
+        {% if not user.rider.performancereport.recent %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <p>No recent placings.</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class=table>
+                    <thead>
+                        <tr><th>Race</th><th>Grade</th><th>Place</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in user.rider.performancereport.recent %}
+                    <tr>
+                        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                        <td>{{result.grade}}</td>
+                        <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+
+    {% for year in year_list %}
+    <div role="tabpanel" class="tab-pane" id="year{{year.grouper}}">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class=table>
+                    <thead>
+                        <tr><th>Race</th><th>Grade</th><th>Place</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in year.list %}
+                    <tr>
+                        <td><a href="{% url 'race' result.race.club.slug result.race.pk %}">{{result.race}}</a></td>
+                        <td>{{result.grade}}</td>
+                        <td>{% if result.place %}{{result.place}}{% else %}-{% endif %}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

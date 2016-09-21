@@ -1,0 +1,48 @@
+{% extends "site_base.html" %}
+{% block content %}
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="col-md-4">
+        <h2>{{page.title}}</h2>
+
+        {% if page.content %}
+        {{ page.content|safe }}
+        {% else %}
+        <p>Create a flatpage with url '/' to see content here</p>
+        {% lorem 2 p %}
+        {% endif %}
+
+         <div class="fb-like" data-href="http://cabici.net/race/{{race.id}}" data-send="true"
+              data-layout="button_count" data-width="450" data-show-faces="true"></div>
+
+    </div>
+    <div class="col-md-8">
+
+{% regroup object_list by date as date_list %}
+
+        <table class='table'>
+          <thead>
+           <tr><th class='racetime'>Time</th>
+               <th class='racetitle'>Race</th>
+               <th class='racelocation'>Location</th>
+           </tr>
+          </thead>
+        {% for date in date_list %}
+           <tr><th colspan='4'>{{date.grouper|date:"D d M"}}</th></tr>
+           {% for race in date.list %}
+                <tr>
+                  <td class='racetime'>{{race.starttime}}</td>
+                  <td class='racetitle'>{{race.club.slug}}: <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a></td>
+                  <td class='racelocation'>{{ race.location }}</td>
+                </tr>
+           {% endfor %}
+         {% endfor %}
+        </table>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

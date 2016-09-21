@@ -1,0 +1,3602 @@
+[
+{
+    "fields": {
+        "username": "valverde@worldtour.com",
+        "first_name": "Alejandro",
+        "last_name": "VALVERDE BELMONTE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "valverde@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.912Z"
+    },
+    "model": "auth.user",
+    "pk": 2531
+},
+{
+    "fields": {
+        "username": "rodriguez@worldtour.com",
+        "first_name": "Joaquin",
+        "last_name": "RODRIGUEZ OLIVER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "rodriguez@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.921Z"
+    },
+    "model": "auth.user",
+    "pk": 2532
+},
+{
+    "fields": {
+        "username": "quintana@worldtour.com",
+        "first_name": "Nairo Alexander",
+        "last_name": "QUINTANA ROJAS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "quintana@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.930Z"
+    },
+    "model": "auth.user",
+    "pk": 2533
+},
+{
+    "fields": {
+        "username": "kristoff@worldtour.com",
+        "first_name": "Alexander",
+        "last_name": "KRISTOFF",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kristoff@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.937Z"
+    },
+    "model": "auth.user",
+    "pk": 2534
+},
+{
+    "fields": {
+        "username": "aru@worldtour.com",
+        "first_name": "Fabio",
+        "last_name": "ARU",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "aru@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.945Z"
+    },
+    "model": "auth.user",
+    "pk": 2535
+},
+{
+    "fields": {
+        "username": "froome@worldtour.com",
+        "first_name": "Christopher",
+        "last_name": "FROOME",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "froome@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.956Z"
+    },
+    "model": "auth.user",
+    "pk": 2536
+},
+{
+    "fields": {
+        "username": "contador@worldtour.com",
+        "first_name": "Alberto",
+        "last_name": "CONTADOR VELASCO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "contador@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.977Z"
+    },
+    "model": "auth.user",
+    "pk": 2537
+},
+{
+    "fields": {
+        "username": "van@worldtour.com",
+        "first_name": "Greg",
+        "last_name": "VAN AVERMAET",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "van@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.986Z"
+    },
+    "model": "auth.user",
+    "pk": 2538
+},
+{
+    "fields": {
+        "username": "faria@worldtour.com",
+        "first_name": "Rui Alberto",
+        "last_name": "FARIA DA COSTA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "faria@worldtour.com",
+        "date_joined": "2015-10-10T10:29:29.994Z"
+    },
+    "model": "auth.user",
+    "pk": 2539
+},
+{
+    "fields": {
+        "username": "pinot@worldtour.com",
+        "first_name": "Thibaut",
+        "last_name": "PINOT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "pinot@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.005Z"
+    },
+    "model": "auth.user",
+    "pk": 2540
+},
+{
+    "fields": {
+        "username": "porte@worldtour.com",
+        "first_name": "Richie",
+        "last_name": "PORTE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "porte@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.016Z"
+    },
+    "model": "auth.user",
+    "pk": 2541
+},
+{
+    "fields": {
+        "username": "degenkolb@worldtour.com",
+        "first_name": "John",
+        "last_name": "DEGENKOLB",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "degenkolb@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.025Z"
+    },
+    "model": "auth.user",
+    "pk": 2542
+},
+{
+    "fields": {
+        "username": "uran@worldtour.com",
+        "first_name": "Rigoberto",
+        "last_name": "URAN URAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "uran@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.034Z"
+    },
+    "model": "auth.user",
+    "pk": 2543
+},
+{
+    "fields": {
+        "username": "thomas@worldtour.com",
+        "first_name": "Geraint",
+        "last_name": "THOMAS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "thomas@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.042Z"
+    },
+    "model": "auth.user",
+    "pk": 2544
+},
+{
+    "fields": {
+        "username": "dumoulin@worldtour.com",
+        "first_name": "Tom",
+        "last_name": "DUMOULIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "dumoulin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.050Z"
+    },
+    "model": "auth.user",
+    "pk": 2545
+},
+{
+    "fields": {
+        "username": "spilak@worldtour.com",
+        "first_name": "Simon",
+        "last_name": "SPILAK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "spilak@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.058Z"
+    },
+    "model": "auth.user",
+    "pk": 2546
+},
+{
+    "fields": {
+        "username": "sagan@worldtour.com",
+        "first_name": "Peter",
+        "last_name": "SAGAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "sagan@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.065Z"
+    },
+    "model": "auth.user",
+    "pk": 2547
+},
+{
+    "fields": {
+        "username": "pozzovivo@worldtour.com",
+        "first_name": "Domenico",
+        "last_name": "POZZOVIVO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "pozzovivo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.072Z"
+    },
+    "model": "auth.user",
+    "pk": 2548
+},
+{
+    "fields": {
+        "username": "nibali@worldtour.com",
+        "first_name": "Vincenzo",
+        "last_name": "NIBALI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "nibali@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.081Z"
+    },
+    "model": "auth.user",
+    "pk": 2549
+},
+{
+    "fields": {
+        "username": "matthews@worldtour.com",
+        "first_name": "Michael",
+        "last_name": "MATTHEWS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "matthews@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.089Z"
+    },
+    "model": "auth.user",
+    "pk": 2550
+},
+{
+    "fields": {
+        "username": "moreno@worldtour.com",
+        "first_name": "Daniel",
+        "last_name": "MORENO FERNANDEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "moreno@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.097Z"
+    },
+    "model": "auth.user",
+    "pk": 2551
+},
+{
+    "fields": {
+        "username": "mollema@worldtour.com",
+        "first_name": "Bauke",
+        "last_name": "MOLLEMA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "mollema@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.105Z"
+    },
+    "model": "auth.user",
+    "pk": 2552
+},
+{
+    "fields": {
+        "username": "bardet@worldtour.com",
+        "first_name": "Romain",
+        "last_name": "BARDET",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bardet@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.114Z"
+    },
+    "model": "auth.user",
+    "pk": 2553
+},
+{
+    "fields": {
+        "username": "greipel@worldtour.com",
+        "first_name": "Andre",
+        "last_name": "GREIPEL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "greipel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.121Z"
+    },
+    "model": "auth.user",
+    "pk": 2554
+},
+{
+    "fields": {
+        "username": "wellens@worldtour.com",
+        "first_name": "Tim",
+        "last_name": "WELLENS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "wellens@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.130Z"
+    },
+    "model": "auth.user",
+    "pk": 2555
+},
+{
+    "fields": {
+        "username": "kwiatkowski@worldtour.com",
+        "first_name": "Michal",
+        "last_name": "KWIATKOWSKI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kwiatkowski@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.138Z"
+    },
+    "model": "auth.user",
+    "pk": 2556
+},
+{
+    "fields": {
+        "username": "zakarin@worldtour.com",
+        "first_name": "Ilnur",
+        "last_name": "ZAKARIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "zakarin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.146Z"
+    },
+    "model": "auth.user",
+    "pk": 2557
+},
+{
+    "fields": {
+        "username": "alaphilippe@worldtour.com",
+        "first_name": "Julian",
+        "last_name": "ALAPHILIPPE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "alaphilippe@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.154Z"
+    },
+    "model": "auth.user",
+    "pk": 2558
+},
+{
+    "fields": {
+        "username": "gilbert@worldtour.com",
+        "first_name": "Philippe",
+        "last_name": "GILBERT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gilbert@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.161Z"
+    },
+    "model": "auth.user",
+    "pk": 2559
+},
+{
+    "fields": {
+        "username": "izaguirre@worldtour.com",
+        "first_name": "Jon",
+        "last_name": "IZAGUIRRE INSAUSTI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "izaguirre@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.168Z"
+    },
+    "model": "auth.user",
+    "pk": 2560
+},
+{
+    "fields": {
+        "username": "stybar@worldtour.com",
+        "first_name": "Zdenek",
+        "last_name": "STYBAR",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "stybar@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.176Z"
+    },
+    "model": "auth.user",
+    "pk": 2561
+},
+{
+    "fields": {
+        "username": "henao@worldtour.com",
+        "first_name": "Sergio Luis",
+        "last_name": "HENAO MONTOYA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "henao@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.184Z"
+    },
+    "model": "auth.user",
+    "pk": 2562
+},
+{
+    "fields": {
+        "username": "majka@worldtour.com",
+        "first_name": "Rafal",
+        "last_name": "MAJKA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "majka@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.191Z"
+    },
+    "model": "auth.user",
+    "pk": 2563
+},
+{
+    "fields": {
+        "username": "landa@worldtour.com",
+        "first_name": "Mikel",
+        "last_name": "LANDA MEANA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "landa@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.199Z"
+    },
+    "model": "auth.user",
+    "pk": 2564
+},
+{
+    "fields": {
+        "username": "yates@worldtour.com",
+        "first_name": "Adam",
+        "last_name": "YATES",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "yates@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.206Z"
+    },
+    "model": "auth.user",
+    "pk": 2565
+},
+{
+    "fields": {
+        "username": "terpstra@worldtour.com",
+        "first_name": "Niki",
+        "last_name": "TERPSTRA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "terpstra@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.215Z"
+    },
+    "model": "auth.user",
+    "pk": 2566
+},
+{
+    "fields": {
+        "username": "dennis@worldtour.com",
+        "first_name": "Rohan",
+        "last_name": "DENNIS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "dennis@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.222Z"
+    },
+    "model": "auth.user",
+    "pk": 2567
+},
+{
+    "fields": {
+        "username": "chaves@worldtour.com",
+        "first_name": "Jhoan Esteban",
+        "last_name": "CHAVES RUBIO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "chaves@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.229Z"
+    },
+    "model": "auth.user",
+    "pk": 2568
+},
+{
+    "fields": {
+        "username": "gallopin@worldtour.com",
+        "first_name": "Tony",
+        "last_name": "GALLOPIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gallopin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.236Z"
+    },
+    "model": "auth.user",
+    "pk": 2569
+},
+{
+    "fields": {
+        "username": "gesink@worldtour.com",
+        "first_name": "Robert",
+        "last_name": "GESINK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gesink@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.244Z"
+    },
+    "model": "auth.user",
+    "pk": 2570
+},
+{
+    "fields": {
+        "username": "kelderman@worldtour.com",
+        "first_name": "Wilco",
+        "last_name": "KELDERMAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kelderman@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.253Z"
+    },
+    "model": "auth.user",
+    "pk": 2571
+},
+{
+    "fields": {
+        "username": "de@worldtour.com",
+        "first_name": "Bart",
+        "last_name": "DE CLERCQ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "de@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.261Z"
+    },
+    "model": "auth.user",
+    "pk": 2572
+},
+{
+    "fields": {
+        "username": "nieve@worldtour.com",
+        "first_name": "Mikel",
+        "last_name": "NIEVE ITURALDE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "nieve@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.268Z"
+    },
+    "model": "auth.user",
+    "pk": 2573
+},
+{
+    "fields": {
+        "username": "boom@worldtour.com",
+        "first_name": "Lars",
+        "last_name": "BOOM",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "boom@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.277Z"
+    },
+    "model": "auth.user",
+    "pk": 2574
+},
+{
+    "fields": {
+        "username": "hesjedal@worldtour.com",
+        "first_name": "Ryder",
+        "last_name": "HESJEDAL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "hesjedal@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.287Z"
+    },
+    "model": "auth.user",
+    "pk": 2575
+},
+{
+    "fields": {
+        "username": "benoot@worldtour.com",
+        "first_name": "Tiesj",
+        "last_name": "BENOOT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "benoot@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.295Z"
+    },
+    "model": "auth.user",
+    "pk": 2576
+},
+{
+    "fields": {
+        "username": "ulissi@worldtour.com",
+        "first_name": "Diego",
+        "last_name": "ULISSI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "ulissi@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.303Z"
+    },
+    "model": "auth.user",
+    "pk": 2577
+},
+{
+    "fields": {
+        "username": "amador@worldtour.com",
+        "first_name": "Andrey",
+        "last_name": "AMADOR BAKKAZAKOVA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "amador@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.312Z"
+    },
+    "model": "auth.user",
+    "pk": 2578
+},
+{
+    "fields": {
+        "username": "martin@worldtour.com",
+        "first_name": "Daniel",
+        "last_name": "MARTIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "martin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.319Z"
+    },
+    "model": "auth.user",
+    "pk": 2579
+},
+{
+    "fields": {
+        "username": "roelandts@worldtour.com",
+        "first_name": "Jurgen",
+        "last_name": "ROELANDTS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "roelandts@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.326Z"
+    },
+    "model": "auth.user",
+    "pk": 2580
+},
+{
+    "fields": {
+        "username": "intxausti@worldtour.com",
+        "first_name": "Benat",
+        "last_name": "INTXAUSTI ELORRIAGA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "intxausti@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.333Z"
+    },
+    "model": "auth.user",
+    "pk": 2581
+},
+{
+    "fields": {
+        "username": "paolini@worldtour.com",
+        "first_name": "Luca",
+        "last_name": "PAOLINI *",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "paolini@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.340Z"
+    },
+    "model": "auth.user",
+    "pk": 2582
+},
+{
+    "fields": {
+        "username": "kruijswijk@worldtour.com",
+        "first_name": "Steven",
+        "last_name": "KRUIJSWIJK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kruijswijk@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.348Z"
+    },
+    "model": "auth.user",
+    "pk": 2583
+},
+{
+    "fields": {
+        "username": "nizzolo@worldtour.com",
+        "first_name": "Giacomo",
+        "last_name": "NIZZOLO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "nizzolo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.355Z"
+    },
+    "model": "auth.user",
+    "pk": 2584
+},
+{
+    "fields": {
+        "username": "evans@worldtour.com",
+        "first_name": "Cadel",
+        "last_name": "EVANS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "evans@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.363Z"
+    },
+    "model": "auth.user",
+    "pk": 2585
+},
+{
+    "fields": {
+        "username": "frank@worldtour.com",
+        "first_name": "Mathias",
+        "last_name": "FRANK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "frank@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.370Z"
+    },
+    "model": "auth.user",
+    "pk": 2586
+},
+{
+    "fields": {
+        "username": "hermans@worldtour.com",
+        "first_name": "Ben",
+        "last_name": "HERMANS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "hermans@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.379Z"
+    },
+    "model": "auth.user",
+    "pk": 2587
+},
+{
+    "fields": {
+        "username": "konig@worldtour.com",
+        "first_name": "Leopold",
+        "last_name": "KONIG",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "konig@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.386Z"
+    },
+    "model": "auth.user",
+    "pk": 2588
+},
+{
+    "fields": {
+        "username": "kreuziger@worldtour.com",
+        "first_name": "Roman",
+        "last_name": "KREUZIGER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kreuziger@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.393Z"
+    },
+    "model": "auth.user",
+    "pk": 2589
+},
+{
+    "fields": {
+        "username": "felline@worldtour.com",
+        "first_name": "Fabio",
+        "last_name": "FELLINE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "felline@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.400Z"
+    },
+    "model": "auth.user",
+    "pk": 2590
+},
+{
+    "fields": {
+        "username": "fuglsang@worldtour.com",
+        "first_name": "Jakob",
+        "last_name": "FUGLSANG",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "fuglsang@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.407Z"
+    },
+    "model": "auth.user",
+    "pk": 2591
+},
+{
+    "fields": {
+        "username": "albasini@worldtour.com",
+        "first_name": "Michael",
+        "last_name": "ALBASINI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "albasini@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.415Z"
+    },
+    "model": "auth.user",
+    "pk": 2592
+},
+{
+    "fields": {
+        "username": "bonifazio@worldtour.com",
+        "first_name": "Niccolo",
+        "last_name": "BONIFAZIO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bonifazio@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.422Z"
+    },
+    "model": "auth.user",
+    "pk": 2593
+},
+{
+    "fields": {
+        "username": "bakelants@worldtour.com",
+        "first_name": "Jan",
+        "last_name": "BAKELANTS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bakelants@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.430Z"
+    },
+    "model": "auth.user",
+    "pk": 2594
+},
+{
+    "fields": {
+        "username": "cancellara@worldtour.com",
+        "first_name": "Fabian",
+        "last_name": "CANCELLARA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "cancellara@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.438Z"
+    },
+    "model": "auth.user",
+    "pk": 2595
+},
+{
+    "fields": {
+        "username": "elmiger@worldtour.com",
+        "first_name": "Martin",
+        "last_name": "ELMIGER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "elmiger@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.445Z"
+    },
+    "model": "auth.user",
+    "pk": 2596
+},
+{
+    "fields": {
+        "username": "caruso@worldtour.com",
+        "first_name": "Damiano",
+        "last_name": "CARUSO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "caruso@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.452Z"
+    },
+    "model": "auth.user",
+    "pk": 2597
+},
+{
+    "fields": {
+        "username": "talansky@worldtour.com",
+        "first_name": "Andrew",
+        "last_name": "TALANSKY",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "talansky@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.460Z"
+    },
+    "model": "auth.user",
+    "pk": 2598
+},
+{
+    "fields": {
+        "username": "rosa@worldtour.com",
+        "first_name": "Diego",
+        "last_name": "ROSA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "rosa@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.468Z"
+    },
+    "model": "auth.user",
+    "pk": 2599
+},
+{
+    "fields": {
+        "username": "vanmarcke@worldtour.com",
+        "first_name": "Sep",
+        "last_name": "VANMARCKE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "vanmarcke@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.475Z"
+    },
+    "model": "auth.user",
+    "pk": 2600
+},
+{
+    "fields": {
+        "username": "fernandez@worldtour.com",
+        "first_name": "Ruben",
+        "last_name": "FERNANDEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "fernandez@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.482Z"
+    },
+    "model": "auth.user",
+    "pk": 2601
+},
+{
+    "fields": {
+        "username": "trentin@worldtour.com",
+        "first_name": "Matteo",
+        "last_name": "TRENTIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "trentin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.490Z"
+    },
+    "model": "auth.user",
+    "pk": 2602
+},
+{
+    "fields": {
+        "username": "navardauskas@worldtour.com",
+        "first_name": "Ramunas",
+        "last_name": "NAVARDAUSKAS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "navardauskas@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.497Z"
+    },
+    "model": "auth.user",
+    "pk": 2603
+},
+{
+    "fields": {
+        "username": "slagter@worldtour.com",
+        "first_name": "Tom Jelte",
+        "last_name": "SLAGTER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "slagter@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.507Z"
+    },
+    "model": "auth.user",
+    "pk": 2604
+},
+{
+    "fields": {
+        "username": "vuillermoz@worldtour.com",
+        "first_name": "Alexis",
+        "last_name": "VUILLERMOZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "vuillermoz@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.515Z"
+    },
+    "model": "auth.user",
+    "pk": 2605
+},
+{
+    "fields": {
+        "username": "impey@worldtour.com",
+        "first_name": "Daryl",
+        "last_name": "IMPEY",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "impey@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.522Z"
+    },
+    "model": "auth.user",
+    "pk": 2606
+},
+{
+    "fields": {
+        "username": "boonen@worldtour.com",
+        "first_name": "Tom",
+        "last_name": "BOONEN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "boonen@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.529Z"
+    },
+    "model": "auth.user",
+    "pk": 2607
+},
+{
+    "fields": {
+        "username": "debusschere@worldtour.com",
+        "first_name": "Jens",
+        "last_name": "DEBUSSCHERE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "debusschere@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.537Z"
+    },
+    "model": "auth.user",
+    "pk": 2608
+},
+{
+    "fields": {
+        "username": "trofimov@worldtour.com",
+        "first_name": "Yury",
+        "last_name": "TROFIMOV",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "trofimov@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.545Z"
+    },
+    "model": "auth.user",
+    "pk": 2609
+},
+{
+    "fields": {
+        "username": "keukeleire@worldtour.com",
+        "first_name": "Jens",
+        "last_name": "KEUKELEIRE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "keukeleire@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.552Z"
+    },
+    "model": "auth.user",
+    "pk": 2610
+},
+{
+    "fields": {
+        "username": "jungels@worldtour.com",
+        "first_name": "Bob",
+        "last_name": "JUNGELS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "jungels@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.561Z"
+    },
+    "model": "auth.user",
+    "pk": 2611
+},
+{
+    "fields": {
+        "username": "poels@worldtour.com",
+        "first_name": "Wouter",
+        "last_name": "POELS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "poels@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.575Z"
+    },
+    "model": "auth.user",
+    "pk": 2612
+},
+{
+    "fields": {
+        "username": "geniez@worldtour.com",
+        "first_name": "Alexandre",
+        "last_name": "GENIEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "geniez@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.589Z"
+    },
+    "model": "auth.user",
+    "pk": 2613
+},
+{
+    "fields": {
+        "username": "modolo@worldtour.com",
+        "first_name": "Sacha",
+        "last_name": "MODOLO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "modolo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.598Z"
+    },
+    "model": "auth.user",
+    "pk": 2614
+},
+{
+    "fields": {
+        "username": "valls@worldtour.com",
+        "first_name": "Rafael",
+        "last_name": "VALLS FERRI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "valls@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.605Z"
+    },
+    "model": "auth.user",
+    "pk": 2615
+},
+{
+    "fields": {
+        "username": "vandenbergh@worldtour.com",
+        "first_name": "Stijn",
+        "last_name": "VANDENBERGH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "vandenbergh@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.612Z"
+    },
+    "model": "auth.user",
+    "pk": 2616
+},
+{
+    "fields": {
+        "username": "scarponi@worldtour.com",
+        "first_name": "Michele",
+        "last_name": "SCARPONI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "scarponi@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.620Z"
+    },
+    "model": "auth.user",
+    "pk": 2617
+},
+{
+    "fields": {
+        "username": "grivko@worldtour.com",
+        "first_name": "Andriy",
+        "last_name": "GRIVKO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "grivko@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.627Z"
+    },
+    "model": "auth.user",
+    "pk": 2618
+},
+{
+    "fields": {
+        "username": "atapuma@worldtour.com",
+        "first_name": "Darwin",
+        "last_name": "ATAPUMA HURTADO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "atapuma@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.634Z"
+    },
+    "model": "auth.user",
+    "pk": 2619
+},
+{
+    "fields": {
+        "username": "plaza@worldtour.com",
+        "first_name": "Ruben",
+        "last_name": "PLAZA MOLINA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "plaza@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.644Z"
+    },
+    "model": "auth.user",
+    "pk": 2620
+},
+{
+    "fields": {
+        "username": "breschel@worldtour.com",
+        "first_name": "Matti",
+        "last_name": "BRESCHEL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "breschel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.652Z"
+    },
+    "model": "auth.user",
+    "pk": 2621
+},
+{
+    "fields": {
+        "username": "monfort@worldtour.com",
+        "first_name": "Maxime",
+        "last_name": "MONFORT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "monfort@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.661Z"
+    },
+    "model": "auth.user",
+    "pk": 2622
+},
+{
+    "fields": {
+        "username": "barguil@worldtour.com",
+        "first_name": "Warren",
+        "last_name": "BARGUIL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "barguil@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.669Z"
+    },
+    "model": "auth.user",
+    "pk": 2623
+},
+{
+    "fields": {
+        "username": "demare@worldtour.com",
+        "first_name": "Arnaud",
+        "last_name": "DEMARE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "demare@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.676Z"
+    },
+    "model": "auth.user",
+    "pk": 2624
+},
+{
+    "fields": {
+        "username": "lampaert@worldtour.com",
+        "first_name": "Yves",
+        "last_name": "LAMPAERT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lampaert@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.684Z"
+    },
+    "model": "auth.user",
+    "pk": 2625
+},
+{
+    "fields": {
+        "username": "cimolai@worldtour.com",
+        "first_name": "Davide",
+        "last_name": "CIMOLAI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "cimolai@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.691Z"
+    },
+    "model": "auth.user",
+    "pk": 2626
+},
+{
+    "fields": {
+        "username": "geschke@worldtour.com",
+        "first_name": "Simon",
+        "last_name": "GESCHKE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "geschke@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.699Z"
+    },
+    "model": "auth.user",
+    "pk": 2627
+},
+{
+    "fields": {
+        "username": "lopez@worldtour.com",
+        "first_name": "Miguel Angel",
+        "last_name": "LOPEZ MORENO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lopez@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.706Z"
+    },
+    "model": "auth.user",
+    "pk": 2628
+},
+{
+    "fields": {
+        "username": "rogers@worldtour.com",
+        "first_name": "Michael",
+        "last_name": "ROGERS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "rogers@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.714Z"
+    },
+    "model": "auth.user",
+    "pk": 2629
+},
+{
+    "fields": {
+        "username": "riblon@worldtour.com",
+        "first_name": "Christophe",
+        "last_name": "RIBLON",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "riblon@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.721Z"
+    },
+    "model": "auth.user",
+    "pk": 2630
+},
+{
+    "fields": {
+        "username": "sanchez@worldtour.com",
+        "first_name": "Samuel",
+        "last_name": "SANCHEZ GONZALEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "sanchez@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.728Z"
+    },
+    "model": "auth.user",
+    "pk": 2631
+},
+{
+    "fields": {
+        "username": "cavendish@worldtour.com",
+        "first_name": "Mark",
+        "last_name": "CAVENDISH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "cavendish@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.736Z"
+    },
+    "model": "auth.user",
+    "pk": 2632
+},
+{
+    "fields": {
+        "username": "viviani@worldtour.com",
+        "first_name": "Elia",
+        "last_name": "VIVIANI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "viviani@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.747Z"
+    },
+    "model": "auth.user",
+    "pk": 2633
+},
+{
+    "fields": {
+        "username": "pantano@worldtour.com",
+        "first_name": "Jarlinson",
+        "last_name": "PANTANO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "pantano@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.755Z"
+    },
+    "model": "auth.user",
+    "pk": 2634
+},
+{
+    "fields": {
+        "username": "formolo@worldtour.com",
+        "first_name": "Davide",
+        "last_name": "FORMOLO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "formolo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.762Z"
+    },
+    "model": "auth.user",
+    "pk": 2635
+},
+{
+    "fields": {
+        "username": "brambilla@worldtour.com",
+        "first_name": "Gianluca",
+        "last_name": "BRAMBILLA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "brambilla@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.770Z"
+    },
+    "model": "auth.user",
+    "pk": 2636
+},
+{
+    "fields": {
+        "username": "roche@worldtour.com",
+        "first_name": "Nicolas",
+        "last_name": "ROCHE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "roche@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.778Z"
+    },
+    "model": "auth.user",
+    "pk": 2637
+},
+{
+    "fields": {
+        "username": "kangert@worldtour.com",
+        "first_name": "Tanel",
+        "last_name": "KANGERT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kangert@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.785Z"
+    },
+    "model": "auth.user",
+    "pk": 2638
+},
+{
+    "fields": {
+        "username": "kiryienka@worldtour.com",
+        "first_name": "Vasil",
+        "last_name": "KIRYIENKA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kiryienka@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.792Z"
+    },
+    "model": "auth.user",
+    "pk": 2639
+},
+{
+    "fields": {
+        "username": "santos@worldtour.com",
+        "first_name": "Nelson Filipe",
+        "last_name": "SANTOS SIMOES OLIVEIRA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "santos@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.800Z"
+    },
+    "model": "auth.user",
+    "pk": 2640
+},
+{
+    "fields": {
+        "username": "tiralongo@worldtour.com",
+        "first_name": "Paolo",
+        "last_name": "TIRALONGO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "tiralongo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.807Z"
+    },
+    "model": "auth.user",
+    "pk": 2641
+},
+{
+    "fields": {
+        "username": "roux@worldtour.com",
+        "first_name": "Anthony",
+        "last_name": "ROUX",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "roux@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.815Z"
+    },
+    "model": "auth.user",
+    "pk": 2642
+},
+{
+    "fields": {
+        "username": "morabito@worldtour.com",
+        "first_name": "Steve",
+        "last_name": "MORABITO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "morabito@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.823Z"
+    },
+    "model": "auth.user",
+    "pk": 2643
+},
+{
+    "fields": {
+        "username": "ewan@worldtour.com",
+        "first_name": "Caleb",
+        "last_name": "EWAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "ewan@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.830Z"
+    },
+    "model": "auth.user",
+    "pk": 2644
+},
+{
+    "fields": {
+        "username": "rowe@worldtour.com",
+        "first_name": "Luke",
+        "last_name": "ROWE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "rowe@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.838Z"
+    },
+    "model": "auth.user",
+    "pk": 2645
+},
+{
+    "fields": {
+        "username": "pelucchi@worldtour.com",
+        "first_name": "Matteo",
+        "last_name": "PELUCCHI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "pelucchi@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.848Z"
+    },
+    "model": "auth.user",
+    "pk": 2646
+},
+{
+    "fields": {
+        "username": "moinard@worldtour.com",
+        "first_name": "Amal",
+        "last_name": "MOINARD",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "moinard@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.858Z"
+    },
+    "model": "auth.user",
+    "pk": 2647
+},
+{
+    "fields": {
+        "username": "lindeman@worldtour.com",
+        "first_name": "Bertjan",
+        "last_name": "LINDEMAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lindeman@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.869Z"
+    },
+    "model": "auth.user",
+    "pk": 2648
+},
+{
+    "fields": {
+        "username": "rojas@worldtour.com",
+        "first_name": "Jose Joaquin",
+        "last_name": "ROJAS GIL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "rojas@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.876Z"
+    },
+    "model": "auth.user",
+    "pk": 2649
+},
+{
+    "fields": {
+        "username": "stuyven@worldtour.com",
+        "first_name": "Jasper",
+        "last_name": "STUYVEN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "stuyven@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.883Z"
+    },
+    "model": "auth.user",
+    "pk": 2650
+},
+{
+    "fields": {
+        "username": "polanc@worldtour.com",
+        "first_name": "Jan",
+        "last_name": "POLANC",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "polanc@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.890Z"
+    },
+    "model": "auth.user",
+    "pk": 2651
+},
+{
+    "fields": {
+        "username": "schleck@worldtour.com",
+        "first_name": "Frank",
+        "last_name": "SCHLECK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "schleck@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.898Z"
+    },
+    "model": "auth.user",
+    "pk": 2652
+},
+{
+    "fields": {
+        "username": "gougeard@worldtour.com",
+        "first_name": "Alexis",
+        "last_name": "GOUGEARD",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gougeard@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.906Z"
+    },
+    "model": "auth.user",
+    "pk": 2653
+},
+{
+    "fields": {
+        "username": "bodnar@worldtour.com",
+        "first_name": "Maciej",
+        "last_name": "BODNAR",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bodnar@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.913Z"
+    },
+    "model": "auth.user",
+    "pk": 2654
+},
+{
+    "fields": {
+        "username": "keisse@worldtour.com",
+        "first_name": "Iljo",
+        "last_name": "KEISSE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "keisse@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.921Z"
+    },
+    "model": "auth.user",
+    "pk": 2655
+},
+{
+    "fields": {
+        "username": "oss@worldtour.com",
+        "first_name": "Daniel",
+        "last_name": "OSS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "oss@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.928Z"
+    },
+    "model": "auth.user",
+    "pk": 2656
+},
+{
+    "fields": {
+        "username": "visconti@worldtour.com",
+        "first_name": "Giovanni",
+        "last_name": "VISCONTI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "visconti@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.935Z"
+    },
+    "model": "auth.user",
+    "pk": 2657
+},
+{
+    "fields": {
+        "username": "chavanel@worldtour.com",
+        "first_name": "Sylvain",
+        "last_name": "CHAVANEL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "chavanel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.948Z"
+    },
+    "model": "auth.user",
+    "pk": 2658
+},
+{
+    "fields": {
+        "username": "lobato@worldtour.com",
+        "first_name": "Juan Jose",
+        "last_name": "LOBATO DEL VALLE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lobato@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.956Z"
+    },
+    "model": "auth.user",
+    "pk": 2659
+},
+{
+    "fields": {
+        "username": "malori@worldtour.com",
+        "first_name": "Adriano",
+        "last_name": "MALORI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "malori@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.963Z"
+    },
+    "model": "auth.user",
+    "pk": 2660
+},
+{
+    "fields": {
+        "username": "drucker@worldtour.com",
+        "first_name": "Jean-Pierre",
+        "last_name": "DRUCKER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "drucker@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.970Z"
+    },
+    "model": "auth.user",
+    "pk": 2661
+},
+{
+    "fields": {
+        "username": "sinkeldam@worldtour.com",
+        "first_name": "Ramon",
+        "last_name": "SINKELDAM",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "sinkeldam@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.978Z"
+    },
+    "model": "auth.user",
+    "pk": 2662
+},
+{
+    "fields": {
+        "username": "bauer@worldtour.com",
+        "first_name": "Jack",
+        "last_name": "BAUER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bauer@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.985Z"
+    },
+    "model": "auth.user",
+    "pk": 2663
+},
+{
+    "fields": {
+        "username": "juul@worldtour.com",
+        "first_name": "Christopher",
+        "last_name": "JUUL JENSEN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "juul@worldtour.com",
+        "date_joined": "2015-10-10T10:29:30.993Z"
+    },
+    "model": "auth.user",
+    "pk": 2664
+},
+{
+    "fields": {
+        "username": "elissonde@worldtour.com",
+        "first_name": "Kenny",
+        "last_name": "ELISSONDE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "elissonde@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.000Z"
+    },
+    "model": "auth.user",
+    "pk": 2665
+},
+{
+    "fields": {
+        "username": "cherel@worldtour.com",
+        "first_name": "Mikael",
+        "last_name": "CHEREL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "cherel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.008Z"
+    },
+    "model": "auth.user",
+    "pk": 2666
+},
+{
+    "fields": {
+        "username": "kittel@worldtour.com",
+        "first_name": "Marcel",
+        "last_name": "KITTEL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kittel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.015Z"
+    },
+    "model": "auth.user",
+    "pk": 2667
+},
+{
+    "fields": {
+        "username": "durbridge@worldtour.com",
+        "first_name": "Luke",
+        "last_name": "DURBRIDGE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "durbridge@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.023Z"
+    },
+    "model": "auth.user",
+    "pk": 2668
+},
+{
+    "fields": {
+        "username": "mezgec@worldtour.com",
+        "first_name": "Luka",
+        "last_name": "MEZGEC",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "mezgec@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.031Z"
+    },
+    "model": "auth.user",
+    "pk": 2669
+},
+{
+    "fields": {
+        "username": "zubeldia@worldtour.com",
+        "first_name": "Haimar",
+        "last_name": "ZUBELDIA AGIRRE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "zubeldia@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.041Z"
+    },
+    "model": "auth.user",
+    "pk": 2670
+},
+{
+    "fields": {
+        "username": "koshevoy@worldtour.com",
+        "first_name": "Ilia",
+        "last_name": "KOSHEVOY",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "koshevoy@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.050Z"
+    },
+    "model": "auth.user",
+    "pk": 2671
+},
+{
+    "fields": {
+        "username": "chernetski@worldtour.com",
+        "first_name": "Sergei",
+        "last_name": "CHERNETSKI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "chernetski@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.058Z"
+    },
+    "model": "auth.user",
+    "pk": 2672
+},
+{
+    "fields": {
+        "username": "haussler@worldtour.com",
+        "first_name": "Heinrich",
+        "last_name": "HAUSSLER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "haussler@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.065Z"
+    },
+    "model": "auth.user",
+    "pk": 2673
+},
+{
+    "fields": {
+        "username": "clarke@worldtour.com",
+        "first_name": "Simon",
+        "last_name": "CLARKE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "clarke@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.074Z"
+    },
+    "model": "auth.user",
+    "pk": 2674
+},
+{
+    "fields": {
+        "username": "puccio@worldtour.com",
+        "first_name": "Salvatore",
+        "last_name": "PUCCIO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "puccio@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.083Z"
+    },
+    "model": "auth.user",
+    "pk": 2675
+},
+{
+    "fields": {
+        "username": "hofland@worldtour.com",
+        "first_name": "Moreno",
+        "last_name": "HOFLAND",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "hofland@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.091Z"
+    },
+    "model": "auth.user",
+    "pk": 2676
+},
+{
+    "fields": {
+        "username": "bennett@worldtour.com",
+        "first_name": "George",
+        "last_name": "BENNETT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bennett@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.098Z"
+    },
+    "model": "auth.user",
+    "pk": 2677
+},
+{
+    "fields": {
+        "username": "cardoso@worldtour.com",
+        "first_name": "Andre Fernando Martins",
+        "last_name": "CARDOSO S.",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "cardoso@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.106Z"
+    },
+    "model": "auth.user",
+    "pk": 2678
+},
+{
+    "fields": {
+        "username": "kennaugh@worldtour.com",
+        "first_name": "Peter",
+        "last_name": "KENNAUGH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kennaugh@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.114Z"
+    },
+    "model": "auth.user",
+    "pk": 2679
+},
+{
+    "fields": {
+        "username": "durasek@worldtour.com",
+        "first_name": "Kristijan",
+        "last_name": "DURASEK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "durasek@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.122Z"
+    },
+    "model": "auth.user",
+    "pk": 2680
+},
+{
+    "fields": {
+        "username": "gerrans@worldtour.com",
+        "first_name": "Simon",
+        "last_name": "GERRANS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gerrans@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.129Z"
+    },
+    "model": "auth.user",
+    "pk": 2681
+},
+{
+    "fields": {
+        "username": "lutsenko@worldtour.com",
+        "first_name": "Alexey",
+        "last_name": "LUTSENKO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lutsenko@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.137Z"
+    },
+    "model": "auth.user",
+    "pk": 2682
+},
+{
+    "fields": {
+        "username": "quinziato@worldtour.com",
+        "first_name": "Manuel",
+        "last_name": "QUINZIATO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "quinziato@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.145Z"
+    },
+    "model": "auth.user",
+    "pk": 2683
+},
+{
+    "fields": {
+        "username": "anacona@worldtour.com",
+        "first_name": "Winner",
+        "last_name": "ANACONA GOMEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "anacona@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.152Z"
+    },
+    "model": "auth.user",
+    "pk": 2684
+},
+{
+    "fields": {
+        "username": "le@worldtour.com",
+        "first_name": "Johan",
+        "last_name": "LE BON",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "le@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.162Z"
+    },
+    "model": "auth.user",
+    "pk": 2685
+},
+{
+    "fields": {
+        "username": "kueng@worldtour.com",
+        "first_name": "Stefan",
+        "last_name": "KUENG",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kueng@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.170Z"
+    },
+    "model": "auth.user",
+    "pk": 2686
+},
+{
+    "fields": {
+        "username": "reichenbach@worldtour.com",
+        "first_name": "Sebastien",
+        "last_name": "REICHENBACH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "reichenbach@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.177Z"
+    },
+    "model": "auth.user",
+    "pk": 2687
+},
+{
+    "fields": {
+        "username": "nielsen@worldtour.com",
+        "first_name": "Magnus Cort",
+        "last_name": "NIELSEN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "nielsen@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.184Z"
+    },
+    "model": "auth.user",
+    "pk": 2688
+},
+{
+    "fields": {
+        "username": "porsev@worldtour.com",
+        "first_name": "Alexander",
+        "last_name": "PORSEV",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "porsev@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.192Z"
+    },
+    "model": "auth.user",
+    "pk": 2689
+},
+{
+    "fields": {
+        "username": "reza@worldtour.com",
+        "first_name": "Kevin",
+        "last_name": "REZA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "reza@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.200Z"
+    },
+    "model": "auth.user",
+    "pk": 2690
+},
+{
+    "fields": {
+        "username": "vangenechten@worldtour.com",
+        "first_name": "Jonas",
+        "last_name": "VANGENECHTEN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "vangenechten@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.208Z"
+    },
+    "model": "auth.user",
+    "pk": 2691
+},
+{
+    "fields": {
+        "username": "boswell@worldtour.com",
+        "first_name": "Ian",
+        "last_name": "BOSWELL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "boswell@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.223Z"
+    },
+    "model": "auth.user",
+    "pk": 2692
+},
+{
+    "fields": {
+        "username": "moser@worldtour.com",
+        "first_name": "Moreno",
+        "last_name": "MOSER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "moser@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.238Z"
+    },
+    "model": "auth.user",
+    "pk": 2693
+},
+{
+    "fields": {
+        "username": "guarnieri@worldtour.com",
+        "first_name": "Jacopo",
+        "last_name": "GUARNIERI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "guarnieri@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.249Z"
+    },
+    "model": "auth.user",
+    "pk": 2694
+},
+{
+    "fields": {
+        "username": "westra@worldtour.com",
+        "first_name": "Lieuwe",
+        "last_name": "WESTRA",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "westra@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.256Z"
+    },
+    "model": "auth.user",
+    "pk": 2695
+},
+{
+    "fields": {
+        "username": "brandle@worldtour.com",
+        "first_name": "Matthias",
+        "last_name": "BRANDLE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "brandle@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.263Z"
+    },
+    "model": "auth.user",
+    "pk": 2696
+},
+{
+    "fields": {
+        "username": "kluge@worldtour.com",
+        "first_name": "Roger",
+        "last_name": "KLUGE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "kluge@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.273Z"
+    },
+    "model": "auth.user",
+    "pk": 2697
+},
+{
+    "fields": {
+        "username": "arredondo@worldtour.com",
+        "first_name": "Julian David",
+        "last_name": "ARREDONDO MORENO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "arredondo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.280Z"
+    },
+    "model": "auth.user",
+    "pk": 2698
+},
+{
+    "fields": {
+        "username": "lagutin@worldtour.com",
+        "first_name": "Sergey",
+        "last_name": "LAGUTIN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "lagutin@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.287Z"
+    },
+    "model": "auth.user",
+    "pk": 2699
+},
+{
+    "fields": {
+        "username": "craddock@worldtour.com",
+        "first_name": "Lawson",
+        "last_name": "CRADDOCK",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "craddock@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.295Z"
+    },
+    "model": "auth.user",
+    "pk": 2700
+},
+{
+    "fields": {
+        "username": "bennati@worldtour.com",
+        "first_name": "Daniele",
+        "last_name": "BENNATI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bennati@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.302Z"
+    },
+    "model": "auth.user",
+    "pk": 2701
+},
+{
+    "fields": {
+        "username": "marangoni@worldtour.com",
+        "first_name": "Alan",
+        "last_name": "MARANGONI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "marangoni@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.309Z"
+    },
+    "model": "auth.user",
+    "pk": 2702
+},
+{
+    "fields": {
+        "username": "tcatevich@worldtour.com",
+        "first_name": "Aleksei",
+        "last_name": "TCATEVICH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "tcatevich@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.317Z"
+    },
+    "model": "auth.user",
+    "pk": 2703
+},
+{
+    "fields": {
+        "username": "martens@worldtour.com",
+        "first_name": "Paul",
+        "last_name": "MARTENS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "martens@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.325Z"
+    },
+    "model": "auth.user",
+    "pk": 2704
+},
+{
+    "fields": {
+        "username": "maes@worldtour.com",
+        "first_name": "Nikolas",
+        "last_name": "MAES",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "maes@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.332Z"
+    },
+    "model": "auth.user",
+    "pk": 2705
+},
+{
+    "fields": {
+        "username": "smukulis@worldtour.com",
+        "first_name": "Gatis",
+        "last_name": "SMUKULIS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "smukulis@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.341Z"
+    },
+    "model": "auth.user",
+    "pk": 2706
+},
+{
+    "fields": {
+        "username": "richeze@worldtour.com",
+        "first_name": "Maximiliano Ariel",
+        "last_name": "RICHEZE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "richeze@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.349Z"
+    },
+    "model": "auth.user",
+    "pk": 2707
+},
+{
+    "fields": {
+        "username": "gretsch@worldtour.com",
+        "first_name": "Patrick",
+        "last_name": "GRETSCH",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "gretsch@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.356Z"
+    },
+    "model": "auth.user",
+    "pk": 2708
+},
+{
+    "fields": {
+        "username": "flens@worldtour.com",
+        "first_name": "Rick",
+        "last_name": "FLENS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "flens@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.364Z"
+    },
+    "model": "auth.user",
+    "pk": 2709
+},
+{
+    "fields": {
+        "username": "vallee@worldtour.com",
+        "first_name": "Boris",
+        "last_name": "VALLEE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "vallee@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.373Z"
+    },
+    "model": "auth.user",
+    "pk": 2710
+},
+{
+    "fields": {
+        "username": "danielson@worldtour.com",
+        "first_name": "Thomas",
+        "last_name": "DANIELSON",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "danielson@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.380Z"
+    },
+    "model": "auth.user",
+    "pk": 2711
+},
+{
+    "fields": {
+        "username": "bouet@worldtour.com",
+        "first_name": "Maxime",
+        "last_name": "BOUET",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "bouet@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.387Z"
+    },
+    "model": "auth.user",
+    "pk": 2712
+},
+{
+    "fields": {
+        "username": "soler@worldtour.com",
+        "first_name": "Marc",
+        "last_name": "SOLER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "soler@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.396Z"
+    },
+    "model": "auth.user",
+    "pk": 2713
+},
+{
+    "fields": {
+        "username": "howson@worldtour.com",
+        "first_name": "Damien",
+        "last_name": "HOWSON",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "howson@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.404Z"
+    },
+    "model": "auth.user",
+    "pk": 2714
+},
+{
+    "fields": {
+        "username": "coppel@worldtour.com",
+        "first_name": "Jerome",
+        "last_name": "COPPEL",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "coppel@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.411Z"
+    },
+    "model": "auth.user",
+    "pk": 2715
+},
+{
+    "fields": {
+        "username": "castroviejo@worldtour.com",
+        "first_name": "Jonathan",
+        "last_name": "CASTROVIEJO NICOLAS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "castroviejo@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.420Z"
+    },
+    "model": "auth.user",
+    "pk": 2716
+},
+{
+    "fields": {
+        "username": "taaramae@worldtour.com",
+        "first_name": "Rein",
+        "last_name": "TAARAMAE",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "taaramae@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.427Z"
+    },
+    "model": "auth.user",
+    "pk": 2717
+},
+{
+    "fields": {
+        "username": "turgot@worldtour.com",
+        "first_name": "Sebastien",
+        "last_name": "TURGOT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "turgot@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.434Z"
+    },
+    "model": "auth.user",
+    "pk": 2718
+},
+{
+    "fields": {
+        "username": "ferrari@worldtour.com",
+        "first_name": "Roberto",
+        "last_name": "FERRARI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "ferrari@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.445Z"
+    },
+    "model": "auth.user",
+    "pk": 2719
+},
+{
+    "fields": {
+        "username": "haas@worldtour.com",
+        "first_name": "Nathan",
+        "last_name": "HAAS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "haas@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.453Z"
+    },
+    "model": "auth.user",
+    "pk": 2720
+},
+{
+    "fields": {
+        "username": "machado@worldtour.com",
+        "first_name": "Tiago",
+        "last_name": "MACHADO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "machado@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.460Z"
+    },
+    "model": "auth.user",
+    "pk": 2721
+},
+{
+    "fields": {
+        "username": "nocentini@worldtour.com",
+        "first_name": "Rinaldo",
+        "last_name": "NOCENTINI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "nocentini@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.468Z"
+    },
+    "model": "auth.user",
+    "pk": 2722
+},
+{
+    "fields": {
+        "username": "brutt@worldtour.com",
+        "first_name": "Pavel",
+        "last_name": "BRUTT",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "brutt@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.476Z"
+    },
+    "model": "auth.user",
+    "pk": 2723
+},
+{
+    "fields": {
+        "username": "boeckmans@worldtour.com",
+        "first_name": "Kris",
+        "last_name": "BOECKMANS",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "boeckmans@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.483Z"
+    },
+    "model": "auth.user",
+    "pk": 2724
+},
+{
+    "fields": {
+        "username": "haller@worldtour.com",
+        "first_name": "Marco",
+        "last_name": "HALLER",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "haller@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.490Z"
+    },
+    "model": "auth.user",
+    "pk": 2725
+},
+{
+    "fields": {
+        "username": "belkov@worldtour.com",
+        "first_name": "Maxim",
+        "last_name": "BELKOV",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "belkov@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.500Z"
+    },
+    "model": "auth.user",
+    "pk": 2726
+},
+{
+    "fields": {
+        "username": "guardini@worldtour.com",
+        "first_name": "Andrea",
+        "last_name": "GUARDINI",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "guardini@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.508Z"
+    },
+    "model": "auth.user",
+    "pk": 2727
+},
+{
+    "fields": {
+        "username": "herrada@worldtour.com",
+        "first_name": "Jesus",
+        "last_name": "HERRADA LOPEZ",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "herrada@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.515Z"
+    },
+    "model": "auth.user",
+    "pk": 2728
+},
+{
+    "fields": {
+        "username": "pozzato@worldtour.com",
+        "first_name": "Filippo",
+        "last_name": "POZZATO",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "pozzato@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.527Z"
+    },
+    "model": "auth.user",
+    "pk": 2729
+},
+{
+    "fields": {
+        "username": "meersman@worldtour.com",
+        "first_name": "Gianni",
+        "last_name": "MEERSMAN",
+        "is_active": true,
+        "is_superuser": false,
+        "is_staff": false,
+        "last_login": null,
+        "groups": [],
+        "user_permissions": [],
+        "password": "",
+        "email": "meersman@worldtour.com",
+        "date_joined": "2015-10-10T10:29:31.536Z"
+    },
+    "model": "auth.user",
+    "pk": 2730
+}
+]

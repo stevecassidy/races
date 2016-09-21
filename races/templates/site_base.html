@@ -1,0 +1,58 @@
+{% extends "theme_bootstrap/base.html" %}
+{% load flatpages %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block style_base %}
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href='{% static "pinax/css/theme.css" %}' rel="stylesheet">
+    <link href='{% static "bootstrap/css/bootstrap.min.css" %}' rel="stylesheet">
+    <link href='{% static "site.css" %}' rel="stylesheet">
+    {% block extra_style %}{% endblock %}
+{% endblock %}
+
+{% block navbar_class %}navbar-inverse{% endblock %}
+
+{% block topbar_base %}
+{% if iframe %}{% else %}{{block.super}}{% endif %}
+{% endblock %}
+
+{% block nav %}
+{% get_flatpages as flatpages %}
+<ul class="nav navbar-nav">
+  <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
+  <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
+  {% for page in flatpages %}
+    {% ifnotequal page.url '/' %}
+    <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+    {% endifnotequal %}
+  {% endfor %}
+</ul>
+{% endblock %}
+
+{% block extra_head_base %}
+    {% block extra_head %}{% endblock %}
+{% endblock %}
+
+{% block footer %}
+    {% if iframe %}
+    <ul>
+    <li>Content managed through <a href="/">cabici.net</a></li>
+    </ul>
+    {% else %}
+    {% include "_footer.html" %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+{% if not iframe %}
+    <div id='masthead'></div>
+    <div id='feed'><a href="{% url "feed" %}">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
+    {% endif %}
+    {% block content %}{% endblock %}
+{% endblock %}
+
+{% block extra_body_base %}
+
+{% endblock %}

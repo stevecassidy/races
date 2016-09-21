@@ -1,0 +1,2202 @@
+[
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19800425",
+        "official": false,
+        "user": 2531,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2930
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "ESP19790512",
+        "official": false,
+        "user": 2532,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2931
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "COL19900204",
+        "official": false,
+        "user": 2533,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2932
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "NOR19870705",
+        "official": false,
+        "user": 2534,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2933
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19900703",
+        "official": false,
+        "user": 2535,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2934
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "GBR19850520",
+        "official": false,
+        "user": 2536,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2935
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "ESP19821206",
+        "official": false,
+        "user": 2537,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2936
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "BEL19850517",
+        "official": false,
+        "user": 2538,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2937
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "POR19861005",
+        "official": false,
+        "user": 2539,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2938
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19900529",
+        "official": false,
+        "user": 2540,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2939
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "AUS19850130",
+        "official": false,
+        "user": 2541,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2940
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "GER19890107",
+        "official": false,
+        "user": 2542,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2941
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "COL19870126",
+        "official": false,
+        "user": 2543,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2942
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "GBR19860525",
+        "official": false,
+        "user": 2544,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2943
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "NED19901111",
+        "official": false,
+        "user": 2545,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2944
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "SLO19860623",
+        "official": false,
+        "user": 2546,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2945
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "SVK19900126",
+        "official": false,
+        "user": 2547,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2946
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "ITA19821130",
+        "official": false,
+        "user": 2548,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2947
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19841114",
+        "official": false,
+        "user": 2549,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2948
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19900926",
+        "official": false,
+        "user": 2550,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2949
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "ESP19810905",
+        "official": false,
+        "user": 2551,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2950
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "NED19861126",
+        "official": false,
+        "user": 2552,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2951
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19901109",
+        "official": false,
+        "user": 2553,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2952
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "GER19820716",
+        "official": false,
+        "user": 2554,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2953
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19910510",
+        "official": false,
+        "user": 2555,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2954
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "POL19900602",
+        "official": false,
+        "user": 2556,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2955
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19890915",
+        "official": false,
+        "user": 2557,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2956
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "FRA19920611",
+        "official": false,
+        "user": 2558,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2957
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "BEL19820705",
+        "official": false,
+        "user": 2559,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2958
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19890204",
+        "official": false,
+        "user": 2560,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2959
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "CZE19851211",
+        "official": false,
+        "user": 2561,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2960
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "COL19871210",
+        "official": false,
+        "user": 2562,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2961
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "POL19890912",
+        "official": false,
+        "user": 2563,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2962
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ESP19891213",
+        "official": false,
+        "user": 2564,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2963
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "GBR19920807",
+        "official": false,
+        "user": 2565,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2964
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "NED19840518",
+        "official": false,
+        "user": 2566,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2965
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "AUS19900528",
+        "official": false,
+        "user": 2567,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2966
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "COL19900117",
+        "official": false,
+        "user": 2568,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2967
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "FRA19880524",
+        "official": false,
+        "user": 2569,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2968
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19860531",
+        "official": false,
+        "user": 2570,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2969
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19910325",
+        "official": false,
+        "user": 2571,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2970
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19860826",
+        "official": false,
+        "user": 2572,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2971
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "ESP19840526",
+        "official": false,
+        "user": 2573,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2972
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "NED19851230",
+        "official": false,
+        "user": 2574,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2973
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "CAN19801209",
+        "official": false,
+        "user": 2575,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2974
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19940311",
+        "official": false,
+        "user": 2576,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2975
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19890715",
+        "official": false,
+        "user": 2577,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2976
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "CRC19860829",
+        "official": false,
+        "user": 2578,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2977
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "IRL19860820",
+        "official": false,
+        "user": 2579,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2978
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19850702",
+        "official": false,
+        "user": 2580,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2979
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19860320",
+        "official": false,
+        "user": 2581,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2980
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "ITA19770117",
+        "official": false,
+        "user": 2582,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2981
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19870607",
+        "official": false,
+        "user": 2583,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2982
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "ITA19890130",
+        "official": false,
+        "user": 2584,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2983
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "AUS19770214",
+        "official": false,
+        "user": 2585,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2984
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "SUI19861209",
+        "official": false,
+        "user": 2586,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2985
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "BEL19860608",
+        "official": false,
+        "user": 2587,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2986
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "CZE19871115",
+        "official": false,
+        "user": 2588,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2987
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "CZE19860506",
+        "official": false,
+        "user": 2589,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2988
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "ITA19900329",
+        "official": false,
+        "user": 2590,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2989
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "DEN19850322",
+        "official": false,
+        "user": 2591,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2990
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "SUI19801220",
+        "official": false,
+        "user": 2592,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2991
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19931029",
+        "official": false,
+        "user": 2593,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2992
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "BEL19860214",
+        "official": false,
+        "user": 2594,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2993
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "SUI19810318",
+        "official": false,
+        "user": 2595,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2994
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "SUI19780923",
+        "official": false,
+        "user": 2596,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2995
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "ITA19871012",
+        "official": false,
+        "user": 2597,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2996
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "USA19881123",
+        "official": false,
+        "user": 2598,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2997
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19890327",
+        "official": false,
+        "user": 2599,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2998
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "BEL19880728",
+        "official": false,
+        "user": 2600,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 2999
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19910301",
+        "official": false,
+        "user": 2601,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3000
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "ITA19890802",
+        "official": false,
+        "user": 2602,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3001
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "LTU19880130",
+        "official": false,
+        "user": 2603,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3002
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "NED19890701",
+        "official": false,
+        "user": 2604,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3003
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19880601",
+        "official": false,
+        "user": 2605,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3004
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "RSA19841206",
+        "official": false,
+        "user": 2606,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3005
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19801015",
+        "official": false,
+        "user": 2607,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3006
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19890828",
+        "official": false,
+        "user": 2608,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3007
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19840126",
+        "official": false,
+        "user": 2609,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3008
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "BEL19881123",
+        "official": false,
+        "user": 2610,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3009
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "LUX19920922",
+        "official": false,
+        "user": 2611,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3010
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "NED19871001",
+        "official": false,
+        "user": 2612,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3011
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19880416",
+        "official": false,
+        "user": 2613,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3012
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19870619",
+        "official": false,
+        "user": 2614,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3013
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ESP19870625",
+        "official": false,
+        "user": 2615,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3014
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19840425",
+        "official": false,
+        "user": 2616,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3015
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19790925",
+        "official": false,
+        "user": 2617,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3016
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "UKR19830807",
+        "official": false,
+        "user": 2618,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3017
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "COL19880115",
+        "official": false,
+        "user": 2619,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3018
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ESP19800229",
+        "official": false,
+        "user": 2620,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3019
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "DEN19840831",
+        "official": false,
+        "user": 2621,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3020
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19830114",
+        "official": false,
+        "user": 2622,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3021
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "FRA19911028",
+        "official": false,
+        "user": 2623,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3022
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19910826",
+        "official": false,
+        "user": 2624,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3023
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19910410",
+        "official": false,
+        "user": 2625,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3024
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19890813",
+        "official": false,
+        "user": 2626,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3025
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "GER19860313",
+        "official": false,
+        "user": 2627,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3026
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "COL19940204",
+        "official": false,
+        "user": 2628,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3027
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "AUS19791220",
+        "official": false,
+        "user": 2629,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3028
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19810117",
+        "official": false,
+        "user": 2630,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3029
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "ESP19780205",
+        "official": false,
+        "user": 2631,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3030
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "GBR19850521",
+        "official": false,
+        "user": 2632,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3031
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "ITA19890207",
+        "official": false,
+        "user": 2633,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3032
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "COL19881119",
+        "official": false,
+        "user": 2634,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3033
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "ITA19921025",
+        "official": false,
+        "user": 2635,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3034
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "ITA19870822",
+        "official": false,
+        "user": 2636,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3035
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "IRL19840703",
+        "official": false,
+        "user": 2637,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3036
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "EST19870311",
+        "official": false,
+        "user": 2638,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3037
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "BLR19810628",
+        "official": false,
+        "user": 2639,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3038
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "POR19890306",
+        "official": false,
+        "user": 2640,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3039
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19770708",
+        "official": false,
+        "user": 2641,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3040
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19870418",
+        "official": false,
+        "user": 2642,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3041
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "SUI19830130",
+        "official": false,
+        "user": 2643,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3042
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19940711",
+        "official": false,
+        "user": 2644,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3043
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "GBR19900310",
+        "official": false,
+        "user": 2645,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3044
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "ITA19890121",
+        "official": false,
+        "user": 2646,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3045
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "FRA19820202",
+        "official": false,
+        "user": 2647,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3046
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19890616",
+        "official": false,
+        "user": 2648,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3047
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19850608",
+        "official": false,
+        "user": 2649,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3048
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "BEL19920417",
+        "official": false,
+        "user": 2650,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3049
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "SLO19920506",
+        "official": false,
+        "user": 2651,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3050
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "LUX19800415",
+        "official": false,
+        "user": 2652,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3051
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19930305",
+        "official": false,
+        "user": 2653,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3052
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "POL19850307",
+        "official": false,
+        "user": 2654,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3053
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19821221",
+        "official": false,
+        "user": 2655,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3054
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "ITA19870113",
+        "official": false,
+        "user": 2656,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3055
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ITA19830113",
+        "official": false,
+        "user": 2657,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3056
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "FRA19790630",
+        "official": false,
+        "user": 2658,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3057
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19881230",
+        "official": false,
+        "user": 2659,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3058
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ITA19880128",
+        "official": false,
+        "user": 2660,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3059
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "LUX19860903",
+        "official": false,
+        "user": 2661,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3060
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "NED19890209",
+        "official": false,
+        "user": 2662,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3061
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "NZL19850407",
+        "official": false,
+        "user": 2663,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3062
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "DEN19890706",
+        "official": false,
+        "user": 2664,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3063
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19910722",
+        "official": false,
+        "user": 2665,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3064
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19860317",
+        "official": false,
+        "user": 2666,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3065
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "GER19880511",
+        "official": false,
+        "user": 2667,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3066
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19910409",
+        "official": false,
+        "user": 2668,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3067
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "SLO19880627",
+        "official": false,
+        "user": 2669,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3068
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "ESP19770401",
+        "official": false,
+        "user": 2670,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3069
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "BLR19910320",
+        "official": false,
+        "user": 2671,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3070
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19900409",
+        "official": false,
+        "user": 2672,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3071
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "AUS19840225",
+        "official": false,
+        "user": 2673,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3072
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19860718",
+        "official": false,
+        "user": 2674,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3073
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "ITA19890831",
+        "official": false,
+        "user": 2675,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3074
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19910831",
+        "official": false,
+        "user": 2676,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3075
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NZL19900407",
+        "official": false,
+        "user": 2677,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3076
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "POR19840903",
+        "official": false,
+        "user": 2678,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3077
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "GBR19890615",
+        "official": false,
+        "user": 2679,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3078
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "CRO19870726",
+        "official": false,
+        "user": 2680,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3079
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19800516",
+        "official": false,
+        "user": 2681,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3080
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "KAZ19920907",
+        "official": false,
+        "user": 2682,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3081
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "ITA19791030",
+        "official": false,
+        "user": 2683,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3082
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "COL19880811",
+        "official": false,
+        "user": 2684,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3083
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19901003",
+        "official": false,
+        "user": 2685,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3084
+},
+{
+    "fields": {
+        "club": 68,
+        "licenceno": "SUI19931116",
+        "official": false,
+        "user": 2686,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3085
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "SUI19890528",
+        "official": false,
+        "user": 2687,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3086
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "DEN19930116",
+        "official": false,
+        "user": 2688,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3087
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19860221",
+        "official": false,
+        "user": 2689,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3088
+},
+{
+    "fields": {
+        "club": 70,
+        "licenceno": "FRA19880518",
+        "official": false,
+        "user": 2690,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3089
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "BEL19860916",
+        "official": false,
+        "user": 2691,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3090
+},
+{
+    "fields": {
+        "club": 66,
+        "licenceno": "USA19910207",
+        "official": false,
+        "user": 2692,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3091
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "ITA19901225",
+        "official": false,
+        "user": 2693,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3092
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "ITA19870814",
+        "official": false,
+        "user": 2694,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3093
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "NED19820911",
+        "official": false,
+        "user": 2695,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3094
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "AUT19891207",
+        "official": false,
+        "user": 2696,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3095
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "GER19860205",
+        "official": false,
+        "user": 2697,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3096
+},
+{
+    "fields": {
+        "club": 75,
+        "licenceno": "COL19880730",
+        "official": false,
+        "user": 2698,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3097
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19810114",
+        "official": false,
+        "user": 2699,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3098
+},
+{
+    "fields": {
+        "club": 71,
+        "licenceno": "USA19920220",
+        "official": false,
+        "user": 2700,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3099
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "ITA19800924",
+        "official": false,
+        "user": 2701,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3100
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "ITA19840716",
+        "official": false,
+        "user": 2702,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3101
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19890705",
+        "official": false,
+        "user": 2703,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3102
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "GER19831026",
+        "official": false,
+        "user": 2704,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3103
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19860409",
+        "official": false,
+        "user": 2705,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3104
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "LAT19870415",
+        "official": false,
+        "user": 2706,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3105
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ARG19830307",
+        "official": false,
+        "user": 2707,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3106
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "GER19870407",
+        "official": false,
+        "user": 2708,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3107
+},
+{
+    "fields": {
+        "club": 77,
+        "licenceno": "NED19830411",
+        "official": false,
+        "user": 2709,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3108
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19930603",
+        "official": false,
+        "user": 2710,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3109
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "USA19780313",
+        "official": false,
+        "user": 2711,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3110
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "FRA19861103",
+        "official": false,
+        "user": 2712,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3111
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19931122",
+        "official": false,
+        "user": 2713,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3112
+},
+{
+    "fields": {
+        "club": 74,
+        "licenceno": "AUS19920813",
+        "official": false,
+        "user": 2714,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3113
+},
+{
+    "fields": {
+        "club": 79,
+        "licenceno": "FRA19860806",
+        "official": false,
+        "user": 2715,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3114
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19870427",
+        "official": false,
+        "user": 2716,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3115
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "EST19870424",
+        "official": false,
+        "user": 2717,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3116
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "FRA19840411",
+        "official": false,
+        "user": 2718,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3117
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19830309",
+        "official": false,
+        "user": 2719,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3118
+},
+{
+    "fields": {
+        "club": 78,
+        "licenceno": "AUS19890312",
+        "official": false,
+        "user": 2720,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3119
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "POR19851018",
+        "official": false,
+        "user": 2721,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3120
+},
+{
+    "fields": {
+        "club": 73,
+        "licenceno": "ITA19770925",
+        "official": false,
+        "user": 2722,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3121
+},
+{
+    "fields": {
+        "club": 67,
+        "licenceno": "RUS19820129",
+        "official": false,
+        "user": 2723,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3122
+},
+{
+    "fields": {
+        "club": 76,
+        "licenceno": "BEL19870213",
+        "official": false,
+        "user": 2724,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3123
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "AUT19910401",
+        "official": false,
+        "user": 2725,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3124
+},
+{
+    "fields": {
+        "club": 64,
+        "licenceno": "RUS19850109",
+        "official": false,
+        "user": 2726,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3125
+},
+{
+    "fields": {
+        "club": 65,
+        "licenceno": "ITA19890612",
+        "official": false,
+        "user": 2727,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3126
+},
+{
+    "fields": {
+        "club": 63,
+        "licenceno": "ESP19900726",
+        "official": false,
+        "user": 2728,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3127
+},
+{
+    "fields": {
+        "club": 69,
+        "licenceno": "ITA19810910",
+        "official": false,
+        "user": 2729,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3128
+},
+{
+    "fields": {
+        "club": 72,
+        "licenceno": "BEL19851205",
+        "official": false,
+        "user": 2730,
+        "gender": "M"
+    },
+    "model": "cabici.rider",
+    "pk": 3129
+}
+]

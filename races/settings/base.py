@@ -6,7 +6,6 @@ BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -24,6 +23,29 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
+        'OPTIONS': {
+            'context_processors': (
+                "django.template.context_processors.debug",
+                "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "pinax_theme_bootstrap.context_processors.theme",
+                'social.apps.django_app.context_processors.backends',
+                'social.apps.django_app.context_processors.login_redirect',
+            )
+        }
+    },
+]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -85,14 +107,9 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '^g=q21r_nnmbz49d!vs*2gvpll-y9b@&amp;t3k2r3c$*u&amp;2la5!%s'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-)
-
+#
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -103,16 +120,6 @@ MIDDLEWARE_CLASSES = (
 #    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.static",
-    "django.core.context_processors.tz",
-    "django.core.context_processors.request",
-    "django.contrib.auth.context_processors.auth",
-    "django.contrib.messages.context_processors.messages",
-)
 
 INTERNAL_IPS = ('127.0.0.1',)
 
@@ -121,12 +128,11 @@ ROOT_URLCONF = 'races.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'races.wsgi.application'
 
-TEMPLATE_DIRS = (
-)
 
 INSTALLED_APPS = (
 
-    # django
+    # main app
+    'races.apps.cabici.apps.CabiciConfig',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,22 +142,24 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.flatpages',
-    'django.contrib.webdesign',
 
-    'south',
-#    'debug_toolbar',
-#    'django_coverage',
+    'social.apps.django_app.default',
+    "bootstrapform",
+    "pinax_theme_bootstrap",
 
-    # my apps
-
-    # main app
-    'races.apps.site',
-
-    #'crispy_forms',
     'pagination',
     'geoposition',
 
+    'rest_framework',
+    'corsheaders',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -182,11 +190,52 @@ LOGGING = {
     }
 }
 
-SOUTH_TESTS_MIGRATE = False
 
 CRISPY_TEMPLATE_PACK = "bootstrap"
 
 # settings for django-easy-maps
 # default centre of maps
-EASY_MAPS_CENTER = (-41.3, 32)
+#EASY_MAPS_CENTER = (-41.3, 32)
 
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_OPEN_SIGNUP = False
+
+
+AUTHENTICATION_BACKENDS = (
+    #'social.backends.twitter.TwitterOAuth',
+    'social.backends.strava.StravaOAuth',
+    'social.backends.facebook.FacebookOAuth2',
+    #'social.backends.google.GoogleOAuth2',
+    #'social_auth.backends.OpenIDBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+
+SOCIAL_AUTH_PIPELINE = (
+    'social.pipeline.social_auth.social_details',
+    'social.pipeline.social_auth.social_uid',
+    'social.pipeline.social_auth.auth_allowed',
+    'social.pipeline.social_auth.social_user',
+    'social.pipeline.user.get_username',
+    'social.pipeline.social_auth.associate_by_email',  # this allows linking social auth to existing account
+    'social.pipeline.user.create_user',
+    'races.apps.cabici.usermodel.save_rider',
+    'social.pipeline.social_auth.associate_user',
+    'social.pipeline.social_auth.load_extra_data',
+    'social.pipeline.user.user_details'
+)
+
+
+# CORS configuration (django-cors-headers)
+# anyone can make GET requests to the API
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_METHODS = (
+        'GET',
+        'HEAD',
+        'OPTIONS'
+)

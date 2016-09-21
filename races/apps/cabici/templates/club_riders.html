@@ -1,0 +1,85 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block extra_script %}
+    {% endblock %}
+
+{% block content %}
+
+<h2>{{club.name}} Members</h2>
+
+<table class='table'>
+    <thead>
+        <tr><th>Name</th><th>Grade</th>
+            {% if request.user.rider.club == club and request.user.rider.official %}
+            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Year</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for rider in members %}
+      <tr>
+          <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+          <td>
+              {% for grading in rider.clubgrade_set.all %}
+                {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          {% if request.user.rider.club == club and request.user.rider.official %}
+          <td>
+              {% for grading in rider.clubgrade_set.all %}
+                {% ifequal grading.club.slug "CNSW" %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          <td>{{rider.phone}}</td>
+          <td>{{rider.user.email}}</td>
+          <td>{{rider.member_category}}</td>
+          <td>{{rider.member_year}}</td>
+          {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Past Members</h3>
+
+<table class='table'>
+    <thead>
+        <tr><th>Name</th><th>Grade</th>
+            {% if request.user.rider.club == club and request.user.rider.official %}
+            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Year</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for rider in pastmembers %}
+      <tr>
+          <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+          <td>
+              {% for grading in rider.clubgrade_set.all %}
+                {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          {% if request.user.rider.club == club and request.user.rider.official %}
+          <td>
+              {% for grading in rider.clubgrade_set.all %}
+                {% ifequal grading.club.slug "CNSW" %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          <td>{{rider.phone}}</td>
+          <td>{{rider.user.email}}</td>
+          <td>{{rider.member_category}}</td>
+          <td>{{rider.member_year}}</td>
+          {% endif %}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

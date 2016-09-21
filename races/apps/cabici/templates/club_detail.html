@@ -1,0 +1,50 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{club.name}}{% endblock %}
+
+{% block content %}
+
+<h2>{{club.name}}</h2>
+
+<ul>
+    <li><a href='{{club.website}}'>{{club.name}} Website</a></li>
+    <li><a href="{% url 'club_races' slug=club.slug %}">Full Race Schedule</a></li>
+    <li><a href="{% url 'club_results' slug=club.slug %}">Race Results</a></li>
+    {% if request.user.is_superuser %}
+    <li><a href="{% url 'club_dashboard' slug=club.slug %}">{{club.name}} Dashboard</a></li>
+    {% endif %}
+{% if club.pointscore_set.all %}
+    {% for ps in club.pointscore_set.all %}
+      <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
+    {% endfor %}
+{% endif %}
+</ul>
+
+
+{% regroup races by date as date_list %}
+<h3>Upcoming Races</h3>
+<table class='table'>
+  <thead>
+   <tr>
+       <th>Date</th>
+       <th class='racetime'>Time</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+   </tr>
+  </thead>
+{% for date in date_list %}
+   {% for race in date.list %}
+      <tr class="status{{race.status}}">
+          <th class='date'>{{race.date|date:"D d M"}}</td>
+          <td class='racetime'>{{race.starttime}}</td>
+          <td class='racetitle'>
+              <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a>
+              {% ifequal race.status 'c' %}CANCELLED{% endifequal %}
+          </td>
+          <td class='racelocation'>{{ race.location }}</td>
+      </tr>
+   {% endfor %}
+ {% endfor %}
+</table>
+
+
+{% endblock %}

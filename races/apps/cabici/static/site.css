@@ -1,0 +1,133 @@
+body {
+        padding-top: 0px;
+}
+
+/*
+ #E8B730 yellow main colour
+ #256B94 blue contrast
+*/
+
+header .navbar {
+    /* background-color: #256B94; */
+    background-color: black;
+}
+
+header a:link {
+    color: #256B94;
+}
+#map-canvas {
+    height: 430px;
+    width: 100%;
+ }
+
+#map-canvas img {
+    max-width: none;
+}
+
+#masthead {
+    margin-top: -40px;
+    margin-left: -100px;
+    margin-right: -100px;
+    height: 75px;
+
+    background-image: url(header75.jpg);
+    background-repeat: repeat-x;
+
+    background-color: #E8B730;
+}
+
+.navbar-toggle {
+        color: white;
+}
+
+#feed {
+    text-align: right;
+    padding: 0px;
+    margin: 10px;
+    font-size: small;
+}
+
+.racetitle {
+}
+
+.racetime {
+
+}
+
+@media (max-width: 480px) {
+
+    .racelocation {
+        display: none;
+    }
+
+}
+
+footer {
+    border-top: 1px solid #999999;
+    margin: 1em;
+    color: #999999;
+}
+footer ul {
+    float: right;
+}
+footer ul li {
+    list-style: none;
+}
+footer a:link {
+    color #999999;
+}
+
+#buttons {
+    float: right;
+}
+#editbutton {
+    float: right;
+}
+.fb-like {
+    overflow: hidden;
+}
+
+
+@media (min-width: 768px) {
+    #dashboardActions {
+        width: 40%;
+    }
+}
+#dashboardActions {
+    list-style:none;
+}
+#dashboardActions li {
+    display: inline-block;
+    width: 110px;
+    height: 110px;
+    margin: 5px;
+    background-color: #E8B730;
+    text-align: center;
+    font-size: 9pt;
+}
+
+
+#dashboardActions .glyphicon {
+    margin-top: 25px;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+#dashboardActions a {
+    color: black;
+}
+
+/* Race Listing styles */
+
+.statusd td:nth-child(2) {
+    background-image: url('draft.png');
+    background-size: contain;
+    background-repeat:no-repeat;
+}
+.statusc td:nth-child(2) {
+    background-image: url('cancelled.png');
+    background-size: contain;
+    background-repeat:no-repeat;
+}
+h2.statusc {
+    text-decoration: line-through;
+}

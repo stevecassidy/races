@@ -1,12 +1,22 @@
-django == 1.5
+django == 1.9
 django-pagination
-south
 django-coverage
 django-ical
 icalendar
 python-dateutil
 django-geoposition
 beautifulsoup4
-lxml
 ngram
 vcrpy
+python-social-auth
+pinax-theme-bootstrap==5.7.5
+django-bootstrap-form
+djangorestframework
+django-cors-headers
+django-yearlessdate
+django-webtest
+# for deployment with postgres
+# psycopg2
+openpyxl
+pyexcel
+pyexcel-xls

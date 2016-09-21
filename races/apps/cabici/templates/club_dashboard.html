@@ -1,0 +1,213 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
+    <style type='text/css'>
+.datepicker{z-index:1151 !important;}
+    </style>
+    {% endblock %}
+
+    {% block extra_script %}
+    <script src="{{ STATIC_URL }}cabici.js"></script>
+    <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
+    <script>
+        $(document).ready(
+            function() {
+                race_create_form_init('{% url 'club_races' club.slug %}');
+            }
+        );
+    </script>
+    {% endblock %}
+
+{% block content %}
+
+<h2>{{club.name}}</h2>
+
+<div class='container-fluid'>
+    <div class='row'>
+
+        <div class='col-md-6'>
+
+            {% if club.manage_members %}
+            <div class='well'>
+                <form class="form-inline" action="{% url 'riders' %}">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="name" size=50 placeholder="Rider Name">
+                  </div>
+                  <button type="submit" class="btn btn-default">Search Riders</button>
+                </form>
+            </div>
+
+            <table class='table'>
+                <tbody>
+                <tr><th>Current Members</th><td>{{statistics.currentmembers}}</td></tr>
+                <tr><th>Race Members</th><td>{{statistics.racemembers}}</td></tr>
+                <tr><th>Ride Members</th><td>{{statistics.ridemembers}}</td></tr>
+                <tr><th>Non-Riding Members</th><td>{{statistics.nonridingmembers}}</td></tr>
+                <tr><th>Commissaires</th><td>{% for rider in statistics.commissaires %}{{rider.user.first_name}} {{rider.user.last_name}} ({{rider.commissaire}}) {% endfor %}</td></tr>
+
+                {% regroup statistics.roles by role.name as role_list %}
+
+                {% for role in role_list %}
+                <tr><th>{{role.grouper}}</th><td>
+                    {% if role.list|length > 10 %}
+                       {{role.list|length}} members
+                    {% else %}
+                    {% for userrole in role.list %}
+                    {{userrole.user.first_name}} {{userrole.user.last_name}}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                    {% endif %}
+                </td></tr>
+                {% endfor %}
+
+            </tbody>
+            </table>
+            {% endif %}
+
+
+            {% if club.pointscore_set.all %}
+            <h2>Pointscores</h3>
+                <ul>
+                {% for ps in club.pointscore_set.all %}
+                  <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <div class='col-md-6'>
+
+            <div class='container'>
+
+                <ul id='dashboardActions'>
+                    <li>
+                        <a href='{{club.website}}'><span class="glyphicon glyphicon-link" aria-hidden="true"></span><br>Club Website</a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle='modal' data-target="#raceCreateModal">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><br>Add Race(s)</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'club_races' club.slug %}">
+                            <span class="glyphicon glyphicon-time" aria-hidden="true"></span><br>Race Schedule</a>
+                    </li>
+                    {% if club.manage_members %}
+                    <li>
+                        <a href="#" data-toggle='modal' data-target="#IMGUploadModal">
+                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span><br>IMG Upload</a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle='modal' data-target="#downloadMembersModal">
+                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span><br> Download Riders</a>
+                    </li>
+                    {% endif %}
+                    {% if club.manage_results %}
+                    <li>
+                        <a href="{% url 'club_riders' club.slug %}">
+                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span><br> Members</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'riders' %}">
+                            <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span><br>All Riders</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'club_results' club.slug %}">
+                            <span class="glyphicon glyphicon-stats" aria-hidden="true"></span><br>Race Results</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+
+            <div>
+                {% regroup club.recent_races by date as date_list %}
+                <h3>Recent Races</h3>
+                <table class='table'>
+                  <thead>
+                   <tr>
+                       <th>Date</th><th class='racelocation'>Location</th>
+                   </tr>
+                  </thead>
+                    {% for date in date_list %}
+                       {% for race in date.list %}
+                          <tr>
+                              <th class='date'>{{race.date|date:"D d M"}}</td>
+                              <td class='racelocation'><a href="{% url 'race' race.club.slug race.pk %}">{{ race.location }}</a></td>
+                          </tr>
+                       {% endfor %}
+                     {% endfor %}
+                </table>            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% if club.manage_members %}
+<div class='modal fade' id='downloadMembersModal' tabindex='-2' role='dialog' aria-labelledby="downloadMembersLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="downloadMembersLabel">Download Rider Spreadsheet</h4>
+        </div>
+        <div class="modal-body">
+            <p>Download an Excel spreasheet containing all rider details
+                for use in race-day registrations.</p>
+            <form action="{% url 'club_riders_excel' slug=club.slug %}" method='GET'>
+                <label for='eventno'>Event Number: </label>
+                <input type='text' name='eventno'> (optional, for old WMCC website)
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <input type="submit" name="submitdownloadmembers" class="btn btn-primary" value="Download">
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="IMGUploadModal" tabindex="-1" role="dialog" aria-labelledby="IMGUploadLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="IMGUploadLabel">Upload IMG Spreadsheet</h4>
+        </div>
+        <div class="modal-body">
+            <p>Upload member details as downloaded from the <a href="https://console.imgstg.com/" target=new>IMG STG website</a>.
+            Choose Members > All Members then use the Blank template
+            to export all Active members. Upload the resulting spreadsheet (.xls)
+            here.</p>
+
+            <form method='post' action="{% url 'club_riders' club.slug %}" name='imgssform' id='imgssform' enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class='well form-group'>
+                    {{memberuploadform.errors}}
+                    <input type='hidden' name='club' value='{{memberuploadform.club.value}}'>
+                    <input type='hidden' name='fileformat' value='IMG'>
+                    {{memberuploadform.memberfile|bootstrap_inline}}
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <input type="submit" name="submituploadimg" class="btn btn-primary" value="Upload">
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+
+
+{% include "race_create_modal.html" with mode="create" %}
+
+
+
+
+{% endblock %}
