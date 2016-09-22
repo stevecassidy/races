@@ -121,7 +121,7 @@ function race_create_form_init(slug) {
     $("#submitracecreateform").click(function(){
         $.ajax({
             type: "POST",
-            url: $(this).action,
+            url: slug,
             data: $('#racecreateform').serialize(),
             success: function(msg){
                 if (msg['success']) {

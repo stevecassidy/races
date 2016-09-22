@@ -28,7 +28,7 @@ $(document).ready(
             'useCurrent': true
         });
         $('.timepicker').datetimepicker({
-            'format': 'LT'
+            'format': 'HH:mm'
         });
 
         race_create_form_init('{% url 'club_races' club.slug %}');
