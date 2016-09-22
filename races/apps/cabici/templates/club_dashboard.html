@@ -3,19 +3,30 @@
 
 {% block title %}{{club.name}}{% endblock %}
 
+
     {% block extra_head %}
-    <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css" />
-    <style type='text/css'>
-.datepicker{z-index:1151 !important;}
-    </style>
+    <link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
     {% endblock %}
 
     {% block extra_script %}
     <script src="{{ STATIC_URL }}cabici.js"></script>
-    <script src="{{ STATIC_URL }}datepicker/bootstrap-datepicker.js"></script>
+
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-datetimepicker/moment.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+
     <script>
         $(document).ready(
             function() {
+
+                $('.datepicker').datetimepicker({
+                    'format': 'YYYY-MM-DD',
+                    'useCurrent': true
+                });
+                $('.timepicker').datetimepicker({
+                    'format': 'LT'
+                });
+
+
                 race_create_form_init('{% url 'club_races' club.slug %}');
             }
         );

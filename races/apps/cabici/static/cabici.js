@@ -118,7 +118,6 @@ function race_create_form_init(slug) {
         }
     });
 
-
     $("#submitracecreateform").click(function(){
         $.ajax({
             type: "POST",
