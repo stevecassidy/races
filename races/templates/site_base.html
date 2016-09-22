@@ -53,6 +53,8 @@
     {% block content %}{% endblock %}
 {% endblock %}
 
+{% load pinax_webanalytics_tags %}
 {% block extra_body_base %}
-
+    {% analytics %}
+    {% block extra_body %}{% endblock %}
 {% endblock %}

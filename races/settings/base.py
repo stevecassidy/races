@@ -152,6 +152,7 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'corsheaders',
+    "pinax.webanalytics",
 )
 
 REST_FRAMEWORK = {
@@ -159,7 +160,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ]
 }
-
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
