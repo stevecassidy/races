@@ -33,8 +33,6 @@ function editmodalbutton(race) {
 
 function populate_race_table(clubid, auth) {
 
-    console.log('populate_race_table ' + clubid );
-
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
@@ -48,8 +46,15 @@ function populate_race_table(clubid, auth) {
     var columns = [{
                        data: "date",
                        render: function(data, type, row) {
-                           var val = new Date(data).toDateString();
-                           return val.substring(0,val.length-5);
+                           var val = "<p>";
+                           dd = new Date(data);
+                           dd = dd.toDateString()
+                           dd = dd.substring(0,dd.length-5);
+                           val += "<b>" +dd + "</b><br>";
+                           val += "Sign On: " + row['signontime'] + "<br>";
+                           val += "Start: " + row['starttime'] + "<br>";
+                           val += "</p>";
+                           return val;
                     }
                 },
                 { data: "title",
@@ -113,10 +118,11 @@ function race_create_form_init(slug) {
         }
     });
 
+
     $("#submitracecreateform").click(function(){
         $.ajax({
             type: "POST",
-            url: slug,
+            url: $(this).action,
             data: $('#racecreateform').serialize(),
             success: function(msg){
                 if (msg['success']) {
@@ -136,6 +142,8 @@ function race_create_form_init(slug) {
 
 function edit_race_modal_init() {
     $('#raceEditModal').on('show.bs.modal', function(event) {
+        console.log('init modal');
+        console.log(this);
         var button = $(event.relatedTarget); // Button that triggered the modal
         var raceurl = button.data('raceurl');
         var racename = button.data('racename');
@@ -163,6 +171,7 @@ function edit_race_modal_init() {
 
         });
 
+        $("#submitraceeditform").off("click");
         $("#submitraceeditform").click(function(){
             $.ajax({
                 type: "POST",

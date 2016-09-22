@@ -389,7 +389,7 @@ class Command(BaseCommand):
         try:
             waratahs = Club.objects.get(slug='WaratahMastersCC')
         except:
-            print "You need to create the WMCC club first"
+            print "You need to create the WaratahMastersCC club first"
             exit()
 
         usermap = import_users(csvdir, waratahs)

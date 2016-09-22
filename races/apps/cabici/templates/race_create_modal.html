@@ -18,7 +18,15 @@
                                 <label for='id_date'>Date</label>
                             </div>
                             <div class='col-md-3'>
+                                <div class='input-group date' id='datepicker1'>
+                                    <input class=" form-control form-control" id="id_date" name="date" type="text">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+<!--
                                 <input class="form-control" data-provide="datepicker" name='date' id='id_date' data-date-format="yyyy-mm-dd" data-date-startDate='-3d'>
+-->
                             </div>
                             <div class='col-md-1'>
                                 <label for='id_title'>Title</label>
@@ -32,7 +40,13 @@
                                 <label for='id_time'>Sign On</label>
                             </div>
                             <div class='col-md-3'>
-                                {{racecreateform.signontime|bootstrap_inline}}
+                                <div class='input-group time' id='timepicker'>
+                                    {{racecreateform.signontime|bootstrap_inline}}
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-time"></span>
+                                    </span>
+                                </div>
+
                             </div>
                             <div class='col-md-1'>
                                 <label for='id_location'>Location</label>

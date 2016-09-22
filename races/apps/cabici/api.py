@@ -55,9 +55,6 @@ class ClubOfficialPermission(permissions.BasePermission):
         """
         Return `True` if permission is granted, `False` otherwise.
         """
-
-        print "HAS_OBJECT_PERMISSION", request.method, request.user, type(view), obj
-
         if request.method in permissions.SAFE_METHODS:
             return True
 
