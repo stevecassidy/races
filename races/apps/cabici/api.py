@@ -60,17 +60,14 @@ class ClubOfficialPermission(permissions.BasePermission):
 
         # anonymous user can't do anything unsafe
         if not request.user.is_authenticated():
-            print request.user, "not authenticated"
             return False
 
         # superuser can do anything
         if request.user.is_superuser:
-            print request.user, "is a superuser"
             return True
 
         # user should be an official of the club referenced in the view
         if not request.user.rider.official:
-            print request.user, "not an official"
             return False
 
         # if they are an official then they can operate on their club
@@ -83,7 +80,6 @@ class ClubOfficialPermission(permissions.BasePermission):
             print request.user, "not whatever"
             return False
 
-        print "Here", request.user.rider.club, club
         return request.user.rider.club == club
 
 #---------------Club------------------
@@ -171,10 +167,12 @@ class RaceList(generics.ListCreateAPIView):
 
     def get_queryset(self):
 
-        clubid = self.request.query_params.get('club', None)
-        scheduled = self.request.query_params.get('scheduled', None)
+        clubslug = self.request.query_params.get('club', None)
+        select = self.request.query_params.get('select', None)
+        count = self.request.query_params.get('count', None)
 
         races = Race.objects.all()
+
         # if user is a club official, include draft races
         if getattr(self.request.user, 'rider', None) != None and self.request.user.rider.official:
             pass
@@ -182,13 +180,23 @@ class RaceList(generics.ListCreateAPIView):
             # no draft or withdrawn races
             races = races.exclude(status__exact="d").exclude(status__exact="w")
 
-        if clubid is not None:
-            races = races.filter(club__pk__exact=clubid)
+        if clubslug is not None:
+            races = races.filter(club__slug__exact=clubslug)
 
-        if scheduled is not None:
-            return races.filter(date__gte=datetime.date.today())
-        else:
-            return races
+        if select == 'future':
+            races = races.filter(date__gte=datetime.date.today())
+        elif select == 'recent':
+            races = races.filter(date__lte=datetime.date.today()).order_by('-date')
+
+        # count needs to be an integer
+        if count is not None:
+            try:
+                count = int(count)
+                races = races[:count]
+            except:
+                pass
+
+        return races
 
 @permission_classes((ClubOfficialPermission,))
 class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
