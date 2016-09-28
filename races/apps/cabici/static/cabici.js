@@ -26,12 +26,14 @@ function addpeoplemodalbutton(race) {
 }
 
 function editmodalbutton(race) {
-    var val = "<div><a href='#' data-toggle='modal' data-target='#raceEditModal' title='Edit Race' data-clubid='" + race.club.id + "' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
+    var val = "<div><a href='#' data-toggle='modal' data-target='#raceEditModal' title='Edit Race' data-clubslug='" + race.club.slug + "' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
     return(val);
 }
 
 
-function populate_race_table(clubid, auth) {
+function populate_race_table(clubslug, auth) {
+
+    console.log(clubslug);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
@@ -82,7 +84,7 @@ function populate_race_table(clubid, auth) {
         processing: true,
         destroy: true,
         ajax: {
-                    url: "/api/races/?club="+ clubid +"&scheduled=true",
+                    url: "/api/races/?club="+ clubslug +"&select=scheduled",
                     dataSrc: ''
                 },
         paging: false,
@@ -147,7 +149,7 @@ function edit_race_modal_init() {
         var raceurl = button.data('raceurl');
         var racename = button.data('racename');
         var raceid = button.data('raceid');
-        var clubid = button.data('clubid');
+        var clubslug = button.data('clubslug');
         var modal = $(this);
 
         modal.find('.modal-title').text('Edit Race' );
@@ -179,7 +181,7 @@ function edit_race_modal_init() {
                 success: function(msg){
 //                    if (msg['success']) {
                        $("#raceEditModal").modal('hide');
-                       populate_race_table(clubid, true);
+                       populate_race_table(clubslug, true);
 //                   } else {
 //                        for (field in msg) {
 //                            $("#id_"+field).parent().addClass("has-error");

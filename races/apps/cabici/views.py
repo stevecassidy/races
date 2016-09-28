@@ -457,15 +457,6 @@ class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     template_name = "race_form.html"
     fields = ['title', 'date', 'signontime', 'starttime', 'website', 'location', 'status', 'description']
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-
-        race = get_object_or_404(Race, **kwargs)
-
-        if self.request.user.rider.club == race.club and self.request.user.rider.official:
-            return super(RaceUpdateView, self).dispatch(*args, **kwargs)
-        else:
-            return HttpResponseRedirect('/login/?next=%s' % self.request.path)
 
 class RaceUploadExcelView(FormView):
 
@@ -620,6 +611,7 @@ class ClubRacesView(DetailView):
                 if form.cleaned_data['repeat'] == 'none':
 
                     race = form.save()
+
                     if pointscore:
                         pointscore.races.add(race)
 
@@ -642,7 +634,7 @@ class ClubRacesView(DetailView):
                         return HttpResponseBadRequest("Invalid repeat option")
 
                     race = form.save(commit=False)
-
+                    print "RACE: ", race
                     # now make N more races
                     for date in rule:
                         # force 'save as new'
@@ -650,6 +642,8 @@ class ClubRacesView(DetailView):
 
                         race.date = date
                         race.save()
+                        print "RACE: ", race
+
                         if pointscore:
                             pointscore.races.add(race)
 

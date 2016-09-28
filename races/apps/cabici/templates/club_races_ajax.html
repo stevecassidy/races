@@ -40,7 +40,7 @@ $(document).ready(
         {% else %}
         var auth = false;
         {% endif %}
-        populate_race_table('{{club.id}}', auth);
+        populate_race_table('{{club.slug}}', auth);
     }
 );
 </script>
