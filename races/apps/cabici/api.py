@@ -187,6 +187,8 @@ class RaceList(generics.ListCreateAPIView):
             races = races.filter(date__gte=datetime.date.today())
         elif select == 'recent':
             races = races.filter(date__lte=datetime.date.today()).order_by('-date')
+        elif select == 'results':
+            races = races.filter(raceresult__rider__isnull=False).distinct().order_by('-date')
 
         # count needs to be an integer
         if count is not None:
