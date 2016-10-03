@@ -50,8 +50,8 @@ function populate_race_table(clubslug, auth) {
                        render: function(data, type, row) {
                            var val = "<p>";
                            dd = new Date(data);
-                           dd = dd.toDateString()
-                           dd = dd.substring(0,dd.length-5);
+                           dd = dd.toGMTString() /* Use GMT because dates in that TZ by default */
+                           dd = dd.substring(0,dd.length-12);
                            val += "<b>" +dd + "</b><br>";
                            val += "Sign On: " + row['signontime'] + "<br>";
                            val += "Start: " + row['starttime'] + "<br>";
