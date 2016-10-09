@@ -20,3 +20,4 @@ django-webtest
 openpyxl
 pyexcel
 pyexcel-xls
+pinax-webanalytics

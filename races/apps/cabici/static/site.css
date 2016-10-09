@@ -118,16 +118,22 @@ footer a:link {
 
 /* Race Listing styles */
 
-.statusd td:nth-child(2) {
+.statusd td:nth-child(3) {
     background-image: url('draft.png');
     background-size: contain;
     background-repeat:no-repeat;
 }
-.statusc td:nth-child(2) {
+.statusc td:nth-child(3) {
     background-image: url('cancelled.png');
     background-size: contain;
     background-repeat:no-repeat;
 }
-h2.statusc {
-    text-decoration: line-through;
+
+h2.statusc:after {
+    content: " CANCELLED";
+    color: #ff0000;
+}
+h2.statusd:after {
+    content: " DRAFT";
+    color: #ff0000;
 }

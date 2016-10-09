@@ -290,7 +290,8 @@ class RaceCourseManager(models.Manager):
         location = ng.finditem(name)
 
         if location == None:
-            location = self.get(name="Unknown")
+            print "UNKNOWN LOCATION", name
+            location, created = self.get_or_create(name="Unknown")
 
         return location
 

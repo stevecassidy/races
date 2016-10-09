@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 import json
+import datetime
 
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff
@@ -33,7 +34,6 @@ class APITests(TestCase):
         self.pointscore = PointScore(club=self.oge, name="sample pointscore")
 
         self.pointscore.save()
-
 
 
     def test_club_list(self):
@@ -70,6 +70,25 @@ class APITests(TestCase):
     def test_race_list(self):
         """Listing races"""
 
+        # make all MOV races published
+        for race in Race.objects.filter(club__slug__exact="MOV"):
+            race.status = 'p'
+            race.save()
+
+        response = self.client.get("/api/races/")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        racelist = json.loads(response.content)
+        self.assertEqual(3, len(racelist))
+
+        # but if we login we get one more draft race
+
+        rider = Rider.objects.filter(club__slug__exact="KAT")[0]
+        rider.official = True
+        rider.save()
+        self.client.force_login(rider.user)
+
         response = self.client.get("/api/races/")
 
         self.assertEqual(200, response.status_code)
@@ -77,9 +96,16 @@ class APITests(TestCase):
         racelist = json.loads(response.content)
         self.assertEqual(4, len(racelist))
 
-        # list just for one club, expect 3 races
 
-        response = self.client.get("/api/races/?club=63")
+    def test_race_list_club(self):
+        """Listing races"""
+
+        # make all MOV races published
+        for race in Race.objects.filter(club__slug__exact="MOV"):
+            race.status = 'p'
+            race.save()
+
+        response = self.client.get("/api/races/?club=MOV")
 
         self.assertEqual(200, response.status_code)
         self.assertEqual('application/json', response['Content-Type'])
@@ -88,6 +114,55 @@ class APITests(TestCase):
         # club in each race should be this one
         for race in racelist:
             self.assertEqual(63, race['club']['id'])
+
+
+    def test_race_list_select_recent(self):
+        """Listing just some races"""
+
+        # make all MOV races published
+        for race in Race.objects.filter(club__slug__exact="MOV"):
+            race.status = 'p'
+            race.save()
+
+        response = self.client.get("/api/races/?club=MOV&select=recent")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        racelist = json.loads(response.content)
+        self.assertEqual(3, len(racelist))
+
+        # races are most recent first
+        self.assertEqual("2015-08-22", racelist[0]['date'])
+
+        response = self.client.get("/api/races/?club=MOV&select=recent&count=1")
+        self.assertEqual('application/json', response['Content-Type'])
+        racelist = json.loads(response.content)
+        # just one race
+        self.assertEqual(1, len(racelist))
+
+    def test_race_list_select_future(self):
+        """Listing just some races"""
+
+        # make all MOV races published
+        races = Race.objects.filter(club__slug__exact="MOV")
+        for race in races:
+            race.status = 'p'
+            race.save()
+        # make two of them in the future
+        for race in races[:2]:
+            race.date = datetime.date.today()
+            race.save()
+
+        response = self.client.get("/api/races/?club=MOV&select=future")
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+        racelist = json.loads(response.content)
+        self.assertEqual(2, len(racelist))
+
+        # races are most recent first
+        self.assertEqual(str(datetime.date.today()), racelist[0]['date'])
+
 
 
     def test_race_detail(self):
