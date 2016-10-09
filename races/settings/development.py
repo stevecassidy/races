@@ -18,3 +18,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs'
 GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
+
+
+
+PINAX_WEBANALYTICS_SETTINGS = {
+    "google": {
+        1: "UA-41522408-1", # production
+    },
+}
