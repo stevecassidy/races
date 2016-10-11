@@ -21,3 +21,4 @@ openpyxl
 pyexcel
 pyexcel-xls
 pinax-webanalytics
+django-gmapify

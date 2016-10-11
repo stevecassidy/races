@@ -149,6 +149,7 @@ INSTALLED_APPS = (
 
     'pagination',
     'geoposition',
+    'gmapify',
 
     'rest_framework',
     'corsheaders',

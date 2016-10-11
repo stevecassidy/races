@@ -1,48 +1,110 @@
 {% extends "site_base.html" %}
+
+
+
+{% block extra_script %}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs"></script>
+    <script src="{{STATIC_URL}}gmaps/gmaps.js"></script>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+.flex-row {
+	display: flex;
+	flex-wrap: wrap;
+}
+.flex-row > [class*='col-'] {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-row .thumbnail,
+.flex-row .caption {
+	flex-direction: column;
+	display: flex;
+	flex: 1 0 auto;
+	height: auto;
+	position: relative;
+}
+.flex-text {
+	flex-grow: 1;
+}
+.flex-row img {
+	min-width: 0;
+	width: 100%;
+}
+
+.racemap img {
+
+}
+
+.thumbnail .racedate {
+    background-color: #E8B730;
+    padding: 10px;
+    margin: 0px;
+    font-size: 14pt;
+    text-align: center;
+}
+.thumbnail {
+    padding: 0px;
+    border: 0px;
+}
+.thumbnail .raceinfo {
+    background-color: #256B94;
+    color: #fff;
+    font-size: 12pt;
+    padding: 10px;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 
 <div class="container-fluid">
-  <div class="row-fluid">
-    <div class="col-md-4">
-        <h2>{{page.title}}</h2>
+  <div class="row flex-row">
+       {% for race in object_list %}
+            <div class='col-xs-12 col-sm-4 col-lg-3'>
+                <div class="thumbnail">
+                    <h2 class='racedate'>{{race.date}}: {{race.signontime}}</h2>
+                    <span class='raceinfo'>{{race.location.name}}</span>
 
-        {% if page.content %}
-        {{ page.content|safe }}
-        {% else %}
-        <p>Create a flatpage with url '/' to see content here</p>
-        {% lorem 2 p %}
-        {% endif %}
+                    <div class='racemap'>
+                        <a href="{% url 'race' race.club.slug race.pk %}" title="Location: {{race.location.name}}">
+                            <img class='racemap_img' id="{{race.id}}_map" alt="map of {{race.location.name}}"
+                             src='http://maps.googleapis.com/maps/api/staticmap?markers={{race.location.location.latitude}},{{race.location.location.longitude}}&size=240x200&sensor=true&zoom=10&scale=2&maptype=terrain'>
+                        </a>
+                    </div>
 
-         <div class="fb-like" data-href="http://cabici.net/race/{{race.id}}" data-send="true"
-              data-layout="button_count" data-width="450" data-show-faces="true"></div>
+                    <div class="flex-text racedate">
+                        <span>{{race.title}}</span>
+                    </div>
+                    <div class="flex-text raceinfo">
+                          <span>{{race.club.name}}</span>
+                      </div>
 
-    </div>
-    <div class="col-md-8">
+                </div>
+            </div>
+       {% endfor %}
+   </div>
+ </div>
 
-{% regroup object_list by date as date_list %}
 
-        <table class='table'>
-          <thead>
-           <tr><th class='racetime'>Time</th>
-               <th class='racetitle'>Race</th>
-               <th class='racelocation'>Location</th>
-           </tr>
-          </thead>
-        {% for date in date_list %}
-           <tr><th colspan='4'>{{date.grouper|date:"D d M"}}</th></tr>
-           {% for race in date.list %}
-                <tr>
-                  <td class='racetime'>{{race.starttime}}</td>
-                  <td class='racetitle'>{{race.club.slug}}: <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a></td>
-                  <td class='racelocation'>{{ race.location }}</td>
-                </tr>
-           {% endfor %}
-         {% endfor %}
-        </table>
-    </div>
-  </div>
+
+<div class="col-md-4">
+    <h2>{{page.title}}</h2>
+
+    {% if page.content %}
+    {{ page.content|safe }}
+    {% else %}
+    <p>Create a flatpage with url '/' to see content here</p>
+    {% lorem 2 p %}
+    {% endif %}
+
+     <div class="fb-like" data-href="http://cabici.net/race/{{race.id}}" data-send="true"
+          data-layout="button_count" data-width="450" data-show-faces="true"></div>
+
 </div>
-
 
 {% endblock %}
