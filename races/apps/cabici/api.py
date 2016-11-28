@@ -157,9 +157,23 @@ class RaceSerializer(serializers.ModelSerializer):
     location = RaceCourseBriefSerializer(read_only=True)
     officials = RaceOfficialField(read_only=True)
 
+    discipline = serializers.SerializerMethodField()
+    category = serializers.SerializerMethodField()
+    licencereq = serializers.SerializerMethodField()
+
     class Meta:
         model = Race
-        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials')
+        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials', 'discipline', 'category', 'licencereq')
+
+    def get_discipline(self, obj):
+        return {'key': obj.discipline, 'display': obj.get_discipline_display()}
+
+    def get_category(self, obj):
+        return {'key': obj.category, 'display': obj.get_category_display()}
+
+    def get_licencereq(self, obj):
+        return {'key': obj.licencereq, 'display': obj.get_licencereq_display()}
+
 
 @permission_classes((ClubOfficialPermission,))
 class RaceList(generics.ListCreateAPIView):
