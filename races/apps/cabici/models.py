@@ -301,10 +301,14 @@ class RaceCourse(models.Model):
     objects = RaceCourseManager()
 
     name = models.CharField(max_length=100)
+    shortname = models.CharField(max_length=20, default='')
     location = GeopositionField()
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class RacePrototype(models.Model):
     """A race prototype describes a race that
