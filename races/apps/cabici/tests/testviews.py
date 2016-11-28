@@ -102,20 +102,6 @@ class ViewTests(TestCase):
         self.assertContains(response, "Today 2 L")
 
 
-    def test_club_page(self):
-        """Test that the club page has all future
-        races for the club including today"""
-
-        response = self.client.get(reverse('club', kwargs={'slug': self.oge.slug}))
-
-        self.assertNotContains(response, "Yesterday 1 W")
-        self.assertContains(response, "Today 2 W")
-        self.assertContains(response, "Tomorrow 3 W")
-        self.assertContains(response, "Next Week 4 W")
-        self.assertContains(response, "Fortnight 5 W")
-        self.assertContains(response, "Three Weeks 6 W")
-        self.assertNotContains(response, "Today 2 L")
-
 
     def test_club_riders(self):
         """The club riders page lists the riders for
