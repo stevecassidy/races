@@ -64,7 +64,16 @@ function populate_race_table(clubslug, auth) {
                       var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
                       return val;
                   }},
-                { data: "location.name" },
+                { data: "location.name",
+                  render: function(data, type, row) {
+                      var val = "<div>";
+                      val += "<span class='racelocation'>" + data + "</span><br>";
+                      val += "<div class='racesuppinfo'>" + row['category'].display + "<br>";
+                      val += "Discipline: " + row['discipline'].display + "<br>";
+                      val += "Licence: " + row['licencereq'].display + "</div>";
+                      val += "</div>";
+                      return val;
+                  }},
                 { data: "officials",
                   render: function(data, type, row) {
                       var val = "<dl class='dl-horizontal'>";
@@ -143,8 +152,7 @@ function race_create_form_init(slug) {
 
 function edit_race_modal_init() {
     $('#raceEditModal').on('show.bs.modal', function(event) {
-        console.log('init modal');
-        console.log(this);
+
         var button = $(event.relatedTarget); // Button that triggered the modal
         var raceurl = button.data('raceurl');
         var racename = button.data('racename');
@@ -169,6 +177,10 @@ function edit_race_modal_init() {
             $('select[id=id_status]').val(data.status);
             $('input[id=id_website]').val(data.website);
             $('textarea[id=id_description]').val(data.description);
+
+            $('select[id=id_category]').val(data.category.key);
+            $('select[id=id_licencereq]').val(data.licencereq.key);
+            $('select[id=id_discipline]').val(data.discipline.key);
 
         });
 

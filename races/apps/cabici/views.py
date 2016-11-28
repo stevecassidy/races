@@ -455,7 +455,9 @@ class RaceOfficialUpdateView(View):
 class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     model = Race
     template_name = "race_form.html"
-    fields = ['title', 'date', 'signontime', 'starttime', 'website', 'location', 'status', 'description']
+    fields = ['title', 'date', 'signontime', 'starttime',
+              'website', 'location', 'status', 'description',
+              'licencereq', 'category', 'discipline']
 
 
 class RaceUploadExcelView(FormView):

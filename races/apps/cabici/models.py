@@ -325,6 +325,39 @@ STATUS_CHOICES = (
     ('c', 'Cancelled')
 )
 
+CATEGORY_CHOICES = (
+    ('1', 'Category 1 Open and State Championships'),
+    ('2', 'Category 2 Open/Masters Open/Junior Open'),
+    ('3', 'Category 3 Club/Inter-Club'),
+    ('Junior', 'Junior Club'),
+    ('Rec', 'Recreational/Timed Rides')
+)
+
+DISCIPLINE_CHOICES = (
+    ('r', 'Road'),
+    ('t', 'Track'),
+    ('cx', 'Cyclocross'),
+    ('mtb', 'MTB'),
+    ('bmx', 'BMX')
+)
+
+LICENCE_CHOICES = (
+    ('e.m', 'Elite Men'),
+    ('e.w', 'Elite Women'),
+    ('e.mw', 'Elite Men & Women'),
+    ('m.mw', 'Masters Men & Women'),
+    ('m.m', 'Masters Men'),
+    ('m.w', 'Masters Women'),
+    ('em.mw', 'Elite or Masters Men & Women'),
+    ('em.m', 'Elite or Masters Men'),
+    ('em.w', 'Elite or Masters Women'),
+    ('j.mw', 'Junior'),
+    ('k.mw', 'Kids'),
+    ('p.mw', 'Para-cyclist Men & Women'),
+    ('p.m', 'Para-cyclist Men'),
+    ('p.w', 'Para-cyclist Women'),
+)
+
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
@@ -338,6 +371,14 @@ class Race(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='p', help_text=" ")
     description = models.TextField(default="", blank=True, help_text=" ")
     hash = models.CharField(max_length=100, blank=True)
+
+    # Offical category of the race
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default="3")
+    # Discipline
+    discipline = models.CharField(max_length=10, choices=DISCIPLINE_CHOICES, default='r')
+    # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
+    licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
+
 
     class Meta:
         ordering = ['date', 'signontime']
