@@ -137,6 +137,29 @@ class Club(models.Model):
                 role = UserRole(user=user, club=self, role=dutyhelper)
                 role.save()
 
+    def allocate_officials(self, role, number, races):
+        """Allocate people to fill the given roles for
+        the given races.
+
+        role - a role to allocate to, eg. 'Duty Helper'
+        number - number to allocate to each race
+        races - list (or result set) of races to allocate
+
+        Select people at random from the eligebility list weighted
+        by the number of times they have served in this role
+        recently.
+        """
+
+        # candidates are those members with a ClubRole with the
+        # corresponding role
+        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+
+        selected = random.sample(candidates, length(races))
+        for race, rider in zip(races, selected):
+            rs = RaceStaff(rider=rider, race=race, role=role)
+            rs.save()
+        
+
 
     def ingest_ical(self):
         """Import races from an icalendar feed

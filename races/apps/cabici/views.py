@@ -636,7 +636,6 @@ class ClubRacesView(DetailView):
                         return HttpResponseBadRequest("Invalid repeat option")
 
                     race = form.save(commit=False)
-                    print "RACE: ", race
                     # now make N more races
                     for date in rule:
                         # force 'save as new'
@@ -644,7 +643,6 @@ class ClubRacesView(DetailView):
 
                         race.date = date
                         race.save()
-                        print "RACE: ", race
 
                         if pointscore:
                             pointscore.races.add(race)
@@ -656,3 +654,31 @@ class ClubRacesView(DetailView):
                 return HttpResponse(data, content_type='application/json')
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
+
+
+
+
+class ClubRacesOfficalUpdateView(DetailView):
+    model = Club
+    template_name = "club_races_officials.html"
+    context_object_name = 'club'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubRacesOfficalUpdateView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
+
+        if self.request.user.is_authenticated():
+            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
+        else:
+            context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
+
+        context['racecreateform'] = RaceCreateForm()
+
+        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name')
+        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name')
+        context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
+
+        return context

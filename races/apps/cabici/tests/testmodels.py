@@ -38,7 +38,7 @@ class ModelTests(TestCase):
 
 		title = "Race Title"
 		date = datetime.today()
-		
+
 		race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
 		race.save()
 
@@ -46,3 +46,35 @@ class ModelTests(TestCase):
 		self.assertTrue(unicode(race).find(title) >= 0)
 
 		self.assertEqual(race.get_absolute_url(), "/races/TEST/1")
+
+
+import random, datetime
+
+class ClubTests(TestCase):
+
+	fixtures = ['users', 'clubs', 'races', 'riders']
+
+	def test_club_create_officials(self):
+		"""Test creation of various roles"""
+
+		club = Club.objects.get(slug="BMC")
+
+		thisyear = datetime.date.today().year
+
+		# make sure all riders are current members
+		racers = 0
+		riders = 0
+		for rider in club.rider_set.all():
+			if random.random() > 0.8:
+				category = 'race'
+				racers += 1
+			else:
+				category = 'ride'
+				riders += 1
+
+			m = Membership(rider=rider, club=club, year=thisyear, category=category)
+			m.save()
+
+		club.create_duty_helpers()
+		helpers = club.clubrole_set.filter(role="Duty Helper")
+		self.assertEqual(riders, helpers.count())
