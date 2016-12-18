@@ -394,6 +394,9 @@ class UserRole(models.Model):
     club = models.ForeignKey(Club)
     role = models.ForeignKey(ClubRole)
 
+    def __unicode__(self):
+
+        return "Role: " + '::'.join((str(self.user), self.club.slug, self.role.name))
 
 class RaceStaff(models.Model):
     """A person associated with a race in some role, eg. Commissaire, Duty Officer

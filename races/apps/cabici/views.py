@@ -409,7 +409,6 @@ class RaceDetailView(DetailView):
 
         pass
 
-
 class RaceOfficialUpdateView(View):
     """Update the officials associated with a race
 
@@ -682,3 +681,31 @@ class ClubRacesOfficalUpdateView(DetailView):
         context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
 
         return context
+
+
+    def post(self, request, *args, **kwargs):
+        """Allocate officials at random to
+        all future races"""
+
+        slug = self.kwargs['slug']
+        club = Club.objects.get(slug=slug)
+
+        user = self.request.user
+
+#        if not (user.is_authenticated() and user.rider.official and user.rider.club == club):
+#            return HttpResponseBadRequest('Not authorised.')
+
+        # find future races
+        races = club.races.filter(date__gte=datetime.date.today())
+        races = club.races.all()
+
+        # allocate duty helpers
+        club.allocate_officials('Duty Helper', 2, races, replace=True)
+
+        # and duty officers
+        club.allocate_officials('Duty Officer', 1, races, replace=False)
+
+        # commisaires?
+
+        # redirect to display page
+        return HttpResponseRedirect(reverse('club_races_officals', kwargs={'slug': club.slug}))

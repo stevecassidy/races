@@ -1,0 +1,92 @@
+{% extends "site_base.html" %}
+
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-select/css/bootstrap-select.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+{% endblock %}
+
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}cabici.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-typeahead.min.js"></script>
+<script src="{{ STATIC_URL }}bootstrap-select/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-datetimepicker/moment.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
+
+
+<script>
+//var apiURL = '/api/races/?select=future&count=5&club=';
+var apiURL = '/api/races/?club=';
+
+var demo = new Vue({
+
+  el: '#demo',
+  data: {
+	club: '{{club}}',
+    races: null
+  },
+
+  created: function () {
+    this.fetchData()
+  },
+
+  methods: {
+    fetchData: function () {
+      var xhr = new XMLHttpRequest()
+      var self = this
+      xhr.open('GET', apiURL + self.club)
+      xhr.onload = function () {
+        self.races = JSON.parse(xhr.responseText);
+      }
+      xhr.send()
+    }
+  }
+})
+</script>
+{% endblock %}
+
+{% block content %}
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+<form method='POST'>
+    {% csrf_token %}
+    <input type='submit'>
+</form>
+
+{% verbatim %}
+<div id="demo">
+  <h1>{{club}} Races</h1>
+
+  <table class='table display' id='racetable'>
+    <thead>
+     <tr>
+         <th style="width: 10em">Date</th>
+         <th>Location</th>
+         <th>Commissaires</th>
+         <th>Duty Officer</th>
+         <th>Duty Helpers</th>
+     </tr>
+    </thead>
+    <tbody>
+        <tr v-for="race in races">
+           <td>{{race.date}}</td>
+           <td>{{race.location.name}}</td>
+           <td>{{race.officials['Commissaire']}}</td>
+           <td>{{race.officials['Duty Officer']}}</td>
+           <td>
+               <span v-for="off in race.officials['Duty Helper']">
+                   {{off.name}},
+               </span>
+           </td>
+       </tr>
+    </tbody>
+  </table>
+
+</div>
+{% endverbatim %}
+
+{% endblock %}
