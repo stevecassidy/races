@@ -93,7 +93,7 @@ function populate_race_table(clubslug, auth) {
         processing: true,
         destroy: true,
         ajax: {
-                    url: "/api/races/?club="+ clubslug +"&select=scheduled",
+                    url: "/api/races/?club="+ clubslug +"&select=future",
                     dataSrc: ''
                 },
         paging: false,
@@ -137,7 +137,7 @@ function populate_race_official_table(clubslug, auth) {
         processing: true,
         destroy: true,
         ajax: {
-                    url: "/api/races/?club="+ clubslug +"&select=scheduled",
+                    url: "/api/races/?club="+ clubslug +"&select=future",
                     dataSrc: ''
                 },
         paging: false,
