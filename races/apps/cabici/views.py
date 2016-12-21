@@ -692,20 +692,19 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         user = self.request.user
 
-#        if not (user.is_authenticated() and user.rider.official and user.rider.club == club):
-#            return HttpResponseBadRequest('Not authorised.')
+        if not (user.is_authenticated() and user.rider.official and user.rider.club == club):
+            return HttpResponseBadRequest('Not authorised.')
 
         # find future races
         races = club.races.filter(date__gte=datetime.date.today())
-        races = club.races.all()
 
         # allocate duty helpers
-        club.allocate_officials('Duty Helper', 2, races, replace=True)
+        club.allocate_officials('Duty Helper', 2, races, replace=False)
 
         # and duty officers
         club.allocate_officials('Duty Officer', 1, races, replace=False)
 
         # commisaires?
 
-        # redirect to display page
-        return HttpResponseRedirect(reverse('club_races_officals', kwargs={'slug': club.slug}))
+        # redirect to race schedule page
+        return HttpResponseRedirect(reverse('club_races', kwargs={'slug': club.slug}))

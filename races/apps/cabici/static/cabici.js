@@ -31,16 +31,18 @@ function editmodalbutton(race) {
 }
 
 
-function populate_race_table(clubslug, auth) {
+function populate_race_table(clubslug, auth, manage_members) {
 
-    console.log(clubslug);
+    console.log(manage_members);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
                               val += editmodalbutton(row);
                               val += deletemodalbutton(row);
-                              val += addpeoplemodalbutton(row);
+                              if (manage_members=='True') {
+                                  val += addpeoplemodalbutton(row);
+                              }
                               return(val);
                           }
                       };
@@ -73,8 +75,11 @@ function populate_race_table(clubslug, auth) {
                       val += "Licence: " + row['licencereq'].display + "</div>";
                       val += "</div>";
                       return val;
-                  }},
-                { data: "officials",
+                  }}
+              ]
+
+    if (manage_members == 'True') {
+            columns.push({ data: "officials",
                   render: function(data, type, row) {
                       var val = "<dl class='dl-horizontal'>";
                       val += formatnames(data.Commissaire, "Commissaire");
@@ -83,7 +88,8 @@ function populate_race_table(clubslug, auth) {
                       val += "</dl>";
                       return val;
                   }
-                }]
+              });
+    }
 
     if (auth) {
         columns.push(edit_column);

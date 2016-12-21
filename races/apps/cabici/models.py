@@ -167,10 +167,11 @@ class Club(models.Model):
 
         # order candidates by number of recent duty assignments
         ordered = []
-        for rider in candidates:
-            c = self.races.filter(officials__rider__exact=rider).count()
-            ordered.append((c,rider))
+        epoch = datetime.date.today() - datetime.timedelta(days=365)
 
+        for rider in candidates:
+            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
+            ordered.append((c,rider))
 
         random.shuffle(ordered)
 
@@ -188,7 +189,6 @@ class Club(models.Model):
                 rs.save()
                 # requeue the rider
                 ordered.append((c,rider))
-
 
     def ingest_ical(self):
         """Import races from an icalendar feed

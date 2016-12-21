@@ -40,7 +40,7 @@ $(document).ready(
         {% else %}
         var auth = false;
         {% endif %}
-        populate_race_table('{{club.slug}}', auth);
+        populate_race_table('{{club.slug}}', auth, '{{club.manage_members}}');
     }
 );
 </script>
@@ -52,13 +52,18 @@ $(document).ready(
 
 {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
 
-    <div class='btn-toolbar' role='toolbar' aria-label='Club Official Actions'>
+    <div class='btn-group' role='group' aria-label='Club Official Actions'>
         <button type='button' class='btn btn-default' data-toggle='modal' data-target="#raceCreateModal">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Races
             </button>
         <button type='button' class='btn btn-default' data-toggle='modal' data-target="#publishDraftModal">
             Publish Draft Races
         </button>
+        {% if club.manage_members %}
+        <button type='button' class='btn btn-default' data-toggle='modal' data-target='#allocateModal'>
+            Randomly Allocate Officials
+        </button>
+        {% endif %}
     </div>
 
 {% endif %}
@@ -69,7 +74,9 @@ $(document).ready(
            <th style="width: 10em">Date</th>
            <th>Race</th>
            <th>Location</th>
+           {% if club.manage_members %}
            <th>Officials</th>
+           {% endif %}
            {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
            <th>Edit</th>
            {% endif %}
@@ -84,6 +91,31 @@ $(document).ready(
     {% include "race_create_modal.html" with mode="edit" %}
 
     {% include "race_confirm_delete.html" %}
+
+
+    <div class='modal fade' id='allocateModal' tabindex='-2' role='dialog' aria-labelledby="allocateModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="allocateModalLabel">Allocate Officials</h4>
+            </div>
+            <div class="modal-body">
+                <p>This will allocate Duty Helpers and Duty Officers at random
+                    for any future race where there is currently no allocation.</p>
+
+                <form method='POST' action='officials/'>
+                    {% csrf_token %}
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <input class='btn btn-primary' type='submit' value="Randomly Allocate Officals">
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+
 
     <div class='modal fade' id='addPeopleModal' tabindex='-2' role='dialog' aria-labelledby="addPeopleModalLabel">
         <div class="modal-dialog" role="document">

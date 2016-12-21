@@ -19,12 +19,12 @@
 
 
 <script>
-//var apiURL = '/api/races/?select=future&count=5&club=';
-var apiURL = '/api/races/?club=';
+var apiURL = '/api/races/?select=future&club=';
+//var apiURL = '/api/races/?club=';
 
 var demo = new Vue({
 
-  el: '#demo',
+  el: '#racelist',
   data: {
 	club: '{{club}}',
     races: null
@@ -46,19 +46,27 @@ var demo = new Vue({
     }
   }
 })
+
+{% verbatim %}
+Vue.component('official-list', {
+    props: ['officials'],
+    template: '<official v-for="off in officials" v-bind:rider="off"></official>'
+})
+
+Vue.component('official', {
+    props: ['rider'],
+    template: '<span>{{rider.name}}</span>'
+})
+
+{% endverbatim %}
 </script>
 {% endblock %}
 
 {% block content %}
 <script src="https://unpkg.com/vue/dist/vue.js"></script>
 
-<form method='POST'>
-    {% csrf_token %}
-    <input type='submit'>
-</form>
-
 {% verbatim %}
-<div id="demo">
+<div id="racelist">
   <h1>{{club}} Races</h1>
 
   <table class='table display' id='racetable'>
@@ -75,12 +83,14 @@ var demo = new Vue({
         <tr v-for="race in races">
            <td>{{race.date}}</td>
            <td>{{race.location.name}}</td>
-           <td>{{race.officials['Commissaire']}}</td>
-           <td>{{race.officials['Duty Officer']}}</td>
            <td>
-               <span v-for="off in race.officials['Duty Helper']">
-                   {{off.name}},
-               </span>
+               <official-list v-bind:officials="race.officials['Commissaire']" />
+           </td>
+           <td>
+               <official-list v-bind:officials="race.officials['Duty Officer']" />
+           </td>
+           <td>
+               <official-list v-bind:officials="race.officials['Duty Helper']" />
            </td>
        </tr>
     </tbody>
