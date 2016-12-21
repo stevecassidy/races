@@ -37,7 +37,9 @@
 
 {% if request.user.rider %}
 
-    {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
+    {# who can edit rider details? #}
+    {% if request.user == user or request.user.is_authenticated and request.user.rider.official and    request.user.rider.club.manage_members %}
+    {# and request.user.rider.club == user.rider.club -- to limit edits to an official's club #}
     <h4>Personal Details <a type='button' class='btn btn-default' href="{% url 'rider_update' user.id %}">Update</a></h4>
 
     <table class=table>
