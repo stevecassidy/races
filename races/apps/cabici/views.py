@@ -697,7 +697,7 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # find future races
         races = club.races.filter(date__gte=datetime.date.today())
-
+        
         # allocate duty helpers
         club.allocate_officials('Duty Helper', 2, races, replace=False)
 

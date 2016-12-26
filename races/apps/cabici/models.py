@@ -161,6 +161,7 @@ class Club(models.Model):
         # candidates are those members with a ClubRole with the
         # corresponding role
         candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+
         # if we have no candidates we can't do anything
         if candidates.count() == 0:
             return
@@ -189,6 +190,7 @@ class Club(models.Model):
                 rs.save()
                 # requeue the rider
                 ordered.append((c,rider))
+
 
     def ingest_ical(self):
         """Import races from an icalendar feed

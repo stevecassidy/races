@@ -7,7 +7,8 @@ from django_webtest import WebTest
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, ClubGrade
 from datetime import datetime, timedelta, date
-
+import re
+import random
 
 class RoleViewTests(WebTest):
     """Tests of user roles and the things they are allowed to do"""
@@ -220,21 +221,6 @@ class RoleViewTests(WebTest):
         self.assertContains(response, "value='"+oge_grade.grade+"'")
         # but mov grade should not be editable
         self.assertNotContains(response, "value='"+mov_grade.grade+"'")
-
-
-    def test_club_official_race_officials_page(self):
-        """There is a page /clubs/<slug>/races/officials that provides
-        an interface for bulk updating of race officials for scheduled
-        races"""
-
-
-        self.client.force_login(user=self.ogeofficial)
-        response = self.client.get(reverse('raceofficialsupdate', kwargs={'slug': self.oge.slug}))
-
-        self.assertContains(response, self.oge.name)
-        # TODO: add some more assertions
-
-
 
 
     # def test_race_riders(self):

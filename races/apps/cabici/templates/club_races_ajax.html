@@ -104,7 +104,7 @@ $(document).ready(
                 <p>This will allocate Duty Helpers and Duty Officers at random
                     for any future race where there is currently no allocation.</p>
 
-                <form method='POST' action='officials/'>
+                <form id='allocateForm' method='POST' action='officials/'>
                     {% csrf_token %}
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
