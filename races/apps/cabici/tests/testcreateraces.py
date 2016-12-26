@@ -82,6 +82,9 @@ class CreateViewTests(TestCase):
                 'starttime': "8am",
                 'repeat': 'none',
                 'status': 'd',
+                'category': '3',
+                'licencereq': 'em.mw',
+                'discipline': 'r',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})
@@ -125,6 +128,12 @@ class CreateViewTests(TestCase):
                 'repeat': 'weekly',
                 'repeatN': '1',
                 'number': 6,
+                'category': '3',
+                'licencereq': 'em.mw',
+                'discipline': 'r',
+                'category': '3',
+                'licencereq': 'em.mw',
+                'discipline': 'r',
                 'website': 'http://example.org/'}
 
         response = self.client.post(formurl, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -176,6 +185,9 @@ class CreateViewTests(TestCase):
                 'repeatMonthN': 2,
                 'repeatDay': 5,
                 'number': 6,
+                'category': '3',
+                'licencereq': 'em.mw',
+                'discipline': 'r',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})
@@ -226,6 +238,9 @@ class CreateViewTests(TestCase):
                 'repeatMonthN': -1,
                 'repeatDay': 0,
                 'number': 6,
+                'category': '3',
+                'licencereq': 'em.mw',
+                'discipline': 'r',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})

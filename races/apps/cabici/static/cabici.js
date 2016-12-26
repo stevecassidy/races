@@ -31,16 +31,18 @@ function editmodalbutton(race) {
 }
 
 
-function populate_race_table(clubslug, auth) {
+function populate_race_table(clubslug, auth, manage_members) {
 
-    console.log(clubslug);
+    console.log(manage_members);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
                               val += editmodalbutton(row);
                               val += deletemodalbutton(row);
-                              val += addpeoplemodalbutton(row);
+                              if (manage_members=='True') {
+                                  val += addpeoplemodalbutton(row);
+                              }
                               return(val);
                           }
                       };
@@ -73,8 +75,59 @@ function populate_race_table(clubslug, auth) {
                       val += "Licence: " + row['licencereq'].display + "</div>";
                       val += "</div>";
                       return val;
-                  }},
-                { data: "officials",
+                  }}
+              ]
+
+    if (manage_members == 'True') {
+            columns.push({ data: "officials",
+                  render: function(data, type, row) {
+                      var val = "<dl class='dl-horizontal'>";
+                      val += formatnames(data.Commissaire, "Commissaire");
+                      val += formatnames(data['Duty Officer'], "Duty Officer");
+                      val += formatnames(data['Duty Helper'], "Duty Helper");
+                      val += "</dl>";
+                      return val;
+                  }
+              });
+    }
+
+    if (auth) {
+        columns.push(edit_column);
+    }
+
+    $('#racetable').DataTable( {
+        processing: true,
+        destroy: true,
+        ajax: {
+                    url: "/api/races/?club="+ clubslug +"&select=future",
+                    dataSrc: ''
+                },
+        paging: false,
+        ordering: false,
+        rowId: 'id',
+        columns: columns,
+        fnCreatedRow: function( nRow, aData, iDataIndex ) {
+             $(nRow).addClass('status'+aData['status']);
+        }
+    } );
+};
+
+/* populate the table of just the race officials for bulk editing */
+function populate_race_official_table(clubslug, auth) {
+
+    var columns = [{
+                       data: "date",
+                       render: function(data, type, row) {
+                           var val = "<p>";
+                           dd = new Date(data);
+                           dd = dd.toGMTString() /* Use GMT because dates in that TZ by default */
+                           dd = dd.substring(0,dd.length-12);
+                           val += "<b>" +dd + "</b></p>";
+                           return val;
+                    }
+                },
+                { data: "location.name"},
+                { data: "commissaire",
                   render: function(data, type, row) {
                       var val = "<dl class='dl-horizontal'>";
                       val += formatnames(data.Commissaire, "Commissaire");
@@ -85,15 +138,12 @@ function populate_race_table(clubslug, auth) {
                   }
                 }]
 
-    if (auth) {
-        columns.push(edit_column);
-    }
 
     $('#racetable').DataTable( {
         processing: true,
         destroy: true,
         ajax: {
-                    url: "/api/races/?club="+ clubslug +"&select=scheduled",
+                    url: "/api/races/?club="+ clubslug +"&select=future",
                     dataSrc: ''
                 },
         paging: false,

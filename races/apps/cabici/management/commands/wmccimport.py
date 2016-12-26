@@ -153,7 +153,7 @@ def import_races(csvdir, waratahs, usermap):
 
             race = Race(title=row['eventname'], date=row['eventdate'],
                         club=waratahs, starttime=row['starttime'],
-                        signontime=time, location=location, status='p')
+                        signontime=time, location=location, status='p', licencereq='m.mw')
             race.save()
 
             if race.date.startswith("2016") and row['mainpointscore']:

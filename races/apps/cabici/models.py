@@ -138,6 +138,60 @@ class Club(models.Model):
                 role.save()
 
 
+    def allocate_officials(self, role, number, races, replace=False):
+        """Allocate people to fill the given roles for
+        the given races.
+
+        role - a role to allocate to, eg. 'Duty Helper'
+        number - number to allocate to each race
+        races - list (or result set) of races to allocate
+        replace - if True, replace any existing officials for each race
+
+        Select people at random from the eligebility list weighted
+        by the number of times they have served in this role
+        recently.
+        """
+
+        self.create_duty_helpers()
+
+        from .usermodel import RaceStaff, ClubRole
+        clubrole, created = ClubRole.objects.get_or_create(name=role)
+
+        import random
+        # candidates are those members with a ClubRole with the
+        # corresponding role
+        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+
+        # if we have no candidates we can't do anything
+        if candidates.count() == 0:
+            return
+
+        # order candidates by number of recent duty assignments
+        ordered = []
+        epoch = datetime.date.today() - datetime.timedelta(days=365)
+
+        for rider in candidates:
+            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
+            ordered.append((c,rider))
+
+        random.shuffle(ordered)
+
+        ordered.sort()
+
+        for race in races:
+            existing = RaceStaff.objects.filter(race=race, role=clubrole)
+            if replace:
+                existing.delete()
+
+            # allocate more if there are less than number already allocated
+            for n in range(max(0,number-existing.count())):
+                c, rider = ordered.pop(0)
+                rs = RaceStaff(rider=rider, race=race, role=clubrole)
+                rs.save()
+                # requeue the rider
+                ordered.append((c,rider))
+
+
     def ingest_ical(self):
         """Import races from an icalendar feed
         Return a tuple (races, errormsg) where races is a list
@@ -301,10 +355,14 @@ class RaceCourse(models.Model):
     objects = RaceCourseManager()
 
     name = models.CharField(max_length=100)
+    shortname = models.CharField(max_length=20, default='')
     location = GeopositionField()
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class RacePrototype(models.Model):
     """A race prototype describes a race that

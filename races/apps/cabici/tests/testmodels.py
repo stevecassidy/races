@@ -2,47 +2,47 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from datetime import datetime, timedelta
+import datetime
 
 class ModelTests(TestCase):
 
 
-	def test_club(self):
-		"""Test creation of clubs and some methods"""
+    def test_club(self):
+        """Test creation of clubs and some methods"""
 
-		name = "test club"
-		website = "http://example.com/"
-		slug = "TEST"
-		club = Club(name=name, website=website, slug=slug)
+        name = "test club"
+        website = "http://example.com/"
+        slug = "TEST"
+        club = Club(name=name, website=website, slug=slug)
 
-		# string version of club is the slug
-		self.assertEqual(unicode(club), slug)
-
-
-		# test failure modes of ingest
-		# this triggers ingest_by_module which fails because there is no module
-		self.assertEqual(club.ingest(), ([], 'No ingest module for club "test"'))
+        # string version of club is the slug
+        self.assertEqual(unicode(club), slug)
 
 
-	def test_race(self):
-		"""Test creation of race and some methods"""
+        # test failure modes of ingest
+        # this triggers ingest_by_module which fails because there is no module
+        self.assertEqual(club.ingest(), ([], 'No ingest module for club "test"'))
 
-		clubname = "test club"
-		website = "http://example.com/"
-		slug = "TEST"
-		club = Club(name=clubname, website=website, slug=slug)
-		club.save()
 
-		loc = RaceCourse(name="Test Course")
-		loc.save()
+    def test_race(self):
+        """Test creation of race and some methods"""
 
-		title = "Race Title"
-		date = datetime.today()
-		
-		race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
-		race.save()
+        clubname = "test club"
+        website = "http://example.com/"
+        slug = "TEST"
+        club = Club(name=clubname, website=website, slug=slug)
+        club.save()
 
-		self.assertTrue(unicode(race).startswith(slug))
-		self.assertTrue(unicode(race).find(title) >= 0)
+        loc = RaceCourse(name="Test Course")
+        loc.save()
 
-		self.assertEqual(race.get_absolute_url(), "/races/TEST/1")
+        title = "Race Title"
+        date = datetime.date.today()
+
+        race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
+        race.save()
+
+        self.assertTrue(unicode(race).startswith(slug))
+        self.assertTrue(unicode(race).find(title) >= 0)
+
+        self.assertEqual(race.get_absolute_url(), "/races/TEST/1")
