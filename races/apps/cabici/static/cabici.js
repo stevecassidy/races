@@ -31,16 +31,18 @@ function editmodalbutton(race) {
 }
 
 
-function populate_race_table(clubslug, auth) {
+function populate_race_table(clubslug, auth, manage_members) {
 
-    console.log(clubslug);
+    console.log(manage_members);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
                               val += editmodalbutton(row);
                               val += deletemodalbutton(row);
-                              val += addpeoplemodalbutton(row);
+                              if (manage_members=='True') {
+                                  val += addpeoplemodalbutton(row);
+                              }
                               return(val);
                           }
                       };
@@ -64,8 +66,68 @@ function populate_race_table(clubslug, auth) {
                       var val = "<a href='/races/" + row['club']['slug'] + "/" + row['id'] + "'>" + data + "</a>";
                       return val;
                   }},
-                { data: "location.name" },
-                { data: "officials",
+                { data: "location.name",
+                  render: function(data, type, row) {
+                      var val = "<div>";
+                      val += "<span class='racelocation'>" + data + "</span><br>";
+                      val += "<div class='racesuppinfo'>" + row['category'].display + "<br>";
+                      val += "Discipline: " + row['discipline'].display + "<br>";
+                      val += "Licence: " + row['licencereq'].display + "</div>";
+                      val += "</div>";
+                      return val;
+                  }}
+              ]
+
+    if (manage_members == 'True') {
+            columns.push({ data: "officials",
+                  render: function(data, type, row) {
+                      var val = "<dl class='dl-horizontal'>";
+                      val += formatnames(data.Commissaire, "Commissaire");
+                      val += formatnames(data['Duty Officer'], "Duty Officer");
+                      val += formatnames(data['Duty Helper'], "Duty Helper");
+                      val += "</dl>";
+                      return val;
+                  }
+              });
+    }
+
+    if (auth) {
+        columns.push(edit_column);
+    }
+
+    $('#racetable').DataTable( {
+        processing: true,
+        destroy: true,
+        ajax: {
+                    url: "/api/races/?club="+ clubslug +"&select=future",
+                    dataSrc: ''
+                },
+        paging: false,
+        ordering: false,
+        rowId: 'id',
+        columns: columns,
+        fnCreatedRow: function( nRow, aData, iDataIndex ) {
+             $(nRow).addClass('status'+aData['status']);
+        }
+    } );
+};
+
+/* populate the table of just the race officials for bulk editing */
+function populate_race_official_table(clubslug, auth) {
+
+    var columns = [{
+                       data: "date",
+                       render: function(data, type, row) {
+                           var val = "<p>";
+                           dd = new Date(data);
+                           dd = dd.toGMTString() /* Use GMT because dates in that TZ by default */
+                           dd = dd.substring(0,dd.length-12);
+                           val += "<b>" +dd + "</b></p>";
+                           return val;
+                    }
+                },
+                { data: "location.name"},
+                { data: "commissaire",
                   render: function(data, type, row) {
                       var val = "<dl class='dl-horizontal'>";
                       val += formatnames(data.Commissaire, "Commissaire");
@@ -76,15 +138,12 @@ function populate_race_table(clubslug, auth) {
                   }
                 }]
 
-    if (auth) {
-        columns.push(edit_column);
-    }
 
     $('#racetable').DataTable( {
         processing: true,
         destroy: true,
         ajax: {
-                    url: "/api/races/?club="+ clubslug +"&select=scheduled",
+                    url: "/api/races/?club="+ clubslug +"&select=future",
                     dataSrc: ''
                 },
         paging: false,
@@ -143,8 +202,7 @@ function race_create_form_init(slug) {
 
 function edit_race_modal_init() {
     $('#raceEditModal').on('show.bs.modal', function(event) {
-        console.log('init modal');
-        console.log(this);
+
         var button = $(event.relatedTarget); // Button that triggered the modal
         var raceurl = button.data('raceurl');
         var racename = button.data('racename');
@@ -169,6 +227,10 @@ function edit_race_modal_init() {
             $('select[id=id_status]').val(data.status);
             $('input[id=id_website]').val(data.website);
             $('textarea[id=id_description]').val(data.description);
+
+            $('select[id=id_category]').val(data.category.key);
+            $('select[id=id_licencereq]').val(data.licencereq.key);
+            $('select[id=id_discipline]').val(data.discipline.key);
 
         });
 

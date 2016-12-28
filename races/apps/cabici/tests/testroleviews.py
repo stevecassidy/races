@@ -7,7 +7,8 @@ from django_webtest import WebTest
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, ClubGrade
 from datetime import datetime, timedelta, date
-
+import re
+import random
 
 class RoleViewTests(WebTest):
     """Tests of user roles and the things they are allowed to do"""
@@ -220,8 +221,6 @@ class RoleViewTests(WebTest):
         self.assertContains(response, "value='"+oge_grade.grade+"'")
         # but mov grade should not be editable
         self.assertNotContains(response, "value='"+mov_grade.grade+"'")
-
-
 
 
     # def test_race_riders(self):

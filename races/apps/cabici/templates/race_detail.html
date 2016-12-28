@@ -78,6 +78,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
               <tr><th>Sign On Time</th><td>{{race.signontime}}</td></tr>
               <tr><th>Start Time</th><td>{{race.starttime}}</td></tr>
               <tr><th>Location</th><td>{{race.location}}</td></tr>
+              <tr><th>Category</th><td>{{race.get_category_display}}</td></tr>
+              <tr><th>Licence</th><td>{{race.get_licencereq_display}}</td></tr>
+              <tr><th>Discipline</th><td>{{race.get_discipline_display}}</td></tr>
               {%if race.url %}
               <tr><th>More Detail</th><td>See race on <a href="{{race.website}}">{{race.club.name}} website</a></td></tr>
               {% endif %}

@@ -2,8 +2,10 @@ from django.db import models
 from geoposition.fields import GeopositionField
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from importlib import import_module
 from django.contrib.auth.models import User
+from django.db import transaction
 
 import icalendar
 import pytz
@@ -17,14 +19,18 @@ import csv
 class ClubManager(models.Manager):
 
     def closest(self, name):
-        """Find a RaceCourse using an approximate match to
-        the given name, return the best matching RaceCourse instance"""
+        """Find a Club using an approximate match to
+        the given name, return the best matching Club instance"""
 
         clubs = self.all()
 
         ng = ngram.NGram(clubs, key=str)
 
         club = ng.finditem(name)
+
+        if club is None:
+            unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
+            club = unknown_club
 
         return club
 
@@ -136,6 +142,60 @@ class Club(models.Model):
             if not user in dofficers:
                 role = UserRole(user=user, club=self, role=dutyhelper)
                 role.save()
+
+
+    def allocate_officials(self, role, number, races, replace=False):
+        """Allocate people to fill the given roles for
+        the given races.
+
+        role - a role to allocate to, eg. 'Duty Helper'
+        number - number to allocate to each race
+        races - list (or result set) of races to allocate
+        replace - if True, replace any existing officials for each race
+
+        Select people at random from the eligebility list weighted
+        by the number of times they have served in this role
+        recently.
+        """
+
+        self.create_duty_helpers()
+
+        from .usermodel import RaceStaff, ClubRole
+        clubrole, created = ClubRole.objects.get_or_create(name=role)
+
+        import random
+        # candidates are those members with a ClubRole with the
+        # corresponding role
+        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+
+        # if we have no candidates we can't do anything
+        if candidates.count() == 0:
+            return
+
+        # order candidates by number of recent duty assignments
+        ordered = []
+        epoch = datetime.date.today() - datetime.timedelta(days=365)
+
+        for rider in candidates:
+            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
+            ordered.append((c,rider))
+
+        random.shuffle(ordered)
+
+        ordered.sort()
+
+        for race in races:
+            existing = RaceStaff.objects.filter(race=race, role=clubrole)
+            if replace:
+                existing.delete()
+
+            # allocate more if there are less than number already allocated
+            for n in range(max(0,number-existing.count())):
+                c, rider = ordered.pop(0)
+                rs = RaceStaff(rider=rider, race=race, role=clubrole)
+                rs.save()
+                # requeue the rider
+                ordered.append((c,rider))
 
 
     def ingest_ical(self):
@@ -301,10 +361,14 @@ class RaceCourse(models.Model):
     objects = RaceCourseManager()
 
     name = models.CharField(max_length=100)
+    shortname = models.CharField(max_length=20, default='')
     location = GeopositionField()
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ['name']
 
 class RacePrototype(models.Model):
     """A race prototype describes a race that
@@ -325,6 +389,39 @@ STATUS_CHOICES = (
     ('c', 'Cancelled')
 )
 
+CATEGORY_CHOICES = (
+    ('1', 'Category 1 Open and State Championships'),
+    ('2', 'Category 2 Open/Masters Open/Junior Open'),
+    ('3', 'Category 3 Club/Inter-Club'),
+    ('Junior', 'Junior Club'),
+    ('Rec', 'Recreational/Timed Rides')
+)
+
+DISCIPLINE_CHOICES = (
+    ('r', 'Road'),
+    ('t', 'Track'),
+    ('cx', 'Cyclocross'),
+    ('mtb', 'MTB'),
+    ('bmx', 'BMX')
+)
+
+LICENCE_CHOICES = (
+    ('e.m', 'Elite Men'),
+    ('e.w', 'Elite Women'),
+    ('e.mw', 'Elite Men & Women'),
+    ('m.mw', 'Masters Men & Women'),
+    ('m.m', 'Masters Men'),
+    ('m.w', 'Masters Women'),
+    ('em.mw', 'Elite or Masters Men & Women'),
+    ('em.m', 'Elite or Masters Men'),
+    ('em.w', 'Elite or Masters Women'),
+    ('j.mw', 'Junior'),
+    ('k.mw', 'Kids'),
+    ('p.mw', 'Para-cyclist Men & Women'),
+    ('p.m', 'Para-cyclist Men'),
+    ('p.w', 'Para-cyclist Women'),
+)
+
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
@@ -338,6 +435,14 @@ class Race(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='p', help_text=" ")
     description = models.TextField(default="", blank=True, help_text=" ")
     hash = models.CharField(max_length=100, blank=True)
+
+    # Offical category of the race
+    category = models.CharField(max_length=10, choices=CATEGORY_CHOICES, default="3")
+    # Discipline
+    discipline = models.CharField(max_length=10, choices=DISCIPLINE_CHOICES, default='r')
+    # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
+    licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
+
 
     class Meta:
         ordering = ['date', 'signontime']
@@ -358,10 +463,8 @@ class Race(models.Model):
     def load_excel_results(self, fd, extension):
         """Load race results from a file handle pointing to an Excel file"""
 
-        from races.apps.cabici.usermodel import RaceResult, Rider
+        from races.apps.cabici.usermodel import RaceResult, Rider, Membership
         import pyexcel
-
-        unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
 
         # delete any existing results for this race
         previousresults = RaceResult.objects.filter(race=self).count()
@@ -381,14 +484,23 @@ class Race(models.Model):
                 rider = Rider.objects.get(licenceno=row['LicenceNo'])
             except:
                 user, created = User.objects.get_or_create(first_name=row['FirstName'], last_name=row['LastName'], username=row['FirstName']+row['LastName'])
+
+                if row['Email'] != '':
+                    user.email = row['Email']
                 user.save()
-                clubs = Club.objects.filter(slug=row['Club'])
-                if len(clubs) == 1:
-                    club = clubs[0]
-                else:
-                    club = unknown_club
+
+                club = Club.objects.closest(row['Club'])
+
                 rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
                 rider.save()
+                # we know that this rider is a current member of their club
+                thisyear = datetime.date.today().year
+                m = Membership(rider=rider, club=club, year=thisyear, category='race')
+                m.save()
+
+            # fix xP grades
+            if row['Grade'].endswith('P'):
+                row['Grade'] = row['Grade'][0]
 
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
@@ -398,7 +510,17 @@ class Race(models.Model):
                 place = 8-points
                 result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
 
-            result.save()
+            while True:
+                try:
+                    with transaction.atomic():
+                        result.save()
+                        break
+                except IntegrityError as e:
+                    # duplicate race/grade/number
+                    # probably wrong number entered so we can recover by fixing the number
+                    result.number = result.number + 200
+
+
 
         self.fix_small_races()
 

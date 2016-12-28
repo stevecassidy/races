@@ -30,6 +30,8 @@ urlpatterns = [
     url(r'^clubs/(?P<slug>[^/]*)/$', xframe_options_exempt(views.ClubDetailView.as_view()), name='club'),
     url(r'^clubs/(?P<slug>[^/]*)/dashboard/$', views.ClubDashboardView.as_view(), name='club_dashboard'),
     url(r'^clubs/(?P<slug>[^/]*)/races/$', views.ClubRacesView.as_view(), name='club_races'),
+    url(r'^clubs/(?P<slug>[^/]*)/races/officials/$', views.ClubRacesOfficalUpdateView.as_view(), name='club_races_officals'),
+
     url(r'^clubs/(?P<slug>[^/]*)/races/publish/$', views.RacePublishDraftView.as_view(), name='club_race_publish'),
     url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),

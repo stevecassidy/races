@@ -53,6 +53,14 @@ header a:link {
 .racetime {
 
 }
+.racelocation {
+    font-weight: bold;
+}
+.racesuppinfo {
+    margin-top: 0px;
+    font-size: small;
+    font-style: italic;
+}
 
 @media (max-width: 480px) {
 
