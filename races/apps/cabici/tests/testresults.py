@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
+from django.db import transaction
 
 import os
 import datetime
@@ -162,6 +163,9 @@ class UserModelTests(TestCase):
         rider1 = Rider(user=user1, club=club, gender='M', licenceno='169508')
         rider1.save()
 
+        parra = Club(slug="ParramattaCC", name="Parramatta Cycling Club")
+        parra.save()
+
         race = Race.objects.get(pk=1)
 
         with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
@@ -186,7 +190,38 @@ class UserModelTests(TestCase):
         resultsB = RaceResult.objects.filter(race__exact=race, grade__exact="B", place__isnull=False).order_by("place")
 
         # highest place in A grade should be Moe Kanj at 1 (small group fix)
-
+        # this also checks rewrite of AP grade to A
         firstplace = resultsB[0]
         self.assertEqual('161788', firstplace.rider.licenceno)
         self.assertEqual(1, firstplace.place)
+
+        # rider 104705 should be in the parra club
+        prider = Rider.objects.get(licenceno='104705')
+
+        self.assertEqual(parra, prider.club)
+
+
+    def test_load_results_excel_duplicates(self):
+        """Load results from Excel creates riders and results
+        check handling of duplicate entries"""
+
+        parra = Club(slug="ParramattaCC", name="Parramatta Cycling Club")
+        parra.save()
+
+        race = Race.objects.get(pk=1)
+
+        with transaction.atomic():
+            with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536-dup.xls'), 'rb') as fd:
+                race.load_excel_results(fd, "xls")
+
+        self.assertEqual(race.raceresult_set.all().count(), 116)
+
+        # check that we have results from both riders with number 104
+        r1 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact='104705')
+        r2 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact='169508')
+
+        self.assertEqual(1, len(r1))
+        self.assertEqual(1, len(r2))
+
+        self.assertEqual(1, r2[0].place)
+        self.assertEqual(None, r1[0].place)

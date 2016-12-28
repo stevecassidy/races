@@ -2,8 +2,10 @@ from django.db import models
 from geoposition.fields import GeopositionField
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError
 from importlib import import_module
 from django.contrib.auth.models import User
+from django.db import transaction
 
 import icalendar
 import pytz
@@ -17,14 +19,18 @@ import csv
 class ClubManager(models.Manager):
 
     def closest(self, name):
-        """Find a RaceCourse using an approximate match to
-        the given name, return the best matching RaceCourse instance"""
+        """Find a Club using an approximate match to
+        the given name, return the best matching Club instance"""
 
         clubs = self.all()
 
         ng = ngram.NGram(clubs, key=str)
 
         club = ng.finditem(name)
+
+        if club is None:
+            unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
+            club = unknown_club
 
         return club
 
@@ -457,10 +463,8 @@ class Race(models.Model):
     def load_excel_results(self, fd, extension):
         """Load race results from a file handle pointing to an Excel file"""
 
-        from races.apps.cabici.usermodel import RaceResult, Rider
+        from races.apps.cabici.usermodel import RaceResult, Rider, Membership
         import pyexcel
-
-        unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
 
         # delete any existing results for this race
         previousresults = RaceResult.objects.filter(race=self).count()
@@ -480,14 +484,23 @@ class Race(models.Model):
                 rider = Rider.objects.get(licenceno=row['LicenceNo'])
             except:
                 user, created = User.objects.get_or_create(first_name=row['FirstName'], last_name=row['LastName'], username=row['FirstName']+row['LastName'])
+
+                if row['Email'] != '':
+                    user.email = row['Email']
                 user.save()
-                clubs = Club.objects.filter(slug=row['Club'])
-                if len(clubs) == 1:
-                    club = clubs[0]
-                else:
-                    club = unknown_club
+
+                club = Club.objects.closest(row['Club'])
+
                 rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
                 rider.save()
+                # we know that this rider is a current member of their club
+                thisyear = datetime.date.today().year
+                m = Membership(rider=rider, club=club, year=thisyear, category='race')
+                m.save()
+
+            # fix xP grades
+            if row['Grade'].endswith('P'):
+                row['Grade'] = row['Grade'][0]
 
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
@@ -497,7 +510,17 @@ class Race(models.Model):
                 place = 8-points
                 result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
 
-            result.save()
+            while True:
+                try:
+                    with transaction.atomic():
+                        result.save()
+                        break
+                except IntegrityError as e:
+                    # duplicate race/grade/number
+                    # probably wrong number entered so we can recover by fixing the number
+                    result.number = result.number + 200
+
+
 
         self.fix_small_races()
 
