@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django_webtest import WebTest
+from django.core import mail
 
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, ClubGrade, Membership, ClubRole, UserRole
@@ -64,21 +65,37 @@ class OfficialsTests(WebTest):
             races.append(race)
         return races
 
+    def make_role(self, club, n, rolename):
+        """Choose n members to have the given role,
+         return a list of riders"""
+
+        role, created = ClubRole.objects.get_or_create(name=rolename)
+
+        riders = []
+        mm = Membership.objects.filter(club__exact=club, category__exact='race')[:n]
+        for m in mm:
+            ur = UserRole(user=m.rider.user, club=club, role=role)
+            ur.save()
+            riders.append(ur.user.rider)
+
+        print role, riders
+        return riders
 
     def test_club_create_officials(self):
         """Test creation of various roles"""
 
-        # make one racer a duty officer - should not be made a DH
-        dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
-
-        r = Membership.objects.filter(club__exact=self.oge, category__exact='race')[0].rider
-        cr = UserRole(user=r.user, club=self.oge, role=dutyofficer)
-        cr.save()
+        dofficers = self.make_role(self.oge, 3, "Duty Officer")
 
         self.oge.create_duty_helpers()
         helpers = self.oge.userrole_set.filter(role__name__exact="Duty Helper")
         racers = self.oge.membership_set.filter(category__exact='race').count()
-        self.assertEqual(racers-1, helpers.count())
+        self.assertEqual(racers-3, helpers.count())
+        # no dofficers should be helpers
+        for rider in dofficers:
+            ur = self.oge.userrole_set.filter(role__name__exact="Duty Helper", user__rider__exact=rider).count()
+            self.assertEqual(0, ur)
+
+
 
     def test_club_allocate_officials(self):
         """Allocate officials to a set of races"""
@@ -160,3 +177,84 @@ class OfficialsTests(WebTest):
         for race in races:
             off = race.officials.all()
             self.assertEqual(2, len(off))
+
+
+    def test_club_official_email_members(self):
+        """Dashboard has a button to email members, leading to a
+        page with a form to send an email"""
+
+        # first test with movistar where we don't manage members
+        dashboard_url = reverse('club_dashboard', kwargs={'slug': self.mov.slug})
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+
+        response = self.app.get(dashboard_url, user=self.ogeofficial)
+
+        # there is no link with the email URL
+        link = response.html.find_all('a', href=emailurl)
+
+        self.assertEqual(0, len(link))
+
+        # now with  membership management for OGE
+        dashboard_url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+
+        # now the link is there
+        response = self.app.get(dashboard_url, user=self.ogeofficial)
+        link = response.html.find_all('a', href=emailurl)
+        self.assertEqual(1, len(link))
+
+        # follow the link
+        response = self.app.get(emailurl, user=self.ogeofficial)
+        # check for the form
+        self.assertTrue('emailmembersform' in response.forms)
+        form = response.forms['emailmembersform']
+        self.assertEqual('POST', form.method)
+
+        # fill the form and submit
+        subject = "test email subject"
+        body = "xyzzy1234 message body"
+        form['sendto'] = 'members'
+        form['subject'] = subject
+        form['message'] = body
+        response = form.submit()
+
+        self.assertRedirects(response, dashboard_url)
+
+        # check that emails are 'sent'
+
+        members = self.oge.rider_set.all()
+
+        self.assertEqual(len(mail.outbox), 1)
+
+        # to should be empty, member emails are in bcc
+        self.assertEqual(len(mail.outbox[0].to), 0)
+
+        recipients = mail.outbox[0].bcc
+        self.assertEqual(len(mail.outbox[0].bcc), members.count())
+        for m in members:
+            self.assertIn(m.user.email, recipients)
+
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].body, body)
+
+
+
+    def test_club_official_email_members_self(self):
+        """Member email form can send mail to myself"""
+
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+        response = self.app.get(emailurl, user=self.ogeofficial)
+        form = response.forms['emailmembersform']
+
+        # fill the form and submit
+        subject = "test email subject"
+        body = "xyzzy1234 message body"
+        form['sendto'] = 'self'
+        form['subject'] = subject
+        form['message'] = body
+        response = form.submit()
+
+        # check that emails are 'sent'
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox[0].to), 0)
+        self.assertEqual(mail.outbox[0].bcc, [self.ogeofficial.email])

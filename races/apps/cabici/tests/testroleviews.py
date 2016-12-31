@@ -202,7 +202,6 @@ class RoleViewTests(WebTest):
         mov_grade = ClubGrade(rider=rider, club=self.mov, grade="MOV_X")
         mov_grade.save()
 
-
         # login as rider
         self.client.force_login(user=rider.user)
         response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
@@ -221,6 +220,7 @@ class RoleViewTests(WebTest):
         self.assertContains(response, "value='"+oge_grade.grade+"'")
         # but mov grade should not be editable
         self.assertNotContains(response, "value='"+mov_grade.grade+"'")
+
 
 
     # def test_race_riders(self):
