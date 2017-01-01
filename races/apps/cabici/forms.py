@@ -90,7 +90,7 @@ class RiderUpdateFormOfficial(forms.ModelForm):
         model = Rider
         fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
                     'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship',
-                    'dutyofficer', 'dutyhelper', 'licenceno',
+                    'club', 'dutyofficer', 'dutyhelper', 'licenceno', 
                     #'grade',
                     'commissaire', 'commissaire_valid', 'official']
 

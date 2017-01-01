@@ -259,22 +259,22 @@ class Rider(models.Model):
     objects = RiderManager()
 
     user = models.OneToOneField(User)
-    licenceno = models.CharField("Licence Number", max_length=20)
-    gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES)
-    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1))
-    streetaddress = models.CharField("Address", max_length=100, default='')
-    suburb = models.CharField("Suburb", max_length=100, default='')
-    state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW')
-    postcode = models.CharField("Postcode", max_length=4, default='')
-    phone = models.CharField("Phone", max_length=50, default='')
+    licenceno = models.CharField("Licence Number", max_length=20, blank=True, default='')
+    gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES, blank=True, default='M')
+    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1), blank=True)
+    streetaddress = models.CharField("Address", max_length=100, default='', blank=True)
+    suburb = models.CharField("Suburb", max_length=100, default='', blank=True)
+    state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW', blank=True)
+    postcode = models.CharField("Postcode", max_length=4, default='', blank=True)
+    phone = models.CharField("Phone", max_length=50, default='', blank=True)
 
-    commissaire = models.CharField("Commissaire Level", max_length=10, default='0',
+    commissaire = models.CharField("Commissaire Level", max_length=10, default='0', blank=True,
                                    help_text="0 if not a Commissaire, otherwise eg. 1, RT")
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
-    emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
-    emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='')
-    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
+    emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='', blank=True)
+    emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='', blank=True)
+    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='', blank=True)
 
     official = models.BooleanField("Club Official", default=False,
                                     help_text="Officials can view and edit member details, schedule races, upload results")

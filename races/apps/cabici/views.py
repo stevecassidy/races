@@ -339,6 +339,8 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
         riderdict = self.object.rider.__dict__
 
         result.update(riderdict)
+        # not sure why club doesn't update but let's do it explicitly
+        result['club'] = self.object.rider.club
         return result
 
 
