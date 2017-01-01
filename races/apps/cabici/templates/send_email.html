@@ -1,0 +1,35 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block content %}
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="col-md-8">
+        <h2>Email Members</h2>
+
+        <form id='emailmembersform' method="POST">
+            {% csrf_token %}
+            {{form|bootstrap}}
+            <div>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <input type="submit" name="sendemail" class="btn btn-primary" value="Send">
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <p>This form will send an email message to members of {{club.name}}.  Choose from:</p>
+        <ul>
+            <li><strong>Yourself</strong> - a test email to just yourself.</li>
+            <li><strong>Current Members</strong> - all current financial members of {{club.name}}</li>
+            <li><strong>Commissaires</strong> - current commissaires</li>
+            <li><strong>Duty Officers</strong> - current duty officers</li>
+        </ul>
+        <p>The message will be sent with your email as the from address with a reply to address
+            of 'dontreply@cabici.net'.</p>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

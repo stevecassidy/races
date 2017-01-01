@@ -12,11 +12,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
+from django.core.mail import EmailMessage, BadHeaderError
+from django.contrib import messages
+
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm
 
 import datetime
 import calendar
@@ -351,7 +354,7 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
 
         # userroles
         roles = UserRole.objects.filter(user=self.object, club=self.object.rider.club)
-        print roles
+
         if form.cleaned_data['dutyofficer']:
             if not roles.filter(role__name__exact="Duty Officier"):
                 dorole = ClubRole.objects.get(name="Duty Officer")
@@ -447,7 +450,6 @@ class RaceOfficialUpdateView(View):
 
             return JsonResponse(nofficials)
         except ValueError as e:
-            print e
             return HttpResponseBadRequest("could not parse JSON body")
 
 
@@ -498,10 +500,7 @@ class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
 
     def form_invalid(self, form):
 
-        print "INVALID", form
-
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
-
 
 class RaceRidersView(ListView):
     model = RaceResult
@@ -563,7 +562,6 @@ class ClubRaceResultsView(DetailView):
                                                status__exact='p').distinct()
 
         return context
-
 
 class ClubRacesView(DetailView):
     model = Club
@@ -654,9 +652,6 @@ class ClubRacesView(DetailView):
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
 
-
-
-
 class ClubRacesOfficalUpdateView(DetailView):
     model = Club
     template_name = "club_races_officials.html"
@@ -697,7 +692,7 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # find future races
         races = club.races.filter(date__gte=datetime.date.today())
-        
+
         # allocate duty helpers
         club.allocate_officials('Duty Helper', 2, races, replace=False)
 
@@ -708,3 +703,62 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # redirect to race schedule page
         return HttpResponseRedirect(reverse('club_races', kwargs={'slug': club.slug}))
+
+class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
+    """View to send emails to some or all members of a club"""
+
+    form_class = ClubMemberEmailForm
+    template_name = 'send_email.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubMemberEmailView, self).get_context_data(**kwargs)
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+
+        return context
+
+    def form_valid(self, form):
+
+        club = get_object_or_404(Club, slug=self.kwargs['slug'])
+
+        thisyear = datetime.date.today().year
+        # sender will be the logged in user
+        sender = self.request.user.email
+
+        sendto = form.cleaned_data['sendto']
+        reply_to = 'dontreply@cabici.net'
+
+        if sendto == 'members':
+            recipients = Rider.objects.filter(club__exact=club, membership__year__gte=thisyear)
+        elif sendto == 'commisaires':
+            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Commissaire')
+            recipients = [ur.user.rider for ur in uroles]
+        elif sendto == 'dutyofficers':
+            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            recipients = [ur.user.rider for ur in uroles]
+        elif sendto == 'self':
+            recipients = [self.request.user.rider]
+
+        subject = form.cleaned_data['subject']
+
+        email = EmailMessage(
+                             subject,
+                             form.cleaned_data['message'],
+                             sender,
+                             [],
+                             [r.user.email for r in recipients],
+                             reply_to=(reply_to,)
+                             )
+
+        try:
+            email.send(fail_silently=False)
+        except BadHeaderError:
+            return HttpResponseBadRequest('Invalid email header found.')
+
+        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(recipients)))
+        return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
+
+    def form_invalid(self, form):
+
+        return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))

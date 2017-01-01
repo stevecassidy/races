@@ -114,6 +114,10 @@
                         <a href="#" data-toggle='modal' data-target="#downloadMembersModal">
                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span><br> Download Riders</a>
                     </li>
+                    <li>
+                        <a href="{% url 'club_email' club.slug %}">
+                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span><br> Email Members</a>
+                    </li>
                     {% endif %}
                     {% if club.manage_results %}
                     <li>
