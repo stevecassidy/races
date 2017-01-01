@@ -20,6 +20,9 @@ class RoleViewTests(WebTest):
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
 
+        self.mov.manage_races = True
+        self.mov.save()
+
         self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
         self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
@@ -142,6 +145,7 @@ class RoleViewTests(WebTest):
 
         # check we have the edit control on the page for a MOV race
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
+
         self.assertContains(response, "Edit")
         self.assertContains(response, "Upload Results")
 
