@@ -139,10 +139,11 @@ class Club(models.Model):
         members = self.membership_set.filter(year__gte=thisyear, category='race')
         for membership in members:
             user = membership.rider.user
-            if not user in dofficers:
+            # don't duplicate (eg. member current for this year and next)
+            existing = self.userrole_set.filter(role=dutyhelper, user=user)
+            if existing.count() == 0 and not user in dofficers:
                 role = UserRole(user=user, club=self, role=dutyhelper)
                 role.save()
-
 
     def allocate_officials(self, role, number, races, replace=False):
         """Allocate people to fill the given roles for
