@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, BadHeaderError
 from django.contrib import messages
 
 
@@ -713,6 +713,14 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
     form_class = ClubMemberEmailForm
     template_name = 'send_email.html'
 
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubMemberEmailView, self).get_context_data(**kwargs)
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+
+        return context
+
     def form_valid(self, form):
 
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
@@ -735,18 +743,23 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         elif sendto == 'self':
             recipients = [self.request.user.rider]
 
+        subject = form.cleaned_data['subject']
+
         email = EmailMessage(
-                             form.cleaned_data['subject'],
+                             subject,
                              form.cleaned_data['message'],
                              sender,
                              [],
                              [r.user.email for r in recipients],
                              reply_to=(reply_to,)
                              )
-        email.send()
+
+        try:
+            email.send(fail_silently=False)
+        except BadHeaderError:
+            return HttpResponseBadRequest('Invalid email header found.')
 
         messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(recipients)))
-
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
 
     def form_invalid(self, form):

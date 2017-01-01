@@ -50,7 +50,6 @@ class OfficialsTests(WebTest):
             m = Membership(rider=rider, club=rider.club, year=thisyear, category=category)
             m.save()
 
-
     def make_races(self):
         """Make some races for testing"""
 
@@ -94,8 +93,6 @@ class OfficialsTests(WebTest):
         for rider in dofficers:
             ur = self.oge.userrole_set.filter(role__name__exact="Duty Helper", user__rider__exact=rider).count()
             self.assertEqual(0, ur)
-
-
 
     def test_club_allocate_officials(self):
         """Allocate officials to a set of races"""
@@ -144,7 +141,6 @@ class OfficialsTests(WebTest):
             c = self.oge.races.filter(officials__rider__exact=rider).count()
             self.assertLessEqual(c,3)
 
-
     def test_view_club_official_allocate_randomly(self):
         """When I am logged in as a club official, I see a
         button on the club race listing page to allocate
@@ -177,7 +173,6 @@ class OfficialsTests(WebTest):
         for race in races:
             off = race.officials.all()
             self.assertEqual(2, len(off))
-
 
     def test_club_official_email_members(self):
         """Dashboard has a button to email members, leading to a
@@ -237,8 +232,6 @@ class OfficialsTests(WebTest):
         self.assertEqual(mail.outbox[0].subject, subject)
         self.assertEqual(mail.outbox[0].body, body)
 
-
-
     def test_club_official_email_members_self(self):
         """Member email form can send mail to myself"""
 
@@ -258,3 +251,22 @@ class OfficialsTests(WebTest):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(len(mail.outbox[0].to), 0)
         self.assertEqual(mail.outbox[0].bcc, [self.ogeofficial.email])
+
+    def test_club_official_email_members_reject_attack(self):
+        """I can't inject headers into an email message"""
+
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+        response = self.app.get(emailurl, user=self.ogeofficial)
+        form = response.forms['emailmembersform']
+
+        # fill in the form, try to inject a To header via the subject
+        subject = "test email subject\nTo: somebody@evil.org"
+        body = "xyzzy1234 message body"
+        form['sendto'] = 'self'
+        form['subject'] = subject
+        form['message'] = body
+        response = form.submit(expect_errors=True)
+
+        self.assertEqual('400 Bad Request', response.status)
+        # check that no emails are 'sent'
+        self.assertEqual(len(mail.outbox), 0)
