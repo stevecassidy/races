@@ -102,7 +102,7 @@ class IMGTests(TestCase):
         self.assertEqual(dict, type(result))
         self.assertIn('updated', result)
         self.assertIn('added', result)
-
+        
         # Valverde should be updated
         self.assertIn(valverde, result['updated'])
 

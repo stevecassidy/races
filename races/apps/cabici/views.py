@@ -354,7 +354,7 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
 
         # userroles
         roles = UserRole.objects.filter(user=self.object, club=self.object.rider.club)
-        print roles
+
         if form.cleaned_data['dutyofficer']:
             if not roles.filter(role__name__exact="Duty Officier"):
                 dorole = ClubRole.objects.get(name="Duty Officer")
@@ -450,7 +450,6 @@ class RaceOfficialUpdateView(View):
 
             return JsonResponse(nofficials)
         except ValueError as e:
-            print e
             return HttpResponseBadRequest("could not parse JSON body")
 
 
@@ -500,8 +499,6 @@ class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
 
     def form_invalid(self, form):
-
-        print "INVALID", form
 
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
 

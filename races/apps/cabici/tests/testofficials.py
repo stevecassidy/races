@@ -77,7 +77,6 @@ class OfficialsTests(WebTest):
             ur.save()
             riders.append(ur.user.rider)
 
-        print role, riders
         return riders
 
     def test_club_create_officials(self):
