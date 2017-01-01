@@ -54,11 +54,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
         {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
 
             <div id='buttons' class='btn-group' role='group'>
+                {% if race.club.manage_races %}
                 <button type='button' class='btn btn-default'><a href="{% url 'race_update' race.id %}">Edit Race Detail</a></button>
-                <!-- Button trigger modal -->
+                {% endif %}
+                {% if race.club.manage_results %}
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resultUploadModal">
                     Upload Results
                 </button>
+                {% endif %}
             </div>
             {% endif %}
 
