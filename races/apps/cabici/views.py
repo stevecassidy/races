@@ -194,11 +194,12 @@ class ClubRidersExcelView(View):
 
         # worksheet is a list of row tuples
         ws = []
+        thisyear = datetime.date.today().year
 
-        if 'eventno' in request.GET:
+        if 'eventno' in request.GET and request.GET['eventno'] != '':
             eventno = request.GET['eventno']
         else:
-            eventno = '12345'
+            eventno = str(datetime.date.today())
 
         header = ('LastName',
                   'FirstName',
@@ -216,7 +217,11 @@ class ClubRidersExcelView(View):
 
         ws.append(header)
 
-        for r in Rider.objects.all():
+        riders = Rider.objects.active_riders(club)
+
+        print "We have ", len(riders)
+
+        for r in riders:
 
             grades = r.clubgrade_set.filter(club=club)
             if grades.count() > 0:
@@ -229,9 +234,15 @@ class ClubRidersExcelView(View):
             except:
                 clubslug = 'Unknown'
 
+            # is the rider currently licenced?
+            if r.membership_set.filter(year__exact=thisyear).count() == 1:
+                registered = 'R'
+            else:
+                registered = 'U'
+
             row = (r.user.last_name,
                    r.user.first_name,
-                   'U',
+                   registered,
                    grade,
                    2,
                    'F',
@@ -249,8 +260,9 @@ class ClubRidersExcelView(View):
         io = StringIO()
         sheet.save_to_memory("xls", io)
 
-        response = HttpResponse(io.getvalue(), content_type='application/vnd-ms.excel')
-        response['Content-Disposition'] = 'attachment; filename="riders-{0}.xls"'.format(eventno)
+        response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="riders-%s.xls"' % eventno
+        response['Content-Length'] = len(io.getvalue())
 
         return response
 

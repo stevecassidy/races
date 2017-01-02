@@ -111,7 +111,7 @@
                             <span class="glyphicon glyphicon-upload" aria-hidden="true"></span><br>IMG Upload</a>
                     </li>
                     <li>
-                        <a href="#" data-toggle='modal' data-target="#downloadMembersModal">
+                        <a href="{% url 'club_riders_excel' slug=club.slug %}" target="new">
                             <span class="glyphicon glyphicon-download" aria-hidden="true"></span><br> Download Riders</a>
                     </li>
                     <li>
@@ -162,29 +162,6 @@
 </div>
 
 {% if club.manage_members %}
-<div class='modal fade' id='downloadMembersModal' tabindex='-2' role='dialog' aria-labelledby="downloadMembersLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="downloadMembersLabel">Download Rider Spreadsheet</h4>
-        </div>
-        <div class="modal-body">
-            <p>Download an Excel spreasheet containing all rider details
-                for use in race-day registrations.</p>
-            <form action="{% url 'club_riders_excel' slug=club.slug %}" method='GET'>
-                <label for='eventno'>Event Number: </label>
-                <input type='text' name='eventno'> (optional, for old WMCC website)
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                  <input type="submit" name="submitdownloadmembers" class="btn btn-primary" value="Download">
-                </div>
-            </form>
-        </div>
-      </div>
-    </div>
-</div>
 
 <div class="modal fade" id="IMGUploadModal" tabindex="-1" role="dialog" aria-labelledby="IMGUploadLabel">
     <div class="modal-dialog" role="document">

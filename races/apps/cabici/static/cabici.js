@@ -256,7 +256,6 @@ function edit_race_modal_init() {
     });
 };
 
-
 function add_people_init() {
     $('#addPeopleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal

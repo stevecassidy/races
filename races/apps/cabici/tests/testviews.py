@@ -118,33 +118,6 @@ class ViewTests(TestCase):
             self.assertNotContains(response, rider.user.first_name + " " + rider.user.last_name)
 
 
-    def test_club_riders_excel(self):
-        """The excel view downloads a complete list of riders
-        as an excel spreadsheet"""
-
-        response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}), {'eventno': 666})
-
-        self.assertEqual(response['Content-Type'], 'application/vnd-ms.excel')
-
-        import pyexcel
-        from StringIO import StringIO
-
-        # should be able to read the response as an xls sheet
-        buf = StringIO(response.content)
-        ws = pyexcel.get_sheet(file_content=buf, file_type="xls")
-        ws.name_columns_by_row(0)
-
-        # the spreadsheet contains all rider licence numbers
-        riderlicences = ws.column["LicenceNo"]
-        for rider in Rider.objects.all():
-            self.assertIn(rider.licenceno, riderlicences)
-        # event number is present in every row (except the header)
-        for row in ws.rows():
-            if row[12] != 'EventNo':
-                self.assertEqual('666', row[12])
-
-        buf.close()
-
     def test_upload_excel_results(self):
         """Test that we can upload an Excel spreasheet of results"""
 
