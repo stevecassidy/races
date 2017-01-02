@@ -104,6 +104,22 @@ class RiderManager(models.Manager):
         else:
             return None
 
+    def active_riders(self, club):
+        """Return a list of 'active' riders for this club,
+        those who are current 'race' members, past members from last year,
+        or have raced with the club in the last 24 months.
+        """
+
+        thisyear = datetime.date.today().year
+        twoyearsago = datetime.date.today()-datetime.timedelta(days=2*365)
+
+        members = self.filter(club__exact=club, membership__year__gte=thisyear-1, membership__category__exact='race').distinct().order_by('licenceno')
+        haveraced = self.filter(raceresult__race__date__gte=twoyearsago).distinct().order_by('licenceno')
+
+        result = members | haveraced
+
+        return result
+
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
         return a list of updated riders"""

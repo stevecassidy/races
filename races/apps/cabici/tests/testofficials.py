@@ -6,7 +6,7 @@ from django_webtest import WebTest
 from django.core import mail
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider, ClubGrade, Membership, ClubRole, UserRole
+from races.apps.cabici.usermodel import Rider, ClubGrade, Membership, ClubRole, UserRole, RaceResult
 import datetime
 import re
 import random
@@ -37,15 +37,15 @@ class OfficialsTests(WebTest):
         thisyear = datetime.date.today().year
 
         # make sure all riders are current members
-        racers = 0
-        riders = 0
+        self.racers = []
+        self.riders = []
         for rider in self.oge.rider_set.all():
             if random.random() > 0.2:
                 category = 'race'
-                racers += 1
+                self.racers.append(rider)
             else:
                 category = 'ride'
-                riders += 1
+                self.riders.append(rider)
 
             m = Membership(rider=rider, club=rider.club, year=thisyear, category=category)
             m.save()
@@ -269,3 +269,47 @@ class OfficialsTests(WebTest):
         self.assertEqual('400 Bad Request', response.status)
         # check that no emails are 'sent'
         self.assertEqual(len(mail.outbox), 0)
+
+
+    def test_club_riders_excel(self):
+        """The excel view downloads a complete list of riders
+        as an excel spreadsheet"""
+
+        thisyear = datetime.date.today().year
+
+        otherriders = list(Rider.objects.exclude(club__exact=self.oge)[:10])
+        location = RaceCourse.objects.all()[0]
+        # add some race results so that we pick up some non club riders
+        for i in range(3):
+            for rider in otherriders:
+                race = Race(club=self.oge, date=str(thisyear-1)+'-01-03', starttime="06:00", signontime="06:00", title="a race", location=location )
+                race.save()
+                result = RaceResult(race=race, rider=rider, grade='A', place=3)
+                result.save()
+
+        response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}), {'eventno': 666})
+
+        self.assertEqual(response['Content-Type'], 'application/octet-stream')
+
+        import pyexcel
+        from StringIO import StringIO
+
+        # should be able to read the response as an xls sheet
+        buf = StringIO(response.content)
+        ws = pyexcel.get_sheet(file_content=buf, file_type="xls")
+        ws.name_columns_by_row(0)
+
+        # the spreadsheet contains all rider licence numbers
+        riderlicences = sorted(ws.column["LicenceNo"])
+
+        riders = self.racers + list(otherriders)
+        targetlicences = sorted([r.licenceno for r in riders])
+
+        self.assertListEqual(targetlicences, riderlicences)
+
+        # event number is present in every row (except the header)
+        for row in ws.rows():
+            if row[12] != 'EventNo':
+                self.assertEqual('666', row[12])
+
+        buf.close()
