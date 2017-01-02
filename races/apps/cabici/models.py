@@ -491,9 +491,18 @@ class Race(models.Model):
                 user.save()
 
                 club = Club.objects.closest(row['Club'])
+                if created:
+                    # make the rider record
+                    rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
+                else:
+                    # we didn't find this person by licence number so set it if we have it
+                    if row['LicenceNo'] != '':
+                        rider.licenceno = row['LicenceNo']
+                    if club.slug != 'Unknown':
+                        rider.club = club
 
-                rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
                 rider.save()
+
                 # we know that this rider is a current member of their club
                 thisyear = datetime.date.today().year
                 m = Membership(rider=rider, club=club, year=thisyear, category='race')
