@@ -53,7 +53,7 @@
     {% for message in messages %}
         <div class="alert fade in {% get_message_tags message %}">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
+            {{ message|safe }}
         </div>
     {% endfor %}
 

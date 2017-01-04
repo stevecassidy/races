@@ -467,13 +467,22 @@ class Race(models.Model):
         from races.apps.cabici.usermodel import RaceResult, Rider, Membership
         import pyexcel
 
-        # delete any existing results for this race
-        previousresults = RaceResult.objects.filter(race=self).count()
-        RaceResult.objects.filter(race=self).delete()
-
         content = fd.read()
 
-        rows = pyexcel.get_records(file_content=content, file_type=extension)
+        try:
+            rows = pyexcel.get_records(file_content=content, file_type=extension)
+        except:
+            # file format problem
+            raise Exception('Error reading uploaded file, please check the file format.')
+
+        # validate the file format
+        if 'LicenceNo' not in rows[0] or 'LastName' not in rows[0] or 'Grade' not in rows[0]:
+            raise Exception('Error in spreadsheet format, required columns missing.')
+
+        # now that we have new data, delete any existing results for this race
+        # but first count them so we can see if we need to recompute points below
+        previousresults = RaceResult.objects.filter(race=self).count()
+        RaceResult.objects.filter(race=self).delete()
 
         messages = []
         for row in rows:
@@ -506,6 +515,7 @@ class Race(models.Model):
                     user.save()
                     message.append("Updated licence number for %s to %s" % (str(rider), row['LicenceNo']))
                 else:
+                    # this is not someone we know, so make a new user/rider record
                     user, created = User.objects.get_or_create(first_name=row['FirstName'],
                                                                last_name=row['LastName'],
                                                                username=username)
@@ -542,23 +552,36 @@ class Race(models.Model):
                 if created:
                     message.append('Updated membership of rider %s of club %s to %s' % (str(rider), rider.club.slug, thisyear))
 
+            # deal with grades
+            grading, created = rider.clubgrade_set.get_or_create(club=self.club, rider=rider)
+            if created:
+                # allocate the grade they raced this time
+                grading.grade = row['Grade']
+                grading.save()
+
+            usual_grade = grading.grade
+
             # a grade ending in P means the rider is being permanently re-graded
             # so we should change their recorded grade
             if row['Grade'].endswith('P'):
                 # get the real grade for the result
                 row['Grade'] = row['Grade'][0]
-                grading, created = rider.clubgrade_set.get_or_create(club=self.club, rider=rider)
                 grading.grade = row['Grade']
                 grading.save()
-                message.append('Updated grade of rider %s to %s' % (str(rider), grading.grade))
+                message.append('Updated grade of %s to %s' % (str(rider), grading.grade))
+            elif not row['Grade'] == usual_grade:
+                message.append('%s rode in grade %s but is usually %s grade' % (str(rider), row['Grade'], usual_grade))
 
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
             if points == 2:
-                result = RaceResult(rider=rider, race=self,  grade=row['Grade'], number=row['ShirtNo'])
+                place = None
             elif points > 0:
                 place = 8-points
-                result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
+
+            result = RaceResult(rider=rider, race=self, place=place,
+                                usual_grade=usual_grade, grade=row['Grade'],
+                                number=row['ShirtNo'])
 
             # check for duplicate race number
             while RaceResult.objects.filter(race=self, number=result.number).count() == 1:
@@ -569,7 +592,6 @@ class Race(models.Model):
                 # not much we can do here
                 message.append("Error: duplicate result discarded for rider %s" % (str(rider)))
             else:
-
                 try:
                     with transaction.atomic():
                         result.save()
@@ -589,7 +611,7 @@ class Race(models.Model):
         else:
             # can just tally these results
             self.tally_pointscores()
-            
+
         return messages
 
     def fix_small_races(self):

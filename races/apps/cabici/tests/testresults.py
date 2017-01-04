@@ -213,8 +213,8 @@ class UserModelTests(TestCase):
 
         # check messages
         # two riders get upgraded to A
-        self.assertIn('Updated grade of rider Alejandro VALVERDE BELMONTE to A', messages)
-        self.assertIn('Updated grade of rider Joaquin RODRIGUEZ OLIVER to A', messages)
+        self.assertIn('Updated grade of Alejandro VALVERDE BELMONTE to A', messages)
+        self.assertIn('Updated grade of Joaquin RODRIGUEZ OLIVER to A', messages)
         # new rider record created
         self.assertIn('Added new rider record for Trisma Allan', messages)
         self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017', messages)

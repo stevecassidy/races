@@ -90,7 +90,7 @@ class RiderManager(models.Manager):
 
     def make_username(self, firstname, lastname, licenceno):
         """Generate a suitable username for a rider"""
-        
+
         return slugify(firstname+lastname+licenceno)[:30]
 
     def find_user(self, email, licenceno):
@@ -455,9 +455,6 @@ class ClubGrade(models.Model):
 
         super(ClubGrade, self).save(*args, **kwargs)
 
-
-
-
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""
 
@@ -472,6 +469,7 @@ class RaceResult(models.Model):
     rider = models.ForeignKey(Rider)
 
     grade = models.CharField("Grade", max_length=10)
+    usual_grade = models.CharField("Usual Grade", max_length=10)
     number = models.IntegerField("Bib Number", blank=True, null=True)  # unique together with grade
 
     place = models.IntegerField("Place", blank=True, null=True, help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")

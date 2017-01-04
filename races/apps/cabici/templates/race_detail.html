@@ -156,15 +156,23 @@ google.maps.event.addDomListener(window, 'load', initialize);
                                     </tr>
                                     {% endif %}
                                 {% endfor %}
-                                {% if 0 %}
+                                {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
                                 {% for result in grade.list %}
                                     {% if not result.place %}
-                                <tr><th>{{result.number}}</th><td>-</td><td><a href="{% url 'rider' pk=rider.user.pk %}">{{result.rider}}</a></td><td>{{result.rider.club}}</tr>
+                                    <tr class='info'>
+                                        <th>{{result.number}}</th>
+                                        <td>-</td>
+                                        <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
+                                        <td>{{result.rider.club}}</td>
+                                    </tr>
                                     {% endif %}
                                 {% endfor %}
                                 {% endif %}
                             </tbody>
                         </table>
+                        {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
+                        <p class="alert alert-info" role="alert"><strong>NOTE:</strong> non-placed riders only shown to club officials.</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
