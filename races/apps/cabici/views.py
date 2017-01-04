@@ -219,8 +219,6 @@ class ClubRidersExcelView(View):
 
         riders = Rider.objects.active_riders(club)
 
-        print "We have ", len(riders)
-
         for r in riders:
 
             grades = r.clubgrade_set.filter(club=club)
@@ -480,6 +478,12 @@ class RaceUploadExcelView(FormView):
     form_class = RaceCSVForm
     template_name = ''
 
+    def form_invalid(self, form):
+        msgtext = 'Error: no file uploaded.'
+        messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
+        return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
+
+
     def form_valid(self, form):
 
         # need to work out what race we're in - from the URL pk
@@ -488,9 +492,18 @@ class RaceUploadExcelView(FormView):
         name, filetype = os.path.splitext(self.request.FILES['excelfile'].name)
 
         if filetype not in ['.xls', 'xlsx']:
-            return HttpResponseBadRequest('Unknown file type, please use .xls or .xlsx')
-
-        race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+            msgtext = 'Error: Unknown file type, please use .xls or .xlsx'
+            messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
+        else:
+            try:
+                user_messages = race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+                # pass the messages to the user
+                if messages != []:
+                    msgtext = '<h4>Upload Complete</h4><ul><li>' + '</li><li>'.join(user_messages) + '</li></ul>'
+                    messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
+            except Exception as e:
+                msgtext = "Error reading file, please check format."
+                messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 

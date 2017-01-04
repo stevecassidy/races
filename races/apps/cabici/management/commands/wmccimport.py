@@ -209,8 +209,8 @@ def import_users(csvdir, waratahs):
 
         usercount = 0
         for row in reader:
-            # make a username up to 30 chars
-            username = slugify(row['firstname']+row['lastname']+row['licenceno'])[:30]
+
+            username = Rider.objects.make_username(row['firstname'], row['lastname'], row['licenceno'])
 
             user, created = User.objects.get_or_create(email=row['email'], username=username)
 
@@ -354,7 +354,9 @@ def import_points(csvdir, waratahs, usermap, racedict):
                     # increment the number to avoid the clash
                     number = number + 200 + random.randint(1,100)
 
-                result = RaceResult(race=race, rider=user.rider, grade=row['grade'], number=number, place=place)
+                result = RaceResult(race=race, rider=user.rider,
+                                    usual_grade=row['registergrade'],
+                                    grade=row['grade'], number=number, place=place)
 
             try:
                 result.save()
