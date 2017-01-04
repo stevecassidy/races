@@ -354,7 +354,9 @@ def import_points(csvdir, waratahs, usermap, racedict):
                     # increment the number to avoid the clash
                     number = number + 200 + random.randint(1,100)
 
-                result = RaceResult(race=race, rider=user.rider, grade=row['grade'], number=number, place=place)
+                result = RaceResult(race=race, rider=user.rider,
+                                    usual_grade=row['registergrade'],
+                                    grade=row['grade'], number=number, place=place)
 
             try:
                 result.save()
