@@ -81,12 +81,14 @@ google.maps.event.addDomListener(window, 'load', initialize);
               <tr><th>Category</th><td>{{race.get_category_display}}</td></tr>
               <tr><th>Licence</th><td>{{race.get_licencereq_display}}</td></tr>
               <tr><th>Discipline</th><td>{{race.get_discipline_display}}</td></tr>
-              {%if race.url %}
-              <tr><th>More Detail</th><td>See race on <a href="{{race.website}}">{{race.club.name}} website</a></td></tr>
-              {% endif %}
               {% for official in race.officials.all %}
               <tr><th>{{official.role}}</th><td>{{official.rider}}</td></tr>
               {% endfor %}
+              {%if race.website %}
+              <tr><th>More Detail</th><td>See race on <a href="{{race.website}}">{{race.club.name}} website</a></td></tr>
+              {% else %}
+              <tr><th>More Detail</th><td>Check on the <a href="{{race.club.website}}">{{race.club.name}} website</a></td></tr>
+              {% endif %}
 
             </table>
             {% if race.description %}

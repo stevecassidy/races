@@ -475,7 +475,9 @@ class Race(models.Model):
 
         rows = pyexcel.get_records(file_content=content, file_type=extension)
 
+        messages = []
         for row in rows:
+            message = []
 
             if row['LicenceNo'] == 0:
                 # create a temporary licence number so that we can record the result
@@ -484,33 +486,71 @@ class Race(models.Model):
             try:
                 rider = Rider.objects.get(licenceno=row['LicenceNo'])
             except:
-                user, created = User.objects.get_or_create(first_name=row['FirstName'], last_name=row['LastName'], username=row['FirstName']+row['LastName'])
 
-                if row['Email'] != '':
-                    user.email = row['Email']
-                user.save()
+                username = Rider.objects.make_username(row['FirstName'],
+                                                       row['LastName'],
+                                                       str(row['LicenceNo']))
 
-                club = Club.objects.closest(row['Club'])
-                if created:
-                    # make the rider record
-                    rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
+                # check for an existing rider with this name and a temp licenceno
+                # if found, assume it's the same person and update the details
+                samepersons = Rider.objects.filter(user__first_name__exact=row['FirstName'],
+                                                   user__last_name__exact=row['LastName'],
+                                                   licenceno__startswith='temp')
+
+                if samepersons.count() == 1:
+                    rider = samepersons[0]
+                    rider.licenceno = row['LicenceNo']
+                    user = rider.user
+                    user.username = username
+                    rider.save()
+                    user.save()
+                    message.append("Updated licence number for %s to %s" % (str(rider), row['LicenceNo']))
                 else:
-                    # we didn't find this person by licence number so set it if we have it
-                    if row['LicenceNo'] != '':
-                        rider.licenceno = row['LicenceNo']
-                    if club.slug != 'Unknown':
-                        rider.club = club
+                    user, created = User.objects.get_or_create(first_name=row['FirstName'],
+                                                               last_name=row['LastName'],
+                                                               username=username)
 
-                rider.save()
+                    if row['Email'] != '':
+                        user.email = row['Email']
+                        user.save()
 
-                # we know that this rider is a current member of their club
+                    club = Club.objects.closest(row['Club'])
+                    if created:
+                        # make the rider record
+                        rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
+                        message.append('Added new rider record for %s %s' % (row['FirstName'], row['LastName']))
+                    else:
+                        # we didn't find this person by licence number so set it if we have it
+                        rider = user.rider
+                        if row['LicenceNo'] != '':
+                            rider.licenceno = str(row['LicenceNo'])
+                            message.append('Updated Licence Number to %s' % (row['LicenceNo'],))
+                        if club.slug != 'Unknown':
+                            rider.club = club
+                            message.append('Updated Club to %s' % (club.slug,))
+
+                    rider.save()
+
+            # we know that this rider is a current member of their club if the Regd field is R
+            if row['Regd'] == 'R':
                 thisyear = datetime.date.today().year
-                m = Membership(rider=rider, club=club, year=thisyear, category='race')
-                m.save()
 
-            # fix xP grades
+                m,created = Membership.objects.get_or_create(rider=rider,
+                                                             club=rider.club,
+                                                             year=thisyear,
+                                                             category='race')
+                if created:
+                    message.append('Updated membership of rider %s of club %s to %s' % (str(rider), rider.club.slug, thisyear))
+
+            # a grade ending in P means the rider is being permanently re-graded
+            # so we should change their recorded grade
             if row['Grade'].endswith('P'):
+                # get the real grade for the result
                 row['Grade'] = row['Grade'][0]
+                grading, created = rider.clubgrade_set.get_or_create(club=self.club, rider=rider)
+                grading.grade = row['Grade']
+                grading.save()
+                message.append('Updated grade of rider %s to %s' % (str(rider), grading.grade))
 
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
@@ -520,17 +560,24 @@ class Race(models.Model):
                 place = 8-points
                 result = RaceResult(rider=rider, race=self, place=place, grade=row['Grade'], number=row['ShirtNo'])
 
-            while True:
+            # check for duplicate race number
+            while RaceResult.objects.filter(race=self, number=result.number).count() == 1:
+                result.number = result.number + 200
+
+            # check for duplicate race/rider
+            if RaceResult.objects.filter(race=self, rider=result.rider).count() == 1:
+                # not much we can do here
+                message.append("Error: duplicate result discarded for rider %s" % (str(rider)))
+            else:
+
                 try:
                     with transaction.atomic():
                         result.save()
-                        break
                 except IntegrityError as e:
-                    # duplicate race/grade/number
-                    # probably wrong number entered so we can recover by fixing the number
-                    result.number = result.number + 200
+                    message.append("Error saving result for rider %s: %s" % (str(rider), e,))
 
-
+            if message != []:
+                messages.append('\n'.join(message))
 
         self.fix_small_races()
 
@@ -542,6 +589,8 @@ class Race(models.Model):
         else:
             # can just tally these results
             self.tally_pointscores()
+            
+        return messages
 
     def fix_small_races(self):
         """fix up races with small fields after import

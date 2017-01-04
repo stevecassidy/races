@@ -88,6 +88,11 @@ IMG_MAP = {
 class RiderManager(models.Manager):
     """Manager for riders"""
 
+    def make_username(self, firstname, lastname, licenceno):
+        """Generate a suitable username for a rider"""
+        
+        return slugify(firstname+lastname+licenceno)[:30]
+
     def find_user(self, email, licenceno):
         """Find an existing user with this email or licenceno
         return the user or None if not found"""

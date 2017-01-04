@@ -209,8 +209,8 @@ def import_users(csvdir, waratahs):
 
         usercount = 0
         for row in reader:
-            # make a username up to 30 chars
-            username = slugify(row['firstname']+row['lastname']+row['licenceno'])[:30]
+
+            username = Rider.objects.make_username(row['firstname'], row['lastname'], row['licenceno'])
 
             user, created = User.objects.get_or_create(email=row['email'], username=username)
 

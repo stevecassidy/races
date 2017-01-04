@@ -219,8 +219,6 @@ class ClubRidersExcelView(View):
 
         riders = Rider.objects.active_riders(club)
 
-        print "We have ", len(riders)
-
         for r in riders:
 
             grades = r.clubgrade_set.filter(club=club)
@@ -490,7 +488,11 @@ class RaceUploadExcelView(FormView):
         if filetype not in ['.xls', 'xlsx']:
             return HttpResponseBadRequest('Unknown file type, please use .xls or .xlsx')
 
-        race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+        user_messages = race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+
+        # pass the messages to the user
+        for msgtext in user_messages:
+            messages.add_message(self.request, messages.INFO, msgtext)
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
