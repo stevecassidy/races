@@ -129,7 +129,8 @@ CLUBMAP = {'ACT': 'ATTANSW',
 
 def import_races(csvdir, waratahs, usermap):
 
-    Race.objects.all().delete()
+    # delete races from waratahs only
+    Race.objects.filter(club=waratahs).delete()
 
     ps, created = PointScore.objects.get_or_create(club=waratahs, name="2016 Pointscore")
 
@@ -196,11 +197,9 @@ def import_races(csvdir, waratahs, usermap):
 
 def import_users(csvdir, waratahs):
 
-    User.objects.filter(is_staff__exact=False).delete()
-    Rider.objects.all().delete()
-    ClubGrade.objects.all().delete()
-    Membership.objects.all().delete()
-    UserRole.objects.filter(club__exact=waratahs).delete()
+    # delete riders except for officials and staff, other models will cascade
+    deleted = User.objects.filter(rider__official__exact=False).filter(is_staff__exact=False).delete()
+    print "DELETED: ", deleted
 
     usermap = dict()
     # import riders from register.csv
