@@ -22,7 +22,9 @@ def save_rider(backend, user, response, *args, **kwargs):
         except ObjectDoesNotExist:
             rider = Rider(user=user)
 
-        rider.gender = response.get('sex')
+        # set gender if we're given it by strava
+        if response.get('sex') is not None:
+            rider.gender = response.get('sex')
         rider.save()
 
 

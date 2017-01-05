@@ -1,4 +1,4 @@
-django == 1.9
+django == 1.10
 django-pagination
 django-coverage
 django-ical
@@ -9,11 +9,12 @@ beautifulsoup4
 ngram
 vcrpy
 python-social-auth
+social-auth-app-django
 pinax-theme-bootstrap==5.7.5
 django-bootstrap-form
 djangorestframework
 django-cors-headers
-django-yearlessdate
+#django-yearlessdate
 django-webtest
 # for deployment with postgres
 # psycopg2
