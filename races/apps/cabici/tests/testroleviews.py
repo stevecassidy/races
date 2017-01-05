@@ -20,6 +20,9 @@ class RoleViewTests(WebTest):
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
 
+        self.mov.manage_races = True
+        self.mov.save()
+
         self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
         self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
@@ -94,7 +97,7 @@ class RoleViewTests(WebTest):
 
         # and we now see membership actions
         self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})))
-        self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#downloadMembersModal"})))
+        self.assertEqual(1, len(response.html.find_all('a', attrs={'href': "/clubs/OGE/riders.xlsx"})))
         # or the member statistics
         self.assertContains(response, 'Current Members')
         self.assertContains(response, 'Race Members')
@@ -142,6 +145,7 @@ class RoleViewTests(WebTest):
 
         # check we have the edit control on the page for a MOV race
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
+
         self.assertContains(response, "Edit")
         self.assertContains(response, "Upload Results")
 
@@ -202,7 +206,6 @@ class RoleViewTests(WebTest):
         mov_grade = ClubGrade(rider=rider, club=self.mov, grade="MOV_X")
         mov_grade.save()
 
-
         # login as rider
         self.client.force_login(user=rider.user)
         response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
@@ -221,6 +224,7 @@ class RoleViewTests(WebTest):
         self.assertContains(response, "value='"+oge_grade.grade+"'")
         # but mov grade should not be editable
         self.assertNotContains(response, "value='"+mov_grade.grade+"'")
+
 
 
     # def test_race_riders(self):

@@ -90,7 +90,7 @@ class RiderUpdateFormOfficial(forms.ModelForm):
         model = Rider
         fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
                     'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship',
-                    'dutyofficer', 'dutyhelper', 'licenceno',
+                    'club', 'dutyofficer', 'dutyhelper', 'licenceno', 
                     #'grade',
                     'commissaire', 'commissaire_valid', 'official']
 
@@ -100,3 +100,14 @@ class RiderUpdateFormOfficial(forms.ModelForm):
     dutyofficer = forms.BooleanField(label="Duty Officer", required=False)
     dutyhelper = forms.BooleanField(label="Duty Helper", required=False)
     #grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
+
+SEND_CHOICES = (('self', 'Yourself (test email)'),
+                ('members', 'Current Members'),
+                ('commisaires', 'Commisaires'),
+                ('dutyofficers', 'Duty Officers'))
+
+class ClubMemberEmailForm(forms.Form):
+
+    sendto = forms.ChoiceField(label="Send To", choices=SEND_CHOICES, required=True)
+    subject = forms.CharField(label="Subject", required=True)
+    message = forms.CharField(label="Message", required=True, widget=forms.Textarea)

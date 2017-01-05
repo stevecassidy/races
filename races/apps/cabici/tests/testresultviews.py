@@ -12,7 +12,7 @@ import os
 
 class ResultViewTests(TestCase):
 
-    fixtures = ['clubs', 'courses', 'users', 'races']
+    fixtures = ['clubs', 'courses', 'users', 'races', 'riders']
 
     def setUp(self):
 
@@ -33,12 +33,7 @@ class ResultViewTests(TestCase):
     def test_upload_excel(self):
         """Test uploading excel file with race results"""
 
-        # add rider info to match a row in the spreadsheet
-        user1 = User(username='user1')
-        user1.save()
-        club = Club.objects.get(slug='MOV')
-        rider1 = Rider(user=user1, club=club, gender='M', licenceno='169508')
-        rider1.save()
+        rider1 = Rider.objects.get(licenceno='ESP19790512')
 
         # need to login first
         self.client.force_login(user=self.movofficial)

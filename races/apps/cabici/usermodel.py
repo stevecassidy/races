@@ -88,6 +88,11 @@ IMG_MAP = {
 class RiderManager(models.Manager):
     """Manager for riders"""
 
+    def make_username(self, firstname, lastname, licenceno):
+        """Generate a suitable username for a rider"""
+
+        return slugify(firstname+lastname+licenceno)[:30]
+
     def find_user(self, email, licenceno):
         """Find an existing user with this email or licenceno
         return the user or None if not found"""
@@ -103,6 +108,22 @@ class RiderManager(models.Manager):
             return users[0]
         else:
             return None
+
+    def active_riders(self, club):
+        """Return a list of 'active' riders for this club,
+        those who are current 'race' members, past members from last year,
+        or have raced with the club in the last 24 months.
+        """
+
+        thisyear = datetime.date.today().year
+        twoyearsago = datetime.date.today()-datetime.timedelta(days=2*365)
+
+        members = self.filter(club__exact=club, membership__year__gte=thisyear-1, membership__category__exact='race').distinct().order_by('licenceno')
+        haveraced = self.filter(raceresult__race__date__gte=twoyearsago).distinct().order_by('licenceno')
+
+        result = members | haveraced
+
+        return result
 
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
@@ -259,22 +280,22 @@ class Rider(models.Model):
     objects = RiderManager()
 
     user = models.OneToOneField(User)
-    licenceno = models.CharField("Licence Number", max_length=20)
-    gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES)
-    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1))
-    streetaddress = models.CharField("Address", max_length=100, default='')
-    suburb = models.CharField("Suburb", max_length=100, default='')
-    state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW')
-    postcode = models.CharField("Postcode", max_length=4, default='')
-    phone = models.CharField("Phone", max_length=50, default='')
+    licenceno = models.CharField("Licence Number", max_length=20, blank=True, default='')
+    gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES, blank=True, default='M')
+    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1), blank=True)
+    streetaddress = models.CharField("Address", max_length=100, default='', blank=True)
+    suburb = models.CharField("Suburb", max_length=100, default='', blank=True)
+    state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default='NSW', blank=True)
+    postcode = models.CharField("Postcode", max_length=4, default='', blank=True)
+    phone = models.CharField("Phone", max_length=50, default='', blank=True)
 
-    commissaire = models.CharField("Commissaire Level", max_length=10, default='0',
+    commissaire = models.CharField("Commissaire Level", max_length=10, default='0', blank=True,
                                    help_text="0 if not a Commissaire, otherwise eg. 1, RT")
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
-    emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='')
-    emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='')
-    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='')
+    emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='', blank=True)
+    emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='', blank=True)
+    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='', blank=True)
 
     official = models.BooleanField("Club Official", default=False,
                                     help_text="Officials can view and edit member details, schedule races, upload results")
@@ -434,9 +455,6 @@ class ClubGrade(models.Model):
 
         super(ClubGrade, self).save(*args, **kwargs)
 
-
-
-
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""
 
@@ -451,6 +469,7 @@ class RaceResult(models.Model):
     rider = models.ForeignKey(Rider)
 
     grade = models.CharField("Grade", max_length=10)
+    usual_grade = models.CharField("Usual Grade", max_length=10)
     number = models.IntegerField("Bib Number", blank=True, null=True)  # unique together with grade
 
     place = models.IntegerField("Place", blank=True, null=True, help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")

@@ -12,11 +12,14 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
+from django.core.mail import EmailMessage, BadHeaderError
+from django.contrib import messages
+
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm
 
 import datetime
 import calendar
@@ -191,11 +194,12 @@ class ClubRidersExcelView(View):
 
         # worksheet is a list of row tuples
         ws = []
+        thisyear = datetime.date.today().year
 
-        if 'eventno' in request.GET:
+        if 'eventno' in request.GET and request.GET['eventno'] != '':
             eventno = request.GET['eventno']
         else:
-            eventno = '12345'
+            eventno = str(datetime.date.today())
 
         header = ('LastName',
                   'FirstName',
@@ -213,7 +217,9 @@ class ClubRidersExcelView(View):
 
         ws.append(header)
 
-        for r in Rider.objects.all():
+        riders = Rider.objects.active_riders(club)
+
+        for r in riders:
 
             grades = r.clubgrade_set.filter(club=club)
             if grades.count() > 0:
@@ -226,9 +232,15 @@ class ClubRidersExcelView(View):
             except:
                 clubslug = 'Unknown'
 
+            # is the rider currently licenced?
+            if r.membership_set.filter(year__exact=thisyear).count() == 1:
+                registered = 'R'
+            else:
+                registered = 'U'
+
             row = (r.user.last_name,
                    r.user.first_name,
-                   'U',
+                   registered,
                    grade,
                    2,
                    'F',
@@ -246,8 +258,9 @@ class ClubRidersExcelView(View):
         io = StringIO()
         sheet.save_to_memory("xls", io)
 
-        response = HttpResponse(io.getvalue(), content_type='application/vnd-ms.excel')
-        response['Content-Disposition'] = 'attachment; filename="riders-{0}.xls"'.format(eventno)
+        response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="riders-%s.xls"' % eventno
+        response['Content-Length'] = len(io.getvalue())
 
         return response
 
@@ -336,6 +349,8 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
         riderdict = self.object.rider.__dict__
 
         result.update(riderdict)
+        # not sure why club doesn't update but let's do it explicitly
+        result['club'] = self.object.rider.club
         return result
 
 
@@ -351,7 +366,7 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
 
         # userroles
         roles = UserRole.objects.filter(user=self.object, club=self.object.rider.club)
-        print roles
+
         if form.cleaned_data['dutyofficer']:
             if not roles.filter(role__name__exact="Duty Officier"):
                 dorole = ClubRole.objects.get(name="Duty Officer")
@@ -447,7 +462,6 @@ class RaceOfficialUpdateView(View):
 
             return JsonResponse(nofficials)
         except ValueError as e:
-            print e
             return HttpResponseBadRequest("could not parse JSON body")
 
 
@@ -464,6 +478,12 @@ class RaceUploadExcelView(FormView):
     form_class = RaceCSVForm
     template_name = ''
 
+    def form_invalid(self, form):
+        msgtext = 'Error: no file uploaded.'
+        messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
+        return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
+
+
     def form_valid(self, form):
 
         # need to work out what race we're in - from the URL pk
@@ -472,9 +492,18 @@ class RaceUploadExcelView(FormView):
         name, filetype = os.path.splitext(self.request.FILES['excelfile'].name)
 
         if filetype not in ['.xls', 'xlsx']:
-            return HttpResponseBadRequest('Unknown file type, please use .xls or .xlsx')
-
-        race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+            msgtext = 'Error: Unknown file type, please use .xls or .xlsx'
+            messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
+        else:
+            try:
+                user_messages = race.load_excel_results(self.request.FILES['excelfile'], filetype[1:])
+                # pass the messages to the user
+                if messages != []:
+                    msgtext = '<h4>Upload Complete</h4><ul><li>' + '</li><li>'.join(user_messages) + '</li></ul>'
+                    messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
+            except Exception as e:
+                msgtext = "Error reading file, please check format."
+                messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
@@ -498,10 +527,7 @@ class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
 
     def form_invalid(self, form):
 
-        print "INVALID", form
-
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
-
 
 class RaceRidersView(ListView):
     model = RaceResult
@@ -563,7 +589,6 @@ class ClubRaceResultsView(DetailView):
                                                status__exact='p').distinct()
 
         return context
-
 
 class ClubRacesView(DetailView):
     model = Club
@@ -654,9 +679,6 @@ class ClubRacesView(DetailView):
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
 
-
-
-
 class ClubRacesOfficalUpdateView(DetailView):
     model = Club
     template_name = "club_races_officials.html"
@@ -697,7 +719,7 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # find future races
         races = club.races.filter(date__gte=datetime.date.today())
-        
+
         # allocate duty helpers
         club.allocate_officials('Duty Helper', 2, races, replace=False)
 
@@ -708,3 +730,62 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # redirect to race schedule page
         return HttpResponseRedirect(reverse('club_races', kwargs={'slug': club.slug}))
+
+class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
+    """View to send emails to some or all members of a club"""
+
+    form_class = ClubMemberEmailForm
+    template_name = 'send_email.html'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubMemberEmailView, self).get_context_data(**kwargs)
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+
+        return context
+
+    def form_valid(self, form):
+
+        club = get_object_or_404(Club, slug=self.kwargs['slug'])
+
+        thisyear = datetime.date.today().year
+        # sender will be the logged in user
+        sender = self.request.user.email
+
+        sendto = form.cleaned_data['sendto']
+        reply_to = 'dontreply@cabici.net'
+
+        if sendto == 'members':
+            recipients = Rider.objects.filter(club__exact=club, membership__year__gte=thisyear)
+        elif sendto == 'commisaires':
+            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Commissaire')
+            recipients = [ur.user.rider for ur in uroles]
+        elif sendto == 'dutyofficers':
+            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            recipients = [ur.user.rider for ur in uroles]
+        elif sendto == 'self':
+            recipients = [self.request.user.rider]
+
+        subject = form.cleaned_data['subject']
+
+        email = EmailMessage(
+                             subject,
+                             form.cleaned_data['message'],
+                             sender,
+                             [],
+                             [r.user.email for r in recipients],
+                             reply_to=(reply_to,)
+                             )
+
+        try:
+            email.send(fail_silently=False)
+        except BadHeaderError:
+            return HttpResponseBadRequest('Invalid email header found.')
+
+        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(recipients)))
+        return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
+
+    def form_invalid(self, form):
+
+        return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
