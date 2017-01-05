@@ -211,11 +211,12 @@ def import_users(csvdir, waratahs):
 
             username = Rider.objects.make_username(row['firstname'], row['lastname'], row['licenceno'])
 
-            user, created = User.objects.get_or_create(email=row['email'], username=username)
+            user, created = User.objects.get_or_create(username=username)
 
             if created:
                 user.first_name = row['firstname']
                 user.last_name = row['lastname']
+                user.email = row['email']
                 user.save()
 
             # add rider info
