@@ -97,7 +97,7 @@ class RoleViewTests(WebTest):
 
         # and we now see membership actions
         self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})))
-        self.assertEqual(1, len(response.html.find_all('a', attrs={'data-target': "#downloadMembersModal"})))
+        self.assertEqual(1, len(response.html.find_all('a', attrs={'href': "/clubs/OGE/riders.xlsx"})))
         # or the member statistics
         self.assertContains(response, 'Current Members')
         self.assertContains(response, 'Race Members')
