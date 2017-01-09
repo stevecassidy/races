@@ -287,7 +287,7 @@ class OfficialsTests(WebTest):
                 result = RaceResult(race=race, rider=rider, grade='A', place=3)
                 result.save()
 
-        response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}), {'eventno': 666})
+        response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}))
 
         self.assertEqual(response['Content-Type'], 'application/octet-stream')
 
@@ -307,9 +307,10 @@ class OfficialsTests(WebTest):
 
         self.assertListEqual(targetlicences, riderlicences)
 
-        # event number is present in every row (except the header)
+        # event number can be parsed as an integer
         for row in ws.rows():
             if row[12] != 'EventNo':
-                self.assertEqual('666', row[12])
+                # just force coercion to int, will raise an exception if it's bad
+                self.assertEqual(row[12], str(int(row[12])))
 
         buf.close()

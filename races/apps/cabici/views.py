@@ -196,10 +196,9 @@ class ClubRidersExcelView(View):
         ws = []
         thisyear = datetime.date.today().year
 
-        if 'eventno' in request.GET and request.GET['eventno'] != '':
-            eventno = request.GET['eventno']
-        else:
-            eventno = str(datetime.date.today())
+        # eventno won't be used but the java desktop app requires
+        # a numer, make one out of the date
+        eventno = str(datetime.date.today().strftime('%Y%m%d'))
 
         header = ('LastName',
                   'FirstName',
