@@ -1,12 +1,11 @@
 {% extends "site_base.html" %}
 {% load bootstrap %}
 
-{% block title %}{{race.club.slug}} - {{race.title}}{% endblock %}
+{% block head_title %}{{race.club.slug}} - {{race.title}}{% endblock %}
 
 {% block content %}
 
 <h2>{{race.club.slug}} - {{race.title}} ({{race.date}},  {{race.location}})</h2>
-
 
 {% if 0 %} request.user.rider
 

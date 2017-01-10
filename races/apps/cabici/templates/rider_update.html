@@ -1,6 +1,10 @@
 {% extends "site_base.html" %}
 {% load bootstrap %}
 
+{% block head_title %}
+Update Rider - {{user.first_name}} {{user.last_name}}
+{% endblock %}
+
 {% block content %}
 
 <div class='container'>
@@ -9,7 +13,7 @@
             <form method='post' id='riderupdateform'>
                 {% csrf_token %}
                 <fieldset>
-                    <legend>Edit Details for {{rider.user.first_name}} {{rider.user.last_name}}</legend>
+                    <legend>Edit Details for {{user.first_name}} {{user.last_name}}</legend>
 
                     {{form|bootstrap}}
                     <div class="form-actions">

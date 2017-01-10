@@ -1,5 +1,8 @@
 {% extends "site_base.html" %}
 
+{% block head_title %}
+{{club.name}} Race Schedule
+{% endblock %}
 
 {% block extra_head %}
 <link rel="stylesheet" href="{{ STATIC_URL }}datepicker/datepicker.css">

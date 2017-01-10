@@ -317,6 +317,7 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
 
     template_name = "rider_update.html"
     model = User
+    context_object_name = 'user'
 
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
