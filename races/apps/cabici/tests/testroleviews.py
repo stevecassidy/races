@@ -225,6 +225,30 @@ class RoleViewTests(WebTest):
         # but mov grade should not be editable
         self.assertNotContains(response, "value='"+mov_grade.grade+"'")
 
+    def test_rider_update_club(self):
+        """Rider update form allows me to change the club of a rider
+        if I am an official"""
+
+        rider = Rider.objects.get(pk=2933)
+
+        # login as official, should be ok
+        url = reverse('rider_update', kwargs={'pk': rider.user.pk})
+        response = self.app.get(url, user=self.ogeofficial)
+
+        # get the form
+        form = response.forms['riderupdateform']
+
+        # change the club
+        form['club'] = self.mov.id
+
+        # submit
+        response = form.submit()
+
+        self.assertEqual(302, response.status_code)
+
+        # check that rider's club is updated
+        rider = Rider.objects.get(pk=2933)
+        self.assertEqual(self.mov, rider.club)
 
 
     # def test_race_riders(self):

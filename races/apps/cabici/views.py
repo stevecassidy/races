@@ -359,6 +359,9 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
         # update the rider object
 
         self.object.rider.__dict__.update(form.cleaned_data)
+        # not sure why I need to do this separately but it doesn't get
+        # updated if I don't
+        self.object.rider.club = form.cleaned_data['club']
         self.object.rider.save()
 
         form.save()
