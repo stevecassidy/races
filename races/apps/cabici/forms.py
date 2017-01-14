@@ -68,7 +68,11 @@ class RaceRiderForm(forms.Form):
 class RiderSearchForm(forms.Form):
     """Form to search riders by various criteria"""
 
-    name = forms.CharField(label="Rider Name")
+    name = forms.CharField(label="Rider Last Name", required=False)
+#    recent_wins = forms.BooleanField(label="With Recent Wins", required=False)
+#    recent_places = forms.BooleanField(label="With Recent Placings", required=False)
+#    grade = forms.CharField(label="Grade", required=False)
+    club = forms.ModelChoiceField(label="Club", queryset=Club.objects.all(), required=False)
 
 class RiderUpdateForm(forms.ModelForm):
     """Form to edit a rider/user by user"""
@@ -90,7 +94,7 @@ class RiderUpdateFormOfficial(forms.ModelForm):
         model = Rider
         fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
                     'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship',
-                    'club', 'dutyofficer', 'dutyhelper', 'licenceno', 
+                    'club', 'dutyofficer', 'dutyhelper', 'licenceno',
                     #'grade',
                     'commissaire', 'commissaire_valid', 'official']
 

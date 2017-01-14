@@ -14,10 +14,6 @@
 
 {% block navbar_class %}navbar-inverse{% endblock %}
 
-{% block topbar_base %}
-{% if iframe %}{% else %}{{block.super}}{% endif %}
-{% endblock %}
-
 {% block nav %}
 {% get_flatpages as flatpages %}
 <ul class="nav navbar-nav">
@@ -36,13 +32,7 @@
 {% endblock %}
 
 {% block footer %}
-    {% if iframe %}
-    <ul>
-    <li>Content managed through <a href="/">cabici.net</a></li>
-    </ul>
-    {% else %}
     {% include "_footer.html" %}
-    {% endif %}
 {% endblock %}
 
 {% block body %}

@@ -1,7 +1,10 @@
 {% extends "site_base.html" %}
 {% load bootstrap %}
 
-{% block title %}{{user.first_name}} {{user.last_name}}{% endblock %}
+
+{% block head_title %}
+Rider - {{user.first_name}} {{user.last_name}}
+{% endblock %}
 
 {% block content %}
 
