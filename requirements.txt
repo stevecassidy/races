@@ -14,7 +14,7 @@ pinax-theme-bootstrap==5.7.5
 django-bootstrap-form
 djangorestframework
 django-cors-headers
-#django-yearlessdate
+django-yearlessdate
 django-webtest
 # for deployment with postgres
 # psycopg2

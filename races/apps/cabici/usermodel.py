@@ -373,8 +373,11 @@ class Rider(models.Model):
                         cat = cat.replace("Boys", "Girls")
                 return cat
 
-    def performancereport(self):
-        """Generate a rider performance report"""
+    def performancereport(self, when=None):
+        """Generate a rider performance report,
+        if the when arg is provided it should be a date
+        and the performance report is generated as if on
+        that date. Otherwise it is generated as of today."""
 
         # number of races
         # number of wins/places in last 12 months
@@ -383,9 +386,11 @@ class Rider(models.Model):
 
         info = dict()
 
-        today = datetime.date.today()
-        startdate = today - datetime.timedelta(days=365)
-        info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate)
+        if when is None:
+            when = datetime.date.today()
+
+        startdate = when - datetime.timedelta(days=365)
+        info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate, race__date__lt=when)
         info['places'] = info['recent'].filter(place__gt=1).count()
         info['wins'] = info['recent'].filter(place__exact=1).count()
 
@@ -495,6 +500,43 @@ class PointScore(models.Model):
     participation = models.IntegerField("Points for participation", default=2)
     races = models.ManyToManyField(Race, blank=True)
 
+    def score(self, result, numberriders):
+        """Calculate the points for this placing
+        according to the Waratah CC pointscore rules
+        """
+        # TODO: we might want to generalise this if some other
+        # club want's to run a different kind of pointscore
+
+        points = [7,6,5,4,3]
+        smallpoints = [5,4]
+        participation = 2
+
+        # is the rider eligible for promotion or riding down a grade
+        perf = result.rider.performancereport(when=result.race.date)
+        promote = (perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7)
+
+        if result.place is None:
+            return participation
+        elif promote or result.grade > result.usual_grade:
+            return participation
+        elif numberriders < 6:
+            # only 3 points to the winner
+            if result.place == 1:
+                return 3
+            else:
+                return participation
+        elif numberriders <= 12:
+            if result.place-1 < len(smallpoints):
+                return smallpoints[result.place-1]
+            else:
+                return participation
+        else:
+            if result.place-1 < len(points):
+                return points[result.place-1]
+            else:
+                return participation
+
+
     def __unicode__(self):
         return unicode(unicode(self.club) + " " + self.name)
 
@@ -515,7 +557,7 @@ class PointScore(models.Model):
 
         return self.smallpointslist
 
-    def score(self, place, numberriders):
+    def default_score(self, place, numberriders):
         """Return the points corresponding to this place in the race
         and this number of riders"""
 
@@ -534,7 +576,6 @@ class PointScore(models.Model):
             else:
                 return self.participation
 
-
     def tally(self, result, reporton=None):
         """Add points for this result to the tally"""
 
@@ -543,14 +584,14 @@ class PointScore(models.Model):
             return
 
         number_in_grade = RaceResult.objects.filter(race=result.race, grade=result.grade).count()
-        points = self.score(result.place, number_in_grade)
+        points = self.score(result, number_in_grade)
 
         tally, created = PointscoreTally.objects.get_or_create(rider=result.rider, pointscore=self)
 
         if result.grade == "Helper" and tally.eventcount > 0:
             # points is average points so far for this rider
             points = int(round(float(tally.points)/float(tally.eventcount)))
-            #print "Helper", result, "\t", points
+            print "Helper", result, "\t", points
 
         tally.add(points)
 
