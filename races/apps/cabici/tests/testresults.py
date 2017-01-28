@@ -250,7 +250,7 @@ class UserModelTests(TestCase):
 
         # modify a rider so they have a temporary licence number
         rider1 = Rider.objects.get(licenceno='FRA19900529')
-        rider1.licenceno = 'temp9999999999'
+        rider1.licenceno = '0'
         rider1.save()
         user1 = rider1.user
 

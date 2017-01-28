@@ -269,11 +269,11 @@ class ClubRidersExcelView(View):
                    'F',
                    '',
                    2,
-                   r.licenceno,
+                   r.licenceno,  # must be numeric
                    clubslug,
                    r.user.email,
-                   '',  # needs to be the id from the old site or empty
-                   eventno
+                   r.id,
+                   eventno  # must be numeric
                   )
             ws.append(row)
 
@@ -555,6 +555,7 @@ class RaceUploadExcelView(FormView):
                     messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
             except Exception as e:
                 msgtext = "Error reading file, please check format."
+                print e
                 messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))

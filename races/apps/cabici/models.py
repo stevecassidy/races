@@ -488,58 +488,58 @@ class Race(models.Model):
         for row in rows:
             message = []
 
-            if row['LicenceNo'] == 0:
-                # create a temporary licence number so that we can record the result
-                row['LicenceNo'] = 'temp'+str(hash(str(row)))[1:10]
-
-            try:
-                rider = Rider.objects.get(licenceno=row['LicenceNo'])
-            except:
-
+            if row['Id'] == '':
+                # this should be a new rider, but it could be someone we know who
+                # wasn't in the spreadsheet
                 username = Rider.objects.make_username(row['FirstName'],
                                                        row['LastName'],
                                                        str(row['LicenceNo']))
 
-                # check for an existing rider with this name and a temp licenceno
-                # if found, assume it's the same person and update the details
-                samepersons = Rider.objects.filter(user__first_name__exact=row['FirstName'],
-                                                   user__last_name__exact=row['LastName'],
-                                                   licenceno__startswith='temp')
+                # just in case we know them already we use get_or_create
+                user, created = User.objects.get_or_create(first_name=row['FirstName'],
+                                                           last_name=row['LastName'],
+                                                           username=username)
 
-                if samepersons.count() == 1:
-                    rider = samepersons[0]
-                    rider.licenceno = row['LicenceNo']
-                    user = rider.user
-                    user.username = username
-                    rider.save()
+                if row['Email'] != '':
+                    user.email = row['Email']
                     user.save()
-                    message.append("Updated licence number for %s to %s" % (str(rider), row['LicenceNo']))
+
+                club = Club.objects.closest(row['Club'])
+                if created:
+                    # make the rider record
+                    rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
+                    message.append('Added new rider record for %s %s' % (row['FirstName'], row['LastName']))
                 else:
-                    # this is not someone we know, so make a new user/rider record
-                    user, created = User.objects.get_or_create(first_name=row['FirstName'],
-                                                               last_name=row['LastName'],
-                                                               username=username)
+                    # we didn't find this person by licence number so set it if we have it
+                    rider = user.rider
+                    if row['LicenceNo'] != '':
+                        rider.licenceno = str(row['LicenceNo'])
+                        message.append('Updated Licence Number to %s' % (row['LicenceNo'],))
+                    if club.slug != 'Unknown':
+                        rider.club = club
+                        message.append('Updated Club to %s' % (club.slug,))
 
-                    if row['Email'] != '':
-                        user.email = row['Email']
-                        user.save()
+                rider.save()
+            else:
+                try:
+                    rider = Rider.objects.get(id=int(row['Id']))
+                except:
+                    messages.append("Rider Id %s not found in database " % row['Id'])
+                    continue
 
-                    club = Club.objects.closest(row['Club'])
-                    if created:
-                        # make the rider record
-                        rider = Rider(licenceno=row['LicenceNo'], club=club, user=user)
-                        message.append('Added new rider record for %s %s' % (row['FirstName'], row['LastName']))
-                    else:
-                        # we didn't find this person by licence number so set it if we have it
-                        rider = user.rider
-                        if row['LicenceNo'] != '':
-                            rider.licenceno = str(row['LicenceNo'])
-                            message.append('Updated Licence Number to %s' % (row['LicenceNo'],))
-                        if club.slug != 'Unknown':
-                            rider.club = club
-                            message.append('Updated Club to %s' % (club.slug,))
+                # validate a bit
+                if row['LastName'] != rider.user.last_name:
+                    messages.append("Rider with Id %s has wrong last name, expected %s but found %s." % (row['Id'], rider.user.last_name, row['LastName']))
+                    continue
 
-                    rider.save()
+            # ok, we now have our rider, either existing or new
+
+            # update licenceno if we didn't know it before
+            if rider.licenceno == '0' and row['LicenceNo'] != '0':
+                rider.licenceno = row['LicenceNo']
+                rider.save()
+                message.append("Updated licence number for %s %s to %s" % (rider.user.first_name, rider.user.last_name, rider.licenceno))
+
 
             # we know that this rider is a current member of their club if the Regd field is R
             if row['Regd'] == 'R':
@@ -579,9 +579,14 @@ class Race(models.Model):
             elif points > 0:
                 place = 8-points
 
+            if row['ShirtNo'] == '':
+                shirtno = 0
+            else:
+                shirtno = int(row['ShirtNo'])
+
             result = RaceResult(rider=rider, race=self, place=place,
                                 usual_grade=usual_grade, grade=row['Grade'],
-                                number=row['ShirtNo'])
+                                number=shirtno)
 
             # check for duplicate race number
             while RaceResult.objects.filter(race=self, number=result.number).count() == 1:
