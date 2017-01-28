@@ -308,9 +308,13 @@ class OfficialsTests(WebTest):
         self.assertListEqual(targetlicences, riderlicences)
 
         # event number can be parsed as an integer
+        # and every row has an id that matches a rider
         for row in ws.rows():
             if row[12] != 'EventNo':
                 # just force coercion to int, will raise an exception if it's bad
                 self.assertEqual(row[12], str(int(row[12])))
+                id = row[11]
+                rider = Rider.objects.get(id=id)
+                self.assertEqual(rider.licenceno, row[8])
 
         buf.close()

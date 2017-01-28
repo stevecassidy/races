@@ -410,3 +410,16 @@ class APITests(TestCase):
 
         # should have the same number of races
         self.assertEqual(movraces+1, self.mov.races.count())
+
+    def test_pointscore_list(self):
+        """Get the list of pointscores"""
+
+
+        url = '/api/pointscores/'
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+
+        self.assertEqual(1, len(data))
+        self.assertEqual("OGE", data[0]['club']['slug'])

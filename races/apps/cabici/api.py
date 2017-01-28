@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 import datetime
+from django.db import models
 
 from models import Club, Race, RaceCourse
 from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
@@ -174,7 +175,6 @@ class RaceSerializer(serializers.ModelSerializer):
     def get_licencereq(self, obj):
         return {'key': obj.licencereq, 'display': obj.get_licencereq_display()}
 
-
 @permission_classes((ClubOfficialPermission,))
 class RaceList(generics.ListCreateAPIView):
     serializer_class = RaceSerializer
@@ -219,7 +219,6 @@ class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
 
-
 #---------------RaceStaff------------------
 
 class RaceStaffSerializer(serializers.HyperlinkedModelSerializer):
@@ -227,7 +226,6 @@ class RaceStaffSerializer(serializers.HyperlinkedModelSerializer):
         model = RaceStaff
 
     role = serializers.SlugRelatedField(slug_field='name', queryset=ClubRole.objects.all())
-
 
 class RaceStaffList(generics.ListCreateAPIView):
     queryset = RaceStaff.objects.all()
@@ -237,7 +235,6 @@ class RaceStaffList(generics.ListCreateAPIView):
 class RaceStaffDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceStaff.objects.all()
     serializer_class = RaceStaffSerializer
-
 
 #---------------Rider------------------
 
@@ -254,11 +251,9 @@ class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-
 class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
 
 class RiderSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(read_only=True)
@@ -293,16 +288,29 @@ class RiderDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #---------------PointScore------------------
 
-class PointScoreResultSerializer(serializers.Serializer):
+class PointScoreBriefSerializer(serializers.HyperlinkedModelSerializer):
 
-    def to_representation(self, tally):
+    club = ClubBriefSerializer(read_only=True)
 
-        return {'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
-                'riderid': tally.rider.user.id,
-                'grade': tally.rider.clubgrade_set.get(club__exact=tally.pointscore.club).grade,
-                'points': tally.points,
-                'eventcount': tally.eventcount}
+    class Meta:
+        model = PointScore
+        fields = ('url', 'club', 'name')
 
+class PointScoreList(generics.ListCreateAPIView):
+    serializer_class = PointScoreBriefSerializer
+
+    def get_queryset(self):
+        """Allow filtering of queryset by a URL query
+        parameter ?club=SLUG
+        """
+
+        clubslug = self.request.query_params.get('club', None)
+        ps = PointScore.objects.all()
+
+        if clubslug is not None:
+            ps = ps.filter(club__slug__exact=clubslug)
+
+        return ps
 
 class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -314,10 +322,11 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
     def result_list(self, ps):
 
-        queryset = ps.tabulate()[:100]
+        queryset = ps.tabulate()
 
         return [{'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
                 'riderid': tally.rider.user.id,
+                'club': tally.rider.club.slug,
                 'grade': tally.rider.clubgrade_set.get(club__exact=tally.pointscore.club).grade,
                 'points': tally.points,
                 'eventcount': tally.eventcount}
@@ -327,9 +336,6 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
         model = PointScore
         fields = ('name', 'club', 'results')
 
-class PointScoreList(generics.ListCreateAPIView):
-    queryset = PointScore.objects.all()
-    serializer_class = PointScoreSerializer
 
 @permission_classes((ClubOfficialPermission,))
 class PointScoreDetail(generics.RetrieveUpdateDestroyAPIView):
