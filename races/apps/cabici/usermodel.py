@@ -127,6 +127,23 @@ class RiderManager(models.Manager):
 
         return result
 
+    def promotion(self, club):
+        """Return a list of riders who might be eligible for
+        promotion based on results in races run by this club."""
+
+        thisyear = datetime.date.today().year
+        oneyearago = datetime.date.today()-datetime.timedelta(days=365)
+
+        winresults = RaceResult.objects.filter(race__club__exact=club, race__date__gt=oneyearago, place=1)
+        riders = set([res.rider for res in winresults])
+        promotable = []
+        for rider in riders:
+            if rider.promotion():
+                promotable.append(rider)
+
+        promotable.sort(key=lambda x: x.user.last_name)
+        return promotable
+
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
         return a list of updated riders"""
@@ -389,12 +406,29 @@ class Rider(models.Model):
         if when is None:
             when = datetime.date.today()
 
+        # HACK grade is the most recent usual_grade in any race
+        # this won't work in general if there are results for more than one club
+        grade = self.raceresult_set.all().order_by('-race__date')[0].usual_grade
+
         startdate = when - datetime.timedelta(days=365)
         info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate, race__date__lt=when)
-        info['places'] = info['recent'].filter(place__gt=1).count()
-        info['wins'] = info['recent'].filter(place__exact=1).count()
+        info['places'] = info['recent'].filter(place__gt=1, grade__exact=grade).count()
+        info['wins'] = info['recent'].filter(place__exact=1, grade__exact=grade).count()
 
         return info
+
+    def promotion(self, when=None):
+        """Is this rider eligible for promotion according to the
+        WaratahCC rules
+        More than 3 wins in grade or more than 7 placings in last 12 months.
+        If the when argument is given, the calculation is done at that time.
+        Return True if eligible, false otherwise."""
+
+        perf = self.performancereport(when=when)
+        grade = self.raceresult_set.all().order_by('-race__date')[0].usual_grade
+
+        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7))
+
 
 MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding', 'non-riding'))
 
@@ -512,8 +546,8 @@ class PointScore(models.Model):
         participation = 2
 
         # is the rider eligible for promotion or riding down a grade
-        perf = result.rider.performancereport(when=result.race.date)
-        promote = (perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7)
+        # note you can't be promoted from A grade
+        promote = result.grade != 'A' and result.rider.promotion(when=result.race.date)
 
         if result.place is None:
             return participation

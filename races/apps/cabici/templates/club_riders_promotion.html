@@ -1,0 +1,41 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+
+{% block head_title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block extra_script %}
+    {% endblock %}
+
+{% block content %}
+
+<h2>Riders Eligible for Promotion</h2>
+
+<p>Riders who have more than 3 wins in their grade or more than 7 placings in the last
+    12 months.</p>
+
+<table class='table'>
+    <thead>
+        <tr><th>Name</th><th>Grade</th><th>Wins</th><th>Places (2-5)</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for rider in riders %}
+      <tr>
+          <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+          <td>
+              {% for grading in rider.clubgrade_set.all %}
+                {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+              {% endfor %}
+          </td>
+          <td>{{rider.performancereport.wins}}</td>
+          <td>{{rider.performancereport.places}}
+      </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

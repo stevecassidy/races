@@ -125,24 +125,20 @@ class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
 class ClubRidersPromotionView(ListView):
 
     model = Club
-    template_name = 'club_riders_primotion.html'
+    template_name = 'club_riders_promotion.html'
 
     def get_context_data(self, **kwargs):
 
         thisyear = datetime.date.today().year
 
-        context = super(ClubRidersView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all riders who could be promoted
+        context = super(ClubRidersPromotionView, self).get_context_data(**kwargs)
+        # Add in a list of all riders who could be promoted
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
         context['club'] = club
-        # find riders who have won or placed with this club in the last 12 months
-        # and count the number of wins/places
-        riders = Rider.objects.filter(raceresult__race__date__gt=lastyear,
-                                      raceresult__place__gte=5)
-        riders = riders.annotate(Count('raceresult')).order_by('-raceresult__count')
-        riders = riders.filter(raceresult__count__gt=3)
+        context['riders'] = Rider.objects.promotion(club)
 
+        return context
 
 
 class ClubRidersView(ListView):
