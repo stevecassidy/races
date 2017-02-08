@@ -136,7 +136,7 @@ class ClubRidersPromotionView(ListView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
         context['club'] = club
-        context['riders'] = Rider.objects.promotion(club)
+        context['riders'] = club.promotable()
 
         return context
 
@@ -355,6 +355,17 @@ class RiderView(DetailView):
     model = User
     template_name = 'rider_detail.html'
     context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+
+        context = super(RiderView, self).get_context_data(**kwargs)
+
+        context['raceclubs'] = Club.objects.filter(manage_races__exact=True)
+
+        return context
+
+
+
 
 class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
     """View to allow update of rider and user details as well

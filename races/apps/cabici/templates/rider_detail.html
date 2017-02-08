@@ -1,6 +1,6 @@
 {% extends "site_base.html" %}
 {% load bootstrap %}
-
+{% load racetags %}
 
 {% block head_title %}
 Rider - {{user.first_name}} {{user.last_name}}
@@ -33,9 +33,12 @@ Rider - {{user.first_name}} {{user.last_name}}
     {% for role in user.userrole_set.all %}
         <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>
     {% endfor %}
-    <tr><th colspan=2>In the last 12 months</th></tr>
-    <tr><th>Wins</th><td>{{user.rider.performancereport.wins}}</td></tr>
-    <tr><th>Places</th><td>{{user.rider.performancereport.places}}</td></tr>
+
+    {% for club in raceclubs %}
+    <tr><th colspan=2>In the last 12 months races with {{club}}:</th></tr>
+    <tr><th>Wins</th><td>{% clubwins  club=club rider=user.rider %}</td></tr>
+    <tr><th>Places</th><td>{% clubplaces club=club rider=user.rider %}</td></tr>
+    {% endfor %}
 </table>
 
 {% if request.user.rider %}
