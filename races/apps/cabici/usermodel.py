@@ -127,6 +127,7 @@ class RiderManager(models.Manager):
 
         return result
 
+
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
         return a list of updated riders"""
@@ -373,11 +374,15 @@ class Rider(models.Model):
                         cat = cat.replace("Boys", "Girls")
                 return cat
 
+
     def performancereport(self, when=None):
-        """Generate a rider performance report,
+        """Generate a rider performance report for all clubs
         if the when arg is provided it should be a date
         and the performance report is generated as if on
         that date. Otherwise it is generated as of today."""
+
+        # note that this duplicates logic in Club.performancereport but for all
+        # clubs, we use it in generating the rider details page
 
         # number of races
         # number of wins/places in last 12 months
@@ -385,16 +390,13 @@ class Rider(models.Model):
         # places in grade
 
         info = dict()
-
-        if when is None:
-            when = datetime.date.today()
-
-        startdate = when - datetime.timedelta(days=365)
-        info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate, race__date__lt=when)
-        info['places'] = info['recent'].filter(place__gt=1).count()
+        startdate = datetime.date.today() - datetime.timedelta(days=365)
+        info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate)
+        info['places'] = info['recent'].filter(place__lte=3).count()
         info['wins'] = info['recent'].filter(place__exact=1).count()
 
         return info
+
 
 MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding', 'non-riding'))
 
@@ -512,8 +514,7 @@ class PointScore(models.Model):
         participation = 2
 
         # is the rider eligible for promotion or riding down a grade
-        perf = result.rider.performancereport(when=result.race.date)
-        promote = (perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7)
+        promote = result.race.club.promotion(result.rider, when=result.race.date)
 
         if result.place is None:
             return participation

@@ -113,7 +113,7 @@ class ModelTests(TestCase):
         today = datetime.today()
 
         loc = RaceCourse.objects.all()[0]
-        # make some races for OGE
+        # make some races for OGE within the last year
         for i in range(n):
             date = today - timedelta(days=300+i)
             race = Race(club=club, date=date, signontime="08:00", title="test", location=loc)
@@ -189,6 +189,38 @@ class ModelTests(TestCase):
         self.assertEqual(winnerpoints, table[0].points)
 
 
+    def test_promotion(self):
+        """Test the classification of riders as promtable """
+
+        club = Club.objects.get(slug='OGE')
+
+        # generate races and add them to the pointscore
+        self.gen_races(club, 6)
+
+        # find a rider with no points
+        rider = Rider.objects.all()[0]
+
+        grade = ClubGrade(rider=rider, club=club, grade='B')
+        grade.save()
+        gradeletter = grade.grade
+
+        # make this person win five
+        for race in Race.objects.all()[:5]:
+            winner = RaceResult(race=race, rider=rider, place=1, grade=gradeletter)
+            winner.save()
+
+        self.assertEqual(gradeletter, club.grade(rider))
+        self.assertTrue(club.promotion(rider))
+
+        # now remove all results and grade for this person
+        rider.raceresult_set.all().delete()
+        rider.clubgrade_set.all().delete()
+        # we should still be able to get results
+
+        self.assertEqual(None, club.grade(rider))
+        self.assertFalse(club.promotion(rider))
+
+
     def test_points_promotion(self):
         """A rider who is eligible for promotion shouldn't
         get more than 2 points """
@@ -204,8 +236,10 @@ class ModelTests(TestCase):
         # generate some results that will tally in the pointscore
         self.gen_results()
 
-        # find winning race results
+        # find a rider with no points
         rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
+        grade = ClubGrade(rider=rider, club=club, grade='B')
+        grade.save()
         # make this person win five
         for race in Race.objects.all()[:5]:
             winner = RaceResult.objects.get(race=race, place=1, grade='B')
@@ -223,3 +257,90 @@ class ModelTests(TestCase):
         # this rider should only get winning points for three races
         pst = PointscoreTally.objects.get(rider=rider)
         self.assertEqual(25, pst.points)
+
+        # they should also show up in the promotions report
+
+        report = club.promotable()
+        self.assertIn(rider, report)
+
+
+    def test_points_promotion_a_grade(self):
+        """A rider who is eligible for promotion shouldn't
+        get more than 2 points unless they are in A grade"""
+
+        club = Club.objects.get(slug='OGE')
+        ps = PointScore(club=club, name="Test")
+        ps.save()
+
+        # generate races and add them to the pointscore
+        self.gen_races(club, 6)
+        ps.races.set(club.races.all())
+
+        # generate some results that will tally in the pointscore
+        self.gen_results()
+
+        # find a rider with no points, put them in A grade
+        rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
+        grade = ClubGrade(rider=rider, club=club, grade='A')
+        grade.save()
+
+        # make this person win five
+        for race in Race.objects.all()[:5]:
+            winner = RaceResult.objects.get(race=race, place=1, grade='A')
+            winner.rider = rider
+            winner.save()
+
+        ouresults = RaceResult.objects.filter(rider__exact=rider)
+
+        # recalculate points
+        ps.recalculate()
+
+        # results for our rider
+        results = RaceResult.objects.filter(rider=rider)
+
+        # this rider should get winning points for all five races
+        pst = PointscoreTally.objects.get(rider=rider)
+        self.assertEqual(35, pst.points)
+
+
+    def test_points_promotion_ab_grade(self):
+        """Only wins in the riders current grade should
+        make them eligible for promotion and hence lose points"""
+
+        club = Club.objects.get(slug='OGE')
+        ps = PointScore(club=club, name="Test")
+        ps.save()
+
+        # generate races and add them to the pointscore
+        self.gen_races(club, 6)
+        ps.races.set(club.races.all())
+
+        # generate some results that will tally in the pointscore
+        self.gen_results()
+
+        # find a rider with no points
+        rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
+        grade = ClubGrade(rider=rider, club=club, grade='B')
+        grade.save()
+        # make this person win five, three in C, two in B
+        races = Race.objects.all()[:5]
+        for race in races[:3]:
+            winner = RaceResult.objects.get(race=race, place=1, grade='C')
+            winner.rider = rider
+            winner.save()
+        for race in races[3:]:
+            winner = RaceResult.objects.get(race=race, place=1, grade='B')
+            winner.rider = rider
+            winner.save()
+
+        ouresults = RaceResult.objects.filter(rider__exact=rider)
+
+        # recalculate points
+        ps.recalculate()
+
+        # results for our rider
+        results = RaceResult.objects.filter(rider=rider)
+
+        # this rider should get winning points for all five races
+        pst = PointscoreTally.objects.get(rider=rider)
+        self.assertEqual(35, pst.points)
