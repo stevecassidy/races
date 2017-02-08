@@ -360,11 +360,9 @@ class RiderView(DetailView):
 
         context = super(RiderView, self).get_context_data(**kwargs)
 
-        context['raceclubs'] = Club.objects.filter(manage_races__exact=True)
+        context['raceclubs'] = Club.objects.filter(manage_results__exact=True)
 
         return context
-
-
 
 
 class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):

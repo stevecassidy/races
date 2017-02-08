@@ -244,7 +244,7 @@ class Club(models.Model):
         perf = self.performancereport(rider, when=when)
         grade = self.grade(rider)
 
-        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7))
+        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] >= 7))
 
     def promotable(self):
         """Return a list of riders who might be eligible for
