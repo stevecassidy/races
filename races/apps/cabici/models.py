@@ -90,7 +90,6 @@ class Club(models.Model):
         else:
             return self.ingest_by_module()
 
-
     def ingest_by_module(self):
         """Try to find a module named for the (lowercased) slug field
         of this club. If found call the ingest procedure
@@ -197,6 +196,74 @@ class Club(models.Model):
                 rs.save()
                 # requeue the rider
                 ordered.append((c,rider))
+
+    def performancereport(self, rider, when=None):
+        """Generate a rider performance report for this club,
+        if the when arg is provided it should be a date
+        and the performance report is generated as if on
+        that date. Otherwise it is generated as of today."""
+
+        # number of races
+        # number of wins/places in last 12 months
+        # wins in grade
+        # places in grade
+
+        info = dict()
+
+        if when is None:
+            when = datetime.date.today()
+
+        # get the rider's current grade with this club, if we have one
+        grade = self.grade(rider)
+
+        startdate = when - datetime.timedelta(days=365)
+        info['recent'] = rider.raceresult_set.filter(race__club__exact=self, place__lte=5, race__date__gt=startdate, race__date__lt=when)
+        info['places'] = info['recent'].filter(place__lte=3, grade__exact=grade).count()
+        info['wins'] = info['recent'].filter(place__exact=1, grade__exact=grade).count()
+
+        return info
+
+    def grade(self, rider):
+        """Get the current grade of this rider, if we have one
+        return the string grade name or None if there is no grade recorded"""
+
+        # get the rider's current grade with this club, if we have one
+        grades = rider.clubgrade_set.filter(club=self)
+        if len(grades) == 1:
+            return grades[0].grade
+        else:
+            return None
+
+    def promotion(self, rider, when=None):
+        """Is this rider eligible for promotion according to the
+        WaratahCC rules
+        More than 3 wins in grade or more than 7 placings in last 12 months.
+        If the when argument is given, the calculation is done at that time.
+        Return True if eligible, false otherwise."""
+
+        perf = self.performancereport(rider, when=when)
+        grade = self.grade(rider)
+
+        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7))
+
+    def promotable(self):
+        """Return a list of riders who might be eligible for
+        promotion based on results in races run by this club."""
+
+        from races.apps.cabici.usermodel import RaceResult
+
+        thisyear = datetime.date.today().year
+        oneyearago = datetime.date.today()-datetime.timedelta(days=365)
+
+        winresults = RaceResult.objects.filter(race__club__exact=self, race__date__gt=oneyearago, place=1)
+        riders = set([res.rider for res in winresults])
+        promotable = []
+        for rider in riders:
+            if self.promotion(rider):
+                promotable.append(rider)
+
+        promotable.sort(key=lambda x: x.user.last_name)
+        return promotable
 
 
     def ingest_ical(self):
@@ -331,11 +398,6 @@ class Club(models.Model):
 
 
         return (racelist, errors)
-
-
-
-
-
 
 class RaceCourseManager(models.Manager):
 
