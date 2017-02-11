@@ -550,7 +550,7 @@ class Race(models.Model):
         for row in rows:
             message = []
 
-            if row['Id'] == '':
+            if type(row['Id']) != int:
                 # this should be a new rider, but it could be someone we know who
                 # wasn't in the spreadsheet
                 username = Rider.objects.make_username(row['FirstName'],
@@ -586,7 +586,7 @@ class Race(models.Model):
                 try:
                     rider = Rider.objects.get(id=int(row['Id']))
                 except:
-                    messages.append("Rider Id %s not found in database " % row['Id'])
+                    messages.append("Rider Id '%s' not found in database " % row['Id'])
                     continue
 
                 # validate a bit
