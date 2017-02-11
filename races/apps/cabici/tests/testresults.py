@@ -278,3 +278,23 @@ class UserModelTests(TestCase):
         self.assertEqual('FRA19900529', rider1.licenceno)
 
         self.assertIn('Updated licence number for Thibaut PINOT to FRA19900529', messages)
+
+
+
+    def test_load_results_excel_duty_helper(self):
+        """Load results from Excel gives points to duty helpers
+        with the special shirtno of 999"""
+
+        rider1 = Rider.objects.get(licenceno='ESP19870625')
+        user1 = rider1.user
+
+        race = Race.objects.get(pk=1)
+
+        with transaction.atomic():
+            with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
+                messages = race.load_excel_results(fd, "xls")
+
+        self.assertEqual(race.raceresult_set.all().count(), 116)
+
+        result1 = race.raceresult_set.get(rider=rider1)
+        self.assertEqual("Helper", result1.grade)
