@@ -243,7 +243,7 @@ class ClubRidersExcelView(View):
         ws.append(header)
 
         #riders = Rider.objects.active_riders(club)
-        riders = Rider.objects.filter(membership__category__exact='race')
+        riders = Rider.objects.filter(membership__category__exact='race').distinct()
 
         for r in riders:
 
