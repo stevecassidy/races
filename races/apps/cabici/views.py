@@ -89,8 +89,14 @@ class ClubOfficialRequiredMixin(AccessMixin):
 
         # superuser can do anything
         if not request.user.is_superuser:
+            # any user who has no rider object can't get access
+            try:
+                rider = request.user.rider
+            except:
+                return self.handle_no_permission()
+
             # user should be an official of the club referenced in the view
-            if not request.user.rider.official:
+            if not rider.official:
                 return self.handle_no_permission()
 
             # if there is a club slug in the kwargs then verify that
@@ -99,7 +105,7 @@ class ClubOfficialRequiredMixin(AccessMixin):
                 clublist = Club.objects.filter(slug=kwargs['slug'])
                 if len(clublist) == 1:
                     club = clublist[0]
-                    if not request.user.rider.club == club:
+                    if not rider.club == club:
                         return self.handle_no_permission()
 
         return super(ClubOfficialRequiredMixin, self).dispatch(request, *args, **kwargs)
@@ -236,7 +242,8 @@ class ClubRidersExcelView(View):
 
         ws.append(header)
 
-        riders = Rider.objects.active_riders(club)
+        #riders = Rider.objects.active_riders(club)
+        riders = Rider.objects.filter(membership__category__exact='race')
 
         for r in riders:
 
