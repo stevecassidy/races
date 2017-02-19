@@ -318,6 +318,11 @@ class RiderListView(ListView):
 
     def get_queryset(self):
 
+        # don't return any results if we don't get a form submission
+
+        if 'name' not in self.request.GET:
+            return []
+
         riders = Rider.objects.all().order_by('user__last_name')
 
         # search by name just returns directly
@@ -326,23 +331,8 @@ class RiderListView(ListView):
             riders = riders.filter(user__last_name__icontains=name).order_by('user__last_name')
             return riders
 
-        # recent
-        if self.request.GET.has_key('recent_wins'):
-            # riders with a race win in the last 12 months
-            lastyear = datetime.date.today()-datetime.timedelta(365)
-            riders = riders.filter(raceresult__race__date__gt=lastyear,
-                                          raceresult__place__exact=1)
-            riders = riders.annotate(Count('raceresult')).order_by('-raceresult__count')
-        elif self.request.GET.has_key('recent_places'):
-            # riders with a race win in the last 12 months
-            lastyear = datetime.date.today()-datetime.timedelta(365)
-            riders = riders.filter(raceresult__race__date__gt=lastyear,
-                                          raceresult__place__gte=5)
-            riders = riders.annotate(Count('raceresult')).order_by('-raceresult__count')
-
         if self.request.GET.has_key('grade') and self.request.GET['grade'] != '':
-            print "Filtering on grade", grade
-            riders = riders.filter(raceresult__grade__exact=self.request.GET['grade'])
+            riders = riders.filter(clubgrade__grade__exact=self.request.GET['grade'])
 
         if self.request.GET.has_key('club') and self.request.GET['club'] != '':
             club = get_object_or_404(Club, pk=self.request.GET['club'])
