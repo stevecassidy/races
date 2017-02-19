@@ -13,14 +13,30 @@
 
 <h2>{{club.name}} Riders</h2>
 
-<form class="form-horizontal" action="{% url 'riders' %}">
-  {{searchform|bootstrap_horizontal}}
-  <div class="form-group">
-      <div class="col-sm-10 col-sm-offset-2">
-          <button type="submit" class="btn btn-default">Search Riders</button>
-      </div>
-  </div>
-</form>
+<div class='row-fluid'>
+
+    <div class='col-md-4'>
+
+        <p>This page allows you to search for rider performance reports held on Cabici.  These reports
+        and all information we hold about riders comes from clubs uploading results to the
+        site (currently only Waratah Masters CC).</p>
+
+    </div>
+
+    <div class='col-md-8'>
+        <form class="form-horizontal" action="{% url 'riders' %}">
+          {{searchform|bootstrap_horizontal}}
+          <div class="form-group">
+              <div class="col-sm-10 col-sm-offset-2">
+                  <button type="submit" class="btn btn-default">Search Riders</button>
+              </div>
+          </div>
+        </form>
+    </div>
+
+</div>
+
+{% if riders %}
 
 <p>Showing <strong>{{riders|length}}</strong> riders.</p>
 
@@ -28,7 +44,6 @@
     <thead>
         <tr>
             <th>Name</th><th>Club</th>
-            <th>Grade</th>
         </tr>
     </thead>
     <tbody>
@@ -36,12 +51,11 @@
       <tr>
           <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
           <td>{{rider.club.name}}</td>
-          <td>{{rider.clubgrade_set.all.0.grade}}</td> {# TODO: should be club specific #}
-          {# <td>{{rider.raceresult__count}}</td> #}
       </tr>
     {% endfor %}
     </tbody>
 </table>
 
+{% endif %}
 
 {% endblock %}
