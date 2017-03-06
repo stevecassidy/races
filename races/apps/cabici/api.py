@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 import datetime
 from django.db import models
+from django.http import Http404
 
 from models import Club, Race, RaceCourse
 from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
@@ -374,13 +375,17 @@ class RaceResultList(generics.ListCreateAPIView):
         raceid = self.request.query_params.get('race', None)
         placed = self.request.query_params.get('placed', None)
 
-        if raceid is not None:
-            if placed is not None:
-                return RaceResult.objects.filter(race__pk__exact=raceid, place__gt=0)
+        try:
+            if raceid is not None:
+                if placed is not None:
+                    return RaceResult.objects.filter(race__pk__exact=raceid, place__gt=0)
+                else:
+                    return RaceResult.objects.filter(race__pk__exact=raceid)
             else:
-                return RaceResult.objects.filter(race__pk__exact=raceid)
-        else:
-            return RaceResult.objects.all()
+                return RaceResult.objects.all()
+        except ValueError:
+            # given a non integer for raceid
+            raise Http404("Invalid Race ID")
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceResult.objects.all()
