@@ -69,10 +69,10 @@ class Club(models.Model):
         thisyear = datetime.date.today().year
 
         dd = dict()
-        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear).count()
-        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='race').count()
-        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='ride').count()
-        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='non-riding').count()
+        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear).count()
+        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='race').count()
+        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='ride').count()
+        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='non-riding').count()
 
         # roles
         dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0)
@@ -539,7 +539,7 @@ class Race(models.Model):
 
         # validate the file format
         if 'LicenceNo' not in rows[0] or 'LastName' not in rows[0] or 'Grade' not in rows[0]:
-            raise Exception('Error in spreadsheet format, required columns missing.')        
+            raise Exception('Error in spreadsheet format, required columns missing.')
 
         # now that we have new data, delete any existing results for this race
         # but first count them so we can see if we need to recompute points below
