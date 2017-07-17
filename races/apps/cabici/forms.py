@@ -107,6 +107,7 @@ class RiderUpdateFormOfficial(forms.ModelForm):
 
 SEND_CHOICES = (('self', 'Yourself (test email)'),
                 ('members', 'Current Members'),
+                ('pastriders', 'All Riders from Past Year'),
                 ('commisaires', 'Commisaires'),
                 ('dutyofficers', 'Duty Officers'))
 

@@ -26,9 +26,9 @@ class OfficialsTests(WebTest):
 
         self.oge.save()
 
-        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial = User(username="ogeofficial", email='oge@here.com', password="hello", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
-        self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
+        self.movofficial = User(username="movofficial", email='mov@here.com', password="hello", first_name="MOV", last_name="Official")
         self.movofficial.save()
 
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
@@ -224,7 +224,7 @@ class OfficialsTests(WebTest):
         self.assertEqual(len(mail.outbox[0].to), 0)
 
         recipients = mail.outbox[0].bcc
-        self.assertEqual(len(mail.outbox[0].bcc), members.count())
+        self.assertEqual(len(recipients), members.count())
         for m in members:
             self.assertIn(m.user.email, recipients)
 
@@ -250,6 +250,39 @@ class OfficialsTests(WebTest):
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(len(mail.outbox[0].to), 0)
         self.assertEqual(mail.outbox[0].bcc, [self.ogeofficial.email])
+
+    def test_club_official_email_pastriders(self):
+        """Member email form can send mail to all past riders"""
+
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+        response = self.app.get(emailurl, user=self.ogeofficial)
+        form = response.forms['emailmembersform']
+
+        # fill the form and submit
+        subject = "test email subject"
+        body = "xyzzy1234 message body"
+        form['sendto'] = 'pastriders'
+        form['subject'] = subject
+        form['message'] = body
+        response = form.submit()
+
+        # check that emails are sent
+        who = self.oge.rider_set.all()
+
+        self.assertEqual(len(mail.outbox), len(who))
+
+        # to should be empty, member emails are in bcc
+        self.assertEqual(len(mail.outbox[0].to), 0)
+
+        recipients = mail.outbox[0].bcc
+        self.assertEqual(len(recipients), members.count())
+        for m in who:
+            self.assertIn(m.user.email, recipients)
+
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].body, body)
+
+
 
     def test_club_official_email_members_reject_attack(self):
         """I can't inject headers into an email message"""
@@ -291,8 +324,10 @@ class OfficialsTests(WebTest):
         # the spreadsheet contains all rider licence numbers
         riderlicences = sorted(ws.column["LicenceNo"])
 
-        riders = self.racers
+        riders = Rider.objects.all()
         targetlicences = sorted([r.licenceno for r in riders])
+
+        self.assertEqual(len(targetlicences), len(riderlicences))
 
         self.assertListEqual(targetlicences, riderlicences)
 

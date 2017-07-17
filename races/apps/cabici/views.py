@@ -812,14 +812,21 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
 
         if sendto == 'members':
             recipients = Rider.objects.filter(club__exact=club, membership__year__gte=thisyear)
+            emails = [r.user.email for r in recipients if r.user.email != '']
+        elif sendto == 'pastriders':
+            epoch = datetime.date.today() - datetime.timedelta(days=365)
+            # riders who have raced with this club in the epoch
+            results = RaceResult.objects.filter(race__date__gt=epoch).order_by('rider__user__email').values('rider').distinct()
+            riders = [Rider.objects.get(id=x['rider']) for x in results]
+            emails = [r.user.email for r in riders if r.user.email != '']
         elif sendto == 'commisaires':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Commissaire')
-            recipients = [ur.user.rider for ur in uroles]
+            emails = [ur.user.email for ur in uroles]
         elif sendto == 'dutyofficers':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
-            recipients = [ur.user.rider for ur in uroles]
+            emails = [ur.user.email for ur in uroles]
         elif sendto == 'self':
-            recipients = [self.request.user.rider]
+            emails = [self.request.user.email]
 
         subject = form.cleaned_data['subject']
 
@@ -828,7 +835,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
                              form.cleaned_data['message'],
                              sender,
                              [],
-                             [r.user.email for r in recipients],
+                             emails,
                              reply_to=(reply_to,)
                              )
 
@@ -837,7 +844,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         except BadHeaderError:
             return HttpResponseBadRequest('Invalid email header found.')
 
-        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(recipients)))
+        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(emails)))
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
 
     def form_invalid(self, form):
