@@ -257,8 +257,8 @@ class ClubRidersExcelView(View):
             except:
                 clubslug = 'Unknown'
 
-            # is the rider currently licenced?
-            if r.membership_set.filter(year__exact=thisyear).count() == 1:
+            # is the rider currently licenced to race?
+            if r.membership_set.filter(category='race', year__exact=thisyear).count() == 1:
                 registered = 'R'
             else:
                 registered = 'U'
