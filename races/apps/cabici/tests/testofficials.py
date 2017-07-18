@@ -50,12 +50,16 @@ class OfficialsTests(WebTest):
             m = Membership(rider=rider, club=rider.club, year=thisyear, category=category)
             m.save()
 
-    def make_races(self):
-        """Make some races for testing"""
+    def make_races(self, past=False):
+        """Make some races for testing
+        if past=True make races in the past 6 months"""
 
         # give us some races
         races = []
-        when = datetime.date.today()
+        if past:
+            when = datetime.date.today() - datetime.timedelta(days=150)
+        else:
+            when = datetime.date.today()
         where = RaceCourse.objects.all()[0]
         for r in ['one', 'two', 'three']:
             when = when + datetime.timedelta(days=7)
@@ -258,6 +262,14 @@ class OfficialsTests(WebTest):
         response = self.app.get(emailurl, user=self.ogeofficial)
         form = response.forms['emailmembersform']
 
+        # need some riders to have raced with OGE recently
+        riders = Rider.objects.all()[:10]
+        races = self.make_races(past=True)
+        for race in races:
+            for rider in riders:
+                result = RaceResult(race=race, rider=rider, grade='A')
+                result.save()
+
         # fill the form and submit
         subject = "test email subject"
         body = "xyzzy1234 message body"
@@ -267,16 +279,14 @@ class OfficialsTests(WebTest):
         response = form.submit()
 
         # check that emails are sent
-        who = self.oge.rider_set.all()
-
-        self.assertEqual(len(mail.outbox), len(who))
+        #self.assertEqual(len(mail.outbox), len(riders))
 
         # to should be empty, member emails are in bcc
         self.assertEqual(len(mail.outbox[0].to), 0)
 
         recipients = mail.outbox[0].bcc
-        self.assertEqual(len(recipients), members.count())
-        for m in who:
+        self.assertEqual(len(recipients), riders.count())
+        for m in riders:
             self.assertIn(m.user.email, recipients)
 
         self.assertEqual(mail.outbox[0].subject, subject)

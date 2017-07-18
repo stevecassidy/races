@@ -52,7 +52,7 @@ class RoleViewTests(WebTest):
 
 
     def test_club_official_dashboard(self):
-        """Test the club dashboard page view"""
+        """Test the club dashboard page view for a club with just race management"""
 
         url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
         response = self.app.get(url)
@@ -79,7 +79,6 @@ class RoleViewTests(WebTest):
 
         # or race result actions
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
 
@@ -104,7 +103,6 @@ class RoleViewTests(WebTest):
 
         # but we see no race result actions
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
 
@@ -122,7 +120,7 @@ class RoleViewTests(WebTest):
 
         # and we see race result actions
         self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(1, len(response.html.find_all('a', href=reverse('riders'))))
+        self.assertEqual(2, len(response.html.find_all('a', href=reverse('riders')))) # plus link in menu
         self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
         # but we don't see membership actions
