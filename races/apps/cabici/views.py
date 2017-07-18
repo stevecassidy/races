@@ -531,6 +531,10 @@ class RaceUploadExcelView(FormView):
     form_class = RaceCSVForm
     template_name = ''
 
+    def get(self, request, pk, slug):
+        """GET request redirects to the race page"""
+        return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
+
     def form_invalid(self, form):
         msgtext = 'Error: no file uploaded.'
         messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
