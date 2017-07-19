@@ -308,10 +308,11 @@ function submit_add_people(event) {
     var comms = [{id: commissaire}];
     var dos = [{id: dutyofficer}];
     var dhs = [];
-    for (var i=0; i<dutyhelpers.length; i++) {
-        dhs.push({id: dutyhelpers[i]});
+    if (dutyhelpers) {
+        for (var i=0; i<dutyhelpers.length; i++) {
+            dhs.push({id: dutyhelpers[i]});
+        }
     }
-
     var officials = {
         'Commissaire': comms,
         'Duty Officer': dos,
