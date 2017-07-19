@@ -490,7 +490,6 @@ class RaceOfficialUpdateView(View):
     def post(self, request, *args, **kwargs):
 
         race = get_object_or_404(Race, **kwargs)
-
         try:
             officials = json.loads(request.body)
             nofficials = dict()
@@ -504,10 +503,11 @@ class RaceOfficialUpdateView(View):
                 # and add to newofficials
                 nofficials[role] = []
                 for person in officials[role]:
-                    rider = get_object_or_404(Rider, id__exact=person['id'])
-                    newracestaff = RaceStaff(rider=rider, role=clubrole, race=race)
-                    newracestaff.save()
-                    nofficials[role].append({'id': rider.id, 'name': str(rider)})
+                    if person['id']:
+                        rider = get_object_or_404(Rider, id__exact=person['id'])
+                        # make sure we don't add the same person to the same role for this race
+                        newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
+                        nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
             return JsonResponse(nofficials)
         except ValueError as e:
