@@ -20,7 +20,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm
 
 import datetime
 import calendar
@@ -466,8 +466,7 @@ class RaceDetailView(DetailView):
         context = super(RaceDetailView, self).get_context_data(**kwargs)
 
         context['csvform'] = RaceCSVForm()
-        if 'iframe' in self.request.GET:
-            context['iframe'] = True
+        context['resulteditform'] = RaceResultUpdateForm()
 
         return context
 
@@ -494,7 +493,6 @@ class RaceOfficialUpdateView(View):
     def post(self, request, *args, **kwargs):
 
         race = get_object_or_404(Race, **kwargs)
-
         try:
             officials = json.loads(request.body)
             nofficials = dict()
@@ -508,10 +506,11 @@ class RaceOfficialUpdateView(View):
                 # and add to newofficials
                 nofficials[role] = []
                 for person in officials[role]:
-                    rider = get_object_or_404(Rider, id__exact=person['id'])
-                    newracestaff = RaceStaff(rider=rider, role=clubrole, race=race)
-                    newracestaff.save()
-                    nofficials[role].append({'id': rider.id, 'name': str(rider)})
+                    if person['id']:
+                        rider = get_object_or_404(Rider, id__exact=person['id'])
+                        # make sure we don't add the same person to the same role for this race
+                        newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
+                        nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
             return JsonResponse(nofficials)
         except ValueError as e:
