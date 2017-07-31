@@ -4,6 +4,10 @@
 
 {% block head_title %}{{race.club.slug}} - {{race.title}}{% endblock %}
 
+{% block extra_script %}
+<script src="{{ STATIC_URL }}cabici.js"></script>
+{% endblock %}
+
 {% block extra_head %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs&sensor=false"></script>
     <script>
@@ -153,6 +157,16 @@ google.maps.event.addDomListener(window, 'load', initialize);
                                         {% for p in result.race.pointscores %}
                                         <td>{{p.points}}</td>
                                         {% endfor %}
+                                        {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
+                                        <td>
+                                            <a href="#" data-toggle="modal"
+                                                data-target="#editResultModal" title="Edit Result"  data-resultid="{{result.id}}" data-place="{{result.place}}"
+                                                data-number="{{result.number}}"
+                                                data-rider="{{result.rider}}">
+                                                <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
+                                        {% endif %}
                                     </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -164,7 +178,16 @@ google.maps.event.addDomListener(window, 'load', initialize);
                                         <td>-</td>
                                         <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
                                         <td>{{result.rider.club}}</td>
-                                    </tr>
+                                        {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
+                                        <td>
+                                            <a href="#" data-toggle="modal"
+                                                data-target="#editResultModal" title="Edit Result"  data-resultid="{{result.id}}" data-place="{{result.place}}"
+                                                data-number="{{result.number}}"
+                                                data-rider="{{result.rider}}">
+                                                <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
+                                        {% endif %}                                    </tr>
                                     {% endif %}
                                 {% endfor %}
                                 {% endif %}
@@ -185,6 +208,29 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 <p>Report a problem with this race listing: email <a href="mailto:steve@cabici.net?subject=Problem with race {{race.id}} on cabici.net&body=Reporting a problem with http://cabici.net{% url 'race' race.club.slug race.pk %}">steve@cabici.net</a></p>
+
+
+
+<div class='modal fade' id='editResultModal' tabindex='-2' role='dialog' aria-labelledby="editResultModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="editResultModalLabel">Edit Result</h4>
+        </div>
+        <div class="modal-body">
+            <form id='editResultForm' method='POST' action=''>
+                {% csrf_token %}
+                {{resulteditform|bootstrap}}
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                  <input type="submit" name="submit" class="btn btn-primary" value="Update">
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+</div>
 
 
 {% endblock %}

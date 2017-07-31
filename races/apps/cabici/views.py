@@ -20,7 +20,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm
 
 import datetime
 import calendar
@@ -462,8 +462,7 @@ class RaceDetailView(DetailView):
         context = super(RaceDetailView, self).get_context_data(**kwargs)
 
         context['csvform'] = RaceCSVForm()
-        if 'iframe' in self.request.GET:
-            context['iframe'] = True
+        context['resulteditform'] = RaceResultUpdateForm()
 
         return context
 
