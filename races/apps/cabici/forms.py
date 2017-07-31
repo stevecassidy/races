@@ -1,7 +1,7 @@
 
 from django import forms
 from races.apps.cabici.models import Race, Club
-from races.apps.cabici.usermodel import PointScore, Rider
+from races.apps.cabici.usermodel import PointScore, Rider, RaceResult
 from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 
@@ -19,6 +19,13 @@ DAYS = [(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'),
         (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')]
 
 GRADE_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
+
+class RaceResultUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = RaceResult
+        fields = ['place', 'number']
+
 
 class RaceCreateForm(forms.ModelForm):
 

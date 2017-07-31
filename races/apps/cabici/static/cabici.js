@@ -319,8 +319,6 @@ function submit_add_people(event) {
         'Duty Helper': dhs
     }
 
-    console.log(officials);
-    console.log(url);
     // post request to add the person to the race
     $.ajax({
         type: "POST",
@@ -329,12 +327,9 @@ function submit_add_people(event) {
         contentType: 'application/json',
         processData: false,
         success: function(msg) {
-                    console.log(msg);
                     // update the page...
                     raceinfo = $('#racetable').DataTable().row('#'+raceid).data();
-                    console.log(raceinfo);
                     raceinfo.officials = msg;
-                    console.log(raceinfo);
                     $('#racetable').DataTable().row('#'+raceid).data( raceinfo );
                     $('#addPeopleModal').modal('hide');
                  }
@@ -349,8 +344,6 @@ function delete_race_init() {
       var raceurl = button.data('raceurl'); // Extract info from data-* attributes
       var racename = button.data('racename');
 
-      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
       var modal = $(this);
       modal.find('.modal-title').text('Delete Race ' + racename );
       modal.find('form')[0].action = raceurl;
@@ -359,7 +352,6 @@ function delete_race_init() {
       $("#submitdeleteform").click(function(){
 
           var racedeleteurl = $("#racedeleteform").attr('action');
-          console.log("Action " + racedeleteurl);
 
           $.ajax({
               type: "DELETE",
@@ -378,4 +370,47 @@ function delete_race_init() {
       });
   });
 
+}
+
+
+$('#editResultModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+  var rider = button.data('rider')
+  var place = button.data('place')
+  var number = button.data('number')
+  var resultid = button.data('resultid')
+
+  var resulturl = '/api/raceresults/' + resultid + '/';
+
+  var modal = $(this);
+  var theform = modal.find('form')[0]
+
+  modal.find('.modal-title').text('Edit Result for ' + rider);
+  modal.find('#id_place').val(place);
+  modal.find('#id_number').val(number);
+  theform.action = resulturl;
+
+  $(theform).submit(submit_result_update_form);
+});
+
+function submit_result_update_form(event) {
+    event.preventDefault();
+
+    var theform = $( this ),
+        resulturl = theform.attr( "action" );
+
+    $.ajax({
+        type: "PATCH",
+        url: resulturl,
+        data: theform.serialize(),
+        success: function(msg){
+               $("#editResultModal").modal('hide');
+               /* force a page refresh */
+               window.location = window.location;
+        },
+        error: function(req, status, msg){
+            $("#editResultModal").modal('hide');
+            alert("You don't have permission to update this result.");
+        }
+    });
 }
