@@ -79,7 +79,6 @@ class RoleViewTests(WebTest):
 
         # or race result actions
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
 
@@ -104,7 +103,6 @@ class RoleViewTests(WebTest):
 
         # but we see no race result actions
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(0, len(response.html.find_all('a', href=reverse('riders'))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
 
@@ -122,7 +120,6 @@ class RoleViewTests(WebTest):
 
         # and we see race result actions
         self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
-        self.assertEqual(1, len(response.html.find_all('a', href=reverse('riders'))))
         self.assertEqual(1, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
         # but we don't see membership actions
@@ -138,7 +135,7 @@ class RoleViewTests(WebTest):
 
         # get a race page, should not see any admin controls
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
-        self.assertNotContains(response, "Edit")
+        self.assertNotContains(response, "Upload Results")
 
         # now login as the MOV admin
         self.client.force_login(user=self.movofficial)
@@ -151,7 +148,7 @@ class RoleViewTests(WebTest):
 
         # for another club it shouldn't be there
         response = self.client.get(reverse('race', kwargs={'slug': 'KAT', 'pk': 4}))
-        self.assertNotContains(response, "Edit")
+        #self.assertNotContains(response, "Edit")  # edit is there for individual results
         self.assertNotContains(response, "Upload Results")
 
 
