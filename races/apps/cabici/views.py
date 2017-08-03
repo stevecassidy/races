@@ -89,8 +89,14 @@ class ClubOfficialRequiredMixin(AccessMixin):
 
         # superuser can do anything
         if not request.user.is_superuser:
+            # any user who has no rider object can't get access
+            try:
+                rider = request.user.rider
+            except:
+                return self.handle_no_permission()
+
             # user should be an official of the club referenced in the view
-            if not request.user.rider.official:
+            if not rider.official:
                 return self.handle_no_permission()
 
             # if there is a club slug in the kwargs then verify that
@@ -99,7 +105,7 @@ class ClubOfficialRequiredMixin(AccessMixin):
                 clublist = Club.objects.filter(slug=kwargs['slug'])
                 if len(clublist) == 1:
                     club = clublist[0]
-                    if not request.user.rider.club == club:
+                    if not rider.club == club:
                         return self.handle_no_permission()
 
         return super(ClubOfficialRequiredMixin, self).dispatch(request, *args, **kwargs)
@@ -236,7 +242,7 @@ class ClubRidersExcelView(View):
 
         ws.append(header)
 
-        riders = Rider.objects.active_riders(club)
+        riders = Rider.objects.all()
 
         for r in riders:
 
@@ -251,8 +257,8 @@ class ClubRidersExcelView(View):
             except:
                 clubslug = 'Unknown'
 
-            # is the rider currently licenced?
-            if r.membership_set.filter(year__exact=thisyear).count() == 1:
+            # is the rider currently licenced to race?
+            if r.membership_set.filter(category='race', year__exact=thisyear).count() == 1:
                 registered = 'R'
             else:
                 registered = 'U'
@@ -350,11 +356,9 @@ class RiderView(DetailView):
 
         context = super(RiderView, self).get_context_data(**kwargs)
 
-        context['raceclubs'] = Club.objects.filter(manage_races__exact=True)
+        context['raceclubs'] = Club.objects.filter(manage_results__exact=True)
 
         return context
-
-
 
 
 class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
@@ -505,6 +509,12 @@ class RaceOfficialUpdateView(View):
                     if person['id']:
                         rider = get_object_or_404(Rider, id__exact=person['id'])
                         # make sure we don't add the same person to the same role for this race
+
+                        currentstaff = RaceStaff.objects.filter(rider=rider, role=clubrole, race=race)
+                        if currentstaff:
+                            # remove them
+                            currentstaff.delete()
+                            
                         newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
                         nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
@@ -525,6 +535,10 @@ class RaceUploadExcelView(FormView):
 
     form_class = RaceCSVForm
     template_name = ''
+
+    def get(self, request, pk, slug):
+        """GET request redirects to the race page"""
+        return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
     def form_invalid(self, form):
         msgtext = 'Error: no file uploaded.'
@@ -807,14 +821,21 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
 
         if sendto == 'members':
             recipients = Rider.objects.filter(club__exact=club, membership__year__gte=thisyear)
+            emails = [r.user.email for r in recipients if r.user.email != '']
+        elif sendto == 'pastriders':
+            epoch = datetime.date.today() - datetime.timedelta(days=365)
+            # riders who have raced with this club in the epoch
+            results = RaceResult.objects.filter(race__date__gt=epoch).order_by('rider__user__email').values('rider').distinct()
+            riders = [Rider.objects.get(id=x['rider']) for x in results]
+            emails = [r.user.email for r in riders if r.user.email != '']
         elif sendto == 'commisaires':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Commissaire')
-            recipients = [ur.user.rider for ur in uroles]
+            emails = [ur.user.email for ur in uroles]
         elif sendto == 'dutyofficers':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
-            recipients = [ur.user.rider for ur in uroles]
+            emails = [ur.user.email for ur in uroles]
         elif sendto == 'self':
-            recipients = [self.request.user.rider]
+            emails = [self.request.user.email]
 
         subject = form.cleaned_data['subject']
 
@@ -823,7 +844,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
                              form.cleaned_data['message'],
                              sender,
                              [],
-                             [r.user.email for r in recipients],
+                             emails,
                              reply_to=(reply_to,)
                              )
 
@@ -832,7 +853,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         except BadHeaderError:
             return HttpResponseBadRequest('Invalid email header found.')
 
-        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(recipients)))
+        messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(emails)))
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))
 
     def form_invalid(self, form):

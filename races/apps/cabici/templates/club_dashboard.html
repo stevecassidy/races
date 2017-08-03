@@ -95,9 +95,6 @@
 
                 <ul id='dashboardActions'>
                     <li>
-                        <a href='{{club.website}}'><span class="glyphicon glyphicon-link" aria-hidden="true"></span><br>Club Website</a>
-                    </li>
-                    <li>
                         <a href="#" data-toggle='modal' data-target="#raceCreateModal">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span><br>Add Race(s)</a>
                     </li>
@@ -132,10 +129,16 @@
                         <a href="{% url 'club_results' club.slug %}">
                             <span class="glyphicon glyphicon-stats" aria-hidden="true"></span><br>Race Results</a>
                     </li>
+                    <li>
+                        <a href="{% url 'club_riders_promotion' club.slug %}">
+                            <span class="glyphicon glyphicon-star" aria-hidden="true"></span><br>Promotion Report</a>
+                    </li>
                     {% endif %}
                 </ul>
 
             </div>
+
+            <p><a href='{{club.website}}'>{{club.name}} Website</a></p>
 
             <div>
                 {% regroup club.recent_races by date as date_list %}

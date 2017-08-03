@@ -26,9 +26,9 @@ class OfficialsTests(WebTest):
 
         self.oge.save()
 
-        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial = User(username="ogeofficial", email='oge@here.com', password="hello", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
-        self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
+        self.movofficial = User(username="movofficial", email='mov@here.com', password="hello", first_name="MOV", last_name="Official")
         self.movofficial.save()
 
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
@@ -50,12 +50,16 @@ class OfficialsTests(WebTest):
             m = Membership(rider=rider, club=rider.club, year=thisyear, category=category)
             m.save()
 
-    def make_races(self):
-        """Make some races for testing"""
+    def make_races(self, past=False):
+        """Make some races for testing
+        if past=True make races in the past 6 months"""
 
         # give us some races
         races = []
-        when = datetime.date.today()
+        if past:
+            when = datetime.date.today() - datetime.timedelta(days=150)
+        else:
+            when = datetime.date.today()
         where = RaceCourse.objects.all()[0]
         for r in ['one', 'two', 'three']:
             when = when + datetime.timedelta(days=7)
@@ -224,7 +228,7 @@ class OfficialsTests(WebTest):
         self.assertEqual(len(mail.outbox[0].to), 0)
 
         recipients = mail.outbox[0].bcc
-        self.assertEqual(len(mail.outbox[0].bcc), members.count())
+        self.assertEqual(len(recipients), members.count())
         for m in members:
             self.assertIn(m.user.email, recipients)
 
@@ -251,6 +255,45 @@ class OfficialsTests(WebTest):
         self.assertEqual(len(mail.outbox[0].to), 0)
         self.assertEqual(mail.outbox[0].bcc, [self.ogeofficial.email])
 
+    def test_club_official_email_pastriders(self):
+        """Member email form can send mail to all past riders"""
+
+        emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
+        response = self.app.get(emailurl, user=self.ogeofficial)
+        form = response.forms['emailmembersform']
+
+        # need some riders to have raced with OGE recently
+        riders = Rider.objects.all()[:10]
+        races = self.make_races(past=True)
+        for race in races:
+            for rider in riders:
+                result = RaceResult(race=race, rider=rider, grade='A')
+                result.save()
+
+        # fill the form and submit
+        subject = "test email subject"
+        body = "xyzzy1234 message body"
+        form['sendto'] = 'pastriders'
+        form['subject'] = subject
+        form['message'] = body
+        response = form.submit()
+
+        # check that emails are sent
+        #self.assertEqual(len(mail.outbox), len(riders))
+
+        # to should be empty, member emails are in bcc
+        self.assertEqual(len(mail.outbox[0].to), 0)
+
+        recipients = mail.outbox[0].bcc
+        self.assertEqual(len(recipients), riders.count())
+        for m in riders:
+            self.assertIn(m.user.email, recipients)
+
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].body, body)
+
+
+
     def test_club_official_email_members_reject_attack(self):
         """I can't inject headers into an email message"""
 
@@ -275,17 +318,6 @@ class OfficialsTests(WebTest):
         """The excel view downloads a complete list of riders
         as an excel spreadsheet"""
 
-        thisyear = datetime.date.today().year
-
-        otherriders = list(Rider.objects.exclude(club__exact=self.oge)[:10])
-        location = RaceCourse.objects.all()[0]
-        # add some race results so that we pick up some non club riders
-        for i in range(3):
-            for rider in otherriders:
-                race = Race(club=self.oge, date=str(thisyear-1)+'-01-03', starttime="06:00", signontime="06:00", title="a race", location=location )
-                race.save()
-                result = RaceResult(race=race, rider=rider, grade='A', place=3)
-                result.save()
 
         response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}))
 
@@ -302,8 +334,10 @@ class OfficialsTests(WebTest):
         # the spreadsheet contains all rider licence numbers
         riderlicences = sorted(ws.column["LicenceNo"])
 
-        riders = self.racers + list(otherriders)
+        riders = Rider.objects.all()
         targetlicences = sorted([r.licenceno for r in riders])
+
+        self.assertEqual(len(targetlicences), len(riderlicences))
 
         self.assertListEqual(targetlicences, riderlicences)
 

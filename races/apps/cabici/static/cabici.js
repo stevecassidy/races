@@ -33,8 +33,6 @@ function editmodalbutton(race) {
 
 function populate_race_table(clubslug, auth, manage_members) {
 
-    console.log(manage_members);
-
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
@@ -55,7 +53,7 @@ function populate_race_table(clubslug, auth, manage_members) {
                            dd = dd.toGMTString() /* Use GMT because dates in that TZ by default */
                            dd = dd.substring(0,dd.length-12);
                            val += "<b>" +dd + "</b><br>";
-                           val += "Sign On: " + row['signontime'] + "<br>";
+                           val += "Sign On: " + row['signontime'].substring(0,5) + "<br>";
                            val += "Start: " + row['starttime'] + "<br>";
                            val += "</p>";
                            return val;

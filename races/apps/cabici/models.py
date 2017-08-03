@@ -69,10 +69,10 @@ class Club(models.Model):
         thisyear = datetime.date.today().year
 
         dd = dict()
-        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear).count()
-        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='race').count()
-        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='ride').count()
-        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__exact=thisyear, category='non-riding').count()
+        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear).count()
+        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='race').count()
+        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='ride').count()
+        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='non-riding').count()
 
         # roles
         dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0)
@@ -244,7 +244,7 @@ class Club(models.Model):
         perf = self.performancereport(rider, when=when)
         grade = self.grade(rider)
 
-        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] + perf['wins'] >= 7))
+        return grade != 'A' and ((perf['wins'] >= 3) or (perf['places'] >= 7))
 
     def promotable(self):
         """Return a list of riders who might be eligible for
@@ -550,7 +550,7 @@ class Race(models.Model):
         for row in rows:
             message = []
 
-            if row['Id'] == '':
+            if type(row['Id']) != int:
                 # this should be a new rider, but it could be someone we know who
                 # wasn't in the spreadsheet
                 username = Rider.objects.make_username(row['FirstName'],
@@ -586,7 +586,7 @@ class Race(models.Model):
                 try:
                     rider = Rider.objects.get(id=int(row['Id']))
                 except:
-                    messages.append("Rider Id %s not found in database " % row['Id'])
+                    messages.append("Rider Id '%s' not found in database " % row['Id'])
                     continue
 
                 # validate a bit
@@ -645,6 +645,11 @@ class Race(models.Model):
                 shirtno = 0
             else:
                 shirtno = int(row['ShirtNo'])
+
+            # special case of number 999 indicates a helper, change the 'grade'
+            if shirtno == 999:
+                row['Grade'] = "Helper"
+                message.append('%s recorded as a Helper' % (str(rider),))
 
             result = RaceResult(rider=rider, race=self, place=place,
                                 usual_grade=usual_grade, grade=row['Grade'],
