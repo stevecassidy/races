@@ -509,6 +509,12 @@ class RaceOfficialUpdateView(View):
                     if person['id']:
                         rider = get_object_or_404(Rider, id__exact=person['id'])
                         # make sure we don't add the same person to the same role for this race
+
+                        currentstaff = RaceStaff.objects.filter(rider=rider, role=clubrole, race=race)
+                        if currentstaff:
+                            # remove them
+                            currentstaff.delete()
+                            
                         newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
                         nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
