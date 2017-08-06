@@ -47,7 +47,7 @@ class ModelTests(TestCase):
         # small race less than or equal to 12
         self.assertEqual((7, 'Placed 1 in race'), ps.score(place(1), 13))
         self.assertEqual((5, 'Placed 1 in race <= 12 riders'), ps.score(place(1), 12))
-        self.assertEqual((4, 'Placed 1 in race <= 12 riders'), ps.score(place(2), 11))
+        self.assertEqual((4, 'Placed 2 in race <= 12 riders'), ps.score(place(2), 11))
         self.assertEqual((2, 'Participation, race <= 12 riders'), ps.score(place(3), 6))
 
         # very small races, less than five
