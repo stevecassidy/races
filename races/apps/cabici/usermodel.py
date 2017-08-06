@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.text import slugify
 
+import json
 import datetime
 from djangoyearlessdate.models import YearField
 
@@ -505,6 +506,9 @@ class PointScore(models.Model):
     def score(self, result, numberriders):
         """Calculate the points for this placing
         according to the Waratah CC pointscore rules
+
+        Return a tuple: (points, reason)
+        where reason is a string explaining the score
         """
         # TODO: we might want to generalise this if some other
         # club want's to run a different kind of pointscore
@@ -517,25 +521,27 @@ class PointScore(models.Model):
         promote = result.race.club.promotion(result.rider, when=result.race.date)
 
         if result.place is None:
-            return participation
-        elif promote or result.grade > result.usual_grade:
-            return participation
+            return (participation, "Participation")
+        elif promote:
+            return (participation, "Rider eligible for promotion")
+        elif result.grade > result.usual_grade:
+            return (participation, "Riding below normal grade")
         elif numberriders < 6:
             # only 3 points to the winner
             if result.place == 1:
-                return 3
+                return (3, "Placed 1 in small race < 6 riders")
             else:
-                return participation
+                return (participation, "Participation, small race < 6 riders")
         elif numberriders <= 12:
             if result.place-1 < len(smallpoints):
-                return smallpoints[result.place-1]
+                return (smallpoints[result.place-1], "Placed %s in race <= 12 riders" % result.place)
             else:
-                return participation
+                return (participation, "Participation, race <= 12 riders")
         else:
             if result.place-1 < len(points):
-                return points[result.place-1]
+                return (points[result.place-1], "Placed %s in race" % result.place)
             else:
-                return participation
+                return (participation, "Participation")
 
 
     def __unicode__(self):
@@ -577,7 +583,7 @@ class PointScore(models.Model):
             else:
                 return self.participation
 
-    def tally(self, result, reporton=None):
+    def tally(self, result):
         """Add points for this result to the tally"""
 
         # check that this race is part of this pointscore
@@ -585,34 +591,41 @@ class PointScore(models.Model):
             return
 
         number_in_grade = RaceResult.objects.filter(race=result.race, grade=result.grade).count()
-        points = self.score(result, number_in_grade)
+        points, reason = self.score(result, number_in_grade)
 
         tally, created = PointscoreTally.objects.get_or_create(rider=result.rider, pointscore=self)
 
         if result.grade == "Helper" and tally.eventcount > 0:
             # points is average points so far for this rider
             points = int(round(float(tally.points)/float(tally.eventcount)))
-            print "Helper", result, "\t", points
+            reason = "Helper " + str(points)
 
-        tally.add(points)
+        reason += " : " + str(result.race)
 
-        if reporton != None and result.rider.id == reporton:
-            print result.race, ",\t", points
+        tally.add(points, reason)
 
-    def recalculate(self, reporton=None):
+    def recalculate(self):
         """Recalculate all points from scratch"""
 
         PointscoreTally.objects.filter(pointscore=self).delete()
 
         for race in self.races.all().order_by('date'):
             for result in race.raceresult_set.all():
-                self.tally(result, reporton)
+                self.tally(result)
 
     def tabulate(self):
         """Generate a queryset of point tallys in order"""
 
         return self.results.all()
 
+    def audit(self, rider):
+        """Generate an audit report for this rider on this pointscore"""
+
+        try:
+            tally = PointscoreTally.objects.get(pointscore=self, rider=rider)
+            return tally.audit_trail()
+        except:
+            return []
 
 class PointscoreTally(models.Model):
     """An entry in the pointscore table for a rider"""
@@ -624,13 +637,35 @@ class PointscoreTally(models.Model):
     pointscore = models.ForeignKey(PointScore, related_name='results')
     points = models.IntegerField(default=0)
     eventcount = models.IntegerField(default=0)
+    audit = models.TextField(default='[]')
 
     def __unicode__(self):
         return str(self.rider) + " " + str(self.points)
 
-    def add(self, points):
-        """Add points to the tally for a rider"""
+    def _add_reason(self, points, reason):
+        """Add a new reason to the audit trail"""
 
+        reasons = self.audit_trail()
+
+        reasons.append((points, reason))
+        self.audit = json.dumps(reasons)
+        self.save()
+
+    def audit_trail(self):
+        """Return a list of reasons justifying the
+        points for this tally"""
+
+        reasons = json.loads(self.audit)
+        if reasons is None:
+            reasons = []
+        return reasons
+
+
+    def add(self, points, reason):
+        """Add points to the tally for a rider and record the reason"""
+
+        #print "POINTS", points, reason
         self.points += points
+        self._add_reason(points, reason)
         self.eventcount += 1
         self.save()

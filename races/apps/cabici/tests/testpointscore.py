@@ -38,22 +38,22 @@ class ModelTests(TestCase):
         self.assertEqual(2, ps.participation)
         self.assertEqual([5, 4], ps.get_smallpoints())
 
-        self.assertEqual(7, ps.score(place(1), 20))
-        self.assertEqual(6, ps.score(place(2), 20))
-        self.assertEqual(5, ps.score(place(3), 20))
-        self.assertEqual(4, ps.score(place(4), 20))
-        self.assertEqual(2, ps.score(place(12), 20))
+        self.assertEqual((7, 'Placed 1 in race'), ps.score(place(1), 20))
+        self.assertEqual((6, 'Placed 2 in race'), ps.score(place(2), 20))
+        self.assertEqual((5, 'Placed 3 in race'), ps.score(place(3), 20))
+        self.assertEqual((4, 'Placed 4 in race'), ps.score(place(4), 20))
+        self.assertEqual((2, 'Participation'), ps.score(place(12), 20))
 
         # small race less than or equal to 12
-        self.assertEqual(7, ps.score(place(1), 13))
-        self.assertEqual(5, ps.score(place(1), 12))
-        self.assertEqual(4, ps.score(place(2), 11))
-        self.assertEqual(2, ps.score(place(3), 6))
+        self.assertEqual((7, 'Placed 1 in race'), ps.score(place(1), 13))
+        self.assertEqual((5, 'Placed 1 in race <= 12 riders'), ps.score(place(1), 12))
+        self.assertEqual((4, 'Placed 2 in race <= 12 riders'), ps.score(place(2), 11))
+        self.assertEqual((2, 'Participation, race <= 12 riders'), ps.score(place(3), 6))
 
         # very small races, less than five
-        self.assertEqual(3, ps.score(place(1), 5))
-        self.assertEqual(3, ps.score(place(1), 3))
-        self.assertEqual(2, ps.score(place(2), 3))
+        self.assertEqual((3, 'Placed 1 in small race < 6 riders'), ps.score(place(1), 5))
+        self.assertEqual((3, 'Placed 1 in small race < 6 riders'), ps.score(place(1), 3))
+        self.assertEqual((2, 'Participation, small race < 6 riders'), ps.score(place(2), 3))
 
     def test_points(self):
         """Getting points for a race result"""
@@ -104,7 +104,11 @@ class ModelTests(TestCase):
         self.assertEqual(rider2, table[1].rider)
         self.assertEqual(2, table[1].points)
 
-
+        # look at the audit
+        audit = ps2.audit(rider1)
+        expected = [[3, u'Placed 1 in small race < 6 riders : OGE: test, 2016-10-05'],
+                    [3, u'Placed 1 in small race < 6 riders : OGE: test, 2016-10-06']]
+        self.assertEqual(expected, audit)
 
     def gen_races(self, club, n=10):
 
@@ -262,6 +266,15 @@ class ModelTests(TestCase):
 
         report = club.promotable()
         self.assertIn(rider, report)
+
+        # look at the audit report
+        report = ps.audit(rider)
+        expected =  [[7, u'Placed 1 in race : OGE: test, 2016-10-05'],
+                     [7, u'Placed 1 in race : OGE: test, 2016-10-06'],
+                     [7, u'Placed 1 in race : OGE: test, 2016-10-07'],
+                     [2, u'Rider eligible for promotion : OGE: test, 2016-10-08'],
+                     [2, u'Rider eligible for promotion : OGE: test, 2016-10-09']]
+        self.assertEqual(expected, report)
 
 
     def test_points_promotion_a_grade(self):
