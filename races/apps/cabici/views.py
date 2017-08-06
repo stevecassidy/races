@@ -19,7 +19,7 @@ from django.db.models import Count
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
-from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade
+from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade, PointscoreTally
 from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm
 
 import datetime
@@ -197,6 +197,32 @@ class ClubPointscoreView(DetailView):
         context['races'] = Race.objects.filter(pointscore=self.object)
 
         return context
+
+class ClubPointscoreAuditView(DetailView):
+
+    model = PointScore
+    template_name = "pointscore_audit.html"
+
+    def get_context_data(self, **kwargs):
+
+        context = super(ClubPointscoreAuditView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the future races
+        club = self.kwargs['slug']
+        rider = get_object_or_404(Rider, user__id__exact=self.kwargs['rider'])
+        try:
+            tally = PointscoreTally.objects.get(pointscore=self.object, rider=rider)
+        except Exception as e:
+            print e
+            tally = None
+
+        context['club'] = Club.objects.get(slug=club)
+        context['rider'] = rider
+        context['tally'] = tally
+        context['audit'] = self.object.audit(rider)
+
+        return context
+
+
 
 class ClubPointscoreList(ListView):
 
@@ -514,7 +540,7 @@ class RaceOfficialUpdateView(View):
                         if currentstaff:
                             # remove them
                             currentstaff.delete()
-                            
+
                         newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
                         nofficials[role].append({'id': rider.id, 'name': str(rider)})
 

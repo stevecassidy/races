@@ -37,6 +37,7 @@ urlpatterns = [
     url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
     url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
+    url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)/(?P<rider>\d+)$', views.ClubPointscoreAuditView.as_view(), name='pointscore-audit'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/promotion/$', views.ClubRidersPromotionView.as_view(), name='club_riders_promotion'),
 
     # get rider csv file for race entry front end

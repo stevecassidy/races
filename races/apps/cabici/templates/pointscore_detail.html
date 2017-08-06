@@ -13,7 +13,14 @@
     <p>Top 100 places shown.</p>
     <table class=table>
         <thead>
-            <tr><th>Place</th><th>Rider</th><th>Points</th><th>Grade</th><th>Club</th><th>Events</th></tr>
+            <tr><th>Place</th>
+                <th>Rider</th>
+                <th>Points</th>
+                <th>Grade</th>
+                <th>Club</th>
+                <th>Events</th>
+                <th>Audit</th>
+            </tr>
         </thead>
         <tbody>
     {% for row in object.tabulate|slice:":100" %}
@@ -24,6 +31,7 @@
                 <td>{{row.rider.clubgrade_set.all.0.grade}}</td>
                 <td>{{row.rider.club}}</td>
                 <td>{{row.eventcount}}</td>
+                <td><a href="{% url 'pointscore-audit' slug=object.club.slug pk=object.pk rider=row.rider.user.pk %}">Audit</a></td>
             </tr>
     {% endfor %}
         </tbody>
