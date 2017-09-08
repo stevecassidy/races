@@ -61,11 +61,9 @@ Rider - {{user.first_name}} {{user.last_name}}
         {% endif %}
         <tr><th>Membership Status</th><td>
         {% for m in user.rider.membership_set.all %}
-            {{m.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
+            {{m.date.year}}{% if m.category != 'race' %} ({{m.category}}){% endif %}{% if not forloop.last %},{% endif %}
         {% endfor %}
         </td></tr>
-
-
     </table>
     {% endif %}
 

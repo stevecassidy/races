@@ -106,8 +106,8 @@ class ModelTests(TestCase):
 
         # look at the audit
         audit = ps2.audit(rider1)
-        expected = [[3, u'Placed 1 in small race < 6 riders : OGE: test, 2016-10-05'],
-                    [3, u'Placed 1 in small race < 6 riders : OGE: test, 2016-10-06']]
+        expected = [[3, u'Placed 1 in small race < 6 riders : '+str(race)],
+                    [3, u'Placed 1 in small race < 6 riders : '+str(race2)]]
         self.assertEqual(expected, audit)
 
     def gen_races(self, club, n=10):
@@ -245,10 +245,15 @@ class ModelTests(TestCase):
         grade = ClubGrade(rider=rider, club=club, grade='B')
         grade.save()
         # make this person win five
+        expected = []
         for race in Race.objects.all()[:5]:
             winner = RaceResult.objects.get(race=race, place=1, grade='B')
             winner.rider = rider
             winner.save()
+            if len(expected) < 3:
+                expected.append([7, u'Placed 1 in race : '+str(race)])
+            else:
+                expected.append([2, u'Rider eligible for promotion : '+str(race)])
 
         ouresults = RaceResult.objects.filter(rider__exact=rider)
 
@@ -269,11 +274,6 @@ class ModelTests(TestCase):
 
         # look at the audit report
         report = ps.audit(rider)
-        expected =  [[7, u'Placed 1 in race : OGE: test, 2016-10-05'],
-                     [7, u'Placed 1 in race : OGE: test, 2016-10-06'],
-                     [7, u'Placed 1 in race : OGE: test, 2016-10-07'],
-                     [2, u'Rider eligible for promotion : OGE: test, 2016-10-08'],
-                     [2, u'Rider eligible for promotion : OGE: test, 2016-10-09']]
         self.assertEqual(expected, report)
 
 

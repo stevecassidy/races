@@ -135,8 +135,6 @@ class ClubRidersPromotionView(ListView):
 
     def get_context_data(self, **kwargs):
 
-        thisyear = datetime.date.today().year
-
         context = super(ClubRidersPromotionView, self).get_context_data(**kwargs)
         # Add in a list of all riders who could be promoted
         slug = self.kwargs['slug']
@@ -154,14 +152,14 @@ class ClubRidersView(ListView):
 
     def get_context_data(self, **kwargs):
 
-        thisyear = datetime.date.today().year
+        today = datetime.date.today()
 
         context = super(ClubRidersView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['members'] = context['club'].rider_set.filter(membership__year__gte=thisyear).distinct().order_by('user__last_name')
-        context['pastmembers'] = context['club'].rider_set.exclude(membership__year__gte=thisyear).distinct().order_by('user__last_name')
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by('user__last_name')
+        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by('user__last_name')
 
         return context
 
@@ -246,7 +244,7 @@ class ClubRidersExcelView(View):
 
         # worksheet is a list of row tuples
         ws = []
-        thisyear = datetime.date.today().year
+        today = datetime.date.today()
 
         # eventno won't be used but the java desktop app requires
         # a numer, make one out of the date
@@ -284,7 +282,7 @@ class ClubRidersExcelView(View):
                 clubslug = 'Unknown'
 
             # is the rider currently licenced to race?
-            if r.membership_set.filter(category='race', year__exact=thisyear).count() == 1:
+            if r.membership_set.filter(category='race', date__gte=today).count() == 1:
                 registered = 'R'
             else:
                 registered = 'U'
@@ -838,7 +836,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
 
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
 
-        thisyear = datetime.date.today().year
+        today = datetime.date.today()
         # sender will be the logged in user
         sender = self.request.user.email
 
@@ -846,7 +844,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         reply_to = 'dontreply@cabici.net'
 
         if sendto == 'members':
-            recipients = Rider.objects.filter(club__exact=club, membership__year__gte=thisyear)
+            recipients = Rider.objects.filter(club__exact=club, membership__date__gte=today)
             emails = [r.user.email for r in recipients if r.user.email != '']
         elif sendto == 'pastriders':
             epoch = datetime.date.today() - datetime.timedelta(days=365)

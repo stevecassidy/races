@@ -35,11 +35,11 @@ class UserModelTests(TestCase):
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
         self.ogeofficial.rider.save()
 
-        thisyear = datetime.date.today().year
+        endofyear = datetime.date(day=31, month=12, year=datetime.date.today().year)
 
         # make sure all riders are current members
         for rider in Rider.objects.all():
-            m = Membership(rider=rider, club=rider.club, year=thisyear, category='race')
+            m = Membership(rider=rider, club=rider.club, date=endofyear, category='race')
             m.save()
 
 
@@ -217,7 +217,7 @@ class UserModelTests(TestCase):
         self.assertIn('Updated grade of Joaquin RODRIGUEZ OLIVER to A', messages)
         # new rider record created
         self.assertIn('Added new rider record for Trisma Allan', messages)
-        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017', messages)
+        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017-12-31', messages)
 
 
     def test_load_results_excel_duplicates(self):

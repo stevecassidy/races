@@ -6,7 +6,6 @@ from django.utils.text import slugify
 
 import json
 import datetime
-from djangoyearlessdate.models import YearField
 
 from races.apps.cabici.models import Club, Race
 import csv
@@ -112,22 +111,6 @@ class RiderManager(models.Manager):
         else:
             return None
 
-    def active_riders(self, club):
-        """Return a list of 'active' riders for this club,
-        those who are current 'race' members, past members from last year,
-        or have raced with the club in the last 24 months.
-        """
-
-        thisyear = datetime.date.today().year
-        twoyearsago = datetime.date.today()-datetime.timedelta(days=2*365)
-
-        members = self.filter(club__exact=club, membership__year__gte=thisyear-1, membership__category__exact='race').distinct().order_by('licenceno')
-        haveraced = self.filter(raceresult__race__date__gte=twoyearsago).distinct().order_by('licenceno')
-
-        result = members | haveraced
-
-        return result
-
 
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
@@ -137,15 +120,14 @@ class RiderManager(models.Manager):
         updated = []
         added = []
 
-        # get the current member list for this year, check that all are in the spreadsheet
-        thisyear = datetime.date.today().year
-        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__year__exact=thisyear))
+        # get the current member list, check that all are in the spreadsheet
+        today = datetime.date.today()
+        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today))
 
         for row in rows:
-
             #print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
 
-            if row['Financial Date'] == None or row['Financial Date'] < datetime.date.today():
+            if row['Financial Date'] == None or row['Financial Date'] < today:
                 # don't import old membership records
                 continue
 
@@ -223,11 +205,11 @@ class RiderManager(models.Manager):
             elif 'NON-RIDING' in row['Member Types']:
                 category = 'non-riding'
 
-            # update membership if it is for this year
-            if memberdate is not None and memberdate > datetime.date.today():
-                mm = Membership.objects.filter(rider=user.rider, club=club, year=memberdate.year)
+            # update membership if it is current
+            if memberdate is not None and memberdate > today:
+                mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
                 if len(mm) == 0:
-                    m = Membership(rider=user.rider, club=club, year=memberdate.year, category=category)
+                    m = Membership(rider=user.rider, club=club, date=memberdate, category=category)
                     m.save()
                     userchanges.append('membership')
                 else:
@@ -357,7 +339,8 @@ class Rider(models.Model):
                    ("M7", 65),
                    ("M8", 70),
                    ("M9", 75),
-                   ("M10", 81))
+                   ("M10", 81),
+                   ("M11", 110))
 
         age = datetime.datetime.now().year - self.dob.year
 
@@ -402,11 +385,11 @@ class Rider(models.Model):
 MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding', 'non-riding'))
 
 class Membership(models.Model):
-    """Membership of a club in a given year"""
+    """Membership of a club with a given expiry date"""
 
     rider = models.ForeignKey(Rider)
     club = models.ForeignKey(Club, null=True)
-    year = YearField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
 class ClubRole(models.Model):
