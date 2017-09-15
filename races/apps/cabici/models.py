@@ -66,13 +66,13 @@ class Club(models.Model):
 
         from usermodel import Membership, Rider, UserRole
 
-        thisyear = datetime.date.today().year
+        today = datetime.date.today()
 
         dd = dict()
-        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear).count()
-        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='race').count()
-        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='ride').count()
-        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, year__gte=thisyear, category='non-riding').count()
+        dd['currentmembers'] = Membership.objects.filter(rider__club__exact=self, date__gte=today).count()
+        dd['racemembers'] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category='race').count()
+        dd['ridemembers'] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category='ride').count()
+        dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category='non-riding').count()
 
         # roles
         dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0)
@@ -126,7 +126,7 @@ class Club(models.Model):
         from .usermodel import ClubRole, Membership, UserRole
 
         dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
-        thisyear = datetime.date.today().year
+        today = datetime.date.today()
 
         # remove all current helpers
         self.userrole_set.filter(role=dutyhelper).delete()
@@ -135,7 +135,7 @@ class Club(models.Model):
         dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
         dofficers = [ur.user for ur in UserRole.objects.filter(club=self, role=dutyofficer)]
 
-        members = self.membership_set.filter(year__gte=thisyear, category='race')
+        members = self.membership_set.filter(date__gte=today, category='race')
         for membership in members:
             user = membership.rider.user
             # don't duplicate (eg. member current for this year and next)
@@ -605,14 +605,14 @@ class Race(models.Model):
 
             # we know that this rider is a current member of their club if the Regd field is R
             if row['Regd'] == 'R':
-                thisyear = datetime.date.today().year
+                endofyear = datetime.date(day=31, month=12, year=datetime.date.today().year)
 
                 m,created = Membership.objects.get_or_create(rider=rider,
                                                              club=rider.club,
-                                                             year=thisyear,
+                                                             date=endofyear,
                                                              category='race')
                 if created:
-                    message.append('Updated membership of rider %s of club %s to %s' % (str(rider), rider.club.slug, thisyear))
+                    message.append('Updated membership of rider %s of club %s to %s' % (str(rider), rider.club.slug, endofyear))
 
             # deal with grades
             grading, created = rider.clubgrade_set.get_or_create(club=self.club, rider=rider)

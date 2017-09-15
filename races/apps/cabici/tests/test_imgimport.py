@@ -102,7 +102,7 @@ class IMGTests(TestCase):
         self.assertEqual(dict, type(result))
         self.assertIn('updated', result)
         self.assertIn('added', result)
-        
+
         # Valverde should be updated
         self.assertIn(valverde, result['updated'])
 
@@ -121,7 +121,7 @@ class IMGTests(TestCase):
         self.assertEqual(datetime.date(datetime.date.today().year+1, 12, 31), anotherrider.rider.commissaire_valid)
 
         # membership should be updated
-        mems = anotherrider.rider.membership_set.filter(year=datetime.date.today().year)
+        mems = anotherrider.rider.membership_set.filter(date__gte=datetime.date.today())
         self.assertEqual(1, len(mems))
 
         # grading is updated
