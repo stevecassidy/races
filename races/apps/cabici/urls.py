@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.views.generic.base import TemplateView
 
 from django.views.decorators.clickjacking import xframe_options_exempt

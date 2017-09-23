@@ -299,19 +299,19 @@ class Rider(models.Model):
     def member_category(self):
         """Return the category from the most recent membership year"""
 
-        m = self.membership_set.all().order_by('-year')
+        m = self.membership_set.all().order_by('-date')
         if m:
             return m[0].get_category_display()
         else:
             return ''
 
     @property
-    def member_year(self):
+    def member_date(self):
         """Return the year from the most recent membership year"""
 
-        m = self.membership_set.all().order_by('-year')
+        m = self.membership_set.all().order_by('-date')
         if m:
-            return m[0].year
+            return m[0].date
         else:
             return ''
 

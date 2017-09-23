@@ -35,11 +35,11 @@ class UserModelTests(TestCase):
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
         self.ogeofficial.rider.save()
 
-        endofyear = datetime.date(day=31, month=12, year=datetime.date.today().year)
+        self.memberdate = datetime.date(day=31, month=12, year=datetime.date.today().year)
 
         # make sure all riders are current members
         for rider in Rider.objects.all():
-            m = Membership(rider=rider, club=rider.club, date=endofyear, category='race')
+            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category='race')
             m.save()
 
 
@@ -94,6 +94,29 @@ class UserModelTests(TestCase):
         # kiddies
         rider.dob = datetime.date(thisyear-12, 1, 1)
         self.assertEqual("U13 Girls", rider.classification)
+
+    def test_member_category(self):
+
+        rider = Rider.objects.get(id=2930)
+
+        # should be a race member
+        self.assertEqual('race', rider.member_category)
+
+        # remove this riders membership and it should return ''
+        rider.membership_set.all().delete()
+        self.assertEqual('', rider.member_category)
+
+
+    def test_member_date(self):
+
+        rider = Rider.objects.get(id=2930)
+
+        # should be a race member
+        self.assertEqual(self.memberdate, rider.member_date)
+
+        # remove this riders membership and it should return ''
+        rider.membership_set.all().delete()
+        self.assertEqual('', rider.member_date)
 
     def test_grade(self):
         """Assigning riders to grades"""

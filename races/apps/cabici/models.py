@@ -34,6 +34,7 @@ class ClubManager(models.Manager):
 
         return club
 
+
 class Club(models.Model):
 
     objects = ClubManager()

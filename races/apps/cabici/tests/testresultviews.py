@@ -36,7 +36,7 @@ class ResultViewTests(TestCase):
         rider1 = Rider.objects.get(licenceno='ESP19790512')
 
         # need to login first
-        self.client.force_login(user=self.movofficial)
+        self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         race = Race.objects.all()[0]
         url = reverse('race_results_excel', kwargs={'pk': race.pk, 'slug': race.club.slug})

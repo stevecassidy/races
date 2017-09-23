@@ -48,7 +48,7 @@ class CreateViewTests(TestCase):
 
         # logged in version has race form
 
-        response = self.client.force_login(self.ogeofficial)
+        response = self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(url)
 
         self.assertContains(response, self.oge.name)
@@ -63,7 +63,7 @@ class CreateViewTests(TestCase):
 
         # need to login first
 
-        response = self.client.force_login(self.ogeofficial)
+        response = self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
@@ -105,7 +105,7 @@ class CreateViewTests(TestCase):
 
         # need to login first
 
-        response = self.client.force_login(self.ogeofficial)
+        response = self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         url = reverse('club_dashboard', kwargs={'slug': self.oge.slug})
         # first get
@@ -162,7 +162,7 @@ class CreateViewTests(TestCase):
 
         # need to login first
 
-        response = self.client.force_login(self.ogeofficial)
+        response = self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
@@ -215,7 +215,7 @@ class CreateViewTests(TestCase):
 
         # need to login first
 
-        response = self.client.force_login(self.ogeofficial)
+        response = self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         url = reverse('club_races', kwargs={'slug': self.oge.slug})
         # first get
@@ -327,7 +327,7 @@ class CreateViewTests(TestCase):
             race.save()
 
         # need to login first
-        response = self.client.force_login(self.movofficial)
+        response = self.client.force_login(self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         url = reverse('club_race_publish', kwargs={'slug': self.mov.slug})
 
