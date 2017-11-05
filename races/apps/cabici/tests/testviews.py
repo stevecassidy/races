@@ -87,12 +87,12 @@ class ViewTests(TestCase):
         self.assertContains(response, "Three Weeks 6 W")
         self.assertContains(response, "Three Weeks 6 L")
 
-
     def test_race_list_page_month(self):
         """Test that the race list page for a given month works"""
 
         today = datetime.today()
         url = today.strftime('/races/%Y/%m/')
+
         response = self.client.get(url)
 
         # just check for today - should check more TODO

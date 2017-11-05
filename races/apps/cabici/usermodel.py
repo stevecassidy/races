@@ -358,7 +358,6 @@ class Rider(models.Model):
                         cat = cat.replace("Boys", "Girls")
                 return cat
 
-
     def performancereport(self, when=None):
         """Generate a rider performance report for all clubs
         if the when arg is provided it should be a date
@@ -384,6 +383,7 @@ class Rider(models.Model):
 
 MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding', 'non-riding'))
 
+
 class Membership(models.Model):
     """Membership of a club with a given expiry date"""
 
@@ -392,6 +392,7 @@ class Membership(models.Model):
     date = models.DateField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
+
 class ClubRole(models.Model):
     """The name of a role that someone can hold in a club"""
 
@@ -399,6 +400,7 @@ class ClubRole(models.Model):
 
     def __unicode__(self):
         return self.name
+
 
 class UserRole(models.Model):
     """A role held by a person in a club, eg. president, handicapper, duty officer
@@ -412,6 +414,7 @@ class UserRole(models.Model):
 
         return "Role: " + '::'.join((str(self.user), self.club.slug, self.role.name))
 
+
 class RaceStaff(models.Model):
     """A person associated with a race in some role, eg. Commissaire, Duty Officer
     """
@@ -422,6 +425,7 @@ class RaceStaff(models.Model):
 
     def __unicode__(self):
         return "%s: %s" % (self.role.name, self.rider.user)
+
 
 class ClubGrade(models.Model):
     """A rider will be assigned a grade by a club, different
@@ -442,11 +446,13 @@ class ClubGrade(models.Model):
 
         cg = ClubGrade.objects.filter(rider=self.rider, club=self.club)
         if self in cg:
-            cg = list(cg).remove(self)
+            cg = list(cg)
+            cg.remove(self)
         if cg is not None and len(cg) > 0:
             raise ValidationError("A rider can only have one grade for each club")
 
         super(ClubGrade, self).save(*args, **kwargs)
+
 
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""
@@ -472,7 +478,6 @@ class RaceResult(models.Model):
         """Return a list of ResultPoints from all PointScores this race is part of"""
 
         return self.resultpoints_set.all()
-
 
 
 class PointScore(models.Model):
@@ -525,7 +530,6 @@ class PointScore(models.Model):
                 return (points[result.place-1], "Placed %s in race" % result.place)
             else:
                 return (participation, "Participation")
-
 
     def __unicode__(self):
         return unicode(unicode(self.club) + " " + self.name)
@@ -610,6 +614,7 @@ class PointScore(models.Model):
         except:
             return []
 
+
 class PointscoreTally(models.Model):
     """An entry in the pointscore table for a rider"""
 
@@ -642,7 +647,6 @@ class PointscoreTally(models.Model):
         if reasons is None:
             reasons = []
         return reasons
-
 
     def add(self, points, reason):
         """Add points to the tally for a rider and record the reason"""

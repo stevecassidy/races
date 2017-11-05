@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
 from django.core.mail import EmailMessage, BadHeaderError
@@ -32,6 +32,7 @@ from StringIO import StringIO
 import pyexcel
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
+
 
 class HomePage(ListView):
 
@@ -59,10 +60,12 @@ class HomePage(ListView):
 
 #    template_name = "test.html"
 
+
 class ClubListView(ListView):
     model = Club
     template_name = 'club_list.html'
     context_object_name = 'clubs'
+
 
 class ClubDetailView(DetailView):
     model = Club
@@ -81,6 +84,7 @@ class ClubDetailView(DetailView):
         context['form'] = RaceCreateForm()
 
         return context
+
 
 class ClubOfficialRequiredMixin(AccessMixin):
 
@@ -110,6 +114,7 @@ class ClubOfficialRequiredMixin(AccessMixin):
 
         return super(ClubOfficialRequiredMixin, self).dispatch(request, *args, **kwargs)
 
+
 class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
 
     model = Club
@@ -128,6 +133,7 @@ class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
 
         return context
 
+
 class ClubRidersPromotionView(ListView):
 
     model = Club
@@ -143,6 +149,51 @@ class ClubRidersPromotionView(ListView):
         context['riders'] = club.promotable()
 
         return context
+
+@login_required()
+def club_riders_csv_view(request, slug):
+    """View of club members as a csv file"""
+
+    today = datetime.date.today()
+
+    club = get_object_or_404(Club, slug=slug)
+
+    # validate the user
+    if not hasattr(request.user, 'rider') or not request.user.rider.club == club and not request.user.rider.official and not request.user.is_staff:
+        return HttpResponseNotAllowed("Must be a Club Official")
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="members.csv"'
+
+    members = club.rider_set.filter(membership__date__gte=today).distinct().order_by('user__last_name')
+
+    writer = csv.writer(response)
+    writer.writerow(['Name', 'Grade', 'State Grade', 'Phone', 'Email', 'Membership', 'Date'])
+    for member in members:
+        grade = member.clubgrade_set.filter(club__exact=club)
+        if grade.count() == 0:
+            grade = ''
+        else:
+            grade = grade[0].grade
+
+        stategrade = member.clubgrade_set.filter(club__slug__exact="CNSW")
+        if stategrade.count() == 0:
+            stategrade = ''
+        else:
+            stategrade = stategrade[0].grade
+
+        row = [str(member),
+               grade,
+               stategrade,
+               member.phone,
+               member.user.email,
+               member.member_category,
+               member.member_date,
+               ]
+        writer.writerow(row)
+
+    return response
 
 
 class ClubRidersView(ListView):
@@ -180,6 +231,9 @@ class ClubRidersView(ListView):
                 pass
 
             return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
+        else:
+            return HttpResponse("invalid form")
+
 
 class ClubPointscoreView(DetailView):
 
@@ -195,6 +249,7 @@ class ClubPointscoreView(DetailView):
         context['races'] = Race.objects.filter(pointscore=self.object)
 
         return context
+
 
 class ClubPointscoreAuditView(DetailView):
 
@@ -221,7 +276,6 @@ class ClubPointscoreAuditView(DetailView):
         return context
 
 
-
 class ClubPointscoreList(ListView):
 
     model = PointScore
@@ -235,6 +289,7 @@ class ClubPointscoreList(ListView):
         context['races'] = Race.objects.filter(pointscore=self.object)
 
         return context
+
 
 class ClubRidersExcelView(View):
 
@@ -313,6 +368,7 @@ class ClubRidersExcelView(View):
 
         return response
 
+
 class ClubGradeView(UpdateView,ClubOfficialRequiredMixin):
     model = ClubGrade
     template_name = "rider_update.html"
@@ -336,7 +392,6 @@ class RiderListView(ListView):
     model = Rider
     template_name = 'rider_list.html'
     context_object_name = 'riders'
-
 
     def get_context_data(self, **kwargs):
 
@@ -369,6 +424,7 @@ class RiderListView(ListView):
             riders = riders.filter(club__exact=club)
 
         return riders
+
 
 class RiderView(DetailView):
 
@@ -427,7 +483,6 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
         result['club'] = self.object.rider.club
         return result
 
-
     def form_valid(self, form):
         """Handle a valid form submission"""
 
@@ -464,6 +519,7 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
 
         return HttpResponseRedirect(reverse('rider', kwargs={'pk': self.object.pk}))
 
+
 class RaceListDateView(ListView):
     model = Race
     template_name = 'race_list.html'
@@ -479,6 +535,7 @@ class RaceListDateView(ListView):
         else:
             # just pull races after today
             return Race.objects.filter(date__gte=datetime.date.today()).exclude(status__exact='w')
+
 
 class RaceDetailView(DetailView):
     model = Race
@@ -499,6 +556,7 @@ class RaceDetailView(DetailView):
         add or modify """
 
         pass
+
 
 class RaceOfficialUpdateView(View):
     """Update the officials associated with a race

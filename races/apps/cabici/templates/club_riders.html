@@ -13,11 +13,13 @@
 
 <h2>{{club.name}} Members</h2>
 
+    <p><a class='btn btn-default' href="{% url 'club_members_csv' slug=club.slug %}">Download Spreadsheet</a></p>
+
 <table class='table'>
     <thead>
         <tr><th>Name</th><th>Grade</th>
             {% if request.user.rider.club == club and request.user.rider.official %}
-            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Year</th>
+            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Date</th>
             {% endif %}
         </tr>
     </thead>
@@ -52,7 +54,7 @@
     <thead>
         <tr><th>Name</th><th>Grade</th>
             {% if request.user.rider.club == club and request.user.rider.official %}
-            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Year</th>
+            <th>NSW State Grade</th><th>Phone</th><th>Email</th><th>Membership</th><th>Date</th>
             {% endif %}
         </tr>
     </thead>
