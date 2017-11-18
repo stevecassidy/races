@@ -13,8 +13,10 @@
 
 <h2>{{club.name}} Members</h2>
 
+    {% if request.user.rider.club == club and request.user.rider.official %}
     <p><a class='btn btn-default' href="{% url 'club_members_csv' slug=club.slug %}">Download Spreadsheet</a></p>
-
+    {%  endif %}
+    
 <table class='table'>
     <thead>
         <tr><th>Name</th><th>Grade</th>
