@@ -6,7 +6,7 @@ import datetime
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import djangoyearlessdate.models
+#import djangoyearlessdate.models
 import geoposition.fields
 
 
@@ -59,7 +59,8 @@ class Migration(migrations.Migration):
             name='Membership',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('year', djangoyearlessdate.models.YearField(blank=True, null=True)),
+                #
+                ('year', models.CharField(blank=True, null=True, max_length=20)),
                 ('category', models.CharField(choices=[(b'Ride', b'ride'), (b'Race', b'race'), (b'Non-riding', b'non-riding')], max_length=10)),
                 ('club', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='cabici.Club')),
             ],

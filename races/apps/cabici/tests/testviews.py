@@ -8,8 +8,6 @@ from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import PointScore, Rider
 from datetime import datetime, timedelta, date
 
-
-
 class ViewTests(TestCase):
 
     fixtures = ['clubs', 'courses', 'users', 'riders']
@@ -89,19 +87,17 @@ class ViewTests(TestCase):
         self.assertContains(response, "Three Weeks 6 W")
         self.assertContains(response, "Three Weeks 6 L")
 
-
     def test_race_list_page_month(self):
         """Test that the race list page for a given month works"""
 
         today = datetime.today()
         url = today.strftime('/races/%Y/%m/')
+
         response = self.client.get(url)
 
         # just check for today - should check more TODO
         self.assertContains(response, "Today 2 W")
         self.assertContains(response, "Today 2 L")
-
-
 
     def test_club_riders(self):
         """The club riders page lists the riders for
@@ -116,7 +112,6 @@ class ViewTests(TestCase):
         # but not riders from any other club
         for rider in Rider.objects.exclude(club__exact=self.oge):
             self.assertNotContains(response, rider.user.first_name + " " + rider.user.last_name)
-
 
     def test_upload_excel_results(self):
         """Test that we can upload an Excel spreasheet of results"""

@@ -139,7 +139,7 @@ class RoleViewTests(WebTest):
         self.assertNotContains(response, "Upload Results")
 
         # now login as the MOV admin
-        self.client.force_login(user=self.movofficial)
+        self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         # check we have the edit control on the page for a MOV race
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
@@ -165,12 +165,12 @@ class RoleViewTests(WebTest):
         self.assertEqual('/login/', response['Location'][:7])
 
         # login as someone else, should be disallowed
-        self.client.force_login(user=otherrider.user)
+        self.client.force_login(user=otherrider.user, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
         self.assertEqual(400, response.status_code)
 
         # login as rider, should be ok
-        self.client.force_login(user=rider.user)
+        self.client.force_login(user=rider.user, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
         self.assertEqual(200, response.status_code)
         # should see some edit fields
@@ -181,7 +181,7 @@ class RoleViewTests(WebTest):
         self.assertNotContains(response, 'licenseno')
 
         # login as official, should be ok
-        self.client.force_login(user=self.ogeofficial)
+        self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
         self.assertEqual(200, response.status_code)
         # should see some edit fields
@@ -205,7 +205,7 @@ class RoleViewTests(WebTest):
         mov_grade.save()
 
         # login as rider
-        self.client.force_login(user=rider.user)
+        self.client.force_login(user=rider.user, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
         self.assertEqual(200, response.status_code)
         # should not see a grade update form
@@ -214,7 +214,7 @@ class RoleViewTests(WebTest):
         self.assertContains(response, mov_grade.grade)
 
         # if we login as an official, we should see it
-        self.client.force_login(user=self.ogeofficial)
+        self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.get(reverse('rider', kwargs={'pk': rider.user.pk}))
 
         self.assertContains(response, 'grade-update')

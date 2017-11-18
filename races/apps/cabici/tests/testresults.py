@@ -35,11 +35,11 @@ class UserModelTests(TestCase):
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
         self.ogeofficial.rider.save()
 
-        thisyear = datetime.date.today().year
+        self.memberdate = datetime.date(day=31, month=12, year=datetime.date.today().year)
 
         # make sure all riders are current members
         for rider in Rider.objects.all():
-            m = Membership(rider=rider, club=rider.club, year=thisyear, category='race')
+            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category='race')
             m.save()
 
 
@@ -94,6 +94,29 @@ class UserModelTests(TestCase):
         # kiddies
         rider.dob = datetime.date(thisyear-12, 1, 1)
         self.assertEqual("U13 Girls", rider.classification)
+
+    def test_member_category(self):
+
+        rider = Rider.objects.get(id=2930)
+
+        # should be a race member
+        self.assertEqual('race', rider.member_category)
+
+        # remove this riders membership and it should return ''
+        rider.membership_set.all().delete()
+        self.assertEqual('', rider.member_category)
+
+
+    def test_member_date(self):
+
+        rider = Rider.objects.get(id=2930)
+
+        # should be a race member
+        self.assertEqual(self.memberdate, rider.member_date)
+
+        # remove this riders membership and it should return ''
+        rider.membership_set.all().delete()
+        self.assertEqual('', rider.member_date)
 
     def test_grade(self):
         """Assigning riders to grades"""
@@ -217,7 +240,7 @@ class UserModelTests(TestCase):
         self.assertIn('Updated grade of Joaquin RODRIGUEZ OLIVER to A', messages)
         # new rider record created
         self.assertIn('Added new rider record for Trisma Allan', messages)
-        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017', messages)
+        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017-12-31', messages)
 
 
     def test_load_results_excel_duplicates(self):

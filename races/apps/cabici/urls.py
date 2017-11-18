@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url, include
+from django.conf.urls import url, include
 from django.views.generic.base import TemplateView
 
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -10,7 +10,7 @@ from races.apps.cabici import views, feeds, api
 urlpatterns = [
     url(r'^$', views.HomePage.as_view(), name='home'),
     url(r'^races/$', views.RaceListDateView.as_view(), name='races'),
-    url(r'^races/(?P<year>\d{4})/(?P<month>[0-9][1-9])/$', views.RaceListDateView.as_view(), name='racesmonth'),
+    url(r'^races/(?P<year>\d{4})/(?P<month>\d{2})/$', views.RaceListDateView.as_view(), name='racesmonth'),
     #url(r'^races/(?P<pk>\d+)/$', views.RaceDetailView.as_view(), name='race'),
 
     url(r'^races/(?P<slug>\w+)/(?P<pk>\d+)$', views.RaceDetailView.as_view(), name='race'),
@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^clubs/(?P<slug>[^/]*)/races/publish/$', views.RacePublishDraftView.as_view(), name='club_race_publish'),
     url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
+    url(r'^clubs/(?P<slug>[^/]*)/members.csv$', views.club_riders_csv_view, name='club_members_csv'),
     url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
     url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)/(?P<rider>\d+)$', views.ClubPointscoreAuditView.as_view(), name='pointscore-audit'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/promotion/$', views.ClubRidersPromotionView.as_view(), name='club_riders_promotion'),

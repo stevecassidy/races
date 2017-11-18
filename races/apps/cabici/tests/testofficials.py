@@ -34,7 +34,7 @@ class OfficialsTests(WebTest):
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
         self.ogeofficial.rider.save()
 
-        thisyear = datetime.date.today().year
+        endofyear = datetime.date(day=31, month=12, year=datetime.date.today().year)
 
         # make sure all riders are current members
         self.racers = []
@@ -47,7 +47,7 @@ class OfficialsTests(WebTest):
                 category = 'ride'
                 self.riders.append(rider)
 
-            m = Membership(rider=rider, club=rider.club, year=thisyear, category=category)
+            m = Membership(rider=rider, club=rider.club, date=endofyear, category=category)
             m.save()
 
     def make_races(self, past=False):

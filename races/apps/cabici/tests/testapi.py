@@ -87,7 +87,7 @@ class APITests(TestCase):
         rider = Rider.objects.filter(club__slug__exact="KAT")[0]
         rider.official = True
         rider.save()
-        self.client.force_login(rider.user)
+        self.client.force_login(rider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         response = self.client.get("/api/races/")
 
@@ -284,7 +284,7 @@ class APITests(TestCase):
         self.assertEqual(response.status_code, 403, "Expect auth failure without login for delete race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
 
         # login as movrider still should not work since they are not an official
-        self.client.force_login(user=movrider.user)
+        self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         # without login, we should get a redirect response
         response = self.client.delete(url)
@@ -294,7 +294,7 @@ class APITests(TestCase):
         movrider.official = True
         movrider.save()
 
-        self.client.force_login(user=movrider.user)
+        self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, 204, "Expect success after login for delete race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
@@ -333,7 +333,7 @@ class APITests(TestCase):
         self.assertEqual(response.status_code, 403, "Expect auth failure without login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
 
         # login as a club member, not official, still expect failure
-        self.client.force_login(user=movrider.user)
+        self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         response = self.client.put(url, data, content_type='application/json')
         self.assertEqual(response.status_code, 403, "Expect auth failure with member login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
@@ -341,7 +341,7 @@ class APITests(TestCase):
         # now designate our rider an official and we should be ok
         movrider.official = True
         movrider.save()
-        self.client.force_login(user=movrider.user)
+        self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         # now it should work
         response = self.client.put(url, data, content_type='application/json')
