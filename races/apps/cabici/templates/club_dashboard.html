@@ -35,7 +35,7 @@
 
 {% block content %}
 
-<h2>{{club.name}}</h2>
+    <h2>{{club.name}} <sup><a href='{{club.website}}' title="{{club.name}} Home Page"><span class="glyphicon glyphicon-share"/></a></sup></h2>
 
 <div class='container-fluid'>
     <div class='row'>
@@ -76,16 +76,6 @@
 
             </tbody>
             </table>
-            {% endif %}
-
-
-            {% if club.pointscore_set.all %}
-            <h2>Pointscores</h3>
-                <ul>
-                {% for ps in club.pointscore_set.all %}
-                  <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
-                {% endfor %}
-                </ul>
             {% endif %}
         </div>
 
@@ -138,7 +128,15 @@
 
             </div>
 
-            <p><a href='{{club.website}}'>{{club.name}} Website</a></p>
+
+            {% if club.pointscore_set.all %}
+                <h3>Pointscores</h3>
+                <ul>
+                    {% for ps in club.pointscore_set.all %}
+                        <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
 
             <div>
                 {% regroup club.recent_races by date as date_list %}
@@ -157,8 +155,8 @@
                           </tr>
                        {% endfor %}
                      {% endfor %}
-                </table>            </div>
-
+                </table>
+            </div>
         </div>
 
     </div>
