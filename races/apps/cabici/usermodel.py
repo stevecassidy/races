@@ -111,7 +111,6 @@ class RiderManager(models.Manager):
         else:
             return None
 
-
     def update_from_spreadsheet(self, club, rows):
         """Update the membership list for a club,
         return a list of updated riders"""
@@ -127,7 +126,7 @@ class RiderManager(models.Manager):
         for row in rows:
             #print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
 
-            if row['Financial Date'] == None or row['Financial Date'] < today:
+            if row['Financial Date'] is None or row['Financial Date'] < today:
                 # don't import old membership records
                 continue
 
@@ -143,7 +142,7 @@ class RiderManager(models.Manager):
             user = self.find_user(row['Email Address'], row['Member Number'])
             updating = False
 
-            if user != None:
+            if user is not None:
                 try:
                     user.rider
                 except ObjectDoesNotExist:
@@ -153,7 +152,7 @@ class RiderManager(models.Manager):
             else:
                 # new rider
                 username = slugify(row['First Name']+row['Last Name']+row['Member Number'])[:30]
-                if row['Email Address'] == None:
+                if row['Email Address'] is None:
                     email = ''
                 else:
                     email = row['Email Address']
@@ -225,7 +224,7 @@ class RiderManager(models.Manager):
                     currentmembers.remove(user)
 
             # u'NSW Road Handicap Data'
-            if row['NSW Road Handicap Data'] != None:
+            if row['NSW Road Handicap Data'] is not None:
                 stategrade = row['NSW Road Handicap Data']
                 try:
                     grading = ClubGrade.objects.get(rider=user.rider, club=cyclingnsw)
@@ -246,8 +245,9 @@ class RiderManager(models.Manager):
         # we need to revoke the member record for these
         revoked = currentmembers
         for user in currentmembers:
-            m = user.rider.membership_set.get(year=thisyear)
-            m.delete()
+            mm = user.rider.membership_set.filter(date__gte=today)
+            for m in mm:
+                m.delete()
 
         # update club duty helper roles
         club.create_duty_helpers()
