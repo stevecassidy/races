@@ -8,6 +8,7 @@ from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import PointScore, Rider
 from datetime import datetime, timedelta, date
 
+
 class ViewTests(TestCase):
 
     fixtures = ['clubs', 'courses', 'users', 'riders']
@@ -20,7 +21,6 @@ class ViewTests(TestCase):
         nextweek = today + timedelta(7)
         nextfortnight = today + timedelta(14)
         nextthreeweeks = today + timedelta(21)
-
 
         self.oge = Club.objects.get(slug='OGE')
         self.bmc = Club.objects.get(slug='BMC')
@@ -37,14 +37,12 @@ class ViewTests(TestCase):
         r.append(Race(title='Three Weeks 6 W', date=nextthreeweeks, club=self.oge, signontime="7:00", status='p', website=self.oge.website, location=self.lansdowne))
         r.append(Race(title='Not Published', date=tomorrow, club=self.oge, signontime="7:00", status='d', website=self.oge.website, location=self.lansdowne))
 
-
         r.append(Race(title='Yesterday 1 L', date=yesterday, club=self.bmc, signontime="8:00", status='p', website=self.bmc.website, location=self.sop))
         r.append(Race(title='Today 2 L', date=today, club=self.bmc, signontime="8:00", status='p', website=self.bmc.website, location=self.sop))
         r.append(Race(title='Tomorrow 3 L', date=tomorrow, club=self.bmc, signontime="8:00", status='p', website=self.bmc.website, location=self.sop))
         r.append(Race(title='Next Week 4 L', date=nextweek, club=self.bmc, signontime="8:00", status='p', website=self.bmc.website, location=self.sop))
         r.append(Race(title='Fortnight 5 L', date=nextfortnight, club=self.bmc, signontime="8:00", status='p', website=self.bmc.website, location=self.sop))
         r.append(Race(title='Three Weeks 6 L', date=nextthreeweeks, club=self.bmc, signontime="8:00", status='p',  website=self.bmc.website, location=self.sop))
-
 
         for race in r:
             race.save()
@@ -59,7 +57,6 @@ class ViewTests(TestCase):
         """Test that the home page lists the next two
         weeks of races, starting from today"""
 
-
         response = self.client.get(reverse('home'))
         self.assertNotContains(response, "Yesterday 1 W")
         self.assertContains(response, "Today 2 W")
@@ -70,7 +67,6 @@ class ViewTests(TestCase):
 
         # draft races shouldn't appear
         self.assertNotContains(response, "Not Published")
-
 
     def test_race_list_page(self):
         """Test that the race list page has all future
