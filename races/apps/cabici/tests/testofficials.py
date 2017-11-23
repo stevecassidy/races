@@ -222,18 +222,19 @@ class OfficialsTests(WebTest):
 
         members = self.oge.rider_set.all()
 
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 13)
 
         # to should be empty, member emails are in bcc
-        self.assertEqual(len(mail.outbox[0].to), 0)
+        self.assertEqual(len(mail.outbox[0].to), 1)
 
-        recipients = mail.outbox[0].bcc
+        recipients = [x.to[0] for x in mail.outbox]
         self.assertEqual(len(recipients), members.count())
         for m in members:
             self.assertIn(m.user.email, recipients)
 
         self.assertEqual(mail.outbox[0].subject, subject)
-        self.assertEqual(mail.outbox[0].body, body)
+        self.assertIn(body, mail.outbox[0].body)
+        self.assertIn("you are a member of %s" % (self.oge.name,), mail.outbox[0].body)
 
     def test_club_official_email_members_self(self):
         """Member email form can send mail to myself"""
@@ -252,8 +253,9 @@ class OfficialsTests(WebTest):
 
         # check that emails are 'sent'
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(len(mail.outbox[0].to), 0)
-        self.assertEqual(mail.outbox[0].bcc, [self.ogeofficial.email])
+        self.assertEqual(len(mail.outbox[0].to), 1)
+        self.assertIn(body, mail.outbox[0].body)
+        self.assertIn("you are sending a test email for %s" % (self.oge.name,), mail.outbox[0].body, )
 
     def test_club_official_email_pastriders(self):
         """Member email form can send mail to all past riders"""
@@ -279,20 +281,16 @@ class OfficialsTests(WebTest):
         response = form.submit()
 
         # check that emails are sent
-        #self.assertEqual(len(mail.outbox), len(riders))
+        self.assertEqual(len(mail.outbox), len(riders))
 
-        # to should be empty, member emails are in bcc
-        self.assertEqual(len(mail.outbox[0].to), 0)
-
-        recipients = mail.outbox[0].bcc
+        recipients = [x.to[0] for x in mail.outbox]
         self.assertEqual(len(recipients), riders.count())
         for m in riders:
             self.assertIn(m.user.email, recipients)
 
         self.assertEqual(mail.outbox[0].subject, subject)
-        self.assertEqual(mail.outbox[0].body, body)
-
-
+        self.assertIn(body, mail.outbox[0].body)
+        self.assertIn("you have raced with %s in the past year." % (self.oge.name,), mail.outbox[0].body, )
 
     def test_club_official_email_members_reject_attack(self):
         """I can't inject headers into an email message"""
@@ -313,11 +311,9 @@ class OfficialsTests(WebTest):
         # check that no emails are 'sent'
         self.assertEqual(len(mail.outbox), 0)
 
-
     def test_club_riders_excel(self):
         """The excel view downloads a complete list of riders
         as an excel spreadsheet"""
-
 
         response = self.client.get(reverse('club_riders_excel', kwargs={'slug': self.oge.slug}))
 

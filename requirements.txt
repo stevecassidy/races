@@ -22,3 +22,4 @@ openpyxl
 pyexcel
 pyexcel-xls
 pinax-webanalytics
+django-anymail[mailgun]
