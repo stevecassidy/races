@@ -1,20 +1,16 @@
-# top-level views for the project, which don't belong in any specific app
 
-from django.views.generic.base import TemplateView
 from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
-from django.template import RequestContext
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.views.generic.edit import UpdateView
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
-from django.core.mail import EmailMessage, BadHeaderError
+from django.core.mail import EmailMessage, BadHeaderError, get_connection
 from django.contrib import messages
-from django.db.models import Count
 
 
 from django.contrib.auth.models import User
@@ -491,7 +487,8 @@ class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
         self.object.rider.__dict__.update(form.cleaned_data)
         # not sure why I need to do this separately but it doesn't get
         # updated if I don't
-        self.object.rider.club = form.cleaned_data['club']
+        if 'club' in form.cleaned_data:
+            self.object.rider.club = form.cleaned_data['club']
         self.object.rider.save()
 
         form.save()
@@ -901,39 +898,46 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         sendto = form.cleaned_data['sendto']
         reply_to = 'dontreply@cabici.net'
 
+        footer = "\n\n----\nYou are receiving this message via cabici.net because "
+
         if sendto == 'members':
             recipients = Rider.objects.filter(club__exact=club, membership__date__gte=today)
             emails = [r.user.email for r in recipients if r.user.email != '']
+            footer += "you are a member of %s." % (club.name,)
         elif sendto == 'pastriders':
             epoch = datetime.date.today() - datetime.timedelta(days=365)
             # riders who have raced with this club in the epoch
             results = RaceResult.objects.filter(race__date__gt=epoch).order_by('rider__user__email').values('rider').distinct()
             riders = [Rider.objects.get(id=x['rider']) for x in results]
             emails = [r.user.email for r in riders if r.user.email != '']
+            footer += "you have raced with %s in the past year." % (club.name,)
         elif sendto == 'commisaires':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Commissaire')
             emails = [ur.user.email for ur in uroles]
+            footer += "you are a commisaire with %s." % (club.name,)
         elif sendto == 'dutyofficers':
             uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
             emails = [ur.user.email for ur in uroles]
+            footer += "you are a duty officer with %s." % (club.name,)
         elif sendto == 'self':
             emails = [self.request.user.email]
+            footer += "you are sending a test email for %s." % (club.name,)
 
         subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message'] + footer
 
-        email = EmailMessage(
-                             subject,
-                             form.cleaned_data['message'],
-                             sender,
-                             [],
-                             emails,
-                             reply_to=(reply_to,)
-                             )
+        msgs = []
+        for email in emails:
+            msgs.append(EmailMessage(subject, message, sender, [email], reply_to=(reply_to,)))
 
+        connection = get_connection()
+        connection.open()
         try:
-            email.send(fail_silently=False)
+            connection.send_messages(msgs)
         except BadHeaderError:
             return HttpResponseBadRequest('Invalid email header found.')
+
+        connection.close()
 
         messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(emails)))
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))

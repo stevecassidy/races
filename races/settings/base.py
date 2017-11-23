@@ -153,6 +153,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'corsheaders',
     "pinax.webanalytics",
+
+    "anymail",
 )
 
 REST_FRAMEWORK = {
@@ -239,3 +241,6 @@ CORS_ALLOW_METHODS = (
         'HEAD',
         'OPTIONS'
 )
+
+
+

@@ -1,14 +1,10 @@
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
 from django_webtest import WebTest
 
-from races.apps.cabici.models import Club, RaceCourse, Race
+from races.apps.cabici.models import Club
 from races.apps.cabici.usermodel import Rider, ClubGrade
-from datetime import datetime, timedelta, date
-import re
-import random
+
 
 class RoleViewTests(WebTest):
     """Tests of user roles and the things they are allowed to do"""
@@ -33,7 +29,6 @@ class RoleViewTests(WebTest):
         rider2 = Rider(user=self.movofficial, gender="F", licenceno="12346", club=self.mov, official=True)
         rider2.save()
 
-
     def test_club_official_dashboard_blocked(self):
         """Test that the club dashboard page view can't be
         seen by someone who is not a club official"""
@@ -48,8 +43,6 @@ class RoleViewTests(WebTest):
         response = self.app.get(url, user=self.movofficial)
 
         self.assertRedirects(response, '/login/?next='+url)
-
-
 
     def test_club_official_dashboard(self):
         """Test the club dashboard page view for a club with just race management"""
@@ -81,7 +74,6 @@ class RoleViewTests(WebTest):
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
 
-
     def test_club_official_dashboard_membership(self):
         """Test the club dashboard page view for a club that
         has manage_members set"""
@@ -104,7 +96,6 @@ class RoleViewTests(WebTest):
         # but we see no race result actions
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_riders', kwargs={'slug': self.oge.slug}))))
         self.assertEqual(0, len(response.html.find_all('a', href=reverse('club_results', kwargs={'slug': self.oge.slug}))))
-
 
     def test_club_official_dashboard_results(self):
         """Test the club dashboard page view for a club that
@@ -130,7 +121,6 @@ class RoleViewTests(WebTest):
         self.assertNotContains(response, 'Current Members')
         self.assertNotContains(response, 'Race Members')
 
-
     def test_club_official_race(self):
         """Test view of a race as a club official"""
 
@@ -151,7 +141,6 @@ class RoleViewTests(WebTest):
         response = self.client.get(reverse('race', kwargs={'slug': 'KAT', 'pk': 4}))
         #self.assertNotContains(response, "Edit")  # edit is there for individual results
         self.assertNotContains(response, "Upload Results")
-
 
     def test_rider_update(self):
         """Rider update form is only available to rider and club officials"""
@@ -190,7 +179,6 @@ class RoleViewTests(WebTest):
         # and also others
         self.assertContains(response, 'dutyofficer')
         self.assertContains(response, 'licenceno')
-
 
     def test_rider_update_grade(self):
         """Rider page contains a grade update form only for a club official"""
