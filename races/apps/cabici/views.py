@@ -242,7 +242,7 @@ class ClubPointscoreView(DetailView):
         context = super(ClubPointscoreView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         club = self.kwargs['slug']
-        
+
         context['club'] = get_object_or_404(Club, slug=club)
         context['races'] = Race.objects.filter(pointscore=self.object)
 
