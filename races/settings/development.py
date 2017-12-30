@@ -14,14 +14,14 @@ SOCIAL_AUTH_FACEBOOK_SECRET = '01acd83d40e996f60386f9a87454b04c'
 
 
 # email to the console
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ## django-anymail configuration
-ANYMAIL = {
-    "MAILGUN_API_KEY": 'key-579a20de44b97c7dd72e13be867acb70',
-    "MAILGUN_SENDER_DOMAIN": 'mail.cabici.net'
-}
-EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
+#ANYMAIL = {
+#    "MAILGUN_API_KEY": 'key-579a20de44b97c7dd72e13be867acb70',
+#    "MAILGUN_SENDER_DOMAIN": 'mail.cabici.net'
+#}
+#EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs'

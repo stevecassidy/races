@@ -130,7 +130,7 @@ $(document).ready(
             </div>
             <div class="modal-body">
 
-                <form action="" method='POST'>
+                <form action="" method='POST' id="addPeopleForm">
                     {% csrf_token %}
                     <input type='hidden' name='raceid' id='raceid'>
                     <div class='container'>
@@ -140,6 +140,7 @@ $(document).ready(
                             </div>
                             <div class='col-md-3'>
                                 <select class='selectpicker' id='commissaire' name='commissaire'>
+                                    <option value="NONE">None</option>
                                     {% for comm in commissaires %}
                                     <option value='{{comm.id}}'>{{comm}}</option>
                                     {% endfor %}
@@ -152,6 +153,7 @@ $(document).ready(
                             </div>
                             <div class='col-md-3'>
                                 <select class='selectpicker' id='dutyofficer' name='dutyofficer'>
+                                    <option value="NONE">None</option>
                                     {% for do in dutyofficers %}
                                     <option value='{{do.id}}'>{{do}}</option>
                                     {% endfor %}
