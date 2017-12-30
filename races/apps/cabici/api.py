@@ -50,7 +50,6 @@ class ClubOfficialPermission(permissions.BasePermission):
         if not request.user.rider.official:
             return False
 
-
         return True
 
     def has_object_permission(self, request, view, obj):
@@ -129,6 +128,7 @@ class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
 
 #---------------Race------------------
 
+
 class RaceOfficialField(serializers.Field):
     """Custom field to return a representation of officials at a race
     note: read only, to modify officials use racesstaff-detail view"""
@@ -136,7 +136,7 @@ class RaceOfficialField(serializers.Field):
     def to_representation(self, obj):
 
         result = dict()
-        for role in obj.all():
+        for role in obj.distinct():
             entry = {'id': role.rider.id, 'name': role.rider.user.first_name + " " + role.rider.user.last_name}
             if role.role.name not in result:
                 result[role.role.name] = [entry]
@@ -189,7 +189,7 @@ class RaceList(generics.ListCreateAPIView):
         races = Race.objects.all()
 
         # if user is a club official, include draft races
-        if getattr(self.request.user, 'rider', None) != None and self.request.user.rider.official:
+        if getattr(self.request.user, 'rider', None) is not None and self.request.user.rider.official:
             pass
         else:
             # no draft or withdrawn races

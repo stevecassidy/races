@@ -10,8 +10,9 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadReque
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
 from django.core.mail import EmailMessage, BadHeaderError, get_connection
+from django.core.exceptions import ValidationError
 from django.contrib import messages
-
+from anymail.exceptions import AnymailInvalidAddress
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
@@ -241,7 +242,8 @@ class ClubPointscoreView(DetailView):
         context = super(ClubPointscoreView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         club = self.kwargs['slug']
-        context['club'] = Club.objects.get(slug=club)
+
+        context['club'] = get_object_or_404(Club, slug=club)
         context['races'] = Race.objects.filter(pointscore=self.object)
 
         return context
@@ -582,20 +584,21 @@ class RaceOfficialUpdateView(View):
                 # remove them
                 staff.delete()
                 # create new ones corresponding to officials[role]
-                # and add to newofficials
+                # and add to nofficials
                 nofficials[role] = []
                 for person in officials[role]:
                     if person['id']:
                         rider = get_object_or_404(Rider, id__exact=person['id'])
                         # make sure we don't add the same person to the same role for this race
 
-                        currentstaff = RaceStaff.objects.filter(rider=rider, role=clubrole, race=race)
-                        if currentstaff:
-                            # remove them
-                            currentstaff.delete()
+                        try:
+                            newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
+                            if created:
+                                nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
-                        newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
-                        nofficials[role].append({'id': rider.id, 'name': str(rider)})
+                        except ValidationError:
+                            # tried to add the same person twice, so don't worry
+                            pass
 
             return JsonResponse(nofficials)
         except ValueError as e:
@@ -931,13 +934,12 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
             msgs.append(EmailMessage(subject, message, sender, [email], reply_to=(reply_to,)))
 
         connection = get_connection()
-        connection.open()
         try:
             connection.send_messages(msgs)
         except BadHeaderError:
             return HttpResponseBadRequest('Invalid email header found.')
-
-        connection.close()
+        except AnymailInvalidAddress as e:
+            messages.add_message(e)
 
         messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(emails)))
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))

@@ -303,8 +303,11 @@ function submit_add_people(event) {
         raceid = $form.find( "input[name='raceid']").val(),
         url = $form.attr( "action" );
 
+    // get form values, special value 'NONE' gives us the empty list
     var comms = [{id: commissaire}];
+    if (commissaire == "NONE") { comms = []; }
     var dos = [{id: dutyofficer}];
+    if (dutyofficer == "NONE") { dos = []; }
     var dhs = [];
     if (dutyhelpers) {
         for (var i=0; i<dutyhelpers.length; i++) {
@@ -332,8 +335,6 @@ function submit_add_people(event) {
                     $('#addPeopleModal').modal('hide');
                  }
     });
-
-
 }
 
 function delete_race_init() {

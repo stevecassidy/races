@@ -11,6 +11,7 @@ from races.apps.cabici.models import Club, Race
 import csv
 from bs4 import BeautifulSoup
 
+
 def save_rider(backend, user, response, *args, **kwargs):
     """Create a rider object for a user, part of the
     social authentication flow. Adds fields from the Strava
@@ -28,7 +29,6 @@ def save_rider(backend, user, response, *args, **kwargs):
         rider.save()
 
 
-
 STATE_CHOICES = (('ACT', 'Australian Capital Territory'),
                  ('NSW', 'New South Wales'),
                  ('NT', 'Northern Territory'),
@@ -37,6 +37,7 @@ STATE_CHOICES = (('ACT', 'Australian Capital Territory'),
                  ('TAS', 'Tasmania'),
                  ('VIC', 'Victoria'),
                  ('WA', 'Western Australia'))
+
 
 def parse_img_members(fd):
     """Parse the membership list downloaded from IMG Sports
@@ -70,20 +71,21 @@ def parse_img_members(fd):
             d[headers[i]] = value
         yield d
 
+
 IMG_MAP = {
-     u'Address1': ('rider', 'streetaddress'),
-     u'DOB': ('rider', 'dob'),
-     u'Email Address': ('user', 'email'),
-     u'Emergency Contact Number': ('rider', 'emergencyphone'),
-     u'Emergency Contact Person': ('rider', 'emergencyname'),
-     u'First Name': ('user', 'first_name'),
-     u'Last Name': ('user', 'last_name'),
-     u'Member Number': ('rider', 'licenceno'),
-     u'Postcode': ('rider', 'postcode'),
-     u'State': ('rider', 'state'),
-     u'Suburb': ('rider', 'suburb'),
-     u'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
-     u'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
+    u'Address1': ('rider', 'streetaddress'),
+    u'DOB': ('rider', 'dob'),
+    u'Email Address': ('user', 'email'),
+    u'Emergency Contact Number': ('rider', 'emergencyphone'),
+    u'Emergency Contact Person': ('rider', 'emergencyname'),
+    u'First Name': ('user', 'first_name'),
+    u'Last Name': ('user', 'last_name'),
+    u'Member Number': ('rider', 'licenceno'),
+    u'Postcode': ('rider', 'postcode'),
+    u'State': ('rider', 'state'),
+    u'Suburb': ('rider', 'suburb'),
+    u'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
+    u'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
 }
 
 
@@ -93,7 +95,7 @@ class RiderManager(models.Manager):
     def make_username(self, firstname, lastname, licenceno):
         """Generate a suitable username for a rider"""
 
-        return slugify(firstname+lastname+licenceno)[:30]
+        return slugify(firstname + lastname + licenceno)[:30]
 
     def find_user(self, email, licenceno):
         """Find an existing user with this email or licenceno
@@ -124,7 +126,7 @@ class RiderManager(models.Manager):
         currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today))
 
         for row in rows:
-            #print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
+            # print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
 
             if row['Financial Date'] is None or row['Financial Date'] < today:
                 # don't import old membership records
@@ -151,7 +153,7 @@ class RiderManager(models.Manager):
                 updating = True
             else:
                 # new rider
-                username = slugify(row['First Name']+row['Last Name']+row['Member Number'])[:30]
+                username = slugify(row['First Name'] + row['Last Name'] + row['Member Number'])[:30]
                 if row['Email Address'] is None:
                     email = ''
                 else:
@@ -239,7 +241,7 @@ class RiderManager(models.Manager):
             if updating and userchanges != []:
                 updated.append(user)
 
-            # u'NSW Track Handicap Data'
+                # u'NSW Track Handicap Data'
 
         # check for any left over members in the currentmembers list
         # we need to revoke the member record for these
@@ -281,10 +283,10 @@ class Rider(models.Model):
 
     emergencyname = models.CharField("Emergency Contact Name", max_length=100, default='', blank=True)
     emergencyphone = models.CharField("Emergency Contact Phone", max_length=50, default='', blank=True)
-    emergencyrelationship =  models.CharField("Emergency Contact Relationship", max_length=20, default='', blank=True)
+    emergencyrelationship = models.CharField("Emergency Contact Relationship", max_length=20, default='', blank=True)
 
     official = models.BooleanField("Club Official", default=False,
-                                    help_text="Officials can view and edit member details, schedule races, upload results")
+                                   help_text="Officials can view and edit member details, schedule races, upload results")
 
     club = models.ForeignKey(Club, null=True)
 
@@ -411,7 +413,6 @@ class UserRole(models.Model):
     role = models.ForeignKey(ClubRole)
 
     def __unicode__(self):
-
         return "Role: " + '::'.join((str(self.user), self.club.slug, self.role.name))
 
 
@@ -425,6 +426,10 @@ class RaceStaff(models.Model):
 
     def __unicode__(self):
         return "%s: %s" % (self.role.name, self.rider.user)
+
+    class Meta:
+        # should only assign each person once to a role in a race
+        unique_together = (('rider', 'race', 'role'),)
 
 
 class ClubGrade(models.Model):
@@ -471,7 +476,8 @@ class RaceResult(models.Model):
     usual_grade = models.CharField("Usual Grade", max_length=10)
     number = models.IntegerField("Bib Number", blank=True, null=True)  # unique together with grade
 
-    place = models.IntegerField("Place", blank=True, null=True, help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")
+    place = models.IntegerField("Place", blank=True, null=True,
+                                help_text="Enter finishing position (eg. 1-5), leave blank for a result out of the placings.")
     dnf = models.BooleanField("DNF", default=False)
 
     def pointscores(self):
@@ -501,8 +507,8 @@ class PointScore(models.Model):
         # TODO: we might want to generalise this if some other
         # club want's to run a different kind of pointscore
 
-        points = [7,6,5,4,3]
-        smallpoints = [5,4]
+        points = [7, 6, 5, 4, 3]
+        smallpoints = [5, 4]
         participation = 2
 
         # is the rider eligible for promotion or riding down a grade
@@ -521,13 +527,13 @@ class PointScore(models.Model):
             else:
                 return (participation, "Participation, small race < 6 riders")
         elif numberriders <= 12:
-            if result.place-1 < len(smallpoints):
-                return (smallpoints[result.place-1], "Placed %s in race <= 12 riders" % result.place)
+            if result.place - 1 < len(smallpoints):
+                return (smallpoints[result.place - 1], "Placed %s in race <= 12 riders" % result.place)
             else:
                 return (participation, "Participation, race <= 12 riders")
         else:
-            if result.place-1 < len(points):
-                return (points[result.place-1], "Placed %s in race" % result.place)
+            if result.place - 1 < len(points):
+                return (points[result.place - 1], "Placed %s in race" % result.place)
             else:
                 return (participation, "Participation")
 
@@ -538,7 +544,6 @@ class PointScore(models.Model):
         "Return a list of integers from the points field"
 
         if not hasattr(self, 'pointslist'):
-
             self.pointslist = [int(n.strip()) for n in self.points.split(',')]
 
         return self.pointslist
@@ -559,14 +564,14 @@ class PointScore(models.Model):
             return self.participation
 
         if numberriders < self.smallthreshold:
-            if place-1 < len(self.get_smallpoints()):
-                return self.get_smallpoints()[place-1]
+            if place - 1 < len(self.get_smallpoints()):
+                return self.get_smallpoints()[place - 1]
             else:
                 return self.participation
 
         else:
-            if place-1 < len(self.get_points()):
-                return self.get_points()[place-1]
+            if place - 1 < len(self.get_points()):
+                return self.get_points()[place - 1]
             else:
                 return self.participation
 
@@ -584,7 +589,7 @@ class PointScore(models.Model):
 
         if result.grade == "Helper" and tally.eventcount > 0:
             # points is average points so far for this rider
-            points = int(round(float(tally.points)/float(tally.eventcount)))
+            points = int(round(float(tally.points) / float(tally.eventcount)))
             reason = "Helper " + str(points)
 
         reason += " : " + str(result.race)
@@ -651,7 +656,7 @@ class PointscoreTally(models.Model):
     def add(self, points, reason):
         """Add points to the tally for a rider and record the reason"""
 
-        #print "POINTS", points, reason
+        # print "POINTS", points, reason
         self.points += points
         self._add_reason(points, reason)
         self.eventcount += 1

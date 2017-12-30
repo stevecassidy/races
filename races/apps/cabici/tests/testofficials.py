@@ -1,7 +1,5 @@
-from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
 from django_webtest import WebTest
 from django.core import mail
 
@@ -10,6 +8,8 @@ from races.apps.cabici.usermodel import Rider, ClubGrade, Membership, ClubRole, 
 import datetime
 import re
 import random
+import json
+
 
 class OfficialsTests(WebTest):
     """Tests related to allocation of club officials """
@@ -143,6 +143,40 @@ class OfficialsTests(WebTest):
         for rider in self.oge.rider_set.filter(user__userrole__role__name__exact='Duty Helper'):
             c = self.oge.races.filter(officials__rider__exact=rider).count()
             self.assertLessEqual(c,3)
+
+    def test_club_allocate_officials_avoid_duplicates(self):
+        """Allocate officials to a race but ensure that we can't
+        allocate the same person twice"""
+
+        races = self.make_races()
+
+        race = races[0]
+
+        # get the race page
+        url = reverse('race', kwargs={'slug': self.oge.slug, 'pk': race.id})
+        response = self.app.get(url, user=self.ogeofficial)
+
+        form = response.forms['accountLogOutForm']
+        csrftoken = str(form['csrfmiddlewaretoken'].value)
+        headers = {'X-CSRFToken': csrftoken}
+
+        url = reverse('race_officials', kwargs={'pk': race.id})
+
+        # try to add the same person as commissaire twice
+        data = {
+            'commissaire': [{'id': self.ogeofficial.rider.id, 'name': str(self.ogeofficial)},
+                            {'id': self.ogeofficial.rider.id, 'name': str(self.ogeofficial)}],
+            'dutyhelper': [],
+            'dutyofficer': [{'id': self.ogeofficial.rider.id, 'name': str(self.ogeofficial)}]
+        }
+
+        response = self.app.post_json(url, data, user=self.ogeofficial, headers=headers)
+
+        respinfo = response.json
+
+        self.assertEqual(respinfo['dutyhelper'], [])
+        # should be just one commissaire
+        self.assertEqual(1, len(respinfo['commissaire']))
 
     def test_view_club_official_allocate_randomly(self):
         """When I am logged in as a club official, I see a
