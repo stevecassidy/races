@@ -4,11 +4,11 @@ from django_webtest import WebTest
 from django.core import mail
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider, ClubGrade, Membership, ClubRole, UserRole, RaceResult
+from races.apps.cabici.usermodel import Rider, RaceStaff, Membership, ClubRole, UserRole, RaceResult
 import datetime
 import re
 import random
-import json
+
 
 
 class OfficialsTests(WebTest):
@@ -96,6 +96,38 @@ class OfficialsTests(WebTest):
         for rider in dofficers:
             ur = self.oge.userrole_set.filter(role__name__exact="Duty Helper", user__rider__exact=rider).count()
             self.assertEqual(0, ur)
+
+    def test_club_get_officials_ordered(self):
+        """Test creation of a list of riders to be allocated
+        to a role"""
+
+        races = self.make_races()
+
+        self.oge.create_duty_helpers()
+        dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
+
+        dhs = self.oge.rider_set.filter(user__userrole__role__exact=dutyhelper)
+
+        # allocate a few to races
+        for race in races[:3]:
+            rs = RaceStaff(rider=dhs[0], race=race, role=dutyhelper)
+            rs.save()
+            rs = RaceStaff(rider=dhs[1], race=race, role=dutyhelper)
+            rs.save()
+
+        counted_helpers = self.oge.get_officials_with_counts('Duty Helper')
+
+        self.assertEqual(len(dhs), len(counted_helpers))
+        # all should be zero except for dhs[0] and dhs[1]
+        for rc in counted_helpers:
+
+            if rc[1] in [dhs[0], dhs[1]]:
+                self.assertEqual(3, rc[0])
+            else:
+                self.assertEqual(0, rc[0])
+        # and it should be ordered
+        self.assertListEqual(counted_helpers, sorted(counted_helpers))
+
 
     def test_club_allocate_officials(self):
         """Allocate officials to a set of races"""
