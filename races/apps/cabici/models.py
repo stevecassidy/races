@@ -145,6 +145,43 @@ class Club(models.Model):
                 role = UserRole(user=user, club=self, role=dutyhelper)
                 role.save()
 
+    def get_officials_with_counts(self, role):
+        """Get a list of people who can fill a given role ordered
+        by the number of times they have done so in the last year
+
+        role - a role, eg. 'Duty Helper'
+
+        Returns: a list of tuples (count, rider)
+        where rider is a Rider instance, count is a count
+        of the number of times they have been allocated to this role
+        ordered by count, smallest first
+        """
+
+        import random
+        # candidates are those members with a ClubRole with the
+        # corresponding role
+        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+
+        # if we have no candidates we can't do anything
+        if candidates.count() == 0:
+            return
+
+        # order candidates by number of recent duty assignments
+        ordered = []
+        epoch = datetime.date.today() - datetime.timedelta(days=365)
+
+        for rider in candidates:
+            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
+            ordered.append((c,rider))
+
+        # shuffle to get a randomish distribution before sorting
+        random.shuffle(ordered)
+
+        # order on count
+        ordered.sort()
+
+        return ordered
+
     def allocate_officials(self, role, number, races, replace=False):
         """Allocate people to fill the given roles for
         the given races.
@@ -164,26 +201,7 @@ class Club(models.Model):
         from .usermodel import RaceStaff, ClubRole
         clubrole, created = ClubRole.objects.get_or_create(name=role)
 
-        import random
-        # candidates are those members with a ClubRole with the
-        # corresponding role
-        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
-
-        # if we have no candidates we can't do anything
-        if candidates.count() == 0:
-            return
-
-        # order candidates by number of recent duty assignments
-        ordered = []
-        epoch = datetime.date.today() - datetime.timedelta(days=365)
-
-        for rider in candidates:
-            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
-            ordered.append((c,rider))
-
-        random.shuffle(ordered)
-
-        ordered.sort()
+        ordered = self.get_officials_with_counts(role)
 
         for race in races:
             existing = RaceStaff.objects.filter(race=race, role=clubrole)

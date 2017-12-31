@@ -167,11 +167,13 @@ $(document).ready(
                             <div class='col-md-3'>
                                 <select class='selectpicker' multiple id='dutyhelper' name='dutyhelper' data-live-search="true">
                                     {% for dh in dutyhelpers %}
-                                    <option value='{{dh.id}}'>{{dh}}</option>
+                                    <option value='{{dh.1.id}}'>{{dh.1}} ({{dh.0}})</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
+                        <p>Duty Helper counts show number of duty rosters since one year<br>
+                            ago (including this and future races).</p>
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -255,6 +255,7 @@ function edit_race_modal_init() {
 };
 
 function add_people_init() {
+
     $('#addPeopleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var raceurl = button.data('raceurl');
@@ -274,9 +275,13 @@ function add_people_init() {
 
           if (data.officials.Commissaire) {
               $('select[name=commissaire]').val(data.officials.Commissaire[0].id);
+          } else {
+              $('select[name=commissaire]').val('NONE');
           }
           if (data.officials['Duty Officer']) {
               $('select[name=dutyofficer]').val(data.officials['Duty Officer'][0].id);
+          } else {
+              $('select[name=dutyofficer]').val('NONE');
           }
 
           if (data.officials['Duty Helper']) {
@@ -286,10 +291,16 @@ function add_people_init() {
                   helpers.push(data.officials['Duty Helper'][i].id);
               }
               $('select[name=dutyhelper]').val(helpers);
+          } else {
+              $('select[name=dutyhelper]').val("");
           }
-          // refresh the bootstrap seleect widget
+          // refresh the bootstrap select widget
           $('.selectpicker').selectpicker('refresh');
+
+          // attach the submit handler, replace any existing
+          $(form).off('submit');
           $(form).submit(submit_add_people);
+
       })
   });
 }
