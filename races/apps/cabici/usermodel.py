@@ -59,14 +59,14 @@ def parse_img_members(fd):
         cells = row.find_all('td')
         d = dict()
         for i in range(len(cells)):
-            if headers[i] == None:
+            if headers[i] is None:
                 continue
             value = cells[i].string
             # turn date fields into dates
-            if value != None and ('Date' in headers[i] or headers[i] == "DOB"):
+            if value is not None and ('Date' in headers[i] or headers[i] == "DOB"):
                 value = datetime.datetime.strptime(value, "%d-%b-%Y").date()
             # capitalise names
-            if value != None and 'Name' in headers[i]:
+            if value is not None and 'Name' in headers[i]:
                 value = value.capitalize()
             d[headers[i]] = value
         yield d
@@ -128,8 +128,9 @@ class RiderManager(models.Manager):
         for row in rows:
             # print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
 
-            if row['Financial Date'] is None or row['Financial Date'] < today:
-                # don't import old membership records
+            # we will import old membership records if present to ensure database is complete
+            # but we don't want any with no financial date (usually 3-race memberships)
+            if row['Financial Date'] is None:
                 continue
 
             # grab all values from row that are not None, map them
@@ -137,7 +138,7 @@ class RiderManager(models.Manager):
             riderinfo = dict()
             for key in row.keys():
                 if key in IMG_MAP:
-                    if row[key] != None and row[key] != '':
+                    if row[key] is not None and row[key] != '':
                         riderinfo[IMG_MAP[key]] = row[key]
             # riderinfo is our updated information
 
@@ -191,6 +192,15 @@ class RiderManager(models.Manager):
                 user.rider.gender = row['Gender'][0]
                 userchanges.append('gender')
 
+            # update commissaire data
+
+            if ('rider', 'commissaire') in riderinfo and riderinfo[('rider', 'commissaire')] != '0':
+                user.rider.commissaire = riderinfo[('rider', 'commissaire')]
+                userchanges.append('commissaire')
+            if ('rider', 'commissaire_valid') in riderinfo:
+                user.rider.commissaire_valid = riderinfo[('rider', 'commissaire_valid')]
+                userchanges.append('commissaire_valid')
+
             user.rider.club = club
 
             user.save()
@@ -206,8 +216,8 @@ class RiderManager(models.Manager):
             elif 'NON-RIDING' in row['Member Types']:
                 category = 'non-riding'
 
-            # update membership if it is current
-            if memberdate is not None and memberdate > today:
+            # update membership record
+            if memberdate is not None:
                 mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
                 if len(mm) == 0:
                     m = Membership(rider=user.rider, club=club, date=memberdate, category=category)
