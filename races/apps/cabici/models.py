@@ -164,7 +164,7 @@ class Club(models.Model):
 
         # if we have no candidates we can't do anything
         if candidates.count() == 0:
-            return
+            return []
 
         # order candidates by number of recent duty assignments
         ordered = []
@@ -202,6 +202,9 @@ class Club(models.Model):
         clubrole, created = ClubRole.objects.get_or_create(name=role)
 
         ordered = self.get_officials_with_counts(role)
+        # can't allocate if there are no candidates
+        if len(ordered) == 0:
+            return
 
         for race in races:
             existing = RaceStaff.objects.filter(race=race, role=clubrole)

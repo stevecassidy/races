@@ -239,8 +239,9 @@ class UserModelTests(TestCase):
         self.assertIn('Updated grade of Alejandro VALVERDE BELMONTE to A', messages)
         self.assertIn('Updated grade of Joaquin RODRIGUEZ OLIVER to A', messages)
         # new rider record created
+        thisyear = datetime.date.today().year
         self.assertIn('Added new rider record for Trisma Allan', messages)
-        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to 2017-12-31', messages)
+        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to %d-12-31' % thisyear, messages)
 
 
     def test_load_results_excel_duplicates(self):
