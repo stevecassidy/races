@@ -40,8 +40,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "pinax_theme_bootstrap.context_processors.theme",
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
+
             )
         }
     },
@@ -143,7 +142,14 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.flatpages',
 
-    'social.apps.django_app.default',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+
+    # our own auth provider for strava
+    'races.apps.strava',
+
     "bootstrapform",
     "pinax_theme_bootstrap",
 
@@ -199,39 +205,69 @@ CRISPY_TEMPLATE_PACK = "bootstrap"
 # default centre of maps
 #EASY_MAPS_CENTER = (-41.3, 32)
 
-LOGIN_URL = '/login/'
+LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
-
-ACCOUNT_OPEN_SIGNUP = False
 
 
 AUTHENTICATION_BACKENDS = (
-    #'social.backends.twitter.TwitterOAuth',
-    'social.backends.strava.StravaOAuth',
-    'social.backends.facebook.FacebookOAuth2',
-    #'social.backends.google.GoogleOAuth2',
-    #'social_auth.backends.OpenIDBackend',
-    'social.backends.email.EmailAuth',
+
     'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+ACCOUNT_OPEN_SIGNUP = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_EMAIL_REQUIRED=True
+# long sessions by default
+ACCOUNT_SESSION_REMEMBER=True
 
-SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.social_auth.associate_by_email',  # this allows linking social auth to existing account
-    'social.pipeline.user.create_user',
-    'races.apps.cabici.usermodel.save_rider',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
-)
-
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email'],
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.5',
+    },
+    'strava': {
+        'METHOD': 'oauth2',
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id',
+            'email',
+            'name',
+            'first_name',
+            'last_name',
+            'verified',
+            'locale',
+            'timezone',
+            'link',
+            'gender',
+            'updated_time',
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v2.5',
+    }
+}
 
 # CORS configuration (django-cors-headers)
 # anyone can make GET requests to the API
