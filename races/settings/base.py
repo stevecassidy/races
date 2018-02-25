@@ -223,6 +223,10 @@ ACCOUNT_EMAIL_REQUIRED=True
 # long sessions by default
 ACCOUNT_SESSION_REMEMBER=True
 
+def ACCOUNT_USER_DISPLAY(user):
+    """Display users as email address"""
+    return user.email
+
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'METHOD': 'oauth2',
