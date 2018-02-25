@@ -1,0 +1,47 @@
+{% extends "account/base.html" %}
+
+{% load i18n %}
+{% load account socialaccount %}
+{% load bootstrap %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block content %}
+    <div class="row">
+    <div class="col-md-4">
+<h3>{% trans "Sign In" %}</h3>
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form|bootstrap }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+    <a class="btn btn-default secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
+</form>
+
+    </div>
+        <div class="col-md-6">
+            <h3>Accounts on Cabici</h3>
+
+            <div class="alert alert-info" role="alert">
+            <strong>Note</strong>: Strava or Facebook login is no longer available.
+                Please <a href="{% url 'account_reset_password' %}">create a password</a>
+                if you have been logging in this way before.
+            </div>
+
+            <p>Riders who have raced with clubs using Cabici to manage
+            results (currently Waratahs) will have an account on the website.
+                If you have an account, you can find your personal page
+                via the <a href="{%  url 'riders' %}">Riders</a> page.
+                Once you login, you can update your personal details.
+            If you have never logged in, use the <a href="{% url 'account_reset_password' %}">
+                    Forgot Password</a> link to set up a new password. </p>
+
+            <p>If you can't find your name and you need to login to
+            manage races for your club, please contact <a href="mailto:steve@cabici.net">Steve Cassidy</a>.</p>
+        </div>
+    </div>
+{% endblock %}
