@@ -36,7 +36,6 @@ class HomePage(ListView):
     model = Race
     template_name = "index.html"
 
-
     def get_queryset(self):
         # show the races for the next week
         startdate = datetime.date.today()
@@ -627,7 +626,6 @@ class RaceUploadExcelView(FormView):
         messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
-
     def form_valid(self, form):
 
         # need to work out what race we're in - from the URL pk
@@ -674,6 +672,7 @@ class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
 
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
 
+
 class RaceRidersView(ListView):
     model = RaceResult
     template_name = "raceresult_list.html"
@@ -716,6 +715,7 @@ class RaceRidersView(ListView):
 
         return HttpResponseRedirect(reverse('race_riders', kwargs=kwargs))
 
+
 class ClubRaceResultsView(DetailView):
     model = Club
     template_name = "club_results.html"
@@ -734,6 +734,7 @@ class ClubRaceResultsView(DetailView):
                                                status__exact='p').distinct()
 
         return context
+
 
 class ClubRacesView(DetailView):
     model = Club
@@ -825,6 +826,7 @@ class ClubRacesView(DetailView):
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
 
+
 class ClubRacesOfficalUpdateView(DetailView):
     model = Club
     template_name = "club_races_officials.html"
@@ -849,7 +851,6 @@ class ClubRacesOfficalUpdateView(DetailView):
         context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
 
         return context
-
 
     def post(self, request, *args, **kwargs):
         """Allocate officials at random to
@@ -876,6 +877,7 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         # redirect to race schedule page
         return HttpResponseRedirect(reverse('club_races', kwargs={'slug': club.slug}))
+
 
 class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
     """View to send emails to some or all members of a club"""
