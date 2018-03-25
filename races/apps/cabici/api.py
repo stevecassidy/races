@@ -313,6 +313,7 @@ class PointScoreList(generics.ListCreateAPIView):
 
         return ps
 
+
 class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
     results = serializers.SerializerMethodField('result_list')
@@ -328,7 +329,7 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
         return [{'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
                 'riderid': tally.rider.user.id,
                 'club': tally.rider.club.slug,
-                'grade': tally.rider.clubgrade_set.get(club__exact=tally.pointscore.club).grade,
+                'grade': tally.pointscore.club.grade(tally.rider),
                 'points': tally.points,
                 'eventcount': tally.eventcount}
                 for tally in queryset]
@@ -386,6 +387,7 @@ class RaceResultList(generics.ListCreateAPIView):
         except ValueError:
             # given a non integer for raceid
             raise Http404("Invalid Race ID")
+
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceResult.objects.all()
