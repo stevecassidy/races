@@ -20,11 +20,12 @@ DAYS = [(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'),
 
 GRADE_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
 
+
 class RaceResultUpdateForm(forms.ModelForm):
 
     class Meta:
         model = RaceResult
-        fields = ['place', 'number']
+        fields = ['place', 'number', 'usual_grade']
 
 
 class RaceCreateForm(forms.ModelForm):
