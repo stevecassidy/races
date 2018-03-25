@@ -384,20 +384,25 @@ function delete_race_init() {
 
 
 $('#editResultModal').on('show.bs.modal', function (event) {
-  var button = $(event.relatedTarget)
-  var rider = button.data('rider')
-  var place = button.data('place')
-  var number = button.data('number')
-  var resultid = button.data('resultid')
+  var button = $(event.relatedTarget);
+  var rider = button.data('rider');
+  var place = button.data('place');
+  var number = button.data('number');
+  var resultid = button.data('resultid');
+  var usual_grade = button.data('usual_grade');
 
   var resulturl = '/api/raceresults/' + resultid + '/';
 
   var modal = $(this);
-  var theform = modal.find('form')[0]
+  var theform = modal.find('form')[0];
+
+    console.log("usual grade", usual_grade);
 
   modal.find('.modal-title').text('Edit Result for ' + rider);
   modal.find('#id_place').val(place);
   modal.find('#id_number').val(number);
+  modal.find('#id_usual_grade').val(usual_grade);
+
   theform.action = resulturl;
 
   $(theform).submit(submit_result_update_form);
