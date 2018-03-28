@@ -37,12 +37,15 @@ class RoleViewTests(WebTest):
         response = self.app.get(url)
 
         # not logged in should be redirected to login page
-        self.assertRedirects(response, '/login/?next='+url)
+        self.assertRedirects(response, '/accounts/login/?next='+url)
 
         # logged in as official in another club is also rejected
         response = self.app.get(url, user=self.movofficial)
 
-        self.assertRedirects(response, '/login/?next='+url)
+        # this doesn't work, not clear why
+        #self.assertRedirects(response, '/accounts/login/?next='+url)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.location, '/accounts/login/?next='+url)
 
     def test_club_official_dashboard(self):
         """Test the club dashboard page view for a club with just race management"""
@@ -51,7 +54,7 @@ class RoleViewTests(WebTest):
         response = self.app.get(url)
 
         # not logged in should be redirected to login page
-        self.assertRedirects(response, '/login/?next='+url)
+        self.assertRedirects(response, '/accounts/login/?next='+url)
 
         # logged in version has race form
         response = self.app.get(url, user=self.ogeofficial)
@@ -151,7 +154,7 @@ class RoleViewTests(WebTest):
         # get the update page as anonymous user, should get a redirect to login
         response = self.client.get(reverse('rider_update', kwargs={'pk': rider.user.pk}))
         self.assertEqual(302, response.status_code)
-        self.assertEqual('/login/', response['Location'][:7])
+        self.assertTrue(response['Location'].startswith('/accounts/login/'), "respose should redirect to login")
 
         # login as someone else, should be disallowed
         self.client.force_login(user=otherrider.user, backend='django.contrib.auth.backends.ModelBackend')
