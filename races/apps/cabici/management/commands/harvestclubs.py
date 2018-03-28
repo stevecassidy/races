@@ -14,13 +14,12 @@ from races.apps.cabici.models import Club
 
 NSW_CLUBS_URL = 'http://www.nsw.cycling.org.au/Contact/Club-Pages/'
 
-class Command(BaseCommand):
 
+class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
         Club.objects.all().delete()
-
 
         h = urlopen(NSW_CLUBS_URL)
         page = h.read()

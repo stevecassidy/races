@@ -2,11 +2,13 @@
 
 {% load i18n %}
 {% load bootstrap %}
+{% load socialaccount %}
 
 {% block content %}
-<div class="row">
+    <div class="row">
     <div class="col-md-4">
-        <form method="POST" action="{% url "login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+        <form method="POST" action="{% url "login" %}" autocapitalize="off"
+                {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
             <legend>{% trans "Log in to an existing account" %}</legend>
             {% csrf_token %}
             {{ form|bootstrap }}
@@ -18,21 +20,8 @@
         </form>
     </div>
     <div class="col-md-4">
-        <p>You have the option of signing in to Cabici.net with your
-            Strava or Facebook accounts.  This means you don't need a separate
-            username/password.   Cabici is not able to access any of your
-            personal data except for your email address.</p>
-
-        <div>
-            <a href="{% url 'social:begin' 'strava' %}">
-                <img src="{{STATIC_URL}}/btn_strava_connectwith_orange.png" alt="Login with Strava">
-            </a>
-            <a href="{% url 'social:begin' 'facebook' %}">
-                <img src="{{STATIC_URL}}/facebook_login_button.png" alt="Login with Facebook">
-            </a>
-        </div>
-
-
+        <h3>Accounts on Cabici</h3>
+        <p></p>
     </div>
 </div>
 

@@ -23,7 +23,6 @@ class Command(BaseCommand):
 #        unknown, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
         Club.objects.all().delete()
 
-
         for csvfile in options['csvfile']:
             with open(csvfile, 'rU') as fd:
                 reader = csv.DictReader(fd)

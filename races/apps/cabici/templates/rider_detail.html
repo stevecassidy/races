@@ -44,9 +44,15 @@ Rider - {{user.first_name}} {{user.last_name}}
 {% if request.user.rider %}
 
     {# who can edit rider details? #}
-    {% if request.user == user or request.user.is_authenticated and request.user.rider.official and    request.user.rider.club.manage_members %}
+    {% if request.user == user or request.user.is_authenticated and request.user.rider.official and request.user.rider.club.manage_members %}
     {# and request.user.rider.club == user.rider.club -- to limit edits to an official's club #}
     <h4>Personal Details <a type='button' class='btn btn-default' href="{% url 'rider_update' user.id %}">Update</a></h4>
+
+        <ul>
+            <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
+            <li><a href="{% url 'account_email' %}">Update Email Address</a></li>
+        </ul>
+
 
     <table class=table>
         <tr><th>CA Licence</th><td>{{user.rider.licenceno}}</td></tr>
@@ -57,7 +63,7 @@ Rider - {{user.first_name}} {{user.last_name}}
         <tr><th>Gender</th><td>{{user.rider.gender}}</td></tr>
         <tr><th>Emergency Contact</th><td>{{user.rider.emergencyname}} ({{user.rider.emergencyphone}})</td></tr>
         {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
-        <tr><th>Commisaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
+        <tr><th>Commissaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
         {% endif %}
         <tr><th>Membership Status</th><td>
         {% for m in user.rider.membership_set.all %}

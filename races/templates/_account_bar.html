@@ -10,23 +10,16 @@
             <a href="/riders/{{request.user.id}}"><i class="glyphicon glyphicon-user"></i> {{request.user.get_full_name}}</a>
         </li>
         <li>
-            <a id="account_logout" href="/logout/"><i class="glyphicon glyphicon-off"></i> {% trans "Log out" %}</a>
+            <a id="account_logout" href="{%  url 'account_logout' %}"><i class="glyphicon glyphicon-off"></i> {% trans "Log out" %}</a>
         </li>
     {% else %}
     <li>
-        <a href="/login/">{% trans "Login" %}</a>
+        <a href="{% url 'account_login' %}">{% trans "Sign In" %}</a>
     </li>
-    {% if 0 %}
-    <form class="navbar-form navbar-left" role="search">
-      <a href="{% url 'social:begin' 'strava' %}?next={{ request.path }}">
-          <img src="{{STATIC_URL}}/LoginWithStrava.png" alt="Login with Strava">
-      </a>
-     </form>
-     {% endif %}
     {% endif %}
 </ul>
 
-<form id="accountLogOutForm" style="display: none;" action="/logout/" method="POST">
+<form id="accountLogOutForm" style="display: none;" action="{%  url 'account_logout' %}" method="POST">
     <input type='hidden' name='next' value='/'>
     {% csrf_token %}
 </form>

@@ -8,8 +8,6 @@ django-geoposition
 beautifulsoup4
 ngram
 vcrpy
-python-social-auth
-social-auth-app-django
 pinax-theme-bootstrap==5.7.5
 django-bootstrap-form
 djangorestframework
@@ -23,3 +21,8 @@ pyexcel
 pyexcel-xls
 pinax-webanalytics
 django-anymail[mailgun]
+django-allauth
+
+
+python-social-auth
+social-auth-app-django

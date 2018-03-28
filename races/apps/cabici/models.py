@@ -287,7 +287,6 @@ class Club(models.Model):
         promotable.sort(key=lambda x: x.user.last_name)
         return promotable
 
-
     def ingest_ical(self):
         """Import races from an icalendar feed
         Return a tuple (races, errormsg) where races is a list
@@ -371,7 +370,6 @@ class Club(models.Model):
 
         return (races, "")
 
-
     def ingest_race_list(self, races):
         """Create races from a list of dictionaries containing
         the race properties
@@ -418,11 +416,10 @@ class Club(models.Model):
            # else:
                 #print "Race duplicate", r['title'], r['date']
 
-
         return (racelist, errors)
 
-class RaceCourseManager(models.Manager):
 
+class RaceCourseManager(models.Manager):
 
     def find_location(self, name):
         """Find a RaceCourse using an approximate match to
@@ -440,6 +437,7 @@ class RaceCourseManager(models.Manager):
 
         return location
 
+
 class RaceCourse(models.Model):
     """A place where a race happens"""
 
@@ -454,6 +452,7 @@ class RaceCourse(models.Model):
 
     class Meta:
         ordering = ['name']
+
 
 class RacePrototype(models.Model):
     """A race prototype describes a race that
@@ -543,7 +542,6 @@ class Race(models.Model):
         but make it draft"""
 
         pass
-
 
     def load_excel_results(self, fd, extension):
         """Load race results from a file handle pointing to an Excel file"""
