@@ -261,9 +261,6 @@ class RiderManager(models.Manager):
             for m in mm:
                 m.delete()
 
-        # update club duty helper roles
-        club.create_duty_helpers()
-
         return {'added': added, 'updated': updated, 'revoked': revoked}
 
 
