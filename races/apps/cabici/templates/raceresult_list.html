@@ -7,7 +7,7 @@
 
 <h2>{{race.club.slug}} - {{race.title}} ({{race.date}},  {{race.location}})</h2>
 
-{% if 0 %} request.user.rider
+{% if request.user.rider %}
 
     {% if request.user == user or request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == club %}
         <form method='POST'>
@@ -43,11 +43,7 @@
 
     <table class='table'>
         <thead>
-        <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th>
-        {% for p in grade.list.0.pointscores %}
-            <th>{{p.pointscore.name}}</th>
-        {% endfor %}
-        </tr>
+        <tr><th>Number</th><th>Place</th><th>Rider</th><th>Club</th></tr>
     </thead>
     <tbody>
     {% for result in grade.list %}
@@ -57,9 +53,6 @@
             <td>{{result.place}}</td>
             <td><a href="{% url 'rider' pk=result.rider.user.pk %}">{{result.rider}}</a></td>
             <td>{{result.rider.club}}</td>
-            {% for p in result.pointscores %}
-            <td>{{p.points}}</td>
-            {% endfor %}
         </tr>
         {% endif %}
     {% endfor %}

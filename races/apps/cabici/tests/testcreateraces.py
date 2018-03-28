@@ -44,7 +44,7 @@ class CreateViewTests(TestCase):
         response = self.client.get(url)
 
         # not logged in should be redirected to login page
-        self.assertRedirects(response, '/login/?next='+url)
+        self.assertRedirects(response, '/accounts/login/?next='+url)
 
         # logged in version has race form
 
