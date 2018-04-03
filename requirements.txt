@@ -1,4 +1,4 @@
-django == 1.10
+django==1.10
 django-pagination
 django-coverage
 django-ical
@@ -12,7 +12,7 @@ pinax-theme-bootstrap==5.7.5
 django-bootstrap-form
 djangorestframework
 django-cors-headers
-django-yearlessdate
+#django-yearlessdate
 django-webtest
 # for deployment with postgres
 # psycopg2
@@ -24,5 +24,5 @@ django-anymail[mailgun]
 django-allauth
 
 
-python-social-auth
-social-auth-app-django
+#python-social-auth
+#social-auth-app-django
