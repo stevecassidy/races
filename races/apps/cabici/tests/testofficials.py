@@ -201,7 +201,7 @@ class OfficialsTests(WebTest):
             'dutyofficer': [{'id': self.ogeofficial.rider.id, 'name': str(self.ogeofficial)}]
         }
 
-        response = self.app.post_json(url, data, extra_environ={'user': self.ogeofficial}, headers = headers)
+        response = self.app.post_json(url, params=data, user=self.ogeofficial, headers = headers)
 
         respinfo = response.json
 
