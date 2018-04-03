@@ -113,10 +113,12 @@ class ClubDetail(generics.RetrieveUpdateDestroyAPIView):
 class RaceCourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RaceCourse
+        fields = '__all__'
 
 class RaceCourseBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = RaceCourse
+        fields = '__all__'
 
 class RaceCourseList(generics.ListCreateAPIView):
     queryset = RaceCourse.objects.all()

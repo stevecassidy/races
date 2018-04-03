@@ -492,14 +492,16 @@ class RaceResult(models.Model):
 
         return self.resultpoints_set.all()
 
+from django.core.validators import validate_comma_separated_integer_list
+
 
 class PointScore(models.Model):
     """A pointscore is a series of races where points are accumulated"""
 
     club = models.ForeignKey(Club)
     name = models.CharField(max_length=100)
-    points = models.CommaSeparatedIntegerField("Points for larger races", max_length=100, default="7,6,5,4,3")
-    smallpoints = models.CommaSeparatedIntegerField("Points for small races", max_length=100, default="5,4")
+    points = models.CharField("Points for larger races", max_length=100, default="7,6,5,4,3", validators=[validate_comma_separated_integer_list])
+    smallpoints = models.CharField("Points for small races", max_length=100, default="5,4", validators=[validate_comma_separated_integer_list])
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
     races = models.ManyToManyField(Race, blank=True)
