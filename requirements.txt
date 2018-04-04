@@ -1,4 +1,4 @@
-Django==1.10
+Django==1.11.12
 PyYAML==3.12
 WebOb==1.7.4
 WebTest==2.0.29
