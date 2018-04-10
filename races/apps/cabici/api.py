@@ -227,6 +227,7 @@ class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
 class RaceStaffSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RaceStaff
+        fields = '__all__'
 
     role = serializers.SlugRelatedField(slug_field='name', queryset=ClubRole.objects.all())
 
@@ -264,6 +265,8 @@ class RiderSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Rider
+        fields = '__all__'
+
 
 class RiderList(generics.ListCreateAPIView):
     queryset = Rider.objects.all()
@@ -368,6 +371,7 @@ class RaceResultSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RaceResult
+        fields = '__all__'
 
 class RaceResultList(generics.ListCreateAPIView):
 

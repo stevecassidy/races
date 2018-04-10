@@ -7,10 +7,9 @@ admin.autodiscover()
 urlpatterns = [
     url(r'', include('races.apps.cabici.urls')),
     url(r'^admin/', include(admin.site.urls)),
-
-    #url('', include('django.contrib.auth.urls')),
-
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^\.well-known/', include('letsencrypt.urls'))
+
 ]
 
 if settings.DEBUG:
