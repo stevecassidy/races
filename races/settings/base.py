@@ -163,7 +163,6 @@ INSTALLED_APPS = (
 
     "anymail",
 
-    "letsencrypt",
     "debug_toolbar",
 )
 
