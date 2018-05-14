@@ -48,6 +48,9 @@ wsgiref==0.1.2
 xlrd==1.1.0
 xlwt==1.3.0
 django-debug-toolbar
+graphene
+graphene_django
+django-filter
 
 # for deployment with postgres
 # psycopg2
