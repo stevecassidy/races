@@ -115,7 +115,12 @@ google.maps.event.addDomListener(window, 'load', initialize);
             <p class="alert alert-info" role="alert"><strong>NOTE:</strong>
                 To modify results, update the result spreadsheet and re-upload.
                 All previous results will be
-                removed and replaced with those from the spreadsheet.</p>
+                removed and replaced with those from the spreadsheet.
+            </p>
+                <p>
+                <a href="{% url 'race_summary_spreadsheet' pk=race.id %}">
+                    <button class="btn btn-default">Download Race Spreadsheet</button></a>
+                </p>
             {% endif %}
         </div>
     </div>

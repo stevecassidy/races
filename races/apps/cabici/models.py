@@ -506,6 +506,7 @@ LICENCE_CHOICES = (
     ('p.w', 'Para-cyclist Women'),
 )
 
+
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
