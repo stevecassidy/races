@@ -556,6 +556,75 @@ class RaceDetailView(DetailView):
         pass
 
 
+class RaceSummarySpreadsheet(View):
+
+    model = Race
+
+    def get(self, request, *args, **kwargs):
+
+        race = get_object_or_404(Race, pk=kwargs['pk'])
+        club = race.club
+
+        # worksheet is a list of row tuples
+        ws = []
+        today = datetime.date.today()
+
+        header = ('LastName',
+                  'FirstName',
+                  'Grade',
+                  'ShirtNo',
+                  'Place',
+                  'LicenceNo',
+                  'Club',
+                  'Id',
+                  'Date',
+                  )
+
+        ws.append(header)
+
+        results = RaceResult.objects.filter(race__exact=race)
+
+        # add race info rows
+       # ws.append(("Race Date",	"Race Name", "Race Venue", "Race Format", "Host Club", "", "", "", ""))
+       # ws.append((race.date,
+       #           race.title,
+       #            race.location.shortname,
+       #            race.category,
+       #            race.club.slug,
+       #            '', '', '', ''))
+
+        for result in results:
+
+            rider = result.rider
+            try:
+                clubslug = rider.club.slug
+            except:
+                clubslug = 'Unknown'
+
+            row = (rider.user.last_name,
+                   rider.user.first_name,
+                   result.grade,
+                   result.number,
+                   result.place or '',
+                   rider.licenceno,
+                   clubslug,
+                   rider.id,
+                   race.date,
+                   )
+            assert(len(row) == len(header))
+            ws.append(row)
+
+        sheet = pyexcel.Sheet(ws)
+        io = StringIO()
+        sheet.save_to_memory("xls", io)
+
+        response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
+        response['Content-Disposition'] = 'attachment; filename="riders-%s.xls"' % race.title
+        response['Content-Length'] = len(io.getvalue())
+
+        return response
+
+
 class RaceOfficialUpdateView(View):
     """Update the officials associated with a race
 
