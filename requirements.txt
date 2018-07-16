@@ -12,7 +12,9 @@ django-appconf==1.0.2
 django-bootstrap-form==3.4
 django-cors-headers==2.2.0
 django-coverage==1.2.4
-django-geoposition==0.3.0
+# get a pre-release version of geoposition for 1.11 compatability
+https://github.com/philippbosch/django-geoposition/archive/django-1.11.zip
+#django-geoposition==0.3.0
 django-ical==1.4
 django-pagination==1.0.7
 django-webtest==1.9.2
