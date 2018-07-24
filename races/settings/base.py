@@ -158,6 +158,8 @@ INSTALLED_APPS = (
     'geoposition',
 
     'rest_framework',
+    'rest_framework.authtoken',
+
     'corsheaders',
     "pinax.webanalytics",
 
@@ -167,10 +169,16 @@ INSTALLED_APPS = (
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
+    ],
 }
+
+
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
