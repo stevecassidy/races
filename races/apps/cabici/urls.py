@@ -63,10 +63,9 @@ urlpatterns = [
     url(r'^api/racecourses/$', api.RaceCourseList.as_view(), name='racecourse-list'),
     url(r'^api/racecourses/(?P<pk>[0-9]+)/$', api.RaceCourseDetail.as_view(), name='racecourse-detail'),
 
-# no need for rider details through the API yet and danger of leaking user information
-#    url(r'^api/riders/$', api.RiderList.as_view(), name='rider-list'),
-#    url(r'^api/riders/(?P<pk>[0-9]+)/$', api.RiderDetail.as_view(), name='rider-detail'),
-#    url(r'^api/users/(?P<pk>[0-9]+)/$', api.UserDetail.as_view(), name='user-detail'),
+    url(r'^api/riders/$', api.RiderList.as_view(), name='rider-list'),
+    url(r'^api/riders/(?P<pk>[0-9]+)/$', api.RiderDetail.as_view(), name='rider-detail'),
+    #url(r'^api/users/(?P<pk>[0-9]+)/$', api.UserDetail.as_view(), name='user-detail'),
 
     url(r'^api/pointscores/$', api.PointScoreList.as_view(), name='pointscore-list'),
     url(r'^api/pointscores/(?P<pk>[0-9]+)/$', api.PointScoreDetail.as_view(), name='pointscore-detail'),

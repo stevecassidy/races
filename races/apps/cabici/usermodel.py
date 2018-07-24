@@ -367,6 +367,19 @@ class Rider(models.Model):
                         cat = cat.replace("Boys", "Girls")
                 return cat
 
+    @property
+    def grades(self):
+        """Return a dictionary of grades for
+        different clubs for this rider, key is the
+        club slug"""
+
+        result = {}
+        grades = self.clubgrade_set.all()
+        for grade in grades:
+            result[grade.club.slug] = grade.grade
+
+        return result
+
     def performancereport(self, when=None):
         """Generate a rider performance report for all clubs
         if the when arg is provided it should be a date
