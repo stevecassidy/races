@@ -1,12 +1,29 @@
 {% extends "site_base.html" %}
 {% load bootstrap %}
-
+{% load staticfiles %}
 
 {% block head_title %}{{race.club.slug}} - {{race.title}}{% endblock %}
 
 {% block extra_script %}
-<script src="{{ STATIC_URL }}cabici.js"></script>
-{% endblock %}
+    <script src="{%  static 'cabici.js' %}"></script>
+
+    <script src="{% static 'js/bloodhound.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
+    <script src="{% static 'js/riders.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#addResultForm [name=riderName]').riderSelect({
+                '#id_rider': function (d) {
+                    return d.id
+                },
+                '#id_grade': function (d) {
+                    return d.grades['{{ race.club }}']
+                }
+            })
+        })
+    </script>
+{%  endblock %}
+
 
 {% block extra_head %}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnUgACSI5LnSOS5hDsR-iWiZ5ARzur_Bs&sensor=false"></script>
@@ -105,7 +122,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
         </div>
     </div>
 
-{% if race.raceresult_set.all %}
+{% if results.exists %}
     <div class='row'>
 
         <div class='col-md-12'>
@@ -120,13 +137,17 @@ google.maps.event.addDomListener(window, 'load', initialize);
                 <p>
                 <a href="{% url 'race_summary_spreadsheet' pk=race.id %}">
                     <button class="btn btn-default">Download Race Spreadsheet</button></a>
+
+                    <button class="btn btn-default" data-toggle="modal"
+                            data-target="#addResultModal" title="Add Result">Add Result</span>
+                    </button>
                 </p>
             {% endif %}
         </div>
     </div>
 
     <div class='row'>
-        {% regroup race.raceresult_set.all by grade as grade_list %}
+        {% regroup results by grade as grade_list %}
         <ul class="nav nav-tabs">
         {% for grade in grade_list %}
           <li role="presentation" {% if forloop.first %}class="active"{% endif %} >
@@ -242,6 +263,42 @@ google.maps.event.addDomListener(window, 'load', initialize);
       </div>
     </div>
 </div>
+
+
+
+    <div class='modal fade' id='addResultModal' tabindex='-2' role='dialog'
+         aria-labelledby="addResultModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="addResultModalLabel">Add Result</h4>
+                </div>
+                <div class="modal-body">
+                    <form id='addResultForm' method='POST' action=''>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="control-label" for="id_riderName">Rider name</label>
+                            <div class=" ">
+                                <input type="text" name="riderName"
+                                       required="" class=" form-control"
+                                       placeholder="Rider last name"
+                                       id="id_riderName">
+                            </div>
+                        </div>
+                        {{ resultaddform|bootstrap }}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <input type="submit" name="submit" class="btn btn-primary" value="Update">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
 {% endblock %}

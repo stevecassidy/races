@@ -28,6 +28,20 @@ class RaceResultUpdateForm(forms.ModelForm):
         fields = ['place', 'number', 'usual_grade']
 
 
+class RaceResultAddForm(forms.ModelForm):
+    """Form to add a new result for a race"""
+
+    #riderName = forms.CharField(label="Rider name", required=True)
+
+    class Meta:
+        model = RaceResult
+        fields = ['rider', 'race', 'place', 'number', 'grade']
+        widgets = {
+            'rider': forms.HiddenInput,
+            'race': forms.HiddenInput
+        }
+
+
 class RaceCreateForm(forms.ModelForm):
 
     class Meta:
@@ -45,17 +59,21 @@ class RaceCreateForm(forms.ModelForm):
     number = forms.IntegerField(initial=6, required=False)
     pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all(), required=False)
 
+
 class RaceCSVForm(forms.Form):
     """Form for uploading a file with race results"""
 
     excelfile = forms.FileField(label="Excel File")
+
 
 class RacePublishDraftForm(forms.Form):
     """Form for publish action"""
 
     club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
 
+
 MEMBER_FILE_FORMATS = (('IMG', 'IMG Sports'),)
+
 
 class MembershipUploadForm(forms.Form):
     """Form for uploading a membership list file in various formats"""
@@ -73,6 +91,7 @@ class RaceRiderForm(forms.Form):
     grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
     number = forms.IntegerField(label="Bib Number")
 
+
 class RiderSearchForm(forms.Form):
     """Form to search riders by various criteria"""
 
@@ -81,6 +100,7 @@ class RiderSearchForm(forms.Form):
 #    recent_places = forms.BooleanField(label="With Recent Placings", required=False)
 #    grade = forms.CharField(label="Grade", required=False)
     club = forms.ModelChoiceField(label="Club", queryset=Club.objects.all(), required=False)
+
 
 class RiderUpdateForm(forms.ModelForm):
     """Form to edit a rider/user by user"""
@@ -113,11 +133,13 @@ class RiderUpdateFormOfficial(forms.ModelForm):
     dutyhelper = forms.BooleanField(label="Duty Helper", required=False)
     #grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
 
+
 SEND_CHOICES = (('self', 'Yourself (test email)'),
                 ('members', 'Current Members'),
                 ('pastriders', 'All Riders from Past Year'),
                 ('commisaires', 'Commisaires'),
                 ('dutyofficers', 'Duty Officers'))
+
 
 class ClubMemberEmailForm(forms.Form):
 

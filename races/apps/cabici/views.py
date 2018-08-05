@@ -17,7 +17,7 @@ from anymail.exceptions import AnymailInvalidAddress
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club, RaceCourse
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade, PointscoreTally
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm, RaceResultAddForm
 
 import datetime
 import calendar
@@ -318,7 +318,7 @@ class ClubRidersExcelView(View):
 
         ws.append(header)
 
-        riders = Rider.objects.all()
+        riders = Rider.objects.all().select_related('user', 'club')
 
         for r in riders:
 
@@ -544,16 +544,30 @@ class RaceDetailView(DetailView):
 
         context = super(RaceDetailView, self).get_context_data(**kwargs)
 
+        context['results'] = self.object.raceresult_set.select_related('rider', 'rider__user', 'rider__club').all()
         context['csvform'] = RaceCSVForm()
         context['resulteditform'] = RaceResultUpdateForm()
+        context['resultaddform'] = RaceResultAddForm(initial={'race': self.object})
 
         return context
 
     def post(self, request, **kwargs):
-        """Handle the submission of a race update form to
-        add or modify """
+        """Handle the submission of the form to add a new result
+        for this race"""
 
-        pass
+        form = RaceResultAddForm(request.POST)
+
+        if form.is_valid():
+            result = form.save()
+            if result.race.club.slug in result.rider.grades:
+                result.usual_grade = result.rider.grades[result.race.club.slug]
+                result.save()
+            messages.add_message(self.request, messages.SUCCESS, "Result added", extra_tags='safe')
+        else:
+            msgtext = "Error in adding result: %s" % form.errors['__all__']
+            messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
+
+        return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
 
 class RaceSummarySpreadsheet(View):

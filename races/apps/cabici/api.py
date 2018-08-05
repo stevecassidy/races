@@ -306,6 +306,8 @@ class RiderList(generics.ListCreateAPIView):
         if prefix is not None:
             riders = riders.filter(user__last_name__startswith=prefix)
 
+        riders = riders.select_related('user', 'club')
+
         return riders.order_by('user__last_name')
 
 

@@ -76,8 +76,8 @@ class Club(models.Model):
         dd['nonridingmembers'] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category='non-riding').count()
 
         # roles
-        dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0)
-        dd['roles'] = UserRole.objects.filter(club__exact=self).order_by('role')
+        dd['commissaires'] = Rider.objects.filter(club__exact=self).exclude(commissaire__exact='').exclude(commissaire__exact=0).select_related('user')
+        dd['roles'] = UserRole.objects.filter(club__exact=self).order_by('role').select_related('user', 'role')
 
         return dd
 
