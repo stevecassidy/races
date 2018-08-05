@@ -533,7 +533,7 @@ class Race(models.Model):
         ordering = ['date', 'signontime']
 
     def __unicode__(self):
-        return unicode(self.club) + u": " + self.title + ", " + str(self.date)
+        return self.title + ", " + str(self.date)
 
     def get_absolute_url(self):
         return reverse('race', kwargs={'pk': self.id, 'slug': self.club.slug})

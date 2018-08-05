@@ -429,3 +429,35 @@ function submit_result_update_form(event) {
         }
     });
 }
+
+
+function delete_result_init() {
+    $('#resultDeleteModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var rider = button.data('rider'); // Extract info from data-* attributes
+        var resultid = button.data('resultid');
+        var resulturl = '/api/raceresults/' + resultid + '/'
+
+        var modal = $(this);
+        modal.find('.modal-title').text('Delete Result for ' + rider );
+        modal.find('form')[0].action = resulturl;
+
+        $("#submitdeleteform").click(function(){
+
+            $.ajax({
+                type: "DELETE",
+                url: resulturl,
+                success: function(msg){
+                    $("#resultDeleteModal").modal('hide');
+                    /* force a page refresh */
+                    window.location = window.location;
+                },
+                error: function(req, status, msg){
+                    $("#resultDeleteModal").modal('hide');
+                    alert("You don't have permission to delete this result.");
+                }
+            });
+        });
+    });
+
+}

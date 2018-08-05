@@ -20,6 +20,8 @@
                     return d.grades['{{ race.club }}']
                 }
             })
+
+            delete_result_init()
         })
     </script>
 {%  endblock %}
@@ -195,6 +197,13 @@ google.maps.event.addDomListener(window, 'load', initialize);
                                                 <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                         </td>
+                                            <td>
+                                             <a href="#" data-toggle="modal"
+                                                data-target="#resultDeleteModal" title="Delete Result"
+                                                data-resultid="{{result.id}}"
+                                                data-rider="{{result.rider}}"
+                                                ><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                                            </td>
                                         {% endif %}
                                     </tr>
                                     {% endif %}
@@ -219,6 +228,13 @@ google.maps.event.addDomListener(window, 'load', initialize);
                                                 <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
                                             </a>
                                         </td>
+                                            <td>
+                                                <a href="#" data-toggle="modal"
+                                                   data-target="#resultDeleteModal" title="Delete Result"
+                                                   data-resultid="{{result.id}}"
+                                                   data-rider="{{result.rider}}"
+                                                ><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                                            </td>
                                         {% endif %}                                    </tr>
                                     {% endif %}
                                 {% endfor %}
@@ -299,6 +315,28 @@ google.maps.event.addDomListener(window, 'load', initialize);
     </div>
 
 
+    <div class="modal fade" id="resultDeleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="deleteModalLabel">Delete Result</h4>
+                </div>
 
+                <div class="modal-body">
+
+                    <p>Are you sure that you would like to delete this race result?</p>
+
+                    <form id='resultdeleteform'>
+                        {% csrf_token %}
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" id="submitdeleteform" class="btn btn-primary">Delete Result</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

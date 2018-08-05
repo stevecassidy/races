@@ -415,9 +415,9 @@ class RaceResultList(generics.ListCreateAPIView):
         try:
             if raceid is not None:
                 if placed is not None:
-                    return RaceResult.objects.filter(race__pk__exact=raceid, place__gt=0)
+                    return RaceResult.objects.filter(race__pk__exact=raceid, place__gt=0).select_related('rider', 'rider__user')
                 else:
-                    return RaceResult.objects.filter(race__pk__exact=raceid)
+                    return RaceResult.objects.filter(race__pk__exact=raceid).select_related('rider', 'rider__user')
             else:
                 # should be all results but that would be too many
                 # and we'd never actually want that so return nothing
