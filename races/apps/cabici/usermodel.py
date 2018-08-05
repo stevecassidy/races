@@ -3,12 +3,12 @@ from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.utils.text import slugify
+from django.utils.functional import cached_property
 
 import json
 import datetime
 
 from races.apps.cabici.models import Club, Race
-import csv
 from bs4 import BeautifulSoup
 
 
@@ -297,6 +297,9 @@ class Rider(models.Model):
 
     club = models.ForeignKey(Club, null=True)
 
+    class Meta:
+        ordering = ['user__last_name', 'user__first_name']
+
     def get_absolute_url(self):
 
         return reverse('rider', kwargs={'pk': self.user.pk})
@@ -304,13 +307,20 @@ class Rider(models.Model):
     def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
 
+    @cached_property
+    def current_membership(self):
+
+        m = self.membership_set.all().order_by('-date')
+        if m:
+            return m[0]
+
     @property
     def member_category(self):
         """Return the category from the most recent membership year"""
 
-        m = self.membership_set.all().order_by('-date')
+        m = self.current_membership
         if m:
-            return m[0].get_category_display()
+            return m.get_category_display()
         else:
             return ''
 
@@ -318,9 +328,9 @@ class Rider(models.Model):
     def member_date(self):
         """Return the year from the most recent membership year"""
 
-        m = self.membership_set.all().order_by('-date')
+        m = self.current_membership
         if m:
-            return m[0].date
+            return m.date
         else:
             return ''
 
