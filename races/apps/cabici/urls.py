@@ -72,5 +72,5 @@ urlpatterns = [
     url(r'^api/raceresults/$', api.RaceResultList.as_view(), name='raceresult-list'),
     url(r'^api/raceresults/(?P<pk>[0-9]+)/$', api.RaceResultDetail.as_view(), name='raceresult-detail'),
 
-#    url(r'^test.html$', TemplateView.as_view(template_name="test.html"))
+    url(r'^test.html$', TemplateView.as_view(template_name="test.html"))
 ]

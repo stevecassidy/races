@@ -1,24 +1,52 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Test Page</title>
+{% extends "site_base.html" %}
+
+{% load staticfiles %}
+{% block extra_head %}
+{% endblock %}
+
+{% block extra_script %}
+    <script src="{% static 'js/bloodhound.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
+    <script src="{% static 'js/riders.js' %}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#rider').riderSelect({
+                '#rider-id': function (d) {
+                    return d.id
+                },
+                '[name=grade]': function (d) {
+                    return d.grades['WaratahMastersCC']
+                },
+                '[name=licenceno]': function (d) {
+                    return d.licenceno
+                }
+            })
+        })
+    </script>
+{%  endblock %}
 
 
-  </head>
-  <body>
-    <div id="content">
-
-        {% load flatpages %}
-        {% get_flatpages as flatpages %}
-        <ul>
-            {% for page in flatpages %}
-                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-            {% endfor %}
-        </ul>
-
-        
+{%  block content %}
+    <form class="form-horizontal">
+    <div class="form-group">
+    <label for="rider">Rider:</label>
+    <input id="rider" name="rider" class="form-control" type="text" placeholder="Rider last name">
+    <input id="rider-id" name="rider-id" type="hidden">
     </div>
-  </body>
-</html>
+    <div class="form-group">
+        <label for="grade">
+            Grade
+        </label>
+        <input name="grade" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="licenceno">Licence Number</label>
+        <input name="licenceno" class="form-control">
+
+    </div>
+
+    <div class="form-group">
+            <button type="submit" class="btn btn-default">Submit</button>
+    </div>
+    </form>
+{%  endblock %}
