@@ -104,8 +104,10 @@ class UserModelTests(TestCase):
 
         # remove this riders membership and it should return ''
         rider.membership_set.all().delete()
-        self.assertEqual('', rider.member_category)
 
+        # get rider again (to avoid cache of membership)
+        rider_again = Rider.objects.get(id=2930)
+        self.assertEqual('', rider_again.member_category)
 
     def test_member_date(self):
 
@@ -116,7 +118,10 @@ class UserModelTests(TestCase):
 
         # remove this riders membership and it should return ''
         rider.membership_set.all().delete()
-        self.assertEqual('', rider.member_date)
+
+        # get rider again (to avoid cache of membership)
+        rider_again = Rider.objects.get(id=2930)
+        self.assertEqual('', rider_again.member_date)
 
     def test_grade(self):
         """Assigning riders to grades"""

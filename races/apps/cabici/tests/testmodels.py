@@ -42,7 +42,6 @@ class ModelTests(TestCase):
         race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
         race.save()
 
-        self.assertTrue(unicode(race).startswith(slug))
         self.assertTrue(unicode(race).find(title) >= 0)
 
         self.assertEqual(race.get_absolute_url(), "/races/TEST/1")
