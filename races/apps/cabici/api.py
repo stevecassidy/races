@@ -2,14 +2,23 @@
 
 from rest_framework import serializers, generics, permissions, relations
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.pagination import PageNumberPagination
 import datetime
-from django.db import models
 from django.http import Http404
 
 from models import Club, Race, RaceCourse
 from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    """Pagination class for requests that return large numbers of results"""
+
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 @api_view(('GET',))
@@ -19,14 +28,14 @@ def api_root(request, format=None):
         'clubs': reverse('club-list', request=request, format=format),
         'races': reverse('race-list', request=request, format=format),
         'racecourses': reverse('racecourse-list', request=request, format=format),
-        #'riders': reverse('rider-list', request=request, format=format),
+        'riders': reverse('rider-list', request=request, format=format),
         'pointscores': reverse('pointscore-list', request=request, format=format),
         'raceresults': reverse('raceresult-list', request=request, format=format),
     })
 
 
 # TODO: authentication for create/update/delete views
-#---------------Permissions-----------------
+# ---------------Permissions-----------------
 
 class ClubOfficialPermission(permissions.BasePermission):
     """Permission only for officials of a club"""
@@ -78,20 +87,22 @@ class ClubOfficialPermission(permissions.BasePermission):
         elif isinstance(obj, RaceResult):
             club = obj.race.club
         else:
-            print request.user, "not whatever"
             return False
 
         return request.user.rider.club == club
 
-#---------------Club------------------
+# ---------------Club------------------
+
 
 class ClubSerializer(serializers.HyperlinkedModelSerializer):
 
     races = serializers.HyperlinkedRelatedField(many=True, queryset=Race.objects.all(), view_name='race-detail')
     url = relations.HyperlinkedIdentityField(lookup_field='slug', view_name='club-detail')
+
     class Meta:
         model = Club
-        fields = ('url', 'name','slug', 'website', 'races')
+        fields = ('url', 'name', 'slug', 'website', 'races')
+
 
 class ClubBriefSerializer(serializers.ModelSerializer):
 
@@ -99,36 +110,42 @@ class ClubBriefSerializer(serializers.ModelSerializer):
         model = Club
         fields = ('name', 'id', 'slug')
 
+
 class ClubList(generics.ListCreateAPIView):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
+
 
 class ClubDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
     lookup_field = 'slug'
 
-#---------------RaceCourse------------------
+# ---------------RaceCourse------------------
+
 
 class RaceCourseSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = RaceCourse
         fields = '__all__'
 
+
 class RaceCourseBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = RaceCourse
         fields = '__all__'
 
+
 class RaceCourseList(generics.ListCreateAPIView):
     queryset = RaceCourse.objects.all()
     serializer_class = RaceCourseSerializer
+
 
 class RaceCourseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceCourse.objects.all()
     serializer_class = RaceCourseSerializer
 
-#---------------Race------------------
+# ---------------Race------------------
 
 
 class RaceOfficialField(serializers.Field):
@@ -147,12 +164,12 @@ class RaceOfficialField(serializers.Field):
 
         return result
 
-
     def to_internal_value(self, data):
 
         print "TIV", data
 
         return []
+
 
 class RaceSerializer(serializers.ModelSerializer):
     # TODO: we want these fields to be expanded when we read the data
@@ -177,6 +194,7 @@ class RaceSerializer(serializers.ModelSerializer):
 
     def get_licencereq(self, obj):
         return {'key': obj.licencereq, 'display': obj.get_licencereq_display()}
+
 
 @permission_classes((ClubOfficialPermission,))
 class RaceList(generics.ListCreateAPIView):
@@ -217,12 +235,14 @@ class RaceList(generics.ListCreateAPIView):
 
         return races
 
+
 @permission_classes((ClubOfficialPermission,))
 class RaceDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Race.objects.all()
     serializer_class = RaceSerializer
 
-#---------------RaceStaff------------------
+# ---------------RaceStaff------------------
+
 
 class RaceStaffSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -231,51 +251,49 @@ class RaceStaffSerializer(serializers.HyperlinkedModelSerializer):
 
     role = serializers.SlugRelatedField(slug_field='name', queryset=ClubRole.objects.all())
 
+
 class RaceStaffList(generics.ListCreateAPIView):
     queryset = RaceStaff.objects.all()
     serializer_class = RaceStaffSerializer
+
 
 @permission_classes((ClubOfficialPermission,))
 class RaceStaffDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceStaff.objects.all()
     serializer_class = RaceStaffSerializer
 
-#---------------Rider------------------
 
-from django.contrib.auth.models import User
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    #rider = serializers.HyperlinkedRelatedField(many=False, queryset=Rider.objects.all(), view_name='rider-detail')
-
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name')
-
-class UserList(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# ---------------Rider------------------
 
 class RiderSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer(read_only=True)
-    club = ClubBriefSerializer(read_only=True)
+
+    first_name = serializers.CharField(source="user.first_name", read_only=True)
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+    club = serializers.CharField(source="club.name", read_only=True)
+    clubslug = serializers.CharField(source="club.slug", read_only=True)
 
     class Meta:
         model = Rider
-        fields = '__all__'
+        fields = ('id', 'first_name', 'last_name', 'club', 'clubslug', 'licenceno',
+                  'classification',
+                  'member_category',
+                  'member_date',
+                  'grades',
+                  'gender', 'emergencyphone', 'emergencyname' )
 
 
 class RiderList(generics.ListCreateAPIView):
+    # require authentication to access rider list API
+    permission_classes = (IsAuthenticated, )
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
 
         clubid = self.request.query_params.get('club', None)
         commissaire = self.request.query_params.get('commissaire', None)
+        prefix = self.request.query_params.get('prefix', None)
 
         if clubid is not None:
             if commissaire is not None:
@@ -285,14 +303,19 @@ class RiderList(generics.ListCreateAPIView):
         else:
             riders = Rider.objects.all()
 
-        return riders
+        if prefix is not None:
+            riders = riders.filter(user__last_name__startswith=prefix)
+
+        return riders.order_by('user__last_name')
+
 
 @permission_classes((ClubOfficialPermission,))
 class RiderDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rider.objects.all()
     serializer_class = RiderSerializer
 
-#---------------PointScore------------------
+
+# ---------------PointScore------------------
 
 class PointScoreBriefSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -301,6 +324,7 @@ class PointScoreBriefSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PointScore
         fields = ('url', 'club', 'name')
+
 
 class PointScoreList(generics.ListCreateAPIView):
     serializer_class = PointScoreBriefSerializer
@@ -349,10 +373,12 @@ class PointScoreDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = PointScore.objects.all()
     serializer_class = PointScoreSerializer
 
-#---------------RaceResult------------------
+# ---------------RaceResult------------------
+
 
 class RaceResultSerializer(serializers.ModelSerializer):
 
+    rider_name = serializers.CharField(source="rider", read_only=True)
     rider = serializers.SerializerMethodField('rider_name')
     riderid = serializers.SerializerMethodField('rider_id')
     club = serializers.SerializerMethodField('club_name')
@@ -373,9 +399,11 @@ class RaceResultSerializer(serializers.ModelSerializer):
         model = RaceResult
         fields = '__all__'
 
+
 class RaceResultList(generics.ListCreateAPIView):
 
     serializer_class = RaceResultSerializer
+    #pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
 
@@ -389,7 +417,10 @@ class RaceResultList(generics.ListCreateAPIView):
                 else:
                     return RaceResult.objects.filter(race__pk__exact=raceid)
             else:
-                return RaceResult.objects.all()
+                # should be all results but that would be too many
+                # and we'd never actually want that so return nothing
+                return RaceResult.objects.none()
+
         except ValueError:
             # given a non integer for raceid
             raise Http404("Invalid Race ID")

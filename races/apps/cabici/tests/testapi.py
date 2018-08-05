@@ -9,17 +9,16 @@ import datetime
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff
 
-
 OGE = {
-        u"name": u"ORICA GREENEDGE",
-        u"website": u"http://oge.team",
-        u"slug": u"OGE",
-        u"url": u'http://testserver/api/clubs/OGE/',
-        u"races": [],
-    }
+    u"name": u"ORICA GREENEDGE",
+    u"website": u"http://oge.team",
+    u"slug": u"OGE",
+    u"url": u'http://testserver/api/clubs/OGE/',
+    u"races": [],
+}
+
 
 class APITests(TestCase):
-
     fixtures = ['clubs', 'courses', 'races', 'users', 'riders', 'clubroles']
 
     def setUp(self):
@@ -28,6 +27,11 @@ class APITests(TestCase):
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
 
+        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial.save()
+        self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
+        self.movofficial.save()
+
         self.lansdowne = RaceCourse.objects.get(name='Lansdowne Park')
         self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
 
@@ -35,10 +39,8 @@ class APITests(TestCase):
 
         self.pointscore.save()
 
-
     def test_club_list(self):
         """Can retrieve club information via the API"""
-
 
         response = self.client.get("/api/clubs/")
 
@@ -96,7 +98,6 @@ class APITests(TestCase):
         racelist = json.loads(response.content)
         self.assertEqual(4, len(racelist))
 
-
     def test_race_list_club(self):
         """Listing races"""
 
@@ -114,7 +115,6 @@ class APITests(TestCase):
         # club in each race should be this one
         for race in racelist:
             self.assertEqual(63, race['club']['id'])
-
 
     def test_race_list_select_recent(self):
         """Listing just some races"""
@@ -162,8 +162,6 @@ class APITests(TestCase):
 
         # races are most recent first
         self.assertEqual(str(datetime.date.today()), racelist[0]['date'])
-
-
 
     def test_race_detail(self):
         """Get detailed description of a race"""
@@ -221,18 +219,17 @@ class APITests(TestCase):
         self.assertEqual(1, len(jsonresponse['officials']['Commissaire']))
         self.assertEqual(2, len(jsonresponse['officials']['Duty Helper']))
 
-
         data = {'id': race.id,
                 'club': {
-                    "id":  self.oge.id,
+                    "id": self.oge.id,
                     "name": "Orica Greenedge",
                     "slug": "OGE"
-                    },
+                },
                 'location': {
                     "id": self.lansdowne.id,
                     "name": "Lansdowne Park",
                     "location": "-33.89962929570353,150.97582697868347"
-                    },
+                },
                 'pointscore': self.pointscore.id,
                 'title': 'Test Race',
                 'date': '2014-12-13',
@@ -254,19 +251,17 @@ class APITests(TestCase):
                         }
                     ],
                     "Duty Helper": [
-                                    {
-                                        "id": "12345",
-                                        "name": "Jane Boo"
-                                    },
-                                    {
-                                        "id": "12345",
-                                        "name": "Jane Foo"
-                                    }
-                                ]
-                    }
+                        {
+                            "id": "12345",
+                            "name": "Jane Boo"
+                        },
+                        {
+                            "id": "12345",
+                            "name": "Jane Foo"
+                        }
+                    ]
                 }
-
-
+                }
 
     def test_delete_race(self):
         """Can only delete race when logged in as a club official"""
@@ -281,14 +276,18 @@ class APITests(TestCase):
 
         # without login, we should get a redirect response
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, 403, "Expect auth failure without login for delete race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 401,
+                         "Expect auth failure without login for delete race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # login as movrider still should not work since they are not an official
         self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         # without login, we should get a redirect response
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, 403, "Expect auth failure with regular rider login for delete race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 403,
+                         "Expect auth failure with regular rider login for delete race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # now designate our rider an official and we should be ok
         movrider.official = True
@@ -297,11 +296,12 @@ class APITests(TestCase):
         self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
         response = self.client.delete(url)
 
-        self.assertEqual(response.status_code, 204, "Expect success after login for delete race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 204,
+                         "Expect success after login for delete race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # and the race should be gone
         self.assertEqual(0, len(Race.objects.filter(id=raceid)))
-
 
     def test_update_race(self):
 
@@ -313,16 +313,16 @@ class APITests(TestCase):
         movraces = self.mov.races.count()
 
         newrace = {'id': race.id,
-                'club': self.oge.id,
-                'location': self.lansdowne.id,
-                'pointscore': self.pointscore.id,
-                'title': 'Test Race',
-                'date': '2014-12-13',
-                'starttime': '08:00',
-                'signontime': '08:00',
-                'status': 'd',
-                'website': 'http://example.org/',
-                }
+                   'club': self.oge.id,
+                   'location': self.lansdowne.id,
+                   'pointscore': self.pointscore.id,
+                   'title': 'Test Race',
+                   'date': '2014-12-13',
+                   'starttime': '08:00',
+                   'signontime': '08:00',
+                   'status': 'd',
+                   'website': 'http://example.org/',
+                   }
         data = json.dumps(newrace)
 
         url = '/api/races/%d/' % race.id
@@ -330,13 +330,17 @@ class APITests(TestCase):
         # try to update the race with a POST request
         # without login, we should get a redirect response
         response = self.client.put(url, data, content_type='application/json')
-        self.assertEqual(response.status_code, 403, "Expect auth failure without login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 401,
+                         "Expect auth failure without login for create race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # login as a club member, not official, still expect failure
         self.client.force_login(user=movrider.user, backend='django.contrib.auth.backends.ModelBackend')
 
         response = self.client.put(url, data, content_type='application/json')
-        self.assertEqual(response.status_code, 403, "Expect auth failure with member login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 403,
+                         "Expect auth failure with member login for create race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # now designate our rider an official and we should be ok
         movrider.official = True
@@ -346,7 +350,8 @@ class APITests(TestCase):
         # now it should work
         response = self.client.put(url, data, content_type='application/json')
         self.assertEqual(response.status_code, 200,
-                "Failed request for race create when logged in (%d). Response text:\n%s" % (response.status_code, str(response)))
+                         "Failed request for race create when logged in (%d). Response text:\n%s" % (
+                         response.status_code, str(response)))
 
         raceinfo = json.loads(response.content)
         self.assertEqual(raceinfo['title'], newrace['title'])
@@ -355,7 +360,6 @@ class APITests(TestCase):
 
         # should have the same number of races
         self.assertEqual(movraces, self.mov.races.count())
-
 
     @skip('create not implemented yet   ')
     def test_create_race(self):
@@ -368,16 +372,16 @@ class APITests(TestCase):
         movraces = self.mov.races.count()
 
         newrace = {'id': race.id,
-                'club': {'name': 'Movistar', 'id': self.mov.id},
-                'location': self.lansdowne.id,
-                'pointscore': self.pointscore.id,
-                'title': 'Test Race',
-                'date': '2014-12-13',
-                'starttime': '08:00',
-                'signontime': '08:00',
-                'status': 'd',
-                'website': 'http://example.org/',
-                }
+                   'club': {'name': 'Movistar', 'id': self.mov.id},
+                   'location': self.lansdowne.id,
+                   'pointscore': self.pointscore.id,
+                   'title': 'Test Race',
+                   'date': '2014-12-13',
+                   'starttime': '08:00',
+                   'signontime': '08:00',
+                   'status': 'd',
+                   'website': 'http://example.org/',
+                   }
         data = json.dumps(newrace)
 
         url = '/api/races/'
@@ -385,13 +389,17 @@ class APITests(TestCase):
         # try to update the race with a POST request
         # without login, we should get a redirect response
         response = self.client.post(url, data, content_type='application/json')
-        self.assertEqual(response.status_code, 403, "Expect auth failure without login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 403,
+                         "Expect auth failure without login for create race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # login as a club member, not official, still expect failure
         self.client.force_login(user=movrider.user)
 
         response = self.client.post(url, data, content_type='application/json')
-        self.assertEqual(response.status_code, 403, "Expect auth failure with member login for create race. \nResponse code %d\nResponse text:%s\n" % (response.status_code, str(response)))
+        self.assertEqual(response.status_code, 403,
+                         "Expect auth failure with member login for create race. \nResponse code %d\nResponse text:%s\n" % (
+                         response.status_code, str(response)))
 
         # now designate our rider an official and we should be ok
         movrider.official = True
@@ -401,7 +409,8 @@ class APITests(TestCase):
         # now it should work
         response = self.client.post(url, data, content_type='application/json')
         self.assertEqual(response.status_code, 200,
-                "Failed request for race create when logged in (%d). Response text:\n%s" % (response.status_code, str(response)))
+                         "Failed request for race create when logged in (%d). Response text:\n%s" % (
+                         response.status_code, str(response)))
 
         raceinfo = json.loads(response.content)
         self.assertEqual(raceinfo['title'], newrace['title'])
@@ -409,11 +418,10 @@ class APITests(TestCase):
         self.assertEqual(raceinfo['starttime'], newrace['starttime'])
 
         # should have the same number of races
-        self.assertEqual(movraces+1, self.mov.races.count())
+        self.assertEqual(movraces + 1, self.mov.races.count())
 
     def test_pointscore_list(self):
         """Get the list of pointscores"""
-
 
         url = '/api/pointscores/'
 
@@ -423,3 +431,31 @@ class APITests(TestCase):
 
         self.assertEqual(1, len(data))
         self.assertEqual("OGE", data[0]['club']['slug'])
+
+    def test_rider_list(self):
+        """List of riders is not accessible unless authenticated"""
+
+        url = '/api/riders/'
+
+        # no authentication gives us an error response
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+        # need to authenticate
+        self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+
+        # should be paged
+        self.assertIn('count', data)
+        self.assertEqual(100, len(data['results']))
+
+        # should be able to request the next page via the link in data['next']
+
+        response = self.client.get(data['next'])
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+
+        self.assertEqual(100, len(data['results']))
