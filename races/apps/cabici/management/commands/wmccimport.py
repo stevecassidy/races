@@ -171,14 +171,14 @@ def import_races(csvdir, waratahs, usermap):
                 comm = RaceStaff(race=race, role=role_comm, rider=comm_rider)
                 comm.save()
             elif row['commissaire'] is not '':
-                print "Commissaire not found", row['commissaire']
+                print("Commissaire not found", row['commissaire'])
 
             if row['dutyofficer'] is not '' and int(row['dutyofficer']) in usermap:
                 do_rider = usermap[int(row['dutyofficer'])].rider
                 do = RaceStaff(race=race, role=role_do, rider=do_rider)
                 do.save()
             elif row['dutyofficer'] is not '':
-                print "Duty Officer not found: '%s'" % row['dutyofficer']
+                print("Duty Officer not found: '%s'" % row['dutyofficer'])
 
             for dh_id in row['helpers'].split(','):
                 try:
@@ -187,19 +187,19 @@ def import_races(csvdir, waratahs, usermap):
                         dh = RaceStaff(race=race, role=role_dh, rider=dh_rider)
                         dh.save()
                     else:
-                        print "Duty Helper not found", dh_id
+                        print("Duty Helper not found", dh_id)
                 except:
                     pass
 
-        print "Imported %d races" % len(racedict)
-        print "POINTSCORE: ", ps.races.all().count(), "races"
+        print("Imported %d races" % len(racedict))
+        print("POINTSCORE: ", ps.races.all().count(), "races")
         return racedict
 
 def import_users(csvdir, waratahs):
 
     # delete riders except for officials and staff, other models will cascade
     deleted = User.objects.filter(rider__official__exact=False).filter(is_staff__exact=False).delete()
-    print "DELETED: ", deleted
+    print("DELETED: ", deleted)
 
     usermap = dict()
     # import riders from register.csv
@@ -276,7 +276,7 @@ def import_users(csvdir, waratahs):
 
         waratahs.create_duty_helpers()
 
-        print "Imported %d riders" % usercount
+        print("Imported %d riders" % usercount)
         return usermap
 
 def import_roles(csvdir, waratahs):
@@ -289,7 +289,7 @@ def import_roles(csvdir, waratahs):
         for row in reader:
             users = User.objects.filter(email=row['email'])
             if users.count() > 1:
-                print users
+                print(users)
             user = users[0]
 
             if '/' in row['position']:
@@ -307,9 +307,9 @@ def import_roles(csvdir, waratahs):
             user.rider.official = True
             user.rider.save()
 
-            print "Role: ", user, [r.role for r in user.userrole_set.all()]
+            print("Role: ", user, [r.role for r in user.userrole_set.all()])
 
-    print "Imported roles"
+    print("Imported roles")
 
 
 def import_points(csvdir, waratahs, usermap, racedict):
@@ -391,7 +391,7 @@ class Command(BaseCommand):
         try:
             waratahs = Club.objects.get(slug='WaratahMastersCC')
         except:
-            print "You need to create the WaratahMastersCC club first"
+            print("You need to create the WaratahMastersCC club first")
             exit()
 
         usermap = import_users(csvdir, waratahs)

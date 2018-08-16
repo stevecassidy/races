@@ -1,11 +1,10 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from races.apps.cabici.models import Club, RaceCourse, Race
 import datetime
 
 class ModelTests(TestCase):
-
 
     def test_club(self):
         """Test creation of clubs and some methods"""
@@ -16,8 +15,7 @@ class ModelTests(TestCase):
         club = Club(name=name, website=website, slug=slug)
 
         # string version of club is the slug
-        self.assertEqual(unicode(club), slug)
-
+        self.assertEqual(str(club), slug)
 
         # test failure modes of ingest
         # this triggers ingest_by_module which fails because there is no module
@@ -42,6 +40,6 @@ class ModelTests(TestCase):
         race = Race(title=title, date=date, signontime="08:00", club=club, location=loc)
         race.save()
 
-        self.assertTrue(unicode(race).find(title) >= 0)
+        self.assertTrue(str(race).find(title) >= 0)
 
         self.assertEqual(race.get_absolute_url(), "/races/TEST/1")

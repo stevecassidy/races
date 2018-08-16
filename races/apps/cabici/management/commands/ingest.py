@@ -27,7 +27,7 @@ class Command(BaseCommand):
         for club in clubs:
             try:
                 (races, errors) = club.ingest()
-                print "Club: ", club, "found", len(races), "races"
+                print("Club: ", club, "found", len(races), "races")
             except Exception as e:
-                print "Club: ", club, "error:", e
+                print("Club: ", club, "error:", e)
             

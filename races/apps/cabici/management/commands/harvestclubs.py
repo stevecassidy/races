@@ -5,7 +5,7 @@ Created on August 18, 2015
 '''
 
 from bs4 import BeautifulSoup
-from urllib2 import urlopen
+from urllib.request import urlopen
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -48,4 +48,4 @@ class Command(BaseCommand):
             slug = clubname.replace(' ', '')
             club = Club(name=clubname, slug=slug, website=website)
             club.save()
-            print club
+            print(club)

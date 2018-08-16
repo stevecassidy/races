@@ -6,7 +6,7 @@ Created on Apr 15, 2013
 CALENDAR_URL = 'http://penrithp.ipower.com/calendar.php'
 LOCATION = "Penrith Regatta Centre"
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 import datetime
 import re
@@ -16,12 +16,12 @@ import hashlib
 def ingest():
     """Return a list of dictionaries, one for each race"""
 
-    webtext = urllib2.urlopen(CALENDAR_URL).read()
+    webtext = urllib.request.urlopen(CALENDAR_URL).read()
     soup = BeautifulSoup(webtext, "lxml")
     tables = soup.find_all('table')
 
     if len(tables) < 6:
-        print "No events found in Penrith's web page"
+        print("No events found in Penrith's web page")
         return []
     
     cal_table = tables[5]
@@ -45,7 +45,7 @@ def ingest():
             d = datetime.datetime.strptime(dateinfo, "%d/%m/%Y")
             race['date'] = d.strftime("%Y-%m-%d")
         except:
-            print "Unknown date for Penrith race: '%s' " % dateinfo
+            print("Unknown date for Penrith race: '%s' " % dateinfo)
         
         
         race['url'] = CALENDAR_URL
@@ -73,5 +73,5 @@ if __name__ == '__main__':
     #print races[0]
     
     for race in ingest():
-        print "RACE: ", race
+        print("RACE: ", race)
         

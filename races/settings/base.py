@@ -107,7 +107,7 @@ STATICFILES_FINDERS = (
 SECRET_KEY = '^g=q21r_nnmbz49d!vs*2gvpll-y9b@&amp;t3k2r3c$*u&amp;2la5!%s'
 
 #
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -154,7 +154,7 @@ INSTALLED_APPS = (
     "bootstrapform",
     "pinax_theme_bootstrap",
 
-    'pagination',
+    #'pagination',
     'geoposition',
 
     'rest_framework',

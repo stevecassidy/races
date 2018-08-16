@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django_webtest import WebTest
 from django.core import mail
@@ -125,8 +125,7 @@ class OfficialsTests(WebTest):
             else:
                 self.assertEqual(0, rc[0])
         # and it should be ordered
-        self.assertListEqual(counted_helpers, sorted(counted_helpers))
-
+        self.assertListEqual(counted_helpers, sorted(counted_helpers, key=lambda x: x[0]))
 
     def test_club_allocate_officials(self):
         """Allocate officials to a set of races"""
@@ -250,7 +249,7 @@ class OfficialsTests(WebTest):
         dashboard_url = reverse('club_dashboard', kwargs={'slug': self.mov.slug})
         emailurl = reverse('club_email', kwargs={'slug': self.oge.slug})
 
-        response = self.app.get(dashboard_url, user=self.ogeofficial)
+        response = self.app.get(dashboard_url, user=self.ogeofficial, status=403)
 
         # there is no link with the email URL
         link = response.html.find_all('a', href=emailurl)
@@ -385,10 +384,10 @@ class OfficialsTests(WebTest):
         self.assertEqual(response['Content-Type'], 'application/octet-stream')
 
         import pyexcel
-        from StringIO import StringIO
+        from io import BytesIO
 
         # should be able to read the response as an xls sheet
-        buf = StringIO(response.content)
+        buf = BytesIO(response.content)
         ws = pyexcel.get_sheet(file_content=buf, file_type="xls")
         ws.name_columns_by_row(0)
 

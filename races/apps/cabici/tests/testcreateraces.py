@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 
@@ -93,7 +93,7 @@ class CreateViewTests(TestCase):
         # expect a redirect response to the race page
         self.assertEqual(response.status_code, 200)
         # respose should be JSON
-        self.assertEqual('{"success": 1}', response.content)
+        self.assertEqual(b'{"success": 1}', response.content)
 
         # should have one more race
 
@@ -140,7 +140,7 @@ class CreateViewTests(TestCase):
         # expect a redirect response to the race page
         self.assertEqual(response.status_code, 200)
         # respose should be JSON
-        self.assertEqual('{"success": 1}', response.content)
+        self.assertEqual(b'{"success": 1}', response.content)
         # should have six more races
         self.assertEqual(6, self.oge.races.count())
 
@@ -195,7 +195,7 @@ class CreateViewTests(TestCase):
         # expect a redirect response to the race page
         self.assertEqual(response.status_code, 200)
         # respose should be JSON
-        self.assertEqual('{"success": 1}', response.content)
+        self.assertEqual(b'{"success": 1}', response.content)
 
         # should have six more races
         self.assertEqual(6, self.oge.races.count())
@@ -248,7 +248,7 @@ class CreateViewTests(TestCase):
         # expect a redirect response to the race page
         self.assertEqual(response.status_code, 200)
         # respose should be JSON
-        self.assertEqual('{"success": 1}', response.content)
+        self.assertEqual(b'{"success": 1}', response.content)
 
         # should have six more races
         self.assertEqual(6, self.oge.races.count())
@@ -262,7 +262,6 @@ class CreateViewTests(TestCase):
         self.assertEqual(races[3].date, date(2015, 3, 30))
         self.assertEqual(races[4].date, date(2015, 4, 27))
         self.assertEqual(races[5].date, date(2015, 5, 25))
-
 
     def test_set_race_officials(self):
         """Test that we can set the officails for a race"""
