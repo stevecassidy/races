@@ -813,7 +813,7 @@ class ClubRaceResultsView(DetailView):
         context['races'] = Race.objects.filter(date__lt=datetime.date.today(),
                                                club__exact=club,
                                                raceresult__rider__isnull=False,
-                                               status__exact='p').distinct()
+                                               status__exact='p').distinct().select_related('club').select_related('location')
 
         return context
 
