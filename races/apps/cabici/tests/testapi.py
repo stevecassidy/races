@@ -1,6 +1,6 @@
 from django.test import TestCase
 from unittest import skip
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 
 import json
@@ -10,11 +10,11 @@ from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff
 
 OGE = {
-    u"name": u"ORICA GREENEDGE",
-    u"website": u"http://oge.team",
-    u"slug": u"OGE",
-    u"url": u'http://testserver/api/clubs/OGE/',
-    u"races": [],
+    "name": "ORICA GREENEDGE",
+    "website": "http://oge.team",
+    "slug": "OGE",
+    "url": 'http://testserver/api/clubs/OGE/',
+    "races": [],
 }
 
 

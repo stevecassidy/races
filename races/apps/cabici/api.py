@@ -9,8 +9,8 @@ from rest_framework.pagination import PageNumberPagination
 import datetime
 from django.http import Http404
 
-from models import Club, Race, RaceCourse
-from usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
+from .models import Club, Race, RaceCourse
+from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -48,7 +48,7 @@ class ClubOfficialPermission(permissions.BasePermission):
             return True
 
         # anonymous user can't do anything unsafe
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return False
 
         # superuser can do anything
@@ -69,7 +69,7 @@ class ClubOfficialPermission(permissions.BasePermission):
             return True
 
         # anonymous user can't do anything unsafe
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return False
 
         # superuser can do anything
@@ -166,7 +166,7 @@ class RaceOfficialField(serializers.Field):
 
     def to_internal_value(self, data):
 
-        print "TIV", data
+        print("TIV", data)
 
         return []
 

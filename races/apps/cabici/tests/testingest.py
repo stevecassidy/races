@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 import vcr
 
 from races.apps.cabici.models import Club, RaceCourse, Race
@@ -114,28 +114,28 @@ class IngestTests():
                   {'date': '2013-09-29',
                   'hash': '7823305046c8a4a5fd1a71405b9fe36ec7bbe2e5',
                   'location': 'Lansdowne Park',
-                  'time': u'07:45',
+                  'time': '07:45',
                   'title': 'Criterium Race Grades C-F',
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'},
 
                  {'date': '2013-09-29',
                   'hash': '5aa36abebcf11c45679e3f800a7a9f19a147f100',
                   'location': 'Lansdowne Park',
-                  'time': u'09:00',
+                  'time': '09:00',
                   'title': 'Criterium Race Grades A-B',
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'},
 
                  {'date': '2013-10-06',
                   'hash': 'c0fb7620efe9e21273293ad9dbdf2a2be5758bd0',
                   'location': 'Sydney Dragway Full',
-                  'time': u'08:00',
+                  'time': '08:00',
                   'title': 'This title is really long and will be truncated because we only allow titles up to one hundred characters and this is a bit longer than that in fact it is quite a bit longer',
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'},
 
                  {'date': '2013-10-07',
                   'hash': '450cf08fc916bfe323825a6370836fb2da2feb36',
                   'location': 'SMSP Full GP Circuit, Eastern Creek (MONDAY)',
-                  'time': u'07:00',
+                  'time': '07:00',
                   'title': 'Ashfield Cycles / Specialized Cup - Graded Scratch',
                   'url': 'http://www.waratahmasters.com.au/eventsmenu.cfm'}
                  ]
@@ -163,7 +163,7 @@ class IngestTests():
         self.assertEqual(errors, [])
 
         loc = races[0].location
-        self.assertEqual(loc.name, u'SMSP Full GP Circuit, Eastern Creek')
+        self.assertEqual(loc.name, 'SMSP Full GP Circuit, Eastern Creek')
 
         # try one with a malformed time
         badrace = racedicts[0]

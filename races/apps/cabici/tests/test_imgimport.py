@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.models import User
 from django_webtest import WebTest
 from webtest import Upload
@@ -17,7 +17,7 @@ def write_imgsample(outfile, rows):
 
         fd.write('\n<table border="1">\n')
         # header row
-        keys = rows[0].keys()
+        keys = list(rows[0].keys())
         fd.write('\n<tr valign="top">\n')
         for key in keys:
             fd.write('\t<td valign="top">%s</td>\n' % key)
@@ -46,7 +46,7 @@ class IMGTests(TestCase):
         """We can read a file downloaded from IMG
         and return an iterator over the rows"""
 
-        from imgsampledict import rows
+        from .imgsampledict import rows
         write_imgsample(TESTFILE, rows)
 
         count = 0
@@ -54,8 +54,8 @@ class IMGTests(TestCase):
             for row in parse_img_members(fd):
                 count += 1
                 self.assertEqual(dict, type(row))
-                self.assertIn("First Name", row.keys())
-                self.assertIn("Member Number", row.keys())
+                self.assertIn("First Name", list(row.keys()))
+                self.assertIn("Member Number", list(row.keys()))
                 if row['First Name'] is 'Anthony':
                     self.assertEqual('DULWICH HILL', row['Suburb'])
                 if row['First Name'] is 'Stephen':
@@ -96,7 +96,7 @@ class IMGTests(TestCase):
         usernodob.rider.save()
 
         # use pre-parsed rows
-        from imgsampledict import rows
+        from .imgsampledict import rows
         result = Rider.objects.update_from_spreadsheet(club, rows)
 
         self.assertEqual(dict, type(result))
@@ -167,7 +167,7 @@ class IMGWebTests(WebTest):
         self.assertEqual("IMG", form['fileformat'].value)
 
 
-        from imgsampledict import rows
+        from .imgsampledict import rows
         write_imgsample(TESTFILE, rows)
 
         # fill the form to upload the file

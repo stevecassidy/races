@@ -25,32 +25,32 @@ class Command(BaseCommand):
         if options['list']:
             ps = PointScore.objects.all()
             for p in ps:
-                print p
+                print(p)
         else:
             ps = PointScore.objects.filter(name__contains=options['name'])
             if ps.count() == 0:
-                print "No pointscore matches", options['name']
+                print("No pointscore matches", options['name'])
             elif ps.count() == 1:
                 if options['rescore']:
-                    print "Rescoring ", ps[0]
+                    print("Rescoring ", ps[0])
                     ps[0].recalculate()
                 elif options['rider']:
                     riders = Rider.objects.filter(user__last_name__icontains=options['rider'])
                     if riders.count() == 0:
-                        print "Rider %s not found" % options['rider']
+                        print("Rider %s not found" % options['rider'])
                         exit()
 
                     for rider in riders:
-                        print rider
+                        print(rider)
                         try:
                             tally = PointscoreTally.objects.get(pointscore=ps[0], rider=rider)
-                            print "Total: ", tally.points
+                            print("Total: ", tally.points)
                             audit = ps[0].audit(rider)
                             for reason in sorted(audit):
-                                print '\t', reason[0], reason[1]
+                                print('\t', reason[0], reason[1])
                         except:
-                            print "\tNo Points"
+                            print("\tNo Points")
             else:
-                print "more than one pointscore matches", options['name'], ":"
+                print("more than one pointscore matches", options['name'], ":")
                 for p in ps:
-                    print p
+                    print(p)

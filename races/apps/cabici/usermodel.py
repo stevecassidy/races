@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse
 from django.utils.text import slugify
 from django.utils.functional import cached_property
 
@@ -73,19 +73,19 @@ def parse_img_members(fd):
 
 
 IMG_MAP = {
-    u'Address1': ('rider', 'streetaddress'),
-    u'DOB': ('rider', 'dob'),
-    u'Email Address': ('user', 'email'),
-    u'Emergency Contact Number': ('rider', 'emergencyphone'),
-    u'Emergency Contact Person': ('rider', 'emergencyname'),
-    u'First Name': ('user', 'first_name'),
-    u'Last Name': ('user', 'last_name'),
-    u'Member Number': ('rider', 'licenceno'),
-    u'Postcode': ('rider', 'postcode'),
-    u'State': ('rider', 'state'),
-    u'Suburb': ('rider', 'suburb'),
-    u'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
-    u'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
+    'Address1': ('rider', 'streetaddress'),
+    'DOB': ('rider', 'dob'),
+    'Email Address': ('user', 'email'),
+    'Emergency Contact Number': ('rider', 'emergencyphone'),
+    'Emergency Contact Person': ('rider', 'emergencyname'),
+    'First Name': ('user', 'first_name'),
+    'Last Name': ('user', 'last_name'),
+    'Member Number': ('rider', 'licenceno'),
+    'Postcode': ('rider', 'postcode'),
+    'State': ('rider', 'state'),
+    'Suburb': ('rider', 'suburb'),
+    'Commissaire Level (e.g. 2 Road Track MTB)': ('rider', 'commissaire'),
+    'Commissaire Accreditation Expiry Date': ('rider', 'commissaire_valid'),
 }
 
 
@@ -136,7 +136,7 @@ class RiderManager(models.Manager):
             # grab all values from row that are not None, map them
             # to the keys via IMG_MAP
             riderinfo = dict()
-            for key in row.keys():
+            for key in list(row.keys()):
                 if key in IMG_MAP:
                     if row[key] is not None and row[key] != '':
                         riderinfo[IMG_MAP[key]] = row[key]
@@ -170,7 +170,7 @@ class RiderManager(models.Manager):
 
             userchanges = []
             # add data from spreadsheet only if current entry is empty
-            for key in riderinfo.keys():
+            for key in list(riderinfo.keys()):
                 if key[0] == 'user':
                     if getattr(user, key[1]) == '':
                         setattr(user, key[1], riderinfo[key])
@@ -274,7 +274,7 @@ class Rider(models.Model):
 
     objects = RiderManager()
 
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     licenceno = models.CharField("Licence Number", max_length=20, blank=True, default='')
     gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES, blank=True, default='M')
     dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1), blank=True)
@@ -295,7 +295,7 @@ class Rider(models.Model):
     official = models.BooleanField("Club Official", default=False,
                                    help_text="Officials can view and edit member details, schedule races, upload results")
 
-    club = models.ForeignKey(Club, null=True)
+    club = models.ForeignKey(Club, null=True, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['user__last_name', 'user__first_name']
@@ -304,7 +304,7 @@ class Rider(models.Model):
 
         return reverse('rider', kwargs={'pk': self.user.pk})
 
-    def __unicode__(self):
+    def __str__(self):
         return self.user.first_name + " " + self.user.last_name
 
     @cached_property
@@ -419,8 +419,8 @@ MEMBERSHIP_CATEGORY_CHOICES = (('Ride', 'ride'), ('Race', 'race'), ('Non-riding'
 class Membership(models.Model):
     """Membership of a club with a given expiry date"""
 
-    rider = models.ForeignKey(Rider)
-    club = models.ForeignKey(Club, null=True)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, null=True, on_delete=models.CASCADE)
     date = models.DateField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
@@ -430,7 +430,7 @@ class ClubRole(models.Model):
 
     name = models.CharField("Name", max_length=100)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -438,11 +438,11 @@ class UserRole(models.Model):
     """A role held by a person in a club, eg. president, handicapper, duty officer
     """
 
-    user = models.ForeignKey(User)
-    club = models.ForeignKey(Club)
-    role = models.ForeignKey(ClubRole)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    role = models.ForeignKey(ClubRole, on_delete=models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return "Role: " + '::'.join((str(self.user), self.club.slug, self.role.name))
 
 
@@ -450,11 +450,11 @@ class RaceStaff(models.Model):
     """A person associated with a race in some role, eg. Commissaire, Duty Officer
     """
 
-    rider = models.ForeignKey(Rider)
-    race = models.ForeignKey(Race, related_name='officials')
-    role = models.ForeignKey(ClubRole)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
+    race = models.ForeignKey(Race, related_name='officials', on_delete=models.CASCADE)
+    role = models.ForeignKey(ClubRole, on_delete=models.CASCADE)
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s: %s" % (self.role.name, self.rider.user)
 
     class Meta:
@@ -469,12 +469,12 @@ class ClubGrade(models.Model):
     class Meta:
         ordering = ['rider', 'grade']
 
-    club = models.ForeignKey(Club)
-    rider = models.ForeignKey(Rider)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     grade = models.CharField("Grade", max_length=10)
 
-    def __unicode__(self):
-        return " - ".join((self.grade, unicode(self.rider), unicode(self.club)))
+    def __str__(self):
+        return " - ".join((self.grade, str(self.rider), str(self.club)))
 
     def save(self, *args, **kwargs):
         """A rider can only have one grade for each club"""
@@ -496,11 +496,11 @@ class RaceResult(models.Model):
         unique_together = (('race', 'grade', 'number'), ('race', 'rider'))
         ordering = ['race', 'grade', 'place', 'number']
 
-    def __unicode__(self):
+    def __str__(self):
         return "%s - %s-%d/%s, %s" % (str(self.race), self.grade, self.number or 0, self.place or '-', str(self.rider))
 
-    race = models.ForeignKey(Race)
-    rider = models.ForeignKey(Rider)
+    race = models.ForeignKey(Race, on_delete=models.CASCADE)
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
 
     grade = models.CharField("Grade", max_length=10)
     usual_grade = models.CharField("Usual Grade", max_length=10)
@@ -521,7 +521,7 @@ from django.core.validators import validate_comma_separated_integer_list
 class PointScore(models.Model):
     """A pointscore is a series of races where points are accumulated"""
 
-    club = models.ForeignKey(Club)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     points = models.CharField("Points for larger races", max_length=100, default="7,6,5,4,3", validators=[validate_comma_separated_integer_list])
     smallpoints = models.CharField("Points for small races", max_length=100, default="5,4", validators=[validate_comma_separated_integer_list])
@@ -569,8 +569,8 @@ class PointScore(models.Model):
             else:
                 return (participation, "Participation")
 
-    def __unicode__(self):
-        return unicode(unicode(self.club) + " " + self.name)
+    def __str__(self):
+        return str(str(self.club) + " " + self.name)
 
     def get_points(self):
         "Return a list of integers from the points field"
@@ -658,13 +658,13 @@ class PointscoreTally(models.Model):
     class Meta:
         ordering = ['-points', 'eventcount']
 
-    rider = models.ForeignKey(Rider)
-    pointscore = models.ForeignKey(PointScore, related_name='results')
+    rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
+    pointscore = models.ForeignKey(PointScore, related_name='results', on_delete=models.CASCADE)
     points = models.IntegerField(default=0)
     eventcount = models.IntegerField(default=0)
     audit = models.TextField(default='[]')
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.rider) + " " + str(self.points)
 
     def _add_reason(self, points, reason):

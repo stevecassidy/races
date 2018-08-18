@@ -1,10 +1,9 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
 
 from races.apps.cabici.models import Club, Race, RaceCourse
 from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubGrade, PointscoreTally
 from datetime import datetime, timedelta
+
 
 class ModelTests(TestCase):
 
@@ -106,8 +105,8 @@ class ModelTests(TestCase):
 
         # look at the audit
         audit = ps2.audit(rider1)
-        expected = [[3, u'Placed 1 in small race < 6 riders : '+str(race)],
-                    [3, u'Placed 1 in small race < 6 riders : '+str(race2)]]
+        expected = [[3, 'Placed 1 in small race < 6 riders : '+str(race)],
+                    [3, 'Placed 1 in small race < 6 riders : '+str(race2)]]
         self.assertEqual(expected, audit)
 
     def gen_races(self, club, n=10):
@@ -129,19 +128,18 @@ class ModelTests(TestCase):
 
         riders = list(Rider.objects.all())
         random.shuffle(riders)
-        k = len(riders)/4
+        k = int(len(riders)/4)
 
         grades = {'A': [], 'B': [], 'C': [], 'D': []}
-        for grade in grades.keys():
+        for grade in list(grades.keys()):
             for i in range(k-1):
                 rider = riders.pop()
                 grades[grade].append(rider)
 
-
         for race in Race.objects.all():
-            for grade in grades.keys():
+            for grade in list(grades.keys()):
                 who = random.sample(grades[grade], random.randint(k/2, k-1))
-                numbers = range(100)
+                numbers = list(range(100))
                 random.shuffle(numbers)
                 place = 0
                 for rider in who:
@@ -175,7 +173,7 @@ class ModelTests(TestCase):
         # generate some results that will tally in the pointscore
         start = time.time()
         self.gen_results()
-        print "Generated results", time.time()-start
+        print("Generated results", time.time()-start)
 
         table = ps.tabulate()
         # don't know exactly how many but lots
@@ -184,9 +182,9 @@ class ModelTests(TestCase):
         winnerpoints = table[0].points
 
         start = time.time()
-        print "Recalculating..."
+        print("Recalculating...")
         ps.recalculate()
-        print "Done", time.time()-start
+        print("Done", time.time()-start)
 
         table = ps.tabulate()
         self.assertEqual(winner, table[0].rider)
@@ -251,9 +249,9 @@ class ModelTests(TestCase):
             winner.rider = rider
             winner.save()
             if len(expected) < 3:
-                expected.append([7, u'Placed 1 in race : '+str(race)])
+                expected.append([7, 'Placed 1 in race : '+str(race)])
             else:
-                expected.append([2, u'Rider eligible for promotion : '+str(race)])
+                expected.append([2, 'Rider eligible for promotion : '+str(race)])
 
         ouresults = RaceResult.objects.filter(rider__exact=rider)
 

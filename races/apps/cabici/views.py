@@ -2,7 +2,7 @@
 from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
 from django.views.generic.edit import UpdateView
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import render, get_object_or_404
@@ -20,12 +20,11 @@ from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole,
 from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm, RaceResultAddForm
 
 import datetime
-import calendar
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from StringIO import StringIO
+from io import BytesIO
 import pyexcel
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
@@ -262,7 +261,7 @@ class ClubPointscoreAuditView(DetailView):
         try:
             tally = PointscoreTally.objects.get(pointscore=self.object, rider=rider)
         except Exception as e:
-            print e
+            print(e)
             tally = None
 
         context['club'] = Club.objects.get(slug=club)
@@ -299,7 +298,7 @@ class ClubRidersExcelView(View):
         today = datetime.date.today()
 
         # eventno won't be used but the java desktop app requires
-        # a numer, make one out of the date
+        # a number, make one out of the date
         eventno = str(datetime.date.today().strftime('%Y%m%d'))
 
         header = ('LastName',
@@ -356,7 +355,7 @@ class ClubRidersExcelView(View):
             ws.append(row)
 
         sheet = pyexcel.Sheet(ws)
-        io = StringIO()
+        io = BytesIO()
         sheet.save_to_memory("xls", io)
 
         response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
@@ -408,15 +407,15 @@ class RiderListView(ListView):
         riders = Rider.objects.all().order_by('user__last_name')
 
         # search by name just returns directly
-        if self.request.GET.has_key('name') and self.request.GET['name'] != '':
+        if 'name' in self.request.GET and self.request.GET['name'] != '':
             name = self.request.GET['name']
             riders = riders.filter(user__last_name__icontains=name).order_by('user__last_name')
             return riders
 
-        if self.request.GET.has_key('grade') and self.request.GET['grade'] != '':
+        if 'grade' in self.request.GET and self.request.GET['grade'] != '':
             riders = riders.filter(clubgrade__grade__exact=self.request.GET['grade'])
 
-        if self.request.GET.has_key('club') and self.request.GET['club'] != '':
+        if 'club' in self.request.GET and self.request.GET['club'] != '':
             club = get_object_or_404(Club, pk=self.request.GET['club'])
             riders = riders.filter(club__exact=club)
 
@@ -525,7 +524,7 @@ class RaceListDateView(ListView):
 
     def get_queryset(self):
 
-        if self.kwargs.has_key('year') and self.kwargs.has_key('month'):
+        if 'year' in self.kwargs and 'month' in self.kwargs:
             month = int(self.kwargs['month'])
             year = int(self.kwargs['year'])
 
@@ -659,7 +658,7 @@ class RaceOfficialUpdateView(View):
         try:
             officials = json.loads(request.body)
             nofficials = dict()
-            for role in officials.keys():
+            for role in list(officials.keys()):
                 clubrole, created = ClubRole.objects.get_or_create(name=role)
                 # find existing racestaff for this role
                 staff = RaceStaff.objects.filter(race=race, role__name__exact=role)
@@ -728,7 +727,7 @@ class RaceUploadExcelView(FormView):
                     messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
             except Exception as e:
                 msgtext = "Error reading file, please check format."
-                print e
+                print(e)
                 messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
@@ -814,7 +813,7 @@ class ClubRaceResultsView(DetailView):
         context['races'] = Race.objects.filter(date__lt=datetime.date.today(),
                                                club__exact=club,
                                                raceresult__rider__isnull=False,
-                                               status__exact='p').distinct()
+                                               status__exact='p').distinct().select_related('club').select_related('location')
 
         return context
 
@@ -831,7 +830,7 @@ class ClubRacesView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
         else:
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
@@ -881,9 +880,9 @@ class ClubRacesView(DetailView):
                     repeatMonthN = form.cleaned_data['repeatMonthN']
                     repeatDay = form.cleaned_data['repeatDay']
 
-                    if repeat == u'weekly':
+                    if repeat == 'weekly':
                         rule = rrule(WEEKLY, count=number, dtstart=startdate)
-                    elif repeat == u'monthly':
+                    elif repeat == 'monthly':
                         rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
                     else:
                         # invalid option, raise an error
@@ -904,7 +903,7 @@ class ClubRacesView(DetailView):
                     data = json.dumps({'success': 1})
                     return HttpResponse(data, content_type='application/json')
             else:
-                data = json.dumps(dict([(k, [unicode(e) for e in v]) for k,v in form.errors.items()]))
+                data = json.dumps(dict([(k, [str(e) for e in v]) for k,v in list(form.errors.items())]))
                 return HttpResponse(data, content_type='application/json')
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
@@ -922,7 +921,7 @@ class ClubRacesOfficalUpdateView(DetailView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)
         else:
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club, status__exact='p')
@@ -944,7 +943,7 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         user = self.request.user
 
-        if not (user.is_authenticated() and user.rider.official and user.rider.club == club):
+        if not (user.is_authenticated and user.rider.official and user.rider.club == club):
             return HttpResponseBadRequest('Not authorised.')
 
         # find future races

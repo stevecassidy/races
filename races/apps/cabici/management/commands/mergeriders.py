@@ -23,26 +23,26 @@ class Command(BaseCommand):
         if options['search']:
             riders = Rider.objects.filter(user__last_name__icontains=options['search'])
             if riders.count() == 0:
-                print "No riders matched"
+                print("No riders matched")
             else:
                 for rider in riders:
-                    print rider.user.pk, rider
+                    print(rider.user.pk, rider)
         else:
             if options['rider']:
 
                 rider = Rider.objects.get(user__id__exact=options['rider'])
-                print "Rider:", rider
+                print("Rider:", rider)
 
                 if options['merge']:
                     mergerider = Rider.objects.get(user__id__exact=options['merge'])
-                    print "Merge with: ", mergerider
+                    print("Merge with: ", mergerider)
 
                     mergeresults = mergerider.raceresult_set.all()
                     for result in mergeresults:
-                        print result
+                        print(result)
 
-                    print "\nAll race results for '"+str(mergerider)+"' will be moved over to '"+str(rider)+"'"
-                    response = raw_input("Continue? [y/N]")
+                    print("\nAll race results for '"+str(mergerider)+"' will be moved over to '"+str(rider)+"'")
+                    response = input("Continue? [y/N]")
 
                     if response is 'y':
                         for result in mergeresults:
@@ -52,9 +52,9 @@ class Command(BaseCommand):
                         mergerider.user.delete()
                         mergerider.delete()
                         
-                        print "\nResults for ", rider
+                        print("\nResults for ", rider)
                         for result in rider.raceresult_set.all():
-                            print result
+                            print(result)
 
                     else:
-                        print "ok, no action"
+                        print("ok, no action")
