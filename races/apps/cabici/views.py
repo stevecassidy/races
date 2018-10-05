@@ -145,6 +145,7 @@ class ClubRidersPromotionView(ListView):
 
         return context
 
+
 @login_required()
 def club_riders_csv_view(request, slug):
     """View of club members as a csv file"""
@@ -204,8 +205,8 @@ class ClubRidersView(ListView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by('user__last_name')
-        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by('user__last_name')
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by('user__last_name').select_related('club')
+        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by('user__last_name').select_related('club')
 
         return context
 
