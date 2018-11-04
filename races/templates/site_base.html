@@ -17,21 +17,44 @@
 {% block extra_scripts %}{% endblock %}
 {% endblock %}
 
-{% block navbar_class %}navbar-inverse{% endblock %}
 
-{% block nav %}
-{% get_flatpages as flatpages %}
-<ul class="nav navbar-nav">
-  <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
-  <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
-  <li {% ifequal request.path '/riders/' %}class='active'{% endifequal %}><a href="{% url 'riders' %}">Riders</a></li>
-  {% for page in flatpages %}
-    {% ifnotequal page.url '/' %}
-    <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
-    {% endifnotequal %}
-  {% endfor %}
-</ul>
+{% block topbar_base %}
+    <header>
+        <div class="navbar navbar-default {% block navbar_class %}navbar-inverse{% endblock %}">
+            <div class="container">
+                {% block topbar %}
+                    <div class="navbar-header">
+                        <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="fa fa-bars"></span>
+                        </button>
+                        {% block site_brand %}<a class="navbar-brand" href="{% url "home" %}">{{ SITE_NAME }}</a>{% endblock %}
+                    </div>
+                    <div class="collapse navbar-collapse navbar-responsive-collapse">
+                            {% block nav %}
+                                {% get_flatpages as flatpages %}
+                                <ul class="nav navbar-nav">
+                                    <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
+                                    <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
+                                    <li {% ifequal request.path '/riders/' %}class='active'{% endifequal %}><a href="{% url 'riders' %}">Riders</a></li>
+                                    {% for page in flatpages %}
+                                        {% ifnotequal page.url '/' %}
+                                            <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+                                        {% endifnotequal %}
+                                    {% endfor %}
+                                </ul>
+                            {% endblock %}
+                        {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
+                    </div>
+                {% endblock %}
+            </div>
+        </div>
+    </header>
+    <div id='masthead'></div>
 {% endblock %}
+
+
+
+
 
 {% block extra_head_base %}
     {% block extra_head %}{% endblock %}
@@ -42,7 +65,6 @@
 {% endblock %}
 
 {% block body %}
-    <div id='masthead'></div>
     <div id='feed'><a href="{% url "feed" %}">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
 
     {% load pinax_theme_bootstrap_tags %}
