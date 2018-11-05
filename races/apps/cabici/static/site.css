@@ -1,5 +1,6 @@
 body {
-        padding-top: 0px;
+    padding-top: 0px;
+    background-color: rgba(0, 0, 0, 0.03);
 }
 
 /*
@@ -25,16 +26,16 @@ header a:link {
 }
 
 #masthead {
-    margin-top: -40px;
-    margin-left: -100px;
-    margin-right: -100px;
-    height: 75px;
+    margin-top: -20px;
 
-    background-image: url(header75.jpg);
-    background-repeat: repeat-x;
+    width:100%;
+    height:75px;
+    background-image:url(header75.jpg);
+    background-size:cover;
 
     background-color: #E8B730;
 }
+
 
 .navbar-toggle {
         color: white;
@@ -62,13 +63,6 @@ header a:link {
     font-style: italic;
 }
 
-@media (max-width: 480px) {
-
-    .racelocation {
-        display: none;
-    }
-
-}
 
 footer {
     border-top: 1px solid #999999;
@@ -144,4 +138,86 @@ h2.statusc:after {
 h2.statusd:after {
     content: " DRAFT";
     color: #ff0000;
+}
+
+
+/* https://codepen.io/bootstrapped/pen/OMNYpq */
+
+.flex-row {
+    display: flex;
+    flex-wrap: wrap;
+}
+.flex-row > [class*='col-'] {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-row .thumbnail,
+.flex-row .caption {
+    flex-direction: column;
+    display: flex;
+    flex: 1 0 auto;
+    height: auto;
+    position: relative;
+}
+.flex-text {
+    flex-grow: 1;
+}
+.flex-row img {
+    min-width: 0;
+    width: 100%;
+}
+
+.flex-row .thumbnail a {
+    border: 1px solid #ffffff;
+}
+.flex-row .thumbnail a:hover {
+    text-decoration: none;
+    border: 1px solid #cccccc;
+}
+
+.racecard .date {
+    font-size: smaller;
+    font-weight: bold;
+    background-color: #E8B730;
+    text-align: left;
+    padding: 5px;
+    border-bottom: 1px solid black;
+}
+.racecard .signon {
+    font-size: smaller;
+    font-weight: bold;
+    background-color: #E8B730;
+    text-align: right;
+    padding: 5px;
+}
+.racecard h2.clubslug {
+    font-weight: bold;
+    font-size: large;
+    padding-left: 5px;
+}
+.racecard .raceinfo {
+    padding-left: 5px;
+    height: 6rem;
+}
+.raceinfo .racetitle {
+    font-weight: bold;
+}
+.raceinfo .racelocation {
+    font-style: italic;
+    font-weight: normal;
+}
+.thumbnail {
+    padding: 0px;
+}
+
+.thumbnail .caption {
+    padding: 0px;
+}
+
+.dateblock h2 {
+    font-size: large;
+    text-align: center;
+    padding-left: 1em;
+    padding-right: 1em;
 }
