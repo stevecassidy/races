@@ -39,9 +39,23 @@
 
     <h3>Races</h3>
 
-    {% regroup races by date as date_list %}
-
-    {% include 'race_table.html' %}
+    <table class='table'>
+        <thead>
+        <tr>
+            <th class='racedate'>Date</th><th class='racetitle'>Race</th><th class='racelocation'>Location</th>
+        </tr>
+        </thead>
+        {% for race in races %}
+            <tr class="status{{race.status}}">
+                <th colspan='5'>{{race.date|date:"D jS M"}}</th>
+                <td class='racetitle'>{{race.club.slug}}:
+                        <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a>
+                        {% ifequal race.status 'c' %}CANCELLED{% endifequal %}
+                </td>
+                <td class='racelocation'>{{ race.location }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 
 
 {% endblock %}

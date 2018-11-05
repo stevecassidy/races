@@ -36,4 +36,4 @@ def ingest(csvfile):
 if __name__ == '__main__':
 
     for race in ingest():
-        print race
+        print(race)

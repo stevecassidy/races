@@ -1,11 +1,9 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.urls import reverse
 import os
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import PointScore, Rider
+from races.apps.cabici.usermodel import Membership, Rider
 from datetime import datetime, timedelta, date
 
 
@@ -98,6 +96,11 @@ class ViewTests(TestCase):
     def test_club_riders(self):
         """The club riders page lists the riders for
         this club"""
+
+        memdate = datetime.today() + timedelta(100)
+        for rider in Rider.objects.all():
+            m = Membership(rider=rider, club=rider.club, date=memdate, category="race")
+            m.save()
 
         response = self.client.get(reverse('club_riders', kwargs={'slug': self.oge.slug}))
 

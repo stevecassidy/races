@@ -5,7 +5,7 @@ Created on Apr 15, 2013
 '''
 WARATAH_URL = 'http://www.waratahmasters.com.au/eventsmenu.cfm'
 
-import urllib2
+import urllib.request, urllib.error, urllib.parse
 from bs4 import BeautifulSoup
 import datetime
 import re
@@ -34,7 +34,7 @@ def parse_times(times):
     elif times == '9.00am-2.00pm':
         return [('09:00', '')]
     else:
-        print "Unkown time format: ", times
+        print("Unkown time format: ", times)
         return []
 
 
@@ -48,7 +48,7 @@ def parse_web_text(webtext):
     tables = soup.find_all('table', class_='raceroster_table')
 
     if len(tables) == 0:
-        print "No table found in Waratah's web page"
+        print("No table found in Waratah's web page")
         return []
     
     table = tables[0]
@@ -89,14 +89,14 @@ def ingest():
     """Return a list of dictionaries, one for each race"""
 
     try:
-        webtext = urllib2.urlopen(WARATAH_URL).read()
+        webtext = urllib.request.urlopen(WARATAH_URL).read()
         return parse_web_text(webtext)
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
         content = e.read()
-        print "HTTP Error: ", content
+        print("HTTP Error: ", content)
         return []
-    except urllib2.URLError as e:
-        print "URLError: ", e
+    except urllib.error.URLError as e:
+        print("URLError: ", e)
         return []
         
 

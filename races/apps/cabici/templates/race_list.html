@@ -1,12 +1,35 @@
 {% extends "site_base.html" %}
+
+{% block head_title %}Race List{% endblock %}
+
 {% block content %}
 
-{% block head_title %}
-Race List
-{% endblock %}
 
 {% regroup races by date as date_list %}
 
-{% include 'race_table.html' %}
+    <div class="row flex-row">
+        {% regroup object_list by date as date_list %}
+        {%  for date in date_list %}
+            <div class="thumbnail dateblock visible-xs">
+                <h2>{{date.grouper|date:"D jS M"}}</h2>
+            </div>
+            {% for race in date.list %}
+                <div class="col-xs-12 col-sm-4 col-lg-3">
+                    <div class="thumbnail">
+                        <a href="{% url 'race' race.club.slug race.pk %}">
+                            <div class="caption racecard">
+                                <div class="hidden-xs date">{{date.grouper|date:"D jS M"}}</div>
+                                <h2 class="clubslug">{{ race.club.slug }}</h2>
+                                <div class="raceinfo"><span class="racetitle">{{ race.title }}</span> |
+                                    <span class="racelocation">{{ race.location }}</span></div>
+                                <div class="signon">{{ race.starttime }}</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        {%  endfor %}
+    </div>
+
 
 {% endblock %}

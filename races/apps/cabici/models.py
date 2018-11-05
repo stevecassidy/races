@@ -1,6 +1,6 @@
 from django.db import models
 from geoposition.fields import GeopositionField
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from importlib import import_module
@@ -9,7 +9,8 @@ from django.db import transaction
 
 import icalendar
 import pytz
-from urllib2 import urlopen, HTTPError, URLError, Request
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError, URLError
 import datetime
 import hashlib
 import ngram
@@ -50,7 +51,7 @@ class Club(models.Model):
     manage_members = models.BooleanField(default=False)
     manage_results = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.slug
 
     class Meta:
@@ -65,7 +66,7 @@ class Club(models.Model):
     def statistics(self):
         """Return a dictionary of statistics for this club"""
 
-        from usermodel import Membership, Rider, UserRole
+        from .usermodel import Membership, Rider, UserRole
 
         today = datetime.date.today()
 
@@ -178,7 +179,7 @@ class Club(models.Model):
         random.shuffle(ordered)
 
         # order on count
-        ordered.sort()
+        ordered.sort(key=lambda x: x[0])
 
         return ordered
 
@@ -319,7 +320,7 @@ class Club(models.Model):
         races = []
         for component in cal.walk():
 
-            if component.has_key('DTSTART'):
+            if 'DTSTART' in component:
                 start = component.decoded('DTSTART')
                 title = component.get('SUMMARY', '')
                 description = component.get('DESCRIPTION', '')
@@ -361,7 +362,7 @@ class Club(models.Model):
                                     time=starttime,
                                     title=str(title),
                                     website=website,
-                                    description=unicode(description),
+                                    description=str(description),
                                     location=location,
                                     club=self,
                                     hash=racehash)
@@ -432,7 +433,7 @@ class RaceCourseManager(models.Manager):
         location = ng.finditem(name)
 
         if location == None:
-            print "UNKNOWN LOCATION", name
+            print("UNKNOWN LOCATION", name)
             location, created = self.get_or_create(name="Unknown")
 
         return location
@@ -447,7 +448,7 @@ class RaceCourse(models.Model):
     shortname = models.CharField(max_length=20, default='')
     location = GeopositionField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -460,11 +461,11 @@ class RacePrototype(models.Model):
     the date"""
     title = models.CharField(max_length=100)
     time = models.TimeField()
-    club = models.ForeignKey(Club)
-    location = models.ForeignKey(RaceCourse)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
+    location = models.ForeignKey(RaceCourse, on_delete=models.CASCADE)
 
-    def __unicode__(self):
-        return unicode(self.club) + u": " + self.title
+    def __str__(self):
+        return str(self.club) + ": " + self.title
 
 STATUS_CHOICES = (
     ('d', 'Draft'),
@@ -514,9 +515,9 @@ class Race(models.Model):
     date = models.DateField(help_text=" ")
     signontime = models.TimeField(help_text="")
     starttime = models.CharField(max_length=100, help_text="")
-    club = models.ForeignKey(Club, related_name='races', help_text=" ")
+    club = models.ForeignKey(Club, related_name='races', help_text=" ", on_delete=models.CASCADE)
     website  = models.URLField(blank=True, max_length=400, help_text=" ")
-    location = models.ForeignKey(RaceCourse, help_text=" ")
+    location = models.ForeignKey(RaceCourse, help_text=" ", on_delete=models.CASCADE)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='p', help_text=" ")
     description = models.TextField(default="", blank=True, help_text=" ")
     hash = models.CharField(max_length=100, blank=True)
@@ -528,11 +529,10 @@ class Race(models.Model):
     # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
     licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
 
-
     class Meta:
         ordering = ['date', 'signontime']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title + ", " + str(self.date)
 
     def get_absolute_url(self):

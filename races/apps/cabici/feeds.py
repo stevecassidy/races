@@ -7,7 +7,7 @@ from django_ical.views import ICalFeed
 from django.contrib.syndication.views import Feed
 from races.apps.cabici.models import Race, Club
 import datetime
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 class EventICALFeed(ICalFeed):
     """

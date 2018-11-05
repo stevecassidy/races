@@ -30,7 +30,7 @@ class Command(BaseCommand):
         k = len(riders)/4
         grades = {'A': [], 'B': [], 'C': [], 'D': []}
 
-        for grade in grades.keys():
+        for grade in list(grades.keys()):
             for i in range(k-1):
                 rider = riders.pop()
                 grades[grade].append(rider)
@@ -38,9 +38,9 @@ class Command(BaseCommand):
 
 
         for race in Race.objects.all():
-            for grade in grades.keys():
+            for grade in list(grades.keys()):
                 who = random.sample(grades[grade], random.randint(k/2, k-1))
-                numbers = range(100)
+                numbers = list(range(100))
                 random.shuffle(numbers)
                 place = 0
                 for rider in who:

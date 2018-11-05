@@ -9,8 +9,8 @@ import datetime, time
 year = datetime.date.fromtimestamp(time.time()).year
 LACC_URL = 'http://lacc.org.au/index.php?option=com_jevents&task=year.listevents&year=%s' % year
 
-import urllib2
-from urlparse import urljoin
+import urllib.request, urllib.error, urllib.parse
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import re
 import hashlib
@@ -22,18 +22,18 @@ def ingest():
     #(lacc, created) = Club.objects.get_or_create(name="Lidcombe Auburn Cycling Club", slug='LACC', url="http://www.lacc.org.au/")
     
     try:
-        req = urllib2.Request(LACC_URL)
+        req = urllib.request.Request(LACC_URL)
         req.add_header('User-Agent', 'cabici/1.0 event harvester http://cabici.net/')
-        h = urllib2.urlopen(req)
+        h = urllib.request.urlopen(req)
         webtext = h.read()
         h.close()
-    except urllib2.HTTPError as e:
+    except urllib.error.HTTPError as e:
         content = e.read()
         if e.code == 418:
             webtext = content
         else:  
             return ([], "Error reading icalendar URL:" + content[1:20])
-    except urllib2.URLError as e:
+    except urllib.error.URLError as e:
         return ([], "Bad URL: " + self.icalurl)
         
 
@@ -42,7 +42,7 @@ def ingest():
     
     
     if len(events) == 0:
-        print "No events found in LACC's web page"
+        print("No events found in LACC's web page")
         return []
 
     races = []
