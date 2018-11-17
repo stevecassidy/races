@@ -65,7 +65,9 @@
 {% endblock %}
 
 {% block body %}
+    {%  if 0 %}
     <div id='feed'><a href="{% url "feed" %}">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
+    {%  endif %}
 
     {% load pinax_theme_bootstrap_tags %}
     {% for message in messages %}
