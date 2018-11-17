@@ -179,10 +179,9 @@ h2.statusd:after {
 .racecard .date {
     font-size: smaller;
     font-weight: bold;
-    background-color: #E8B730;
+    background-color: #DDD2B680;
     text-align: left;
     padding: 5px;
-    border-bottom: 1px solid black;
 }
 .racecard .signon {
     font-size: smaller;
