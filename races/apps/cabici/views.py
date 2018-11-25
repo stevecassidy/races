@@ -629,7 +629,7 @@ class RaceSummarySpreadsheet(View):
             ws.append(row)
 
         sheet = pyexcel.Sheet(ws)
-        io = StringIO()
+        io = BytesIO()
         sheet.save_to_memory("xls", io)
 
         response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
