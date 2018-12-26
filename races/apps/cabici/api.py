@@ -1,4 +1,5 @@
 """Serializers for the REST API"""
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import serializers, generics, permissions, relations
 from rest_framework.decorators import api_view, permission_classes
@@ -6,8 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.compat import authenticate
+
 import datetime
 from django.http import Http404
+from django.contrib.auth.models import User
+
 
 from .models import Club, Race, RaceCourse
 from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
@@ -32,6 +39,67 @@ def api_root(request, format=None):
         'pointscores': reverse('pointscore-list', request=request, format=format),
         'raceresults': reverse('raceresult-list', request=request, format=format),
     })
+
+
+class CustomAuthTokenSerializer(serializers.Serializer):
+    email = serializers.CharField(label=_("Email"))
+    password = serializers.CharField(
+        label=_("Password"),
+        style={'input_type': 'password'},
+        trim_whitespace=False
+    )
+
+    def validate(self, attrs):
+        print("Validate", attrs)
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if email and password:
+
+            user_from_email = User.objects.get(email=email)
+            if not user_from_email:
+                msg = _("Email not valid")
+                raise serializers.ValidationError(msg, code='authorization')
+
+            username = user_from_email.username
+
+            user = authenticate(request=self.context.get('request'),
+                                username=username, password=password)
+            # The authenticate call simply returns None for is_active=False
+            # users. (Assuming the default ModelBackend authentication
+            # backend.)
+            if not user:
+                msg = _('Unable to log in with provided credentials.')
+                raise serializers.ValidationError(msg, code='authorization')
+        else:
+            msg = _('Must include "username" and "password".')
+            raise serializers.ValidationError(msg, code='authorization')
+
+        attrs['user'] = user
+        return attrs
+
+
+class CustomAuthToken(ObtainAuthToken):
+    """Define a custom response to token authentication request
+    Use email rather than username and return some additional user
+    information"""
+
+    serializer_class = CustomAuthTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'club': user.rider.club.slug,
+            'official': user.rider.official
+        })
 
 
 # TODO: authentication for create/update/delete views

@@ -2,6 +2,7 @@ from django.test import TestCase
 from unittest import skip
 from django.urls import reverse
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
 import json
 import datetime
@@ -27,10 +28,14 @@ class APITests(TestCase):
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
 
-        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial = User(username="ogeofficial", password="hello", email="o@oge.com", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
+        # add a Rider record
+        Rider(user=self.ogeofficial, club=self.oge, official=True).save()
+
         self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
         self.movofficial.save()
+        Rider(user=self.movofficial, club=self.mov, official=True)
 
         self.lansdowne = RaceCourse.objects.get(name='Lansdowne Park')
         self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
@@ -459,3 +464,41 @@ class APITests(TestCase):
         data = json.loads(response.content)
 
         self.assertEqual(100, len(data['results']))
+
+    def test_auth_get_token(self):
+        """Can get an authentication token for a user"""
+
+        url = '/api-token-auth/'
+
+        password = 'hello'
+        self.ogeofficial.set_password(password)
+        self.ogeofficial.save()
+
+        response = self.client.post(url, data={'email': self.ogeofficial.email,
+                                               'password': password})
+        info = json.loads(response.content)
+        self.assertIn('token', info)
+        # get the token and check it's the right one we got back
+        token = Token.objects.get(user=self.ogeofficial)
+
+        self.assertEqual(token.key, info['token'])
+        self.assertIn('email', info)
+        self.assertEqual(self.ogeofficial.email, info['email'])
+        self.assertIn('club', info)
+        self.assertEqual(self.ogeofficial.rider.club.slug, info['club'])
+        self.assertEqual(self.ogeofficial.rider.official, info['official'])
+
+    def test_auth_token_auth(self):
+        """Can authenticate a request using a token"""
+
+        # riders api endpoint requires authentication
+        url = '/api/riders/'
+        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+
+        response = self.client.get(url)
+        # should fail with no auth
+        self.assertEqual(response.status_code, 401)
+        # now add the token
+        response = self.client.get(url, HTTP_AUTHORIZATION="Token %s" % token.key)
+        # should work now
+        self.assertEqual(response.status_code, 200)

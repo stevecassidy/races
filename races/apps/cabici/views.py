@@ -24,7 +24,7 @@ from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from io import BytesIO
+from io import BytesIO, StringIO
 import pyexcel
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]

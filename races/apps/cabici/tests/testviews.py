@@ -112,21 +112,3 @@ class ViewTests(TestCase):
         for rider in Rider.objects.exclude(club__exact=self.oge):
             self.assertNotContains(response, rider.user.first_name + " " + rider.user.last_name)
 
-    def test_upload_excel_results(self):
-        """Test that we can upload an Excel spreasheet of results"""
-
-        date = datetime.today()
-        loc = RaceCourse.objects.all()[0]
-
-        race = Race(title="Test", date=date, signontime="08:00", club=self.oge, location=loc)
-        race.save()
-
-        url = reverse('race_results_excel',  kwargs={'slug': self.oge.slug, 'pk': race.id})
-
-        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
-            response = self.client.post(url, {'excelfile': fd})
-
-        self.assertRedirects(response, reverse('race', kwargs={'slug': self.oge.slug, 'pk': race.id}))
-
-        # there should be some results for this race
-        self.assertEqual(len(race.raceresult_set.all()), 116)
