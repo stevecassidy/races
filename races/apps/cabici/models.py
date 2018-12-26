@@ -529,6 +529,8 @@ class Race(models.Model):
     # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
     licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
 
+    grading = models.CharField(max_length=50, default="A,B,C,D,E,F")
+
     class Meta:
         ordering = ['date', 'signontime']
 

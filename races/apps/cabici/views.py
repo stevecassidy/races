@@ -692,7 +692,7 @@ class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     template_name = "race_form.html"
     fields = ['title', 'date', 'signontime', 'starttime',
               'website', 'location', 'status', 'description',
-              'licencereq', 'category', 'discipline']
+              'licencereq', 'category', 'discipline', 'grading']
 
 
 class RaceUploadExcelView(FormView):

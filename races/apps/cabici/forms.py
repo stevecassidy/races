@@ -49,7 +49,7 @@ class RaceCreateForm(forms.ModelForm):
 
         fields = ['title', 'date', 'starttime', 'signontime', 'club',
                   'website', 'location', 'status', 'description',
-                  'licencereq', 'category', 'discipline']
+                  'licencereq', 'category', 'discipline', 'grading']
 
     repeat = forms.ChoiceField(label="Repeat by", required=False, choices=REPEAT_CHOICES)
     repeatN = forms.IntegerField(label="Repeat every", initial=1, required=False)
