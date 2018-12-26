@@ -123,10 +123,10 @@ class RiderManager(models.Manager):
 
         # get the current member list, check that all are in the spreadsheet
         today = datetime.date.today()
-        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today))
+        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today).distinct())
 
         for row in rows:
-            # print "ROW:", row['Email Address'], row['Member Number'], row['Financial Date']
+           # print("ROW:", row['Email Address'], row['Member Number'], row['Financial Date'])
 
             # we will import old membership records if present to ensure database is complete
             # but we don't want any with no financial date (usually 3-race memberships)
@@ -155,6 +155,7 @@ class RiderManager(models.Manager):
             else:
                 # new rider
                 username = slugify(row['First Name'] + row['Last Name'] + row['Member Number'])[:30]
+
                 if row['Email Address'] is None:
                     email = ''
                 else:
