@@ -517,7 +517,11 @@ class APITests(TestCase):
         for entry in payload['entries'][1:]:
             if not str(entry['rider']).startswith("ID"):
                 rider = Rider.objects.get(id=entry['rider'])
-                ClubGrade(rider=rider, club=race.club, grade=entry['usual_grade']).save()
+                if rider.id == 2932:  # Quintana
+                    grade = "C"
+                else:
+                    grade = "B"
+                ClubGrade(rider=rider, club=race.club, grade=grade).save()
 
         response = self.client.post(url, payload,
                                     content_type='application/json',
@@ -553,8 +557,14 @@ class APITests(TestCase):
         rider = Rider.objects.get(id=2931)
         result = race.raceresult_set.get(rider=rider)
         self.assertEqual(result.number, 999)
+        self.assertFalse(result.dnf)
 
-        ## rider updates
+        # Aru is a DNF
+        rider = Rider.objects.get(id=2934)
+        result = race.raceresult_set.get(rider=rider)
+        self.assertTrue(result.dnf)
+
+        # rider updates
         # Richie club change to TFR
         self.assertFalse(richie_result.rider.current_membership is None)
 
@@ -566,8 +576,6 @@ class APITests(TestCase):
         # and hist name
         self.assertEqual(richie_result.rider.user.first_name, "RICHIE")
         self.assertEqual(richie_result.rider.user.last_name, "Porte")
-
-
 
         # new rider Caleb Ewan
         self.assertEqual(Rider.objects.filter(user__last_name__exact="Ewan").count(), 1)
@@ -596,7 +604,7 @@ class APITests(TestCase):
         for entry in payload['entries'][1:]:
             if not str(entry['rider']).startswith("ID"):
                 rider = Rider.objects.get(id=entry['rider'])
-                ClubGrade(rider=rider, club=race.club, grade=entry['usual_grade']).save()
+                ClubGrade(rider=rider, club=race.club, grade='B').save()
 
         response = self.client.post(url, payload,
                                     content_type='application/json',

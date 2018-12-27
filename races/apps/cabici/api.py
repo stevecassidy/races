@@ -642,10 +642,7 @@ class RaceResultList(generics.ListCreateAPIView):
             if race.club.slug in rider.grades:
                 usual_grade = rider.grades[race.club.slug]
             else:
-                if 'usual_grade' in entry:
-                    usual_grade = entry['usual_grade']
-                else:
-                    usual_grade = entry['grade']
+                usual_grade = entry['grade']
                 # create a rider grade
                 ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
                 print("new grade", rider, race.club, usual_grade)
@@ -657,11 +654,17 @@ class RaceResultList(generics.ListCreateAPIView):
                 grade.save()
                 print("Updated grade for ", rider, grade.grade)
 
+            if 'dnf' in entry and entry['dnf']:
+                dnf = True
+            else:
+                dnf = False
+
             result = RaceResult(rider=rider, race=race,
                                 grade=entry['grade'],
                                 number=entry.get('number', 999),
                                 usual_grade=usual_grade,
-                                place=entry.get('place', 0))
+                                place=entry.get('place', 0),
+                                dnf=dnf)
             result.save()
 
         return Response({'message': 'something'})

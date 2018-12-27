@@ -6,7 +6,6 @@
       "grade": "B",
       "place": 0,
       "dnf": false,
-      "usual_grade": "B",
       "grade_change": false
     },
     {
@@ -15,7 +14,6 @@
       "number": "1",
       "place": 2,
       "dnf": false,
-      "usual_grade": "A",
       "grade_change": true
     },
     {
@@ -23,64 +21,56 @@
       "grade": "B",
       "number": "93",
       "place": 0,
-      "dnf": false,
-      "usual_grade": "C"
+      "dnf": false
     },
     {
       "rider": 2933,
       "grade": "B",
       "number": "38",
       "place": 0,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": false
     },
     {
       "rider": 2934,
       "grade": "B",
       "number": "57",
       "place": 0,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": true
     },
     {
       "rider": 2935,
       "grade": "B",
       "number": "56",
       "place": 0,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": false
     },
     {
       "rider": 2936,
       "grade": "B",
       "number": "25",
       "place": 4,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": false
     },
     {
       "rider": 2937,
       "grade": "B",
       "number": "34",
       "place": 0,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": false
     },
     {
       "rider": 2938,
       "grade": "B",
       "number": "32",
       "place": 3,
-      "dnf": false,
-      "usual_grade": "B"
+      "dnf": false
     },
     {
       "rider": "ID123",
       "grade": "B",
       "number": "314",
       "place": 5,
-      "dnf": true,
-      "usual_grade": "B"
+      "dnf": true
     },
     {
       "rider": 2940,
@@ -88,7 +78,6 @@
       "number": "14",
       "place": 1,
       "dnf": true,
-      "usual_grade": "C",
       "grade_change": true
     }
   ],
