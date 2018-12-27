@@ -10,6 +10,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.compat import authenticate
+from rest_framework.exceptions import APIException
 
 import datetime
 from django.http import Http404
@@ -17,7 +18,7 @@ from django.contrib.auth.models import User
 
 
 from .models import Club, Race, RaceCourse
-from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, PointscoreTally
+from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, ClubGrade, Membership
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -42,6 +43,11 @@ def api_root(request, format=None):
 
 
 class CustomAuthTokenSerializer(serializers.Serializer):
+    """Provide a custom response to a request for an auth token
+    uses email rather than username to authenticate and
+    returns a slightly richer JSON response than the
+    default"""
+
     email = serializers.CharField(label=_("Email"))
     password = serializers.CharField(
         label=_("Password"),
@@ -50,7 +56,6 @@ class CustomAuthTokenSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        print("Validate", attrs)
         email = attrs.get('email')
         password = attrs.get('password')
 
@@ -473,7 +478,6 @@ class RaceResultSerializer(serializers.ModelSerializer):
 class RaceResultList(generics.ListCreateAPIView):
 
     serializer_class = RaceResultSerializer
-    #pagination_class = StandardResultsSetPagination
 
     def get_queryset(self):
 
@@ -494,6 +498,173 @@ class RaceResultList(generics.ListCreateAPIView):
         except ValueError:
             # given a non integer for raceid
             raise Http404("Invalid Race ID")
+
+    def post(self, request, *args, **kwargs):
+        """Handle post payload containing entries and new riders"""
+
+        data = request.data
+        if 'race' in data:
+            raceid = data['race']
+        else:
+            raise APIException("Invalid JSON for race results: require 'race'")
+
+        try:
+            race = Race.objects.get(id=raceid)
+        except Race.DoesNotExist:
+            raise APIException("Invalid Race ID in JSON upload")
+
+        ridermap = {}  # will hold a mapping between temporary and real ids for riders
+
+        # handle new and updated riders
+        for record in data.get('riders', []):
+            # new rider id starts with "ID"
+            if str(record['id']).startswith("ID"):
+                # create a new rider record with these details
+                username = Rider.objects.make_username(record['first_name'],
+                                                       record['last_name'],
+                                                       str(record['licenceno']))
+
+                # just in case we know them already we use get_or_create
+                user, created = User.objects.get_or_create(first_name=record['first_name'],
+                                                           last_name=record['last_name'],
+                                                           email=record['email'],
+                                                           username=username)
+                try:
+                    club = Club.objects.get(slug=record['clubslug'])
+                except Club.DoesNotExist:
+                    raise APIException("Unknown club in rider record")
+
+                if not created:
+                    # guard against recreating the rider
+                    rider = user.rider
+                else:
+                    rider = Rider(licenceno=record['licenceno'], club=club, user=user)
+                    rider.save()
+
+                # membership
+                if 'member_date' in record:
+                    memberdate = datetime.date.fromisoformat(record['member_date'])
+
+                    m = Membership(rider=rider,
+                                   club=rider.club,
+                                   date=memberdate,
+                                   category='race')
+                    m.save()
+
+                # grade
+                if 'grade' in record:
+                    cg = rider.clubgrade_set.filter(club=race.club)
+                    if cg:
+                        cg[0].grade = record['grade']
+                        cg[0].save()
+                    else:
+                        ClubGrade(rider=rider, club=race.club, grade=record['grade']).save()
+
+                # now remember the id of this rider for the results entry later
+                ridermap[record['id']] = rider.id
+            else:
+                # existing rider updated
+                print("Updated Rider", record)
+                try:
+                    rider = Rider.objects.get(id=record['id'])
+                except Rider.DoesNotExist:
+                    raise APIException("Unknown rider ID in new rider record")
+
+                print("Updating Rider:", rider)
+
+                # membership: club and date
+                if 'clubslug' in record:
+                    try:
+                        record['club'] = Club.objects.get(slug=record['clubslug'])
+                    except Club.DoesNotExist:
+                        raise APIException("Club not found in updated rider record")
+
+                if 'member_date' in record:
+                    record['member_date'] = datetime.date.fromisoformat(record['member_date'])
+
+                m = rider.current_membership
+                if m:
+                    # update club if different
+                    if 'club' in record and m.club != record['club']:
+                        m.club = record['club']
+                        m.save()
+
+                    # update membership date if more recent
+                    if 'member_date' in record:
+                        if record['member_date'] > m.date:
+                            m.date = date
+                            m.save()
+                elif 'club' in record and 'member_date' in record:
+                    # no current membership so make one
+                    m = Membership(rider=rider, club=record['club'], date=record['member_date'])
+                    m.save()
+
+                # licenceno
+                if 'licenceno' in record and rider.licenceno != record['licenceno']:
+                    rider.licenceno = record['licenceno']
+                    rider.save()
+
+                # name
+                if 'first_name' in record and rider.user.first_name != record['first_name']:
+                    rider.user.first_name = record['first_name']
+                    rider.user.save()
+
+                if 'last_name' in record and rider.user.last_name != record['last_name']:
+                    rider.user.last_name = record['last_name']
+                    rider.user.save()
+
+
+
+        # handle entries, first remove any existing results for this race
+        # then create one result for each entry
+        entryfields = ['rider', 'grade']
+
+        race.raceresult_set.all().delete()
+        for entry in data.get('entries', []):
+            print("ENTRY", entry)
+            # ensure all required fields
+            if not all([f in entry for f in entryfields]):
+                raise APIException("Missing fields in JSON entry")
+
+            if str(entry['rider']).startswith("ID"):
+                if entry['rider'] in ridermap:
+                    entry['rider'] = ridermap[entry['rider']]
+                else:
+                    raise APIException("Result record with unknown temporary rider ID")
+
+            try:
+                rider = Rider.objects.get(id=entry['rider'])
+            except Rider.DoesNotExist:
+                raise APIException("Rider (id=%s) not found for result" % entry['rider'])
+
+            print("Rider", rider)
+
+            if race.club.slug in rider.grades:
+                usual_grade = rider.grades[race.club.slug]
+            else:
+                if 'usual_grade' in entry:
+                    usual_grade = entry['usual_grade']
+                else:
+                    usual_grade = entry['grade']
+                # create a rider grade
+                ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
+                print("new grade", rider, race.club, usual_grade)
+
+            if not usual_grade == entry['grade'] and 'grade_change' in entry and entry['grade_change']:
+                # update rider grade
+                grade = ClubGrade.objects.get(rider=rider, club=race.club)
+                grade.grade = entry['grade']
+                grade.save()
+                print("Updated grade for ", rider, grade.grade)
+
+            result = RaceResult(rider=rider, race=race,
+                                grade=entry['grade'],
+                                number=entry.get('number', 999),
+                                usual_grade=usual_grade,
+                                place=entry.get('place', 0))
+            result.save()
+
+        return Response({'message': 'something'})
 
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
