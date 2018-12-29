@@ -9,7 +9,6 @@ urlpatterns = [
     path('', include('races.apps.cabici.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('api-token-auth/', CustomAuthToken.as_view()),
 ]
 
 if settings.DEBUG:

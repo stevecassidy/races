@@ -24,7 +24,7 @@ from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, ClubG
 class StandardResultsSetPagination(PageNumberPagination):
     """Pagination class for requests that return large numbers of results"""
 
-    page_size = 100
+    page_size = 200
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -257,7 +257,7 @@ class RaceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Race
-        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials', 'discipline', 'category', 'licencereq')
+        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials', 'discipline', 'category', 'licencereq', 'grading')
 
     def get_discipline(self, obj):
         return {'key': obj.discipline, 'display': obj.get_discipline_display()}
@@ -564,13 +564,10 @@ class RaceResultList(generics.ListCreateAPIView):
                 ridermap[record['id']] = rider.id
             else:
                 # existing rider updated
-                print("Updated Rider", record)
                 try:
                     rider = Rider.objects.get(id=record['id'])
                 except Rider.DoesNotExist:
                     raise APIException("Unknown rider ID in new rider record")
-
-                print("Updating Rider:", rider)
 
                 # membership: club and date
                 if 'clubslug' in record:
@@ -588,6 +585,8 @@ class RaceResultList(generics.ListCreateAPIView):
                     if 'club' in record and m.club != record['club']:
                         m.club = record['club']
                         m.save()
+                        rider.club = record['club']
+                        rider.save()
 
                     # update membership date if more recent
                     if 'member_date' in record:
@@ -598,6 +597,8 @@ class RaceResultList(generics.ListCreateAPIView):
                     # no current membership so make one
                     m = Membership(rider=rider, club=record['club'], date=record['member_date'])
                     m.save()
+                    rider.club = record['club']
+                    rider.save()
 
                 # licenceno
                 if 'licenceno' in record and rider.licenceno != record['licenceno']:
@@ -613,15 +614,12 @@ class RaceResultList(generics.ListCreateAPIView):
                     rider.user.last_name = record['last_name']
                     rider.user.save()
 
-
-
         # handle entries, first remove any existing results for this race
         # then create one result for each entry
         entryfields = ['rider', 'grade']
 
         race.raceresult_set.all().delete()
         for entry in data.get('entries', []):
-            print("ENTRY", entry)
             # ensure all required fields
             if not all([f in entry for f in entryfields]):
                 raise APIException("Missing fields in JSON entry")
@@ -637,22 +635,18 @@ class RaceResultList(generics.ListCreateAPIView):
             except Rider.DoesNotExist:
                 raise APIException("Rider (id=%s) not found for result" % entry['rider'])
 
-            print("Rider", rider)
-
             if race.club.slug in rider.grades:
                 usual_grade = rider.grades[race.club.slug]
             else:
                 usual_grade = entry['grade']
                 # create a rider grade
                 ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
-                print("new grade", rider, race.club, usual_grade)
 
             if not usual_grade == entry['grade'] and 'grade_change' in entry and entry['grade_change']:
                 # update rider grade
                 grade = ClubGrade.objects.get(rider=rider, club=race.club)
                 grade.grade = entry['grade']
                 grade.save()
-                print("Updated grade for ", rider, grade.grade)
 
             if 'dnf' in entry and entry['dnf']:
                 dnf = True
@@ -667,7 +661,7 @@ class RaceResultList(generics.ListCreateAPIView):
                                 dnf=dnf)
             result.save()
 
-        return Response({'message': 'something'})
+        return Response({'message': 'race results uploaded'})
 
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):

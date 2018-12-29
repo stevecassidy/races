@@ -456,7 +456,7 @@ class APITests(TestCase):
 
         # should be paged
         self.assertIn('count', data)
-        self.assertEqual(100, len(data['results']))
+        self.assertEqual(200, len(data['results']))
 
         # should be able to request the next page via the link in data['next']
 
@@ -464,12 +464,12 @@ class APITests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
 
-        self.assertEqual(100, len(data['results']))
+        self.assertEqual(1, len(data['results']))
 
     def test_auth_get_token(self):
         """Can get an authentication token for a user"""
 
-        url = '/api-token-auth/'
+        url = '/api/token-auth/'
 
         password = 'hello'
         self.ogeofficial.set_password(password)
@@ -567,8 +567,8 @@ class APITests(TestCase):
         # rider updates
         # Richie club change to TFR
         self.assertFalse(richie_result.rider.current_membership is None)
-
         self.assertEqual(richie_result.rider.current_membership.club.slug, 'TFR')
+        self.assertEqual(richie_result.rider.club.slug, 'TFR')
         # Richie membership date updated
         self.assertEqual(richie_result.rider.current_membership.date, datetime.date(2019, 12, 31))
         # and his licence number
