@@ -2,12 +2,14 @@ from django.test import TestCase
 from unittest import skip
 from django.urls import reverse
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
 
+import os
 import json
 import datetime
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff
+from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff, ClubGrade
 
 OGE = {
     "name": "ORICA GREENEDGE",
@@ -27,10 +29,14 @@ class APITests(TestCase):
         self.oge = Club.objects.get(slug='OGE')
         self.mov = Club.objects.get(slug='MOV')
 
-        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial = User(username="ogeofficial", password="hello", email="o@oge.com", first_name="OGE", last_name="Official")
         self.ogeofficial.save()
+        # add a Rider record
+        Rider(user=self.ogeofficial, club=self.oge, official=True).save()
+
         self.movofficial = User(username="movofficial", password="hello", first_name="MOV", last_name="Official")
         self.movofficial.save()
+        Rider(user=self.movofficial, club=self.mov, official=True)
 
         self.lansdowne = RaceCourse.objects.get(name='Lansdowne Park')
         self.sop = RaceCourse.objects.get(name='Tennis Centre, SOP')
@@ -450,7 +456,7 @@ class APITests(TestCase):
 
         # should be paged
         self.assertIn('count', data)
-        self.assertEqual(100, len(data['results']))
+        self.assertEqual(200, len(data['results']))
 
         # should be able to request the next page via the link in data['next']
 
@@ -458,4 +464,156 @@ class APITests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
 
-        self.assertEqual(100, len(data['results']))
+        self.assertEqual(1, len(data['results']))
+
+    def test_auth_get_token(self):
+        """Can get an authentication token for a user"""
+
+        url = '/api/token-auth/'
+
+        password = 'hello'
+        self.ogeofficial.set_password(password)
+        self.ogeofficial.save()
+
+        response = self.client.post(url, data={'email': self.ogeofficial.email,
+                                               'password': password})
+        info = json.loads(response.content)
+        self.assertIn('token', info)
+        # get the token and check it's the right one we got back
+        token = Token.objects.get(user=self.ogeofficial)
+
+        self.assertEqual(token.key, info['token'])
+        self.assertIn('email', info)
+        self.assertEqual(self.ogeofficial.email, info['email'])
+        self.assertIn('club', info)
+        self.assertEqual(self.ogeofficial.rider.club.slug, info['club'])
+        self.assertEqual(self.ogeofficial.rider.official, info['official'])
+
+    def test_auth_token_auth(self):
+        """Can authenticate a request using a token"""
+
+        # riders api endpoint requires authentication
+        url = '/api/riders/'
+        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+
+        response = self.client.get(url)
+        # should fail with no auth
+        self.assertEqual(response.status_code, 401)
+        # now add the token
+        response = self.client.get(url, HTTP_AUTHORIZATION="Token %s" % token.key)
+        # should work now
+        self.assertEqual(response.status_code, 200)
+
+    def test_upload_results(self):
+        """Can upload JSON results via the API"""
+
+        url = '/api/raceresults/'
+        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+        with open(os.path.join(os.path.dirname(__file__), "result-upload.json")) as fd:
+            payload = json.load(fd)
+
+        race = Race.objects.get(id=payload['race'])
+        # set up grades for all riders but the first and the one new rider
+        for entry in payload['entries'][1:]:
+            if not str(entry['rider']).startswith("ID"):
+                rider = Rider.objects.get(id=entry['rider'])
+                if rider.id == 2932:  # Quintana
+                    grade = "C"
+                else:
+                    grade = "B"
+                ClubGrade(rider=rider, club=race.club, grade=grade).save()
+
+        response = self.client.post(url, payload,
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION="Token %s" % token.key)
+
+        self.assertEqual(200, response.status_code)
+
+        # should have some new race results
+        results = RaceResult.objects.filter(race=race)
+        self.assertEqual(len(results), 11)
+        # Richie wins
+        richie_result = RaceResult.objects.get(race=race, place=1)
+        self.assertEqual(richie_result.rider.user.first_name, 'RICHIE')
+        self.assertEqual(richie_result.number, 14)
+        # Alejandro is second
+        second = RaceResult.objects.get(race=race, place=2)
+        self.assertEqual(second.rider.user.first_name, 'Alejandro')
+
+        # Richie gets re-graded
+        self.assertEqual(race.club.grade(richie_result.rider), "B")
+
+        # the first rider gets a new grade
+        rider = Rider.objects.get(id=payload['entries'][0]['rider'])
+        self.assertEqual(race.club.grade(rider), "B")
+
+        # Quintana doesn't get regraded, stays in C grade
+        rider = Rider.objects.get(id=2932)
+        self.assertEqual(race.club.grade(rider), "C")
+        result = race.raceresult_set.get(rider=rider)
+        self.assertEqual(result.usual_grade, "C")
+
+        # Rodriguez gets a default number since not provided
+        rider = Rider.objects.get(id=2931)
+        result = race.raceresult_set.get(rider=rider)
+        self.assertEqual(result.number, 999)
+        self.assertFalse(result.dnf)
+
+        # Aru is a DNF
+        rider = Rider.objects.get(id=2934)
+        result = race.raceresult_set.get(rider=rider)
+        self.assertTrue(result.dnf)
+
+        # rider updates
+        # Richie club change to TFR
+        self.assertFalse(richie_result.rider.current_membership is None)
+        self.assertEqual(richie_result.rider.current_membership.club.slug, 'TFR')
+        self.assertEqual(richie_result.rider.club.slug, 'TFR')
+        # Richie membership date updated
+        self.assertEqual(richie_result.rider.current_membership.date, datetime.date(2019, 12, 31))
+        # and his licence number
+        self.assertEqual(richie_result.rider.licenceno, "AUS19850130MOD")
+        # and hist name
+        self.assertEqual(richie_result.rider.user.first_name, "RICHIE")
+        self.assertEqual(richie_result.rider.user.last_name, "Porte")
+
+        # new rider Caleb Ewan
+        self.assertEqual(Rider.objects.filter(user__last_name__exact="Ewan").count(), 1)
+        caleb = Rider.objects.get(user__last_name__exact="Ewan")
+        refcaleb = payload['riders'][0]
+        self.assertEqual(caleb.user.email, refcaleb['email'])
+
+        # membership
+        self.assertEqual(caleb.current_membership.club.slug, refcaleb['clubslug'])
+
+        # he came 5th in the race
+        fifth = RaceResult.objects.get(race=race, place=5)
+        self.assertEqual(fifth.rider, caleb)
+
+    def test_upload_results_twice(self):
+        """Can upload JSON results via the API twice and not
+        cause any problems"""
+
+        url = '/api/raceresults/'
+        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+        with open(os.path.join(os.path.dirname(__file__), "result-upload.json")) as fd:
+            payload = json.load(fd)
+
+        race = Race.objects.get(id=payload['race'])
+        # set up grades for all riders but the first and the one new rider
+        for entry in payload['entries'][1:]:
+            if not str(entry['rider']).startswith("ID"):
+                rider = Rider.objects.get(id=entry['rider'])
+                ClubGrade(rider=rider, club=race.club, grade='B').save()
+
+        response = self.client.post(url, payload,
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION="Token %s" % token.key)
+
+        self.assertEqual(200, response.status_code)
+
+        response = self.client.post(url, payload,
+                                    content_type='application/json',
+                                    HTTP_AUTHORIZATION="Token %s" % token.key)
+
+        self.assertEqual(200, response.status_code)

@@ -24,7 +24,7 @@ from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from io import BytesIO
+from io import BytesIO, StringIO
 import pyexcel
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
@@ -692,7 +692,7 @@ class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
     template_name = "race_form.html"
     fields = ['title', 'date', 'signontime', 'starttime',
               'website', 'location', 'status', 'description',
-              'licencereq', 'category', 'discipline']
+              'licencereq', 'category', 'discipline', 'grading']
 
 
 class RaceUploadExcelView(FormView):

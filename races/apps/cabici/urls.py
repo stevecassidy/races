@@ -2,8 +2,6 @@ from django.conf.urls import url, include
 from django.views.generic.base import TemplateView
 
 from django.views.decorators.clickjacking import xframe_options_exempt
-
-
 from races.apps.cabici import views, feeds, api
 
 
@@ -54,6 +52,8 @@ urlpatterns = [
 
     # api urls
     url(r'^api/$', api.api_root),
+    url(r'^api/token-auth/', api.CustomAuthToken.as_view()),
+
     url(r'^api/clubs/$', api.ClubList.as_view(), name='club-list'),
     url(r'^api/clubs/(?P<slug>[^/]+)/$', api.ClubDetail.as_view(), name='club-detail'),
     url(r'^api/races/$', api.RaceList.as_view(), name='race-list'),

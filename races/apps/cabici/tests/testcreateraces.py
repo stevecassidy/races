@@ -85,6 +85,7 @@ class CreateViewTests(TestCase):
                 'category': '3',
                 'licencereq': 'em.mw',
                 'discipline': 'r',
+                'grading': 'A,B,C',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})
@@ -131,9 +132,7 @@ class CreateViewTests(TestCase):
                 'category': '3',
                 'licencereq': 'em.mw',
                 'discipline': 'r',
-                'category': '3',
-                'licencereq': 'em.mw',
-                'discipline': 'r',
+                'grading': 'A,B,C',
                 'website': 'http://example.org/'}
 
         response = self.client.post(formurl, data, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -188,6 +187,7 @@ class CreateViewTests(TestCase):
                 'category': '3',
                 'licencereq': 'em.mw',
                 'discipline': 'r',
+                'grading': 'A,B,C',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})
@@ -241,6 +241,7 @@ class CreateViewTests(TestCase):
                 'category': '3',
                 'licencereq': 'em.mw',
                 'discipline': 'r',
+                'grading': 'A,B,C',
                 'website': 'http://example.org/'}
 
         formurl = reverse('club_races', kwargs={'slug': self.oge.slug})
@@ -293,7 +294,6 @@ class CreateViewTests(TestCase):
         self.assertListEqual(officials['Commissaire'], resp_officials['Commissaire'])
         self.assertListEqual(officials['Duty Officer'], resp_officials['Duty Officer'])
         self.assertListEqual(officials['Duty Helper'], resp_officials['Duty Helper'])
-
 
         off_stored = RaceStaff.objects.filter(race=race)
         self.assertEqual(4, off_stored.count())

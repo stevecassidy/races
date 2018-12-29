@@ -42,7 +42,6 @@ class UserModelTests(TestCase):
             m = Membership(rider=rider, club=rider.club, date=self.memberdate, category='race')
             m.save()
 
-
     def test_rider(self):
         """Test creation of a rider"""
 
@@ -248,7 +247,6 @@ class UserModelTests(TestCase):
         self.assertIn('Added new rider record for Trisma Allan', messages)
         self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to %d-12-31' % thisyear, messages)
 
-
     def test_load_results_excel_duplicates(self):
         """Load results from Excel creates riders and results
         check handling of duplicate entries"""
@@ -307,8 +305,6 @@ class UserModelTests(TestCase):
         self.assertEqual('FRA19900529', rider1.licenceno)
 
         self.assertIn('Updated licence number for Thibaut PINOT to FRA19900529', messages)
-
-
 
     def test_load_results_excel_duty_helper(self):
         """Load results from Excel gives points to duty helpers

@@ -1,0 +1,106 @@
+{
+  "race": 1,
+  "entries": [
+    {
+      "rider": 2931,
+      "grade": "B",
+      "place": 0,
+      "dnf": false,
+      "grade_change": false
+    },
+    {
+      "rider": 2930,
+      "grade": "B",
+      "number": "1",
+      "place": 2,
+      "dnf": false,
+      "grade_change": true
+    },
+    {
+      "rider": 2932,
+      "grade": "B",
+      "number": "93",
+      "place": 0,
+      "dnf": false
+    },
+    {
+      "rider": 2933,
+      "grade": "B",
+      "number": "38",
+      "place": 0,
+      "dnf": false
+    },
+    {
+      "rider": 2934,
+      "grade": "B",
+      "number": "57",
+      "place": 0,
+      "dnf": true
+    },
+    {
+      "rider": 2935,
+      "grade": "B",
+      "number": "56",
+      "place": 0,
+      "dnf": false
+    },
+    {
+      "rider": 2936,
+      "grade": "B",
+      "number": "25",
+      "place": 4,
+      "dnf": false
+    },
+    {
+      "rider": 2937,
+      "grade": "B",
+      "number": "34",
+      "place": 0,
+      "dnf": false
+    },
+    {
+      "rider": 2938,
+      "grade": "B",
+      "number": "32",
+      "place": 3,
+      "dnf": false
+    },
+    {
+      "rider": "ID123",
+      "grade": "B",
+      "number": "314",
+      "place": 5,
+      "dnf": true
+    },
+    {
+      "rider": 2940,
+      "grade": "B",
+      "number": "14",
+      "place": 1,
+      "dnf": true,
+      "grade_change": true
+    }
+  ],
+  "riders": [
+    {
+      "id": "ID123",
+      "first_name": "Caleb",
+      "last_name": "Ewan",
+      "email": "caleb@example.com",
+      "clubslug": "OGE",
+      "licenceno": "123456",
+      "member_date": "2019-12-31",
+      "grade": "B"
+    },
+    {
+      "id": 2940,
+      "first_name": "RICHIE",
+      "last_name": "Porte",
+      "clubslug": "TFR",
+      "licenceno": "AUS19850130MOD",
+      "member_category": "race",
+      "member_date": "2019-12-31"
+    }
+  ]
+}
+
