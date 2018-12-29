@@ -9,12 +9,12 @@ from rest_framework.reverse import reverse
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-from rest_framework.compat import authenticate
 from rest_framework.exceptions import APIException
 
 import datetime
 from django.http import Http404
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 
 from .models import Club, Race, RaceCourse
