@@ -489,6 +489,35 @@ class APITests(TestCase):
         self.assertEqual(self.ogeofficial.rider.club.slug, info['club'])
         self.assertEqual(self.ogeofficial.rider.official, info['official'])
 
+    def test_auth_get_token_email_case(self):
+        """Can get an authentication token for a user even if email case differs"""
+
+        url = '/api/token-auth/'
+
+        password = 'hello'
+        self.ogeofficial.set_password(password)
+        self.ogeofficial.save()
+
+        response = self.client.post(url, data={'email': self.ogeofficial.email.upper(),
+                                               'password': password})
+        info = json.loads(response.content)
+        self.assertIn('token', info)
+        # get the token and check it's the right one we got back
+        token = Token.objects.get(user=self.ogeofficial)
+
+        self.assertEqual(token.key, info['token'])
+        self.assertIn('email', info)
+        self.assertEqual(self.ogeofficial.email, info['email'])
+        self.assertIn('club', info)
+        self.assertEqual(self.ogeofficial.rider.club.slug, info['club'])
+        self.assertEqual(self.ogeofficial.rider.official, info['official'])
+
+
+
+
+
+
+
     def test_auth_token_auth(self):
         """Can authenticate a request using a token"""
 

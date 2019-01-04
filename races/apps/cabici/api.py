@@ -61,7 +61,7 @@ class CustomAuthTokenSerializer(serializers.Serializer):
 
         if email and password:
 
-            user_from_email = User.objects.get(email=email)
+            user_from_email = User.objects.get(email__iexact=email)
             if not user_from_email:
                 msg = _("Email not valid")
                 raise serializers.ValidationError(msg, code='authorization')
@@ -591,8 +591,9 @@ class RaceResultList(generics.ListCreateAPIView):
                     # update membership date if more recent
                     if 'member_date' in record:
                         if record['member_date'] > m.date:
-                            m.date = date
-                            m.save()
+                            # actually make a new membership
+                            mnew = Membership(rider=rider, club=rider.club, category='race', date=record['member_date'])
+                            mnew.save()
                 elif 'club' in record and 'member_date' in record:
                     # no current membership so make one
                     m = Membership(rider=rider, club=record['club'], date=record['member_date'])
