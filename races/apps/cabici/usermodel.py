@@ -425,6 +425,9 @@ class Membership(models.Model):
     date = models.DateField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
 
+    class Meta:
+        ordering = ['date', 'category']
+
 
 class ClubRole(models.Model):
     """The name of a role that someone can hold in a club"""
