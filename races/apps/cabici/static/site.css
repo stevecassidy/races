@@ -92,7 +92,7 @@ footer a:link {
 
 @media (min-width: 768px) {
     #dashboardActions {
-        width: 40%;
+        width: 500px;
     }
 }
 #dashboardActions {
