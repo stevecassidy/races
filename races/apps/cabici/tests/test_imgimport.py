@@ -243,13 +243,12 @@ class IMGWebTests(WebTest):
         # look for the button
         buttons = response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})
         self.assertEqual(1, len(buttons))
-        self.assertIn("IMG Upload", str(buttons[0]))
+        self.assertIn("TidyHQ Upload", str(buttons[0]))
 
         form = response.forms['imgssform']
         self.assertNotEqual(None, form)
         self.assertEqual(reverse('club_riders', kwargs={'slug': self.oge.slug}), form.action)
-        self.assertEqual("IMG", form['fileformat'].value)
-
+        self.assertEqual("THQ", form['fileformat'].value)
 
         from .imgsampledict import rows
         write_imgsample(TESTFILE, rows)

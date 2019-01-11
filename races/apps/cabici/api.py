@@ -545,7 +545,7 @@ class RaceResultList(generics.ListCreateAPIView):
                 if 'member_date' in record:
                     memberdate = datetime.date.fromisoformat(record['member_date'])
 
-                    current = rider.current_membership()
+                    current = rider.current_membership
 
                     if not current:
                         m = Membership(rider=rider,
