@@ -4,11 +4,15 @@ from django.contrib.auth.models import User
 from django_webtest import WebTest
 from webtest import Upload
 import datetime
+import csv
+import tempfile
+import random
 
 from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import Rider, parse_img_members
 
 TESTFILE = "races/apps/cabici/tests/imgsample.xls"
+
 
 def write_imgsample(outfile, rows):
     """Write out a sample IMG import file from a row dictionary"""
@@ -37,6 +41,44 @@ def write_imgsample(outfile, rows):
             fd.write('</tr>\n\n')
 
         fd.write('</table>\n')
+
+
+def write_tidyhq_sample(outfile, rows):
+    """Write out a sample TidyHQ csv file for testing"""
+
+    mmap = {
+        'RACING Membership': 'Race - Masters U65 - Annual',
+        'RIDE Membership': 'Ride - Adult (19-64) - Annual',
+        'NON-RIDING Membership': 'Non Riding Member - Annual'
+    }
+
+    with open(outfile, 'w') as fd:
+
+        writer = csv.DictWriter(fd, ['Contact', 'Id', 'Email', 'Phone ', 'Membership Level', 'Membership Status', 'Subscription End Date', 'Gender ', 'Birthday '])
+        writer.writeheader()
+
+        for row in rows:
+
+            if row['Status'] == 'Active':
+                status = 'Activated'
+            else:
+                status = 'Expired'
+
+            memberdate = row['Financial Date'].strftime('%d %b %Y')
+
+            trow = {
+                'Contact': row['First Name'] + " " + row['Last Name'],
+                'Id': "CA"+row['Member Number'],
+                'Email': row['Email Address'],
+                'Phone ': row['Mobile'],
+                'Membership Level': mmap[row['Member Types']],
+                'Membership Status': status,
+                'Subscription End Date': memberdate,
+                'Gender ': row['Gender'],
+                'Birthday ': row['DOB'].strftime('%Y-%m-%d'),
+            }
+            writer.writerow(trow)
+
 
 class IMGTests(TestCase):
 
@@ -81,7 +123,6 @@ class IMGTests(TestCase):
         user = Rider.objects.find_user("jeronimo@here.com", "12345")
         self.assertEqual(user, None)
 
-
     def test_update_from_spreadsheet(self):
         """Update user data from a spreadsheet from IMG Sports"""
 
@@ -97,7 +138,7 @@ class IMGTests(TestCase):
 
         # use pre-parsed rows
         from .imgsampledict import rows
-        result = Rider.objects.update_from_spreadsheet(club, rows)
+        result = Rider.objects.update_from_img_spreadsheet(club, rows)
 
         self.assertEqual(dict, type(result))
         self.assertIn('updated', result)
@@ -127,6 +168,49 @@ class IMGTests(TestCase):
         # grading is updated
         grade = valverde.rider.clubgrade_set.get(club=cyclingnsw)
         self.assertEqual("A1", grade.grade)
+
+
+class TidyHQTests(TestCase):
+
+    fixtures = ['clubs', 'users', 'riders']
+
+    def test_update_from_spreadsheet(self):
+        """Update user data from a spreadsheet from IMG Sports"""
+
+        club = Club.objects.get(slug="MOV")
+        cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
+
+        valverde = User.objects.get(pk=2531)
+
+        usernodob = User(first_name="No", last_name="DOB", username="NoDOB", email="nodob@example.com")
+        usernodob.save()
+        usernodob.rider = Rider(user=usernodob, licenceno="1234567")
+        usernodob.rider.save()
+
+        from .imgsampledict import rows
+        with tempfile.NamedTemporaryFile() as temp:
+            csvfile = temp.name
+            write_tidyhq_sample(csvfile, rows)
+            with open(csvfile) as fd:
+                result = Rider.objects.update_from_tidyhq_spreadsheet(club, fd)
+
+            self.assertEqual(dict, type(result))
+            self.assertIn('updated', result)
+            self.assertIn('added', result)
+
+            updated_users = [u['user'] for u in result['updated']]
+
+            # Valverde should be updated
+            self.assertIn(valverde, updated_users)
+
+            # expect two new riders
+            self.assertEqual(2, len(result['added']))
+
+            # re-fetch this user to check db updates
+            usernodob = User.objects.get(last_name="DOB")
+            self.assertIn(usernodob, updated_users)
+            self.assertEqual('F', usernodob.rider.gender)
+            self.assertEqual('0415 999999', usernodob.rider.phone)
 
 
 class IMGWebTests(WebTest):
