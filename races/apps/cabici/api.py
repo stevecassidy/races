@@ -545,11 +545,14 @@ class RaceResultList(generics.ListCreateAPIView):
                 if 'member_date' in record:
                     memberdate = datetime.date.fromisoformat(record['member_date'])
 
-                    m = Membership(rider=rider,
-                                   club=rider.club,
-                                   date=memberdate,
-                                   category='race')
-                    m.save()
+                    current = rider.current_membership()
+
+                    if not current:
+                        m = Membership(rider=rider,
+                                       club=rider.club,
+                                       date=memberdate,
+                                       category='race')
+                        m.save()
 
                 # grade
                 if 'grade' in record:
