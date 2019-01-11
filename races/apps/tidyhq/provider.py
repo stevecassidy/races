@@ -2,20 +2,20 @@ from allauth.socialaccount.providers.base import ProviderAccount
 from allauth.socialaccount.providers.oauth2.provider import OAuth2Provider
 
 
-class StravaAccount(ProviderAccount):
+class TidyHQAccount(ProviderAccount):
 
     def to_str(self):
-        dflt = super(StravaAccount, self).to_str()
+        dflt = super(TidyHQAccount, self).to_str()
         return '%s (%s)' % (
             self.account.extra_data.get('name', ''),
             dflt,
         )
 
 
-class StravaProvider(OAuth2Provider):
-    id = 'strava'
-    name = 'Strava'
-    account_class = StravaAccount
+class TidyHQProvider(OAuth2Provider):
+    id = 'tidyhq'
+    name = 'TidyHQ'
+    account_class = TidyHQAccount
 
     def extract_uid(self, data):
         return str(data.get('id'))
@@ -24,10 +24,7 @@ class StravaProvider(OAuth2Provider):
         return data
 
     def get_default_scope(self):
-        # scope should really be empty for read only but
-        # leaving scope empty causes an error and there is
-        # no way to not have it in the query string
-        return ['view_private']
+        return []
 
 
-provider_classes = [StravaProvider]
+provider_classes = [TidyHQProvider]

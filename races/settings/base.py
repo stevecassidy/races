@@ -146,10 +146,11 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
+    #'allauth.socialaccount.providers.facebook',
 
     # our own auth provider for strava
     'races.apps.strava',
+    'races.apps.tidyhq',
 
     "bootstrapform",
     "pinax_theme_bootstrap",
@@ -238,29 +239,8 @@ def ACCOUNT_USER_DISPLAY(user):
     """Display users as email address"""
     return user.email
 
+
 SOCIALACCOUNT_PROVIDERS = {
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email'],
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.5',
-    },
     'strava': {
         'METHOD': 'oauth2',
         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
@@ -281,6 +261,17 @@ SOCIALACCOUNT_PROVIDERS = {
         'EXCHANGE_TOKEN': True,
         'VERIFIED_EMAIL': False,
         'VERSION': 'v2.5',
+    },
+    'tidyhq': {
+        'METHOD': 'oauth2',
+        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        'INIT_PARAMS': {'cookie': True},
+        'FIELDS': [
+            'id'
+        ],
+        'EXCHANGE_TOKEN': True,
+        'VERIFIED_EMAIL': False,
+        'VERSION': 'v1',
     }
 }
 
