@@ -81,8 +81,6 @@
 
         <div class='col-md-6'>
 
-            <div class='container'>
-
                 <ul id='dashboardActions'>
                     <li>
                         <a href="#" data-toggle='modal' data-target="#raceCreateModal">
@@ -95,7 +93,7 @@
                     {% if club.manage_members %}
                     <li>
                         <a href="#" data-toggle='modal' data-target="#IMGUploadModal">
-                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span><br>IMG Upload</a>
+                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span><br>TidyHQ Upload</a>
                     </li>
                     <li>
                         <a href="{% url 'club_riders_excel' slug=club.slug %}" target="new">
@@ -125,9 +123,6 @@
                     </li>
                     {% endif %}
                 </ul>
-
-            </div>
-
 
             {% if club.pointscore_set.all %}
                 <h3>Pointscores</h3>
@@ -169,20 +164,24 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title" id="IMGUploadLabel">Upload IMG Spreadsheet</h4>
+          <h4 class="modal-title" id="IMGUploadLabel">Upload Member Spreadsheet</h4>
         </div>
         <div class="modal-body">
-            <p>Upload member details as downloaded from the <a href="https://console.sportstg.com/" target=new>SportsTG website</a>.
-            Choose Members > All Members then use the Blank template
-            to export all Active members. Upload the resulting spreadsheet (.xls)
-            here.</p>
+            <p>Upload member details as downloaded from the TidyHQ Club console.
+            Select <b>Contacts</b> and click on <b>Displayed Attributes</b> then
+                make sure <b>Subscription End Date</b> is selected.  You can also
+                select <b>Gender</b> and <b>Birthday</b> to have those imported.
+            </p>
+
+                <p>Click <b>Export CSV</b> to
+            have a file emailed to you. Upload that file here.</p>
 
             <form method='post' action="{% url 'club_riders' club.slug %}" name='imgssform' id='imgssform' enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class='well form-group'>
                     {{memberuploadform.errors}}
                     <input type='hidden' name='club' value='{{memberuploadform.club.value}}'>
-                    <input type='hidden' name='fileformat' value='IMG'>
+                    {{ memberuploadform.fileformat|bootstrap_inline }}
                     {{memberuploadform.memberfile|bootstrap_inline}}
 
                     <div class="modal-footer">
@@ -191,6 +190,8 @@
                     </div>
                 </div>
             </form>
+
+            <p>Note: upload of old IMG spreadsheet is still supported. Select <b>IMG Sports</b> above.</p>
         </div>
       </div>
    </div>

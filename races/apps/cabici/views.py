@@ -26,6 +26,7 @@ import csv
 import os
 from io import BytesIO, StringIO
 import pyexcel
+import codecs
 
 DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
@@ -220,8 +221,10 @@ class ClubRidersView(ListView):
             fileformat = form.cleaned_data['fileformat']
 
             if fileformat == 'IMG':
-                changed = Rider.objects.update_from_spreadsheet(club, parse_img_members(mf))
+                changed = Rider.objects.update_from_img_spreadsheet(club, parse_img_members(mf))
 
+            elif fileformat == 'THQ':
+                changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
             else:
                 # unknown format
                 pass
@@ -838,8 +841,8 @@ class ClubRacesView(DetailView):
 
         context['racecreateform'] = RaceCreateForm()
 
-        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name')
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name')
+        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name').distinct()
+        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name').distinct()
         #context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
         context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
 

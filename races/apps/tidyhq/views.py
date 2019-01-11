@@ -7,14 +7,15 @@ from allauth.socialaccount.providers.oauth2.views import (
     OAuth2LoginView,
 )
 
-from .provider import StravaProvider
+from .provider import TidyHQProvider
 
-class StravaOAuth2Adapter(OAuth2Adapter):
-    provider_id = StravaProvider.id
 
-    access_token_url = 'https://www.strava.com/oauth/token'
-    authorize_url = 'https://www.strava.com/oauth/authorize'
-    identity_url = 'https://www.strava.com/api/v3/athlete'
+class TidyHQOAuth2Adapter(OAuth2Adapter):
+    provider_id = TidyHQProvider.id
+
+    access_token_url = 'https://accounts.tidyhq.com/oauth/token'
+    authorize_url = 'https://accounts.tidyhq.com/oauth/authorize'
+    identity_url = 'https://accounts.tidyhq.com/oauth/contacts/me'
 
     def complete_login(self, request, app, token, **kwargs):
         extra_data = self.get_data(token.token)
@@ -22,6 +23,7 @@ class StravaOAuth2Adapter(OAuth2Adapter):
                                                              extra_data)
 
     def get_data(self, token):
+
         # Verify the user first
         resp = requests.get(
             self.identity_url,
@@ -31,15 +33,14 @@ class StravaOAuth2Adapter(OAuth2Adapter):
 
         # Fill in their generic info
         info = {
-                'username': "%s%s" % (resp.get('lastname'), resp.get('id')),
-                'first_name': resp.get('firstname'),
-                'last_name': resp.get('lastname'),
-                'email': resp.get('email'),
-                'id': resp.get('id')
+            'username': "%s%s" % (resp.get('last_name'), resp.get('id')),
+            'first_name': resp.get('first_name'),
+            'last_name': resp.get('lastname'),
+            'email': resp.get('email'),
+            'id': resp.get('id')
         }
-
         return info
 
 
-oauth2_login = OAuth2LoginView.adapter_view(StravaOAuth2Adapter)
-oauth2_callback = OAuth2CallbackView.adapter_view(StravaOAuth2Adapter)
+oauth2_login = OAuth2LoginView.adapter_view(TidyHQOAuth2Adapter)
+oauth2_callback = OAuth2CallbackView.adapter_view(TidyHQOAuth2Adapter)

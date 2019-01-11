@@ -15,7 +15,7 @@ import datetime
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
-
+from django.db import IntegrityError
 
 from .models import Club, Race, RaceCourse
 from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, ClubGrade, Membership
@@ -545,11 +545,14 @@ class RaceResultList(generics.ListCreateAPIView):
                 if 'member_date' in record:
                     memberdate = datetime.date.fromisoformat(record['member_date'])
 
-                    m = Membership(rider=rider,
-                                   club=rider.club,
-                                   date=memberdate,
-                                   category='race')
-                    m.save()
+                    current = rider.current_membership
+
+                    if not current:
+                        m = Membership(rider=rider,
+                                       club=rider.club,
+                                       date=memberdate,
+                                       category='race')
+                        m.save()
 
                 # grade
                 if 'grade' in record:
@@ -576,8 +579,12 @@ class RaceResultList(generics.ListCreateAPIView):
                     except Club.DoesNotExist:
                         raise APIException("Club not found in updated rider record")
 
+                # try to parse the member date string
                 if 'member_date' in record:
-                    record['member_date'] = datetime.date.fromisoformat(record['member_date'])
+                    try:
+                        record['member_date'] = datetime.date.fromisoformat(record['member_date'])
+                    except ValueError:
+                        del record['member_date']
 
                 m = rider.current_membership
                 if m:
@@ -660,7 +667,14 @@ class RaceResultList(generics.ListCreateAPIView):
                                 usual_grade=usual_grade,
                                 place=entry.get('place', 0),
                                 dnf=dnf)
-            result.save()
+            try:
+                result.save()
+            except IntegrityError:
+                # since we deleted all entries for this race at the start of the loop
+                # the most likely cause of this error is two upload requests running
+                # at the same time, so we just ignore this error assuming that
+                # the existing record is the same as this one
+                pass
 
         return Response({'message': 'race results uploaded'})
 
