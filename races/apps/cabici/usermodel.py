@@ -252,7 +252,7 @@ class RiderManager(models.Manager):
                 grading.save()
 
             if updating and userchanges != []:
-                updated.append(user)
+                updated.append({'user': user, 'changes': userchanges})
 
                 # u'NSW Track Handicap Data'
 
@@ -279,8 +279,9 @@ class RiderManager(models.Manager):
 
         for row in csv.DictReader(csvfile):
 
-            if row['Subscription End Date'] is None or row['Membership Status'] != 'Activated':
-                print("Skipping", row['Contact'])
+            if 'Subscription End Date' not in row or \
+                    row['Subscription End Date'] is None or \
+                    row['Membership Status'] != 'Activated':
                 continue
 
             # remove 'CA' from the licence number
@@ -288,10 +289,7 @@ class RiderManager(models.Manager):
             user = self.find_user(row['Email'], licenceno)
             updating = False
 
-            print(user, row['Email'], licenceno)
-
             if user is not None:
-                print("Existing rider")
                 try:
                     user.rider
                 except ObjectDoesNotExist:
@@ -301,8 +299,6 @@ class RiderManager(models.Manager):
             else:
                 # new rider
                 username = slugify(row['Contact'] + licenceno)[:30]
-                print("New rider", username)
-                print(row)
 
                 # just in case we have used this username before
                 # it wasn't found above so can't be a complete record, so
@@ -336,15 +332,10 @@ class RiderManager(models.Manager):
             # Birthday
             # Phone
             if 'Gender ' in row and row['Gender '] != '':
-                print("Gender", row['Gender '], user.rider.gender)
                 gender = row['Gender '][0]  # M/F
                 if user.rider.gender != gender:
-                    print("changing gender", user)
                     user.rider.gender = gender
                     userchanges.append('Gender')
-                    print("New Gender:", user.rider.gender)
-                else:
-                    print("not changing gender", user.rider.gender, gender)
 
             if 'Birthday ' in row and row['Birthday '] != '':
                 try:

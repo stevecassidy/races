@@ -49,16 +49,16 @@
     </thead>
     <tbody>
     {% for user in changed.added %}
-      <tr>
-          <td><a href="{% url 'rider' user.id %}">{{user.first_name}} {{user.last_name}}</a></td>
-          <td>
-              {% for grading in user.rider.clubgrade_set.all %}
-                  {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
-              {% endfor %}
-          </td>
-          <td>{{user.rider.phone}}</td>
-          <td>{{user.email}}</td>
-      </tr>
+        <tr>
+            <td><a href="{% url 'rider' user.id %}">{{user.first_name}} {{user.last_name}}</a></td>
+            <td>
+                {% for grading in user.rider.clubgrade_set.all %}
+                    {% ifequal grading.club club %}{{grading.grade}}{% endifequal %}
+                {% endfor %}
+            </td>
+            <td>{{user.rider.phone}}</td>
+            <td>{{user.email}}</td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
