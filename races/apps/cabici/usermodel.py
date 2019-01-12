@@ -7,6 +7,7 @@ from django.utils.functional import cached_property
 
 import json
 import datetime
+import csv
 
 from races.apps.cabici.models import Club, Race
 from bs4 import BeautifulSoup
@@ -89,6 +90,7 @@ IMG_MAP = {
 }
 
 
+
 class RiderManager(models.Manager):
     """Manager for riders"""
 
@@ -113,7 +115,7 @@ class RiderManager(models.Manager):
         else:
             return None
 
-    def update_from_spreadsheet(self, club, rows):
+    def update_from_img_spreadsheet(self, club, rows):
         """Update the membership list for a club,
         return a list of updated riders"""
 
@@ -250,9 +252,138 @@ class RiderManager(models.Manager):
                 grading.save()
 
             if updating and userchanges != []:
-                updated.append(user)
+                updated.append({'user': user, 'changes': userchanges})
 
                 # u'NSW Track Handicap Data'
+
+        # check for any left over members in the currentmembers list
+        # we need to revoke the member record for these
+        revoked = currentmembers
+        for user in currentmembers:
+            mm = user.rider.membership_set.filter(date__gte=today)
+            for m in mm:
+                m.delete()
+
+        return {'added': added, 'updated': updated, 'revoked': revoked}
+
+    def update_from_tidyhq_spreadsheet(self, club, csvfile):
+        """Update the membership list for a club, from a spreadsheet
+        downloaded from TidyHQ return a list of updated riders"""
+
+        updated = []
+        added = []
+
+        # get the current member list, check that all are in the spreadsheet
+        today = datetime.date.today()
+        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today).distinct())
+
+        for row in csv.DictReader(csvfile):
+
+            if 'Subscription End Date' not in row or \
+                    row['Subscription End Date'] is None or \
+                    row['Membership Status'] != 'Activated':
+                continue
+
+            # remove 'CA' from the licence number
+            licenceno = row['Id'][2:]
+            user = self.find_user(row['Email'], licenceno)
+            updating = False
+
+            if user is not None:
+                try:
+                    user.rider
+                except ObjectDoesNotExist:
+                    user.rider = Rider()
+
+                updating = True
+            else:
+                # new rider
+                username = slugify(row['Contact'] + licenceno)[:30]
+
+                # just in case we have used this username before
+                # it wasn't found above so can't be a complete record, so
+                # just re-use it and update
+                user, created = User.objects.get_or_create(username=username)
+
+                if row['Email'] is None:
+                    email = ''
+                else:
+                    email = row['Email']
+
+                # try to guess first and last names
+                first_name, last_name = row['Contact'].split(' ', 1)
+                user.first_name = first_name
+                user.last_name = last_name
+                user.email = email
+                user.save()
+
+                try:
+                    user.rider
+                except ObjectDoesNotExist:
+                    user.rider = Rider()
+                    user.rider.save()
+
+                added.append(user)
+
+            userchanges = []
+
+            # look for some optional fields in the csv
+            # Gender
+            # Birthday
+            # Phone
+            if 'Gender ' in row and row['Gender '] != '':
+                gender = row['Gender '][0]  # M/F
+                if user.rider.gender != gender:
+                    user.rider.gender = gender
+                    userchanges.append('Gender')
+
+            if 'Birthday ' in row and row['Birthday '] != '':
+                try:
+                    user.rider.dob = datetime.date.fromisoformat(row['Birthday '])
+                    userchanges.append('DOB')
+                except ValueError:
+                    pass
+
+            if 'Phone ' in row:
+                user.rider.phone = row['Phone '].strip()
+                userchanges.append('Phone')
+
+            # membership category = Member Types, Financial Date
+            memberdate = row['Subscription End Date']
+
+            if 'Race' in row['Membership Level']:
+                category = 'race'
+            elif 'Ride' in row['Membership Level']:
+                category = 'ride'
+            elif 'Non Riding' in row['Membership Level']:
+                category = 'non-riding'
+
+            # update membership record
+            if memberdate is not '':
+                # dates are '31 Dec 2019', convert to 2019-12-31
+                memberdate = datetime.datetime.strptime(memberdate, '%d %b %Y').strftime("%Y-%m-%d")
+                mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
+                if len(mm) == 0:
+                    m = Membership(rider=user.rider, club=club, date=memberdate, category=category)
+                    m.save()
+                    userchanges.append('Membership')
+                else:
+                    # check the category?
+                    m = mm[0]
+                    if m.category != category:
+                        m.category = category
+                        userchanges.append('Membership')
+                        m.save()
+
+                # remove this user from the currentmembers list
+                if user in currentmembers:
+                    currentmembers.remove(user)
+
+            if userchanges:
+                user.rider.save()
+
+            if updating and userchanges != []:
+                updated.append({'user': user, 'changes': userchanges})
 
         # check for any left over members in the currentmembers list
         # we need to revoke the member record for these

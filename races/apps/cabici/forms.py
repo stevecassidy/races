@@ -72,7 +72,7 @@ class RacePublishDraftForm(forms.Form):
     club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
 
 
-MEMBER_FILE_FORMATS = (('IMG', 'IMG Sports'),)
+MEMBER_FILE_FORMATS = (('THQ', 'TidyHQ'), ('IMG', 'IMG Sports'), )
 
 
 class MembershipUploadForm(forms.Form):
