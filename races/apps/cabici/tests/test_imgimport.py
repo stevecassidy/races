@@ -144,13 +144,15 @@ class IMGTests(TestCase):
         self.assertIn('updated', result)
         self.assertIn('added', result)
 
+        updated_users = [u['user'] for u in result['updated']]
+
         # Valverde should be updated
-        self.assertIn(valverde, result['updated'])
+        self.assertIn(valverde, updated_users)
 
         # expect two new riders
         self.assertEqual(2, len(result['added']))
 
-        self.assertIn(usernodob, result['updated'])
+        self.assertIn(usernodob, updated_users)
         # usernodob's DOB should now be set
         # need to requery so that we get the updated object
         usernodob = User.objects.get(username="NoDOB")
@@ -218,7 +220,7 @@ class IMGWebTests(WebTest):
 
     fixtures = ['clubs', 'users', 'riders']
 
-    def test_uploadfile(self):
+    def test_upload_img_file(self):
         """The club dashboard page has a button
         to upload the IMG spreadsheet, doing so
         adds new riders to the database
@@ -246,12 +248,59 @@ class IMGWebTests(WebTest):
         self.assertIn("TidyHQ Upload", str(buttons[0]))
 
         form = response.forms['imgssform']
+        form['fileformat'] = 'IMG'
         self.assertNotEqual(None, form)
         self.assertEqual(reverse('club_riders', kwargs={'slug': self.oge.slug}), form.action)
-        self.assertEqual("THQ", form['fileformat'].value)
 
         from .imgsampledict import rows
         write_imgsample(TESTFILE, rows)
+
+        # fill the form to upload the file
+        form['memberfile'] = Upload(TESTFILE)
+
+        response = form.submit()
+
+        # response is a page reporting on the riders added or modified
+        # should contain mention of just two riders, one added, one updated
+        # ogeofficial should not be mentioned
+
+        self.assertContains(response, valverde.first_name) # updated rider
+        self.assertContains(response, 'Stephen')  # added rider
+
+    def test_upload_tidyhq_file(self):
+        """The club dashboard page has a button
+        to upload the TidyHQ spreadsheet, doing so
+        adds new riders to the database
+        or updates the details of those that are
+        already present."""
+
+        self.oge = Club.objects.get(slug='OGE')
+        self.mov = Club.objects.get(slug='MOV')
+        self.oge.manage_members = True
+        self.oge.save()
+
+        self.ogeofficial = User(username="ogeofficial", password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial.save()
+
+        valverde = User.objects.get(pk=2531)
+
+        ogerider = Rider(user=self.ogeofficial, gender="M", licenceno="987655", club=self.oge, official=True)
+        ogerider.save()
+
+        response = self.app.get(reverse('club_dashboard', kwargs={'slug': 'OGE'}), user=self.ogeofficial)
+
+        # look for the button
+        buttons = response.html.find_all('a', attrs={'data-target': "#IMGUploadModal"})
+        self.assertEqual(1, len(buttons))
+        self.assertIn("TidyHQ Upload", str(buttons[0]))
+
+        form = response.forms['imgssform']
+        form['fileformat'] = 'THQ'
+        self.assertNotEqual(None, form)
+        self.assertEqual(reverse('club_riders', kwargs={'slug': self.oge.slug}), form.action)
+
+        from .imgsampledict import rows
+        write_tidyhq_sample(TESTFILE, rows)
 
         # fill the form to upload the file
         form['memberfile'] = Upload(TESTFILE)
