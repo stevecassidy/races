@@ -676,7 +676,10 @@ class RaceResultList(generics.ListCreateAPIView):
                 # the existing record is the same as this one
                 pass
 
-        return Response({'message': 'race results uploaded'})
+        return Response({
+                        'message': 'race results uploaded',
+                        'ridermap': ridermap,
+                        })
 
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
