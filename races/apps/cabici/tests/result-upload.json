@@ -77,8 +77,16 @@
       "grade": "B",
       "number": "14",
       "place": 1,
-      "dnf": true,
+      "dnf": false,
       "grade_change": true
+    },
+    {
+      "rider": "ID2345",
+      "grade": "B",
+      "number": "15",
+      "place": 0,
+      "dnf": false,
+      "grade_change": false
     }
   ],
   "riders": [
@@ -98,6 +106,15 @@
       "last_name": "Porte",
       "clubslug": "TFR",
       "licenceno": "AUS19850130MOD",
+      "member_category": "race",
+      "member_date": "2019-12-31"
+    },
+    {
+      "id": "ID2345",
+      "first_name": "Ryder",
+      "last_name": "HESJEDAL",
+      "clubslug": "TFR",
+      "licenceno": "CAN19801209",
       "member_category": "race",
       "member_date": "2019-12-31"
     }
