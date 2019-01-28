@@ -525,10 +525,14 @@ class RaceResultList(generics.ListCreateAPIView):
                                                        str(record['licenceno']))
 
                 # just in case we know them already we use get_or_create
-                user, created = User.objects.get_or_create(first_name=record['first_name'],
-                                                           last_name=record['last_name'],
-                                                           email=record['email'],
-                                                           username=username)
+                user, created = User.objects.get_or_create(username=username)
+                # add user details
+                user.first_name = record['first_name']
+                user.last_name = record['last_name']
+                if 'email' in record:
+                    user.email = record['email']
+                user.save()
+
                 try:
                     club = Club.objects.get(slug=record['clubslug'])
                 except Club.DoesNotExist:
@@ -537,6 +541,9 @@ class RaceResultList(generics.ListCreateAPIView):
                 if not created:
                     # guard against recreating the rider
                     rider = user.rider
+                    if not rider.club == club:
+                        rider.club = club
+                        rider.save()
                 else:
                     rider = Rider(licenceno=record['licenceno'], club=club, user=user)
                     rider.save()
@@ -680,6 +687,7 @@ class RaceResultList(generics.ListCreateAPIView):
                         'message': 'race results uploaded',
                         'ridermap': ridermap,
                         })
+
 
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
