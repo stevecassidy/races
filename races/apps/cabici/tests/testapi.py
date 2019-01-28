@@ -558,6 +558,10 @@ class APITests(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+        jsonresp = response.json()
+        self.assertIn('message', jsonresp)
+        self.assertIn('ridermap', jsonresp)
+
         # should have some new race results
         results = RaceResult.objects.filter(race=race)
         self.assertEqual(len(results), 12)
@@ -625,6 +629,9 @@ class APITests(TestCase):
         ryder = Rider.objects.get(user__last_name__exact="HESJEDAL")
         refryder = payload['riders'][2]
         self.assertEqual(refryder['clubslug'], ryder.club.slug)
+
+        # entry for ryder in the ridermap should indicate his true ID
+        self.assertEqual(jsonresp['ridermap'][refryder['id']], ryder.id)
 
     def test_upload_results_twice(self):
         """Can upload JSON results via the API twice and not
