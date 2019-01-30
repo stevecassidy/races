@@ -98,7 +98,9 @@
       "clubslug": "OGE",
       "licenceno": "123456",
       "member_date": "2019-12-31",
-      "grade": "B"
+      "phone": "040332948",
+      "gender": "M",
+      "dob": "1997-12-03"
     },
     {
       "id": 2940,
@@ -107,7 +109,10 @@
       "clubslug": "TFR",
       "licenceno": "AUS19850130MOD",
       "member_category": "race",
-      "member_date": "2019-12-31"
+      "member_date": "2019-12-31",
+      "phone": "040332948",
+      "gender": "M",
+      "dob": "1997-12-03"
     },
     {
       "id": "ID2345",
@@ -116,7 +121,10 @@
       "clubslug": "TFR",
       "licenceno": "CAN19801209",
       "member_category": "race",
-      "member_date": "2019-12-31"
+      "member_date": "2019-12-31",
+      "phone": "040332948",
+      "gender": "M",
+      "dob": "1997-12-03"
     }
   ]
 }

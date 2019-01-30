@@ -570,6 +570,21 @@ class RaceResultList(generics.ListCreateAPIView):
                     else:
                         ClubGrade(rider=rider, club=race.club, grade=record['grade']).save()
 
+                if 'dob' in record:
+                    # validate date format
+                    try:
+                        dob = datetime.date.fromisoformat(record['dob'])
+                        rider.dob = record['dob']
+                    except ValueError:
+                        print("Bad date:", record['dob'])
+                        pass
+                if 'gender' in record and record['gender'] in ['M', 'F']:
+                    rider.gender = record['gender']
+                if 'phone' in record:
+                    rider.phone = record['phone']
+
+                rider.save()
+
                 # now remember the id of this rider for the results entry later
                 ridermap[record['id']] = rider.id
             else:
@@ -687,7 +702,6 @@ class RaceResultList(generics.ListCreateAPIView):
                         'message': 'race results uploaded',
                         'ridermap': ridermap,
                         })
-
 
 
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
