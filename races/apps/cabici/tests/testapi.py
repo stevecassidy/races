@@ -615,6 +615,9 @@ class APITests(TestCase):
         caleb = Rider.objects.get(user__last_name__exact="Ewan")
         refcaleb = payload['riders'][0]
         self.assertEqual(caleb.user.email, refcaleb['email'])
+        self.assertEqual(caleb.phone, refcaleb['phone'])
+        self.assertEqual(caleb.dob.year, 1997)
+        self.assertEqual(caleb.gender, refcaleb['gender'])
 
         # membership
         self.assertEqual(refcaleb['clubslug'], caleb.current_membership.club.slug)

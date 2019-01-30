@@ -281,11 +281,11 @@ class RiderManager(models.Manager):
 
             if 'Subscription End Date' not in row or \
                     row['Subscription End Date'] is None or \
-                    row['Membership Status'] != 'Activated':
+                    row['Membership Status'] != 'Active':
                 continue
 
             # remove 'CA' from the licence number
-            licenceno = row['Id'][2:]
+            licenceno = row['ID'][2:]
             user = self.find_user(row['Email'], licenceno)
             updating = False
 
@@ -312,6 +312,12 @@ class RiderManager(models.Manager):
 
                 # try to guess first and last names
                 first_name, last_name = row['Contact'].split(' ', 1)
+                # but use the fields if they are present
+                if 'First Name' in row:
+                    first_name = row['First Name']
+                if 'Last Name' in row:
+                    first_name = row['Last Name']
+
                 user.first_name = first_name
                 user.last_name = last_name
                 user.email = email
@@ -339,14 +345,18 @@ class RiderManager(models.Manager):
 
             if 'Birthday ' in row and row['Birthday '] != '':
                 try:
-                    user.rider.dob = datetime.date.fromisoformat(row['Birthday '])
-                    userchanges.append('DOB')
+                    dob = datetime.date.fromisoformat(row['Birthday '])
+                    if dob != user.rider.dob:
+                        user.rider.dob = dob
+                        userchanges.append('DOB')
                 except ValueError:
                     pass
 
             if 'Phone ' in row:
-                user.rider.phone = row['Phone '].strip()
-                userchanges.append('Phone')
+                phone = row['Phone '].strip()
+                if user.rider.phone != phone:
+                    user.rider.phone = phone
+                    userchanges.append('Phone')
 
             # membership category = Member Types, Financial Date
             memberdate = row['Subscription End Date']
@@ -360,7 +370,7 @@ class RiderManager(models.Manager):
 
             # update membership record
             if memberdate is not '':
-                # dates are '31 Dec 2019', convert to 2019-12-31
+                # dates are '1-Jan-19', convert to 2019-12-31
                 memberdate = datetime.datetime.strptime(memberdate, '%d %b %Y').strftime("%Y-%m-%d")
                 mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
                 if len(mm) == 0:
@@ -538,8 +548,8 @@ class Rider(models.Model):
 
         info = dict()
         startdate = datetime.date.today() - datetime.timedelta(days=365)
-        info['recent'] = self.raceresult_set.filter(place__lte=5, race__date__gt=startdate)
-        info['places'] = info['recent'].filter(place__lte=3).count()
+        info['recent'] = self.raceresult_set.filter(place__lte=5, place__gt=0, race__date__gt=startdate)
+        info['places'] = info['recent'].filter(place__lte=3, place__gt=0).count()
         info['wins'] = info['recent'].filter(place__exact=1).count()
 
         return info

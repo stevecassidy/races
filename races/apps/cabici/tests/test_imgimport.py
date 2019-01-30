@@ -54,13 +54,13 @@ def write_tidyhq_sample(outfile, rows):
 
     with open(outfile, 'w') as fd:
 
-        writer = csv.DictWriter(fd, ['Contact', 'Id', 'Email', 'Phone ', 'Membership Level', 'Membership Status', 'Subscription End Date', 'Gender ', 'Birthday '])
+        writer = csv.DictWriter(fd, ['Contact', 'ID', 'Email', 'Phone ', 'Membership Level', 'Membership Status', 'Subscription End Date', 'Gender ', 'Birthday '])
         writer.writeheader()
 
         for row in rows:
 
             if row['Status'] == 'Active':
-                status = 'Activated'
+                status = 'Active'
             else:
                 status = 'Expired'
 
@@ -68,7 +68,7 @@ def write_tidyhq_sample(outfile, rows):
 
             trow = {
                 'Contact': row['First Name'] + " " + row['Last Name'],
-                'Id': "CA"+row['Member Number'],
+                'ID': "CA"+row['Member Number'],
                 'Email': row['Email Address'],
                 'Phone ': row['Mobile'],
                 'Membership Level': mmap[row['Member Types']],
