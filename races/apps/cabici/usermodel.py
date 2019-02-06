@@ -691,7 +691,7 @@ class PointScore(models.Model):
         # is the rider eligible for promotion or riding down a grade
         promote = result.race.club.promotion(result.rider, when=result.race.date)
 
-        if result.place is None:
+        if not result.place:
             return (participation, "Participation")
         elif promote:
             return (participation, "Rider eligible for promotion")
