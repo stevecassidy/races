@@ -648,6 +648,10 @@ class RaceResultList(generics.ListCreateAPIView):
         # then create one result for each entry
         entryfields = ['rider', 'grade']
 
+        # count how many results we have already, if non zero we need to
+        # recalculate all of the pointscore, if zero we only need to do this one
+        previousresults = race.raceresult_set.all().count()
+
         race.raceresult_set.all().delete()
         for entry in data.get('entries', []):
             # ensure all required fields
@@ -697,6 +701,15 @@ class RaceResultList(generics.ListCreateAPIView):
                 # at the same time, so we just ignore this error assuming that
                 # the existing record is the same as this one
                 pass
+
+        # once results are in place, we tally the pointscores for this race
+        if previousresults > 0:
+            # need to recalculate pointscores since we've deleted results
+            for ps in race.pointscore_set.all():
+                ps.recalculate()
+        else:
+            # can just tally these results
+            race.tally_pointscores()
 
         return Response({
                         'message': 'race results uploaded',
