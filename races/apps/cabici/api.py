@@ -502,6 +502,8 @@ class RaceResultList(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         """Handle post payload containing entries and new riders"""
 
+        messages = []  # error messages
+
         data = request.data
         if 'race' in data:
             raceid = data['race']
@@ -536,7 +538,8 @@ class RaceResultList(generics.ListCreateAPIView):
                 try:
                     club = Club.objects.get(slug=record['clubslug'])
                 except Club.DoesNotExist:
-                    raise APIException("Unknown club in rider record")
+                    messages.append("Unknown club '%s' in rider record ignored" % (record['clubslug']))
+                    club = Club.objects.get(slug='Unknown')
 
                 if not created:
                     # guard against recreating the rider
@@ -576,15 +579,14 @@ class RaceResultList(generics.ListCreateAPIView):
                         dob = datetime.date.fromisoformat(record['dob'])
                         rider.dob = record['dob']
                     except ValueError:
-                        print("Bad date:", record['dob'])
-                        pass
+                        messages.append("Bad DOB date format (%s) ignored" % record['dob'])
+
                 if 'gender' in record and record['gender'] in ['M', 'F']:
                     rider.gender = record['gender']
                 if 'phone' in record:
                     rider.phone = record['phone']
 
                 rider.save()
-
                 # now remember the id of this rider for the results entry later
                 ridermap[record['id']] = rider.id
             else:
@@ -592,14 +594,16 @@ class RaceResultList(generics.ListCreateAPIView):
                 try:
                     rider = Rider.objects.get(id=record['id'])
                 except Rider.DoesNotExist:
-                    raise APIException("Unknown rider ID in new rider record")
+                    messages.append("Ignored new rider record with unknown temporary rider ID (%s)" % record)
+                    continue
 
                 # membership: club and date
                 if 'clubslug' in record:
                     try:
                         record['club'] = Club.objects.get(slug=record['clubslug'])
                     except Club.DoesNotExist:
-                        raise APIException("Club not found in updated rider record")
+                        messages.append("Unknown club '%s' in rider record ignored" % (record['clubslug']))
+                        record['club'] = Club.objects.get(slug='Unknown')
 
                 # try to parse the member date string
                 if 'member_date' in record:
@@ -654,6 +658,7 @@ class RaceResultList(generics.ListCreateAPIView):
 
         race.raceresult_set.all().delete()
         for entry in data.get('entries', []):
+
             # ensure all required fields
             if not all([f in entry for f in entryfields]):
                 raise APIException("Missing fields in JSON entry")
@@ -662,12 +667,18 @@ class RaceResultList(generics.ListCreateAPIView):
                 if entry['rider'] in ridermap:
                     entry['rider'] = ridermap[entry['rider']]
                 else:
-                    raise APIException("Result record with unknown temporary rider ID")
+                    grade = entry.get('grade','Unknown')
+                    number = entry.get('number', 'Unknown')
+                    messages.append("Ignored result record with unknown temporary rider ID (%s/%s)" % (grade, number))
+                    continue
 
             try:
                 rider = Rider.objects.get(id=entry['rider'])
             except Rider.DoesNotExist:
-                raise APIException("Rider (id=%s) not found for result" % entry['rider'])
+                grade = entry.get('grade','Unknown')
+                number = entry.get('number', 'Unknown')
+                messages.append("Rider (id=%s) not found for result (%s/%s)" % (entry['rider'], grade, number))
+                continue
 
             if race.club.slug in rider.grades:
                 usual_grade = rider.grades[race.club.slug]
@@ -713,6 +724,7 @@ class RaceResultList(generics.ListCreateAPIView):
 
         return Response({
                         'message': 'race results uploaded',
+                        'errors': messages,
                         'ridermap': ridermap,
                         })
 

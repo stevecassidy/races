@@ -13,6 +13,7 @@ import os
 
 
 
+
 class ResultViewTests(TestCase):
 
     fixtures = ['clubs', 'courses', 'users', 'races', 'riders']
@@ -56,6 +57,41 @@ class ResultViewTests(TestCase):
 
         self.assertEqual(result1.grade, 'A')
         self.assertEqual(result1.place, 1)
+
+
+    def test_download_results_excel(self):
+        """We can download a race result as an excel spreadsheet"""
+
+        grades = {'A': [], 'B': [], 'C': [], 'D': []}
+
+        race = Race.objects.all()[0]
+        riders = Rider.objects.all()
+
+        for rider in riders:
+            grade = random.choice(list(grades.keys()))
+            grades[grade].append(rider)
+
+        for grade in grades:
+            numbers = list(range(100))
+            random.shuffle(numbers)
+            place = 0
+            for rider in grades[grade]:
+                place += 1
+                if place <= 5:
+                    result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=place)
+                else:
+                    result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=0)
+                result.save()
+
+        # need to login first
+        self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        url = reverse('race_summary_spreadsheet', kwargs={'pk': race.pk})
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
 
 
     def test_download_results_excel(self):
