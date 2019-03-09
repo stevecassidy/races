@@ -593,14 +593,19 @@ class RaceSummarySpreadsheet(View):
 
     def get(self, request, *args, **kwargs):
 
-        # TODO: add race date and title to spreadsheet filename
-
         race = get_object_or_404(Race, pk=kwargs['pk'])
         club = race.club
 
         # worksheet is a list of row tuples
         ws = []
-        today = datetime.date.today()
+
+        results = RaceResult.objects.filter(race__exact=race)
+
+        ws.append(("Race Date", race.date, '', '', '', '', '', '', ''))
+        ws.append(("Race Name", race.title, '', '', '', '', '', '', ''))
+        ws.append(("Club", race.club.slug, '', '', '', '', '', '', ''))
+        ws.append(("Venue", race.location.name, '', '', '', '', '', '', ''))
+        ws.append(('', '', '', '', '', '', '', '', ''))
 
         header = ('LastName',
                   'FirstName',
@@ -614,17 +619,6 @@ class RaceSummarySpreadsheet(View):
                   )
 
         ws.append(header)
-
-        results = RaceResult.objects.filter(race__exact=race)
-
-        # add race info rows
-        # ws.append(("Race Date",	"Race Name", "Race Venue", "Race Format", "Host Club", "", "", "", ""))
-        # ws.append((race.date,
-        #           race.title,
-        #            race.location.shortname,
-        #            race.category,
-        #            race.club.slug,
-        #            '', '', '', ''))
 
         for result in results:
 
@@ -652,7 +646,7 @@ class RaceSummarySpreadsheet(View):
         sheet.save_to_memory("xls", io)
 
         response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
-        response['Content-Disposition'] = 'attachment; filename="riders-%s.xls"' % race.title
+        response['Content-Disposition'] = 'attachment; filename="%s-%s-%s.xls"' % (race.date, race.club.slug, race.location.name)
         response['Content-Length'] = len(io.getvalue())
 
         return response
