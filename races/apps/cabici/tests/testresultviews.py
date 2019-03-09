@@ -1,17 +1,7 @@
 from django.test import TestCase
-from django.urls import reverse
-from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
 import random
-from races.apps.cabici.models import Club, RaceCourse, Race
 from races.apps.cabici.usermodel import *
-from datetime import datetime, timedelta, date
-
-from django.core.files.uploadedfile import SimpleUploadedFile
 import os
-
-
-
 
 
 class ResultViewTests(TestCase):
@@ -58,7 +48,6 @@ class ResultViewTests(TestCase):
         self.assertEqual(result1.grade, 'A')
         self.assertEqual(result1.place, 1)
 
-
     def test_download_results_excel(self):
         """We can download a race result as an excel spreadsheet"""
 
@@ -92,9 +81,7 @@ class ResultViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-
-
-    def test_download_results_excel(self):
+    def test_download_results_excel2(self):
         """We can download a race result as an excel spreadsheet"""
 
         grades = {'A': [], 'B': [], 'C': [], 'D': []}
@@ -127,9 +114,7 @@ class ResultViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-
-
-    def test_download_results_excel(self):
+    def test_download_results_excel3(self):
         """We can download a race result as an excel spreadsheet"""
 
         grades = {'A': [], 'B': [], 'C': [], 'D': []}
@@ -162,38 +147,55 @@ class ResultViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-
-
-    def test_download_results_excel(self):
-        """We can download a race result as an excel spreadsheet"""
-
-        grades = {'A': [], 'B': [], 'C': [], 'D': []}
+    def test_add_single_result(self):
+        """We can add a single result for a race via the form"""
 
         race = Race.objects.all()[0]
-        riders = Rider.objects.all()
-
-        for rider in riders:
-            grade = random.choice(list(grades.keys()))
-            grades[grade].append(rider)
-
-        for grade in grades:
-            numbers = list(range(100))
-            random.shuffle(numbers)
-            place = 0
-            for rider in grades[grade]:
-                place += 1
-                if place <= 5:
-                    result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=place)
-                else:
-                    result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=0)
-                result.save()
+        rider = Rider.objects.all()[0]
 
         # need to login first
         self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
 
-        url = reverse('race_summary_spreadsheet', kwargs={'pk': race.pk})
+        url = reverse('race', kwargs={'pk': race.pk, 'slug': race.club.slug})
 
-        response = self.client.get(url)
+        data = {
+            'rider': rider.pk,
+            'race': race.pk,
+            'place': 0,
+            'number': 2,
+            'grade': 'A'
+        }
 
-        self.assertEqual(response.status_code, 200)
+        response = self.client.post(url, data)
 
+        self.assertEqual(response.status_code, 302)
+
+        # rider should be in results
+        results = race.raceresult_set.filter(rider__exact=rider)
+        self.assertEqual(1, results.count())
+
+    def test_add_single_result_invalid_form(self):
+        """We can add a single result for a race via the form"""
+
+        race = Race.objects.all()[0]
+        rider = Rider.objects.all()[0]
+
+        # need to login first
+        self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        url = reverse('race', kwargs={'pk': race.pk, 'slug': race.club.slug})
+
+        data = {
+            'race': race.pk,
+            'place': 0,
+            'number': 2,
+            'grade': 'A'
+        }
+
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 302)
+
+        # rider should be in results
+        results = race.raceresult_set.filter(rider__exact=rider)
+        self.assertEqual(0, results.count())

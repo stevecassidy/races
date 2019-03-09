@@ -1,5 +1,5 @@
 {% extends "site_base.html" %}
-
+{% load bootstrap %}
 {% block head_title %}
 Pointscores for {{club}}
 {% endblock %}
@@ -10,9 +10,19 @@ Pointscores for {{club}}
     <h2>Pointscores for {{club}}</h2>
 
     <ul>
-    {% for ps in objects %}
-        <li>{{ps}}</li>
-    {% endfor %}
+        {% for ps in pointscores %}
+            <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
+        {% endfor %}
     </ul>
+
+    <h3>Add New Pointscore</h3>
+
+    <form method="POST">
+        {% csrf_token %}
+        {{ form | bootstrap }}
+
+        <input type="submit" class="btn btn-primary" value="Create Pointscore">
+
+    </form>
 
 {% endblock %}

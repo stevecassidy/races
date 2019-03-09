@@ -1,4 +1,3 @@
-
 from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
 from django.views.generic.edit import UpdateView
@@ -15,16 +14,19 @@ from django.contrib import messages
 from anymail.exceptions import AnymailInvalidAddress
 
 from django.contrib.auth.models import User
-from races.apps.cabici.models import Race, Club, RaceCourse
-from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, ClubGrade, PointscoreTally
-from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm, RaceResultAddForm
+from races.apps.cabici.models import Race, Club
+from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole, RaceStaff, parse_img_members, UserRole, \
+    ClubGrade, PointscoreTally
+from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, \
+    RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm, \
+    RaceResultAddForm, PointScoreAddForm
 
 import datetime
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from io import BytesIO, StringIO
+from io import BytesIO
 import pyexcel
 import codecs
 
@@ -32,7 +34,6 @@ DAYS = [MO, TU, WE, TH, FR, SA, SU]
 
 
 class HomePage(ListView):
-
     model = Race
     template_name = "index.html"
 
@@ -49,10 +50,11 @@ class HomePage(ListView):
         if len(pages) == 1:
             context['page'] = pages[0]
         else:
-            context['page'] = {'title': 'Content',}
+            context['page'] = {'title': 'Content', }
         return context
 
-#class TestPageView(TemplateView):
+
+# class TestPageView(TemplateView):
 
 #    template_name = "test.html"
 
@@ -69,13 +71,13 @@ class ClubDetailView(DetailView):
     context_object_name = 'club'
 
     def get_context_data(self, **kwargs):
-
         context = super(ClubDetailView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
 
-        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club).exclude(status__exact='w')[:5]
+        context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club).exclude(
+            status__exact='w')[:5]
 
         context['form'] = RaceCreateForm()
 
@@ -112,31 +114,28 @@ class ClubOfficialRequiredMixin(AccessMixin):
 
 
 class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
-
     model = Club
     template_name = 'club_dashboard.html'
     context_object_name = 'club'
 
     def get_context_data(self, **kwargs):
-
         context = super(ClubDashboardView, self).get_context_data(**kwargs)
-        #slug = self.kwargs['slug']
-        #club = Club.objects.get(slug=slug)
+        # slug = self.kwargs['slug']
+        # club = Club.objects.get(slug=slug)
         context['racecreateform'] = RaceCreateForm()
         context['memberuploadform'] = MembershipUploadForm(initial={'club': context['club']})
         context['statistics'] = context['club'].statistics()
         context['searchform'] = RiderSearchForm()
+        context['pointscoreform'] = PointScoreAddForm()
 
         return context
 
 
 class ClubRidersPromotionView(ListView):
-
     model = Club
     template_name = 'club_riders_promotion.html'
 
     def get_context_data(self, **kwargs):
-
         context = super(ClubRidersPromotionView, self).get_context_data(**kwargs)
         # Add in a list of all riders who could be promoted
         slug = self.kwargs['slug']
@@ -156,7 +155,8 @@ def club_riders_csv_view(request, slug):
     club = get_object_or_404(Club, slug=slug)
 
     # validate the user
-    if not hasattr(request.user, 'rider') or not request.user.rider.club == club and not request.user.rider.official and not request.user.is_staff:
+    if not hasattr(request.user,
+                   'rider') or not request.user.rider.club == club and not request.user.rider.official and not request.user.is_staff:
         return HttpResponseNotAllowed("Must be a Club Official")
 
     # Create the HttpResponse object with the appropriate CSV header.
@@ -194,7 +194,6 @@ def club_riders_csv_view(request, slug):
 
 
 class ClubRidersView(ListView):
-
     model = Club
     template_name = 'club_riders.html'
 
@@ -206,8 +205,10 @@ class ClubRidersView(ListView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by('user__last_name').select_related('club')
-        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by('user__last_name').select_related('club')
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
+            'user__last_name').select_related('club')
+        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
+            'user__last_name').select_related('club')
 
         return context
 
@@ -227,7 +228,7 @@ class ClubRidersView(ListView):
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
             else:
                 # unknown format
-                pass
+                changed = []
 
             return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
         else:
@@ -235,12 +236,10 @@ class ClubRidersView(ListView):
 
 
 class ClubPointscoreView(DetailView):
-
     model = PointScore
     template_name = "pointscore_detail.html"
 
     def get_context_data(self, **kwargs):
-
         context = super(ClubPointscoreView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the future races
         club = self.kwargs['slug']
@@ -252,7 +251,6 @@ class ClubPointscoreView(DetailView):
 
 
 class ClubPointscoreAuditView(DetailView):
-
     model = PointScore
     template_name = "pointscore_audit.html"
 
@@ -279,16 +277,35 @@ class ClubPointscoreAuditView(DetailView):
 class ClubPointscoreList(ListView):
 
     model = PointScore
+    template_name = "pointscore_list.html"
 
     def get_context_data(self, **kwargs):
-
-        context = super(ClubPointscoreView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the future races
-        club = self.kwargs['club']
-        context['club'] = Club.objects.get(slug=club)
-        context['races'] = Race.objects.filter(pointscore=self.object)
+        context = super(ClubPointscoreList, self).get_context_data(**kwargs)
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+        context['pointscores'] = PointScore.objects.filter(club__slug__exact=slug)
+        context['form'] = PointScoreAddForm()
 
         return context
+
+    def post(self, request, **kwargs):
+        """Handle POST request to create a new pointscore"""
+
+        form = PointScoreAddForm(request.POST)
+
+        if form.is_valid():
+            slug = self.kwargs['slug']
+            club = Club.objects.get(slug=slug)
+            name = form.cleaned_data.get('name')
+
+            ps = PointScore(club=club, name=name)
+            ps.save()
+
+            return HttpResponseRedirect(reverse('pointscore', kwargs={'slug': club.slug, 'pk': ps.pk}))
+
+        else:
+            return render(request, "pointscore_list.html")
+
 
 
 class ClubRidersExcelView(View):
@@ -355,7 +372,7 @@ class ClubRidersExcelView(View):
                    r.user.email,
                    r.id,
                    eventno  # must be numeric
-                  )
+                   )
             ws.append(row)
 
         sheet = pyexcel.Sheet(ws)
@@ -369,14 +386,13 @@ class ClubRidersExcelView(View):
         return response
 
 
-class ClubGradeView(UpdateView,ClubOfficialRequiredMixin):
+class ClubGradeView(UpdateView, ClubOfficialRequiredMixin):
     model = ClubGrade
     template_name = "rider_update.html"
     context_object_name = "clubgrade"
     fields = ['grade']
 
-    def get_object(self):
-
+    def get_object(self, queryset=None):
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
         user = get_object_or_404(User, pk=self.kwargs['pk'])
 
@@ -427,13 +443,11 @@ class RiderListView(ListView):
 
 
 class RiderView(DetailView):
-
     model = User
     template_name = 'rider_detail.html'
     context_object_name = 'user'
 
     def get_context_data(self, **kwargs):
-
         context = super(RiderView, self).get_context_data(**kwargs)
 
         context['raceclubs'] = Club.objects.filter(manage_results__exact=True)
@@ -441,7 +455,7 @@ class RiderView(DetailView):
         return context
 
 
-class RiderUpdateView(UpdateView,ClubOfficialRequiredMixin):
+class RiderUpdateView(UpdateView, ClubOfficialRequiredMixin):
     """View to allow update of rider and user details as well
     as grades and other associated objects"""
 
@@ -567,14 +581,14 @@ class RaceDetailView(DetailView):
                 result.save()
             messages.add_message(self.request, messages.SUCCESS, "Result added", extra_tags='safe')
         else:
-            msgtext = "Error in adding result: %s" % form.errors['__all__']
+            print(form.errors.as_data())
+            msgtext = "Error in adding result: %s" % form.errors
             messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
 
 class RaceSummarySpreadsheet(View):
-
     model = Race
 
     def get(self, request, *args, **kwargs):
@@ -584,7 +598,14 @@ class RaceSummarySpreadsheet(View):
 
         # worksheet is a list of row tuples
         ws = []
-        today = datetime.date.today()
+
+        results = RaceResult.objects.filter(race__exact=race)
+
+        ws.append(("Race Date", race.date, '', '', '', '', '', '', ''))
+        ws.append(("Race Name", race.title, '', '', '', '', '', '', ''))
+        ws.append(("Club", race.club.slug, '', '', '', '', '', '', ''))
+        ws.append(("Venue", race.location.name, '', '', '', '', '', '', ''))
+        ws.append(('', '', '', '', '', '', '', '', ''))
 
         header = ('LastName',
                   'FirstName',
@@ -598,17 +619,6 @@ class RaceSummarySpreadsheet(View):
                   )
 
         ws.append(header)
-
-        results = RaceResult.objects.filter(race__exact=race)
-
-        # add race info rows
-       # ws.append(("Race Date",	"Race Name", "Race Venue", "Race Format", "Host Club", "", "", "", ""))
-       # ws.append((race.date,
-       #           race.title,
-       #            race.location.shortname,
-       #            race.category,
-       #            race.club.slug,
-       #            '', '', '', ''))
 
         for result in results:
 
@@ -628,7 +638,7 @@ class RaceSummarySpreadsheet(View):
                    rider.id,
                    race.date,
                    )
-            assert(len(row) == len(header))
+            assert (len(row) == len(header))
             ws.append(row)
 
         sheet = pyexcel.Sheet(ws)
@@ -636,7 +646,7 @@ class RaceSummarySpreadsheet(View):
         sheet.save_to_memory("xls", io)
 
         response = HttpResponse(io.getvalue(), content_type='application/octet-stream')
-        response['Content-Disposition'] = 'attachment; filename="riders-%s.xls"' % race.title
+        response['Content-Disposition'] = 'attachment; filename="%s-%s-%s.xls"' % (race.date, race.club.slug, race.location.name)
         response['Content-Length'] = len(io.getvalue())
 
         return response
@@ -677,7 +687,8 @@ class RaceOfficialUpdateView(View):
                         # make sure we don't add the same person to the same role for this race
 
                         try:
-                            newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole, race=race)
+                            newracestaff, created = RaceStaff.objects.get_or_create(rider=rider, role=clubrole,
+                                                                                    race=race)
                             if created:
                                 nofficials[role].append({'id': rider.id, 'name': str(rider)})
 
@@ -699,11 +710,10 @@ class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
 
 
 class RaceUploadExcelView(FormView):
-
     form_class = RaceCSVForm
     template_name = ''
 
-    def get(self, request, pk, slug):
+    def get(self, request, *args, **kwargs):
         """GET request redirects to the race page"""
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
@@ -737,14 +747,13 @@ class RaceUploadExcelView(FormView):
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
 
 
-class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
+class RacePublishDraftView(FormView, ClubOfficialRequiredMixin):
     """View to publish all draft races for a club"""
 
     form_class = RacePublishDraftForm
     template_name = 'index.html'
 
     def form_valid(self, form):
-
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
 
         # find all draft races and make them Published
@@ -755,7 +764,6 @@ class RacePublishDraftView(FormView,ClubOfficialRequiredMixin):
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
 
     def form_invalid(self, form):
-
         return HttpResponseRedirect(reverse('club_races', kwargs=self.kwargs))
 
 
@@ -808,7 +816,6 @@ class ClubRaceResultsView(DetailView):
     context_object_name = 'club'
 
     def get_context_data(self, **kwargs):
-
         context = super(ClubRaceResultsView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the past races
         slug = self.kwargs['slug']
@@ -817,7 +824,8 @@ class ClubRaceResultsView(DetailView):
         context['races'] = Race.objects.filter(date__lt=datetime.date.today(),
                                                club__exact=club,
                                                raceresult__rider__isnull=False,
-                                               status__exact='p').distinct().select_related('club').select_related('location')
+                                               status__exact='p').distinct().select_related('club').select_related(
+            'location')
 
         return context
 
@@ -841,9 +849,13 @@ class ClubRacesView(DetailView):
 
         context['racecreateform'] = RaceCreateForm()
 
-        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name').distinct()
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name').distinct()
-        #context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
+        context['commissaires'] = Rider.objects.filter(club__exact=club,
+                                                       commissaire_valid__gt=datetime.date.today()).order_by(
+            'user__last_name').distinct()
+        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+            'user__last_name').distinct()
+        # context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
         context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
 
         return context
@@ -858,9 +870,9 @@ class ClubRacesView(DetailView):
 
         # are we allowed to do this?
         if not request.user.is_superuser and \
-           (not request.user.rider or \
-           not request.user.rider.official or \
-           request.user.rider.club != club):
+                (not request.user.rider or
+                 not request.user.rider.official or
+                 request.user.rider.club != club):
             return HttpResponseBadRequest("Only available for club officials")
 
         if request.is_ajax():
@@ -907,7 +919,7 @@ class ClubRacesView(DetailView):
                     data = json.dumps({'success': 1})
                     return HttpResponse(data, content_type='application/json')
             else:
-                data = json.dumps(dict([(k, [str(e) for e in v]) for k,v in list(form.errors.items())]))
+                data = json.dumps(dict([(k, [str(e) for e in v]) for k, v in list(form.errors.items())]))
                 return HttpResponse(data, content_type='application/json')
         else:
             return HttpResponseBadRequest("Only Ajax requests supported")
@@ -932,9 +944,15 @@ class ClubRacesOfficalUpdateView(DetailView):
 
         context['racecreateform'] = RaceCreateForm()
 
-        context['commissaires'] = Rider.objects.filter(club__exact=club, commissaire_valid__gt=datetime.date.today()).order_by('user__last_name')
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Officer').order_by('user__last_name')
-        context['dutyhelpers'] = Rider.objects.filter(club__exact=club, user__userrole__role__name__exact='Duty Helper').order_by('user__last_name')
+        context['commissaires'] = Rider.objects.filter(club__exact=club,
+                                                       commissaire_valid__gt=datetime.date.today()).order_by(
+            'user__last_name')
+        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+            'user__last_name')
+        context['dutyhelpers'] = Rider.objects.filter(club__exact=club,
+                                                      user__userrole__role__name__exact='Duty Helper').order_by(
+            'user__last_name')
 
         return context
 
@@ -965,7 +983,7 @@ class ClubRacesOfficalUpdateView(DetailView):
         return HttpResponseRedirect(reverse('club_races', kwargs={'slug': club.slug}))
 
 
-class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
+class ClubMemberEmailView(FormView, ClubOfficialRequiredMixin):
     """View to send emails to some or all members of a club"""
 
     form_class = ClubMemberEmailForm
@@ -999,7 +1017,8 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         elif sendto == 'pastriders':
             epoch = datetime.date.today() - datetime.timedelta(days=365)
             # riders who have raced with this club in the epoch
-            results = RaceResult.objects.filter(race__date__gt=epoch).order_by('rider__user__email').values('rider').distinct()
+            results = RaceResult.objects.filter(race__date__gt=epoch).order_by('rider__user__email').values(
+                'rider').distinct()
             riders = [Rider.objects.get(id=x['rider']) for x in results]
             emails = [r.user.email for r in riders if r.user.email != '']
             footer += "you have raced with %s in the past year." % (club.name,)
@@ -1014,6 +1033,8 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         elif sendto == 'self':
             emails = [self.request.user.email]
             footer += "you are sending a test email for %s." % (club.name,)
+        else:
+            emails = []
 
         subject = form.cleaned_data['subject']
         message = form.cleaned_data['message'] + footer
@@ -1028,7 +1049,7 @@ class ClubMemberEmailView(FormView,ClubOfficialRequiredMixin):
         except BadHeaderError:
             return HttpResponseBadRequest('Invalid email header found.')
         except AnymailInvalidAddress as e:
-            messages.add_message(e)
+            messages.add_message(self.request, messages.ERROR, e)
 
         messages.add_message(self.request, messages.INFO, 'Message sent to %d recipients' % (len(emails)))
         return HttpResponseRedirect(reverse('club_dashboard', kwargs=self.kwargs))

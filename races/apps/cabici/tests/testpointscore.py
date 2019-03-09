@@ -111,8 +111,6 @@ class ModelTests(TestCase):
 
     def gen_races(self, club, n=10):
 
-        import random
-
         today = datetime.today()
 
         loc = RaceCourse.objects.all()[0]
@@ -190,14 +188,13 @@ class ModelTests(TestCase):
         self.assertEqual(winner, table[0].rider)
         self.assertEqual(winnerpoints, table[0].points)
 
-
     def test_promotion(self):
         """Test the classification of riders as promtable """
 
         club = Club.objects.get(slug='OGE')
 
-        # generate races and add them to the pointscore
-        self.gen_races(club, 6)
+        # generate 10 races and add them to the pointscore
+        self.gen_races(club, 10)
 
         # find a rider with no points
         rider = Rider.objects.all()[0]
@@ -206,8 +203,15 @@ class ModelTests(TestCase):
         grade.save()
         gradeletter = grade.grade
 
-        # make this person win five
+        # make this person race five times but not place
         for race in Race.objects.all()[:5]:
+            winner = RaceResult(race=race, rider=rider, place=0, grade=gradeletter)
+            winner.save()
+        # should not be promotable
+        self.assertFalse(club.promotion(rider))
+
+        # make this person win five
+        for race in Race.objects.all()[5:10]:
             winner = RaceResult(race=race, rider=rider, place=1, grade=gradeletter)
             winner.save()
 
@@ -221,7 +225,6 @@ class ModelTests(TestCase):
 
         self.assertEqual(None, club.grade(rider))
         self.assertFalse(club.promotion(rider))
-
 
     def test_points_promotion(self):
         """A rider who is eligible for promotion shouldn't
@@ -274,7 +277,6 @@ class ModelTests(TestCase):
         report = ps.audit(rider)
         self.assertEqual(expected, report)
 
-
     def test_points_promotion_a_grade(self):
         """A rider who is eligible for promotion shouldn't
         get more than 2 points unless they are in A grade"""
@@ -312,7 +314,6 @@ class ModelTests(TestCase):
         # this rider should get winning points for all five races
         pst = PointscoreTally.objects.get(rider=rider)
         self.assertEqual(35, pst.points)
-
 
     def test_points_promotion_ab_grade(self):
         """Only wins in the riders current grade should

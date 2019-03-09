@@ -14,7 +14,6 @@ from urllib.error import HTTPError, URLError
 import datetime
 import hashlib
 import ngram
-import csv
 
 
 class ClubManager(models.Manager):
@@ -229,7 +228,7 @@ class Club(models.Model):
         # number of races
         # number of wins/places in last 12 months
         # wins in grade
-        # places in grade
+        # places in grade (> 3rd place)
 
         info = dict()
 
@@ -241,8 +240,8 @@ class Club(models.Model):
 
         startdate = when - datetime.timedelta(days=365)
         info['recent'] = rider.raceresult_set.filter(race__club__exact=self, place__lte=5, race__date__gt=startdate, race__date__lt=when)
-        info['places'] = info['recent'].filter(place__lte=3, grade__exact=grade).count()
-        info['wins'] = info['recent'].filter(place__exact=1, grade__exact=grade).count()
+        info['places'] = info['recent'].filter(place__lte=3, place__gt=0, grade__exact=grade).count()
+        info['wins'] = info['recent'].filter(place__exact=1, place__gt=0, grade__exact=grade).count()
 
         return info
 
@@ -660,9 +659,11 @@ class Race(models.Model):
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
             if points == 2:
-                place = None
+                place = 0
             elif points > 0:
                 place = 8-points
+            else:
+                place = 0
 
             if row['ShirtNo'] == '':
                 shirtno = 0
@@ -714,7 +715,7 @@ class Race(models.Model):
         - points/place calculation is incorrect"""
 
         for grade in ['A', 'B', 'C', 'D', 'E', 'F']:
-            results = self.raceresult_set.filter(grade=grade, place__isnull=False)
+            results = self.raceresult_set.filter(grade=grade, place__gt=0)
             ingrade = self.raceresult_set.filter(grade=grade).count()
 
             if ingrade < 12:
@@ -725,7 +726,6 @@ class Race(models.Model):
                     for result in results:
                         result.place -= fudge
                         result.save()
-
 
     def tally_pointscores(self):
         """Tally all points for this race

@@ -19,7 +19,7 @@
                 '#id_grade': function (d) {
                     return d.grades['{{ race.club }}']
                 }
-            })
+            });
 
             delete_result_init()
         })
@@ -36,17 +36,17 @@ function initialize() {
 
   var mapOptions = {
     zoom: 12,
-    center: myLatlng,
+    center: myLatlng
   };
 
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-  var marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
-      title: '{{race.location.name}}'
-  });
-};
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        title: '{{race.location.name}}'
+    });
+}
 
 google.maps.event.addDomListener(window, 'load', initialize);
     </script>
@@ -142,7 +142,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
                     <button class="btn btn-default">Download Race Spreadsheet</button></a>
 
                     <button class="btn btn-default" data-toggle="modal"
-                            data-target="#addResultModal" title="Add Result">Add Result</span>
+                            data-target="#addResultModal" title="Add Result">Add Result
                     </button>
                 </p>
             {% endif %}
@@ -293,7 +293,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
                     <h4 class="modal-title" id="addResultModalLabel">Add Result</h4>
                 </div>
                 <div class="modal-body">
-                    <form id='addResultForm' method='POST' action=''>
+                    <form id='addResultForm' method='POST' action='' autocomplete="off">
                         {% csrf_token %}
                         <div class="form-group">
                             <label class="control-label" for="id_riderName">Rider name</label>
