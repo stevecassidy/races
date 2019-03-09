@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.urls import reverse
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
@@ -11,10 +10,9 @@ import datetime
 from races.apps.cabici.usermodel import Rider, RaceResult, ClubGrade, Membership
 from races.apps.cabici.models import Club, Race
 
+
 class UserModelTests(TestCase):
 
-    # fixtures define some users (user1, user2, user3)
-    # and some clubs
     fixtures = ['users', 'clubs', 'courses', 'races', 'riders']
 
     def setUp(self):
@@ -224,14 +222,14 @@ class UserModelTests(TestCase):
         self.assertEqual(resultsA.count(), 11)
 
         # highest place in A grade should be Joaqin Rodriguez at 1 (small group fix)
-        firstplace = resultsA.filter(place__isnull=False)[0]
+        firstplace = resultsA.filter(place__gt=0)[0]
         self.assertEqual('ESP19790512', firstplace.rider.licenceno)
         self.assertEqual(1, firstplace.place)
 
         # winner of B grade
         resultsB = RaceResult.objects.filter(race__exact=race,
                                              grade__exact="B",
-                                             place__isnull=False).order_by("place")
+                                             place__gt=0).order_by("place")
 
         # highest place in B grade should be Nikki Terpstra NED19840518
         firstplace = resultsB[0]
@@ -267,7 +265,7 @@ class UserModelTests(TestCase):
         self.assertEqual(1, len(r2))
 
         self.assertEqual(1, r2[0].place)
-        self.assertEqual(None, r1[0].place)
+        self.assertEqual(0, r1[0].place)
 
         self.assertIn('Error: duplicate result discarded for rider Ryder HESJEDAL', messages)
 
