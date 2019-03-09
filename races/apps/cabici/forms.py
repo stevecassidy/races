@@ -2,7 +2,6 @@
 from django import forms
 from races.apps.cabici.models import Race, Club
 from races.apps.cabici.usermodel import PointScore, Rider, RaceResult
-from dateutil.rrule import MO, TU, WE, TH, FR, SA, SU
 
 
 REPEAT_CHOICES = [('none', 'No Repeat'),
@@ -30,8 +29,6 @@ class RaceResultUpdateForm(forms.ModelForm):
 
 class RaceResultAddForm(forms.ModelForm):
     """Form to add a new result for a race"""
-
-    #riderName = forms.CharField(label="Rider name", required=True)
 
     class Meta:
         model = RaceResult
@@ -146,3 +143,9 @@ class ClubMemberEmailForm(forms.Form):
     sendto = forms.ChoiceField(label="Send To", choices=SEND_CHOICES, required=True)
     subject = forms.CharField(label="Subject", required=True)
     message = forms.CharField(label="Message", required=True, widget=forms.Textarea)
+
+
+class PointScoreAddForm(forms.Form):
+
+    name = forms.CharField(label="Pointscore Name")
+

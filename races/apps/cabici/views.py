@@ -19,7 +19,7 @@ from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubRole,
     ClubGrade, PointscoreTally
 from races.apps.cabici.forms import RaceCreateForm, RaceCSVForm, RaceRiderForm, MembershipUploadForm, RiderSearchForm, \
     RiderUpdateForm, RiderUpdateFormOfficial, RacePublishDraftForm, ClubMemberEmailForm, RaceResultUpdateForm, \
-    RaceResultAddForm
+    RaceResultAddForm, PointScoreAddForm
 
 import datetime
 from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
@@ -126,6 +126,7 @@ class ClubDashboardView(ClubOfficialRequiredMixin, DetailView):
         context['memberuploadform'] = MembershipUploadForm(initial={'club': context['club']})
         context['statistics'] = context['club'].statistics()
         context['searchform'] = RiderSearchForm()
+        context['pointscoreform'] = PointScoreAddForm()
 
         return context
 
@@ -274,16 +275,37 @@ class ClubPointscoreAuditView(DetailView):
 
 
 class ClubPointscoreList(ListView):
+
     model = PointScore
+    template_name = "pointscore_list.html"
 
     def get_context_data(self, **kwargs):
         context = super(ClubPointscoreList, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the future races
-        club = self.kwargs['club']
-        context['club'] = Club.objects.get(slug=club)
-        context['races'] = Race.objects.filter(pointscore=self.object)
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+        context['pointscores'] = PointScore.objects.filter(club__slug__exact=slug)
+        context['form'] = PointScoreAddForm()
 
         return context
+
+    def post(self, request, **kwargs):
+        """Handle POST request to create a new pointscore"""
+
+        form = PointScoreAddForm(request.POST)
+
+        if form.is_valid():
+            slug = self.kwargs['slug']
+            club = Club.objects.get(slug=slug)
+            name = form.cleaned_data.get('name')
+
+            ps = PointScore(club=club, name=name)
+            ps.save()
+
+            return HttpResponseRedirect(reverse('pointscore', kwargs={'slug': club.slug, 'pk': ps.pk}))
+
+        else:
+            return render(request, "pointscore_list.html")
+
 
 
 class ClubRidersExcelView(View):
@@ -570,6 +592,8 @@ class RaceSummarySpreadsheet(View):
     model = Race
 
     def get(self, request, *args, **kwargs):
+
+        # TODO: add race date and title to spreadsheet filename
 
         race = get_object_or_404(Race, pk=kwargs['pk'])
         club = race.club
