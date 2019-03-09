@@ -658,7 +658,9 @@ class Race(models.Model):
 
             # work out place from points - actually need to account for small grades (E, F)
             points = int(row['Points'])
-            if points > 0:
+            if points == 2:
+                place = 0
+            elif points > 0:
                 place = 8-points
             else:
                 place = 0
