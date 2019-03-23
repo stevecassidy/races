@@ -295,6 +295,11 @@ class RaceList(generics.ListCreateAPIView):
             races = races.filter(date__gte=datetime.date.today())
         elif select == 'recent':
             races = races.filter(date__lte=datetime.date.today()).order_by('-date')
+        elif select == 'raceday':
+            today = datetime.date.today()
+            future = today + datetime.timedelta(days=30)
+            past = today - datetime.timedelta(days=30)
+            races = races.filter(date__lte=future, date__gte=past).order_by('-date')
         elif select == 'results':
             races = races.filter(raceresult__rider__isnull=False).distinct().order_by('-date')
 
