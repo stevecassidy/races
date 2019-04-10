@@ -26,8 +26,9 @@ class Command(BaseCommand):
         ClubGrade.objects.all().delete()
 
         riders = list(Rider.objects.all())
+        riders = random.sample(riders, 200)
         random.shuffle(riders)
-        k = len(riders)/4
+        k = int(len(riders)/4)
         grades = {'A': [], 'B': [], 'C': [], 'D': []}
 
         for grade in list(grades.keys()):
@@ -35,12 +36,10 @@ class Command(BaseCommand):
                 rider = riders.pop()
                 grades[grade].append(rider)
 
-
-
         for race in Race.objects.all():
             for grade in list(grades.keys()):
                 who = random.sample(grades[grade], random.randint(k/2, k-1))
-                numbers = list(range(100))
+                numbers = list(range(len(who)))
                 random.shuffle(numbers)
                 place = 0
                 for rider in who:
