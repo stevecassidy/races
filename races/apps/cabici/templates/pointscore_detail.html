@@ -9,10 +9,14 @@
 
     <h2>{{object}}</h2>
 
+    {% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == club %}
     <form method="post">
         {% csrf_token %}
-        <input type="submit" value="Recalculate">
+        <input class="btn btn-default" type="submit" value="Recalculate Pointscore">
     </form>
+        <p>Recalculation may take some time. Only use this if there are clear errors in the pointscore
+        total. All points will be recalculated from the stored results.</p>
+    {% endif %}
 
     <h3>Results</h3>
 

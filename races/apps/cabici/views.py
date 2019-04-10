@@ -408,7 +408,7 @@ class ClubGradeView(UpdateView, ClubOfficialRequiredMixin):
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
         user = get_object_or_404(User, pk=self.kwargs['pk'])
 
-        clubgrade = ClubGrade.objects.get(rider=user.rider, club=club)
+        clubgrade, created = ClubGrade.objects.get_or_create(rider=user.rider, club=club)
         return clubgrade
 
     def get_success_url(self):

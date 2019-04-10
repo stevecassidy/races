@@ -1,6 +1,5 @@
 from django import template
 from races.apps.cabici.usermodel import ClubGrade
-from races.apps.cabici.models import Club
 
 register = template.Library()
 
@@ -9,12 +8,11 @@ register = template.Library()
 def clubgrade(club, rider):
     """Return the grade of this rider for this club"""
 
-    print("clubgrade", club, rider)
-
     try:
         return ClubGrade.objects.get(club=club, rider=rider).grade
     except:
-        return "None"
+        return ""
+
 
 @register.simple_tag
 def clubwins(club, rider):
@@ -24,6 +22,7 @@ def clubwins(club, rider):
         return club.performancereport(rider=rider)['wins']
     except:
         return 0
+
 
 @register.simple_tag
 def clubplaces(club, rider):
