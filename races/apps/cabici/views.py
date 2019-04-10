@@ -249,6 +249,18 @@ class ClubPointscoreView(DetailView):
 
         return context
 
+    def post(self, request, **kwargs):
+        """Handle a POST request to recalculate this pointscore"""
+
+        clubslug = self.kwargs['slug']
+        pk = self.kwargs['pk']
+
+        pointscore = get_object_or_404(PointScore, pk=pk)
+
+        pointscore.recalculate()
+
+        return HttpResponseRedirect(reverse('pointscore', slug=clubslug, pk=pk))
+
 
 class ClubPointscoreAuditView(DetailView):
     model = PointScore

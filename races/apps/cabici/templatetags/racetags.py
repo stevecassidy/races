@@ -9,6 +9,8 @@ register = template.Library()
 def clubgrade(club, rider):
     """Return the grade of this rider for this club"""
 
+    print("clubgrade", club, rider)
+
     try:
         return ClubGrade.objects.get(club=club, rider=rider).grade
     except:

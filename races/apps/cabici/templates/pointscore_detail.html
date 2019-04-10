@@ -1,4 +1,5 @@
 {% extends "site_base.html" %}
+{% load racetags %}
 
 {% block head_title %}
 {{object}}
@@ -7,6 +8,11 @@
 {% block content %}
 
     <h2>{{object}}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="submit" value="Recalculate">
+    </form>
 
     <h3>Results</h3>
 
@@ -28,7 +34,7 @@
                 <td>{{forloop.counter}}
                 <td><a href="{% url 'rider' pk=row.rider.user.pk %}">{{row.rider}}</a></td>
                 <td>{{row.points}}</td>
-                <td>{{row.rider.clubgrade_set.all.0.grade}}</td>
+                <td>{% clubgrade rider=row.rider club=club %}</td>
                 <td>{{row.rider.club}}</td>
                 <td>{{row.eventcount}}</td>
                 <td><a href="{% url 'pointscore-audit' slug=object.club.slug pk=object.pk rider=row.rider.user.pk %}">Audit</a></td>
