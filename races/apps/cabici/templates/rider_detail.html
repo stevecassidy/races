@@ -16,7 +16,7 @@ Rider - {{user.first_name}} {{user.last_name}}
     {% for grading in user.rider.clubgrade_set.all %}
         <tr><th>Grade ({{grading.club.name}})</th><td>
             {% if request.user.is_staff or request.user.is_authenticated and request.user.rider.official and request.user.rider.club == grading.club %}
-            <dic class='form-group'>
+            <div class='form-group'>
                 <form class='grade-update form-inline' method=POST action="{% url 'club_grade' grading.club.slug user.pk %}">
                     {% csrf_token %}
                     <input class='form-control' type='text' name='grade' value='{{grading.grade}}'>
@@ -29,6 +29,21 @@ Rider - {{user.first_name}} {{user.last_name}}
         </td>
 
         </tr>
+    {% empty %}
+        {% if request.user.is_staff or request.user.is_authenticated and request.user.rider.official %}
+        <tr>
+            <th>Grade ({{ request.user.rider.club.name }})</th>
+            <td>
+                <div class='form-group'>
+                    <form class='grade-update form-inline' method=POST action="{% url 'club_grade' request.user.rider.club.slug user.pk %}">
+                        {% csrf_token %}
+                        <input class='form-control' type='text' name='grade' value=''>
+                        <button class="btn btn-default">Set Grade</button>
+                    </form>
+                </div>
+            </td>
+        </tr>
+        {% endif %}
     {% endfor %}
     {% for role in user.userrole_set.all %}
         <tr><th>Role</th><td>{{role.role}} ({{role.club}})</td></tr>

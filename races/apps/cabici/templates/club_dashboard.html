@@ -131,13 +131,13 @@
                         <li><a href="{% url 'pointscore' slug=club.slug pk=ps.pk %}">{{ps}}</a></li>
                     {% endfor %}
                 </ul>
-
-                <form method="POST" class="form-inline" action="{% url 'pointscore_list' slug=club.slug %}">
-                    {% csrf_token %}
-                    <input id="id_name" name="name" class="form-control" type="text" required>
-                    <input type="submit" class="btn btn-primary form-control" value="Create New Pointscore">
-                </form>
             {% endif %}
+
+            <form method="POST" class="form-inline" action="{% url 'pointscore_list' slug=club.slug %}">
+                {% csrf_token %}
+                <input id="id_name" name="name" class="form-control" type="text" required>
+                <input type="submit" class="btn btn-primary form-control" value="Create New Pointscore">
+            </form>
 
             <div>
                 {% regroup club.recent_races by date as date_list %}

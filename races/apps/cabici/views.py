@@ -26,7 +26,7 @@ from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from io import BytesIO
+from io import BytesIO, StringIO
 import pyexcel
 import codecs
 
@@ -249,6 +249,18 @@ class ClubPointscoreView(DetailView):
 
         return context
 
+    def post(self, request, **kwargs):
+        """Handle a POST request to recalculate this pointscore"""
+
+        clubslug = self.kwargs['slug']
+        pk = self.kwargs['pk']
+
+        pointscore = get_object_or_404(PointScore, pk=pk)
+
+        pointscore.recalculate()
+
+        return HttpResponseRedirect(reverse('pointscore', slug=clubslug, pk=pk))
+
 
 class ClubPointscoreAuditView(DetailView):
     model = PointScore
@@ -396,7 +408,7 @@ class ClubGradeView(UpdateView, ClubOfficialRequiredMixin):
         club = get_object_or_404(Club, slug=self.kwargs['slug'])
         user = get_object_or_404(User, pk=self.kwargs['pk'])
 
-        clubgrade = ClubGrade.objects.get(rider=user.rider, club=club)
+        clubgrade, created = ClubGrade.objects.get_or_create(rider=user.rider, club=club)
         return clubgrade
 
     def get_success_url(self):
