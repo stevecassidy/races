@@ -179,7 +179,9 @@ REST_FRAMEWORK = {
     ],
 }
 
-
+# Saving JSON result uploads for debugging
+SAVE_RESULT_UPLOADS = True
+SAVE_RESULT_UPLOADS_DIR = 'result-uploads'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
