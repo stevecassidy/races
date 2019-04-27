@@ -11,11 +11,12 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import APIException
 
-import datetime
+import os, json, time, datetime
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.db import IntegrityError
+from django.conf import settings
 
 from .models import Club, Race, RaceCourse
 from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, ClubGrade, Membership
@@ -520,6 +521,14 @@ class RaceResultList(generics.ListCreateAPIView):
         except Race.DoesNotExist:
             raise APIException("Invalid Race ID in JSON upload")
 
+        # stash the payload in a file for later analysis
+        if settings.SAVE_RESULT_UPLOADS:
+            if not os.path.exists(settings.SAVE_RESULT_UPLOADS_DIR):
+                os.makedirs(settings.SAVE_RESULT_UPLOADS_DIR)
+            filename = os.path.join(settings.SAVE_RESULT_UPLOADS_DIR, "{}-{}.json".format(race.id, time.time()))
+            with open(filename, 'w') as fd:
+                json.dump(data, fd, indent=2)
+
         ridermap = {}  # will hold a mapping between temporary and real ids for riders
 
         # handle new and updated riders
@@ -582,7 +591,7 @@ class RaceResultList(generics.ListCreateAPIView):
                     # validate date format
                     try:
                         dob = datetime.date.fromisoformat(record['dob'])
-                        rider.dob = record['dob']
+                        rider.dob = dob
                     except ValueError:
                         messages.append("Bad DOB date format (%s) ignored" % record['dob'])
 
@@ -692,7 +701,7 @@ class RaceResultList(generics.ListCreateAPIView):
                 # create a rider grade
                 ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
 
-            if not usual_grade == entry['grade'] and 'grade_change' in entry and entry['grade_change']:
+            if not usual_grade == entry['grade'] and 'grade_change' in entry and entry['grade_change'] == 'y':
                 # update rider grade
                 grade = ClubGrade.objects.get(rider=rider, club=race.club)
                 grade.grade = entry['grade']
