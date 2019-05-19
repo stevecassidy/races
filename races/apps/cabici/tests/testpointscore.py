@@ -109,6 +109,40 @@ class ModelTests(TestCase):
                     [3, 'Placed 1 in small race < 6 riders : '+str(race2)]]
         self.assertEqual(expected, audit)
 
+    def test_points_lacc(self):
+        """Getting points for a race result using the LACC rules"""
+
+        rider1 = Rider.objects.all()[0]
+        rider2 = Rider.objects.all()[1]
+
+        club = Club.objects.get(slug='OGE')
+        self.gen_races(club, 6)
+
+        race, race2 = Race.objects.all()[:2]
+
+        ps = PointScore(club=club, name="Test", method="LACC")
+        ps.save()
+        ps.races.add(race)
+
+        # create some race results
+        result = RaceResult(race=race, rider=rider1, usual_grade='A', grade='A', number=12, place=1)
+        result.save()
+
+        result2 = RaceResult(race=race2, rider=rider1, usual_grade='A', grade='A', number=12, place=1)
+        result2.save()
+
+        result3 = RaceResult(race=race2, rider=rider2, usual_grade='A', grade='A', number=13, place=2)
+        result3.save()
+
+        # tally them in first ps
+        ps.recalculate()
+        table = ps.tabulate()
+
+        self.assertEqual(1, table.count())
+        # should be rider1 on 7 points - race winner
+        self.assertEqual(rider1, table[0].rider)
+        self.assertEqual(7, table[0].points)
+
     def gen_races(self, club, n=10):
 
         today = datetime.today()

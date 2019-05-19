@@ -211,6 +211,7 @@ class RiderManager(models.Manager):
 
             # membership category = Member Types, Financial Date
             memberdate = row['Financial Date']
+            category = 'race'
             # Member Types: RACING Membership, RIDE Membership, NON-RIDING Membership
             if 'RACING' in row['Member Types']:
                 category = 'race'
@@ -662,6 +663,8 @@ class RaceResult(models.Model):
 
 from django.core.validators import validate_comma_separated_integer_list
 
+POINTSCORE_METHODS = (("WMCC", "WMCC"), ("LACC", "LACC"))
+
 
 class PointScore(models.Model):
     """A pointscore is a series of races where points are accumulated"""
@@ -673,8 +676,22 @@ class PointScore(models.Model):
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
     races = models.ManyToManyField(Race, blank=True)
+    method = models.CharField("Pointscore Method", default="WMCC", choices=POINTSCORE_METHODS, max_length=10)
+
+    def __str__(self):
+        return str(str(self.club) + " " + self.name)
 
     def score(self, result, numberriders):
+        """Calculate points for this placing according
+        to some rules defined by method
+        """
+
+        if self.method == "LACC":
+            return self.score_lacc(result)
+        else:
+            return self.score_wmcc(result, numberriders)
+
+    def score_wmcc(self, result, numberriders):
         """Calculate the points for this placing
         according to the Waratah CC pointscore rules
 
@@ -692,30 +709,45 @@ class PointScore(models.Model):
         promote = result.race.club.promotion(result.rider, when=result.race.date)
 
         if not result.place:
-            return (participation, "Participation")
+            return participation, "Participation"
         elif promote:
-            return (participation, "Rider eligible for promotion")
+            return participation, "Rider eligible for promotion"
         elif result.grade > result.usual_grade:
-            return (participation, "Riding below normal grade")
+            return participation, "Riding below normal grade"
         elif numberriders < 6:
             # only 3 points to the winner
             if result.place == 1:
-                return (3, "Placed 1 in small race < 6 riders")
+                return 3, "Placed 1 in small race < 6 riders"
             else:
-                return (participation, "Participation, small race < 6 riders")
+                return participation, "Participation, small race < 6 riders"
         elif numberriders <= 12:
             if result.place - 1 < len(smallpoints):
-                return (smallpoints[result.place - 1], "Placed %s in race <= 12 riders" % result.place)
+                return smallpoints[result.place - 1], "Placed %s in race <= 12 riders" % result.place
             else:
-                return (participation, "Participation, race <= 12 riders")
+                return participation, "Participation, race <= 12 riders"
         else:
             if result.place - 1 < len(points):
-                return (points[result.place - 1], "Placed %s in race" % result.place)
+                return points[result.place - 1], "Placed %s in race" % result.place
             else:
-                return (participation, "Participation")
+                return participation, "Participation"
 
-    def __str__(self):
-        return str(str(self.club) + " " + self.name)
+    def score_lacc(self, result):
+        """Calculate the points for this placing
+        according to the LACC pointscore rules
+
+        Return a tuple: (points, reason)
+        where reason is a string explaining the score
+        """
+
+        points = [int(x) for x in self.points.split(',')]
+
+        if not result.place:
+            return self.participation, "Participation"
+        else:
+            if result.place - 1 < len(points):
+                return points[result.place - 1], "Placed %s in race" % result.place
+            else:
+                return self.participation, "Participation"
 
     def get_points(self):
         "Return a list of integers from the points field"

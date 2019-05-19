@@ -26,7 +26,7 @@ from dateutil.rrule import rrule, MONTHLY, WEEKLY, MO, TU, WE, TH, FR, SA, SU
 import json
 import csv
 import os
-from io import BytesIO, StringIO
+from io import BytesIO
 import pyexcel
 import codecs
 
@@ -259,7 +259,7 @@ class ClubPointscoreView(DetailView):
 
         pointscore.recalculate()
 
-        return HttpResponseRedirect(reverse('pointscore', slug=clubslug, pk=pk))
+        return HttpResponseRedirect(reverse('pointscore', kwargs={'slug': clubslug, 'pk': pk}))
 
 
 class ClubPointscoreAuditView(DetailView):
