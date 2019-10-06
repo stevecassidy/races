@@ -409,6 +409,7 @@ class ClubGradeView(UpdateView, ClubOfficialRequiredMixin):
         user = get_object_or_404(User, pk=self.kwargs['pk'])
 
         clubgrade, created = ClubGrade.objects.get_or_create(rider=user.rider, club=club)
+        user.rider.save() # trigger timestamp update
         return clubgrade
 
     def get_success_url(self):
