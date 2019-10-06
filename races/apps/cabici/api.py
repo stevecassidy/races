@@ -358,7 +358,7 @@ class RiderSerializer(serializers.HyperlinkedModelSerializer):
                   'member_category',
                   'member_date',
                   'grades',
-                  'gender', 'emergencyphone', 'emergencyname' )
+                  'gender', 'emergencyphone', 'emergencyname', 'updated' )
 
 
 class RiderList(generics.ListCreateAPIView):
@@ -373,6 +373,7 @@ class RiderList(generics.ListCreateAPIView):
         clubid = self.request.query_params.get('club', None)
         commissaire = self.request.query_params.get('commissaire', None)
         prefix = self.request.query_params.get('prefix', None)
+        changed = self.request.query_params.get('changed', None)
 
         if clubid is not None:
             if commissaire is not None:
@@ -384,6 +385,14 @@ class RiderList(generics.ListCreateAPIView):
 
         if prefix is not None:
             riders = riders.filter(user__last_name__istartswith=prefix)
+
+        if changed:
+            try:
+                changed = datetime.datetime.fromtimestamp(int(changed), datetime.timezone.utc)
+                print("Getting riders changed since ", changed)
+                riders = riders.filter(user__rider__updated__gt=changed)
+            except ValueError:
+                raise APIException("Bad timestamp format for changed argument")
 
         riders = riders.select_related('user', 'club')
 
@@ -438,7 +447,7 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
         return [{'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
                 'riderid': tally.rider.user.id,
-                'club': tally.rider.club.slug,
+                'club': tally.rider.club.slug if tally.rider.club else "Unknown",  # avoid crash if no club
                 'grade': tally.pointscore.club.grade(tally.rider),
                 'points': tally.points,
                 'eventcount': tally.eventcount}

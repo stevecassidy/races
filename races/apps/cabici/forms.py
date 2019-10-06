@@ -17,7 +17,7 @@ MONTH_N_CHOICES = [(1, "first"),
 DAYS = [(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'),
         (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')]
 
-GRADE_CHOICES = [('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
+GRADE_CHOICES = [('A', 'A'), ('A2', 'A2'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
 
 
 class RaceResultUpdateForm(forms.ModelForm):
