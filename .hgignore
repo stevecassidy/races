@@ -11,6 +11,10 @@ ptags
 *.original
 *.bak
 *.orig
+*.rej
 .idea/*
 *.ropeproject
-races_development
+races_development*
+result-uploads/*
+cabici-uploads/*
+videos/*
