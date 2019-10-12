@@ -334,6 +334,11 @@ class RiderManager(models.Manager):
 
             userchanges = []
 
+            # update the club if missing or not the same as this club
+            if user.rider.club != club:
+                user.rider.club = club
+                userchanges.append('Club')
+
             # look for some optional fields in the csv
             # Gender
             # Birthday
@@ -416,6 +421,9 @@ class Rider(models.Model):
     """
 
     objects = RiderManager()
+    
+    # an auto updated datetime field to record time of last update to this rider
+    updated = models.DateTimeField(auto_now=True)
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     licenceno = models.CharField("Licence Number", max_length=20, blank=True, default='')
