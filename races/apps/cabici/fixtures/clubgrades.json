@@ -1,0 +1,1811 @@
+[
+{
+  "model": "cabici.clubgrade",
+  "pk": 17,
+  "fields": {
+    "club": 74,
+    "rider": 2957,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 18,
+  "fields": {
+    "club": 74,
+    "rider": 2991,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 19,
+  "fields": {
+    "club": 74,
+    "rider": 2977,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 20,
+  "fields": {
+    "club": 74,
+    "rider": 3083,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 21,
+  "fields": {
+    "club": 74,
+    "rider": 3097,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 22,
+  "fields": {
+    "club": 74,
+    "rider": 2934,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 23,
+  "fields": {
+    "club": 74,
+    "rider": 3018,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 24,
+  "fields": {
+    "club": 74,
+    "rider": 2993,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 25,
+  "fields": {
+    "club": 74,
+    "rider": 2952,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 26,
+  "fields": {
+    "club": 74,
+    "rider": 3022,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 27,
+  "fields": {
+    "club": 74,
+    "rider": 3062,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 28,
+  "fields": {
+    "club": 74,
+    "rider": 3125,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 29,
+  "fields": {
+    "club": 74,
+    "rider": 3100,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 30,
+  "fields": {
+    "club": 74,
+    "rider": 3076,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 31,
+  "fields": {
+    "club": 74,
+    "rider": 2975,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 32,
+  "fields": {
+    "club": 74,
+    "rider": 3053,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 33,
+  "fields": {
+    "club": 74,
+    "rider": 3123,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 34,
+  "fields": {
+    "club": 74,
+    "rider": 2992,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 35,
+  "fields": {
+    "club": 74,
+    "rider": 2973,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 36,
+  "fields": {
+    "club": 74,
+    "rider": 3006,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 37,
+  "fields": {
+    "club": 74,
+    "rider": 3091,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 38,
+  "fields": {
+    "club": 74,
+    "rider": 3111,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 39,
+  "fields": {
+    "club": 74,
+    "rider": 3035,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 40,
+  "fields": {
+    "club": 74,
+    "rider": 3095,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 41,
+  "fields": {
+    "club": 74,
+    "rider": 3020,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 42,
+  "fields": {
+    "club": 74,
+    "rider": 3122,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 43,
+  "fields": {
+    "club": 74,
+    "rider": 2994,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 44,
+  "fields": {
+    "club": 74,
+    "rider": 3077,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 45,
+  "fields": {
+    "club": 74,
+    "rider": 2996,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 46,
+  "fields": {
+    "club": 74,
+    "rider": 3115,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 47,
+  "fields": {
+    "club": 74,
+    "rider": 3031,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 48,
+  "fields": {
+    "club": 74,
+    "rider": 3057,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 49,
+  "fields": {
+    "club": 74,
+    "rider": 2967,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 50,
+  "fields": {
+    "club": 74,
+    "rider": 3065,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 51,
+  "fields": {
+    "club": 74,
+    "rider": 3071,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 52,
+  "fields": {
+    "club": 74,
+    "rider": 3025,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 53,
+  "fields": {
+    "club": 74,
+    "rider": 3073,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 54,
+  "fields": {
+    "club": 74,
+    "rider": 2936,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 55,
+  "fields": {
+    "club": 74,
+    "rider": 3114,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 56,
+  "fields": {
+    "club": 74,
+    "rider": 3099,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 57,
+  "fields": {
+    "club": 74,
+    "rider": 16569,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 58,
+  "fields": {
+    "club": 74,
+    "rider": 3110,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 59,
+  "fields": {
+    "club": 74,
+    "rider": 2971,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 60,
+  "fields": {
+    "club": 74,
+    "rider": 3007,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 61,
+  "fields": {
+    "club": 74,
+    "rider": 2941,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 62,
+  "fields": {
+    "club": 74,
+    "rider": 3023,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 63,
+  "fields": {
+    "club": 74,
+    "rider": 2966,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 64,
+  "fields": {
+    "club": 74,
+    "rider": 3060,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 65,
+  "fields": {
+    "club": 74,
+    "rider": 2944,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 66,
+  "fields": {
+    "club": 74,
+    "rider": 3079,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 67,
+  "fields": {
+    "club": 74,
+    "rider": 3067,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 68,
+  "fields": {
+    "club": 74,
+    "rider": 3064,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 69,
+  "fields": {
+    "club": 74,
+    "rider": 2995,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 70,
+  "fields": {
+    "club": 74,
+    "rider": 2984,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 71,
+  "fields": {
+    "club": 74,
+    "rider": 3043,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 72,
+  "fields": {
+    "club": 74,
+    "rider": 2938,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 73,
+  "fields": {
+    "club": 74,
+    "rider": 2989,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 74,
+  "fields": {
+    "club": 74,
+    "rider": 3000,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 75,
+  "fields": {
+    "club": 74,
+    "rider": 3118,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 76,
+  "fields": {
+    "club": 74,
+    "rider": 3108,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 77,
+  "fields": {
+    "club": 74,
+    "rider": 3034,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 78,
+  "fields": {
+    "club": 74,
+    "rider": 2985,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 79,
+  "fields": {
+    "club": 74,
+    "rider": 2935,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 80,
+  "fields": {
+    "club": 74,
+    "rider": 2990,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 81,
+  "fields": {
+    "club": 74,
+    "rider": 2968,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 82,
+  "fields": {
+    "club": 74,
+    "rider": 3012,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 83,
+  "fields": {
+    "club": 74,
+    "rider": 3080,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 84,
+  "fields": {
+    "club": 74,
+    "rider": 3026,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 85,
+  "fields": {
+    "club": 74,
+    "rider": 2969,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 86,
+  "fields": {
+    "club": 74,
+    "rider": 2958,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 87,
+  "fields": {
+    "club": 74,
+    "rider": 3052,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 88,
+  "fields": {
+    "club": 74,
+    "rider": 2953,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 89,
+  "fields": {
+    "club": 74,
+    "rider": 3107,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 90,
+  "fields": {
+    "club": 74,
+    "rider": 3017,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 91,
+  "fields": {
+    "club": 74,
+    "rider": 3126,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 92,
+  "fields": {
+    "club": 74,
+    "rider": 3093,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 93,
+  "fields": {
+    "club": 74,
+    "rider": 3119,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 94,
+  "fields": {
+    "club": 74,
+    "rider": 3124,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 95,
+  "fields": {
+    "club": 74,
+    "rider": 3072,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 96,
+  "fields": {
+    "club": 74,
+    "rider": 2961,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 97,
+  "fields": {
+    "club": 74,
+    "rider": 2986,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 98,
+  "fields": {
+    "club": 74,
+    "rider": 3127,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 99,
+  "fields": {
+    "club": 74,
+    "rider": 2974,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 100,
+  "fields": {
+    "club": 74,
+    "rider": 3075,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 101,
+  "fields": {
+    "club": 74,
+    "rider": 3113,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 102,
+  "fields": {
+    "club": 74,
+    "rider": 3005,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 103,
+  "fields": {
+    "club": 74,
+    "rider": 2980,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 104,
+  "fields": {
+    "club": 74,
+    "rider": 2959,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 105,
+  "fields": {
+    "club": 74,
+    "rider": 3010,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 106,
+  "fields": {
+    "club": 74,
+    "rider": 3063,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 107,
+  "fields": {
+    "club": 74,
+    "rider": 3037,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 108,
+  "fields": {
+    "club": 74,
+    "rider": 3054,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 109,
+  "fields": {
+    "club": 74,
+    "rider": 2970,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 110,
+  "fields": {
+    "club": 74,
+    "rider": 3078,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 111,
+  "fields": {
+    "club": 74,
+    "rider": 3009,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 112,
+  "fields": {
+    "club": 74,
+    "rider": 3038,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 113,
+  "fields": {
+    "club": 74,
+    "rider": 3066,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 114,
+  "fields": {
+    "club": 74,
+    "rider": 3096,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 115,
+  "fields": {
+    "club": 74,
+    "rider": 2987,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 116,
+  "fields": {
+    "club": 74,
+    "rider": 3070,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 117,
+  "fields": {
+    "club": 74,
+    "rider": 2988,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 118,
+  "fields": {
+    "club": 74,
+    "rider": 2933,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 119,
+  "fields": {
+    "club": 74,
+    "rider": 2982,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 120,
+  "fields": {
+    "club": 74,
+    "rider": 3085,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 121,
+  "fields": {
+    "club": 74,
+    "rider": 2955,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 122,
+  "fields": {
+    "club": 74,
+    "rider": 3098,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 123,
+  "fields": {
+    "club": 74,
+    "rider": 3024,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 124,
+  "fields": {
+    "club": 74,
+    "rider": 2963,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 125,
+  "fields": {
+    "club": 74,
+    "rider": 3084,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 126,
+  "fields": {
+    "club": 74,
+    "rider": 3047,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 127,
+  "fields": {
+    "club": 74,
+    "rider": 3058,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 128,
+  "fields": {
+    "club": 74,
+    "rider": 3027,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 129,
+  "fields": {
+    "club": 74,
+    "rider": 3081,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 130,
+  "fields": {
+    "club": 74,
+    "rider": 3120,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 131,
+  "fields": {
+    "club": 74,
+    "rider": 3104,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 132,
+  "fields": {
+    "club": 74,
+    "rider": 2962,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 133,
+  "fields": {
+    "club": 74,
+    "rider": 3059,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 134,
+  "fields": {
+    "club": 74,
+    "rider": 3101,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 135,
+  "fields": {
+    "club": 74,
+    "rider": 3103,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 136,
+  "fields": {
+    "club": 74,
+    "rider": 2978,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 137,
+  "fields": {
+    "club": 74,
+    "rider": 2949,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 138,
+  "fields": {
+    "club": 74,
+    "rider": 3129,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 139,
+  "fields": {
+    "club": 74,
+    "rider": 3068,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 140,
+  "fields": {
+    "club": 74,
+    "rider": 3013,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 141,
+  "fields": {
+    "club": 74,
+    "rider": 3046,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 142,
+  "fields": {
+    "club": 74,
+    "rider": 2951,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 143,
+  "fields": {
+    "club": 74,
+    "rider": 3021,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 144,
+  "fields": {
+    "club": 74,
+    "rider": 3042,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 145,
+  "fields": {
+    "club": 74,
+    "rider": 2950,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 146,
+  "fields": {
+    "club": 74,
+    "rider": 3092,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 147,
+  "fields": {
+    "club": 74,
+    "rider": 3002,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 148,
+  "fields": {
+    "club": 74,
+    "rider": 2948,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 149,
+  "fields": {
+    "club": 74,
+    "rider": 3087,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 150,
+  "fields": {
+    "club": 74,
+    "rider": 2972,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 151,
+  "fields": {
+    "club": 74,
+    "rider": 2983,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 152,
+  "fields": {
+    "club": 74,
+    "rider": 3121,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 153,
+  "fields": {
+    "club": 74,
+    "rider": 3055,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 154,
+  "fields": {
+    "club": 74,
+    "rider": 3033,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 155,
+  "fields": {
+    "club": 74,
+    "rider": 2981,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 156,
+  "fields": {
+    "club": 74,
+    "rider": 3045,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 157,
+  "fields": {
+    "club": 74,
+    "rider": 2939,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 158,
+  "fields": {
+    "club": 74,
+    "rider": 3019,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 159,
+  "fields": {
+    "club": 74,
+    "rider": 3011,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 160,
+  "fields": {
+    "club": 74,
+    "rider": 3050,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 161,
+  "fields": {
+    "club": 74,
+    "rider": 3088,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 162,
+  "fields": {
+    "club": 74,
+    "rider": 2940,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 163,
+  "fields": {
+    "club": 74,
+    "rider": 3128,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 164,
+  "fields": {
+    "club": 74,
+    "rider": 2947,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 165,
+  "fields": {
+    "club": 74,
+    "rider": 3074,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 166,
+  "fields": {
+    "club": 74,
+    "rider": 2932,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 167,
+  "fields": {
+    "club": 74,
+    "rider": 3082,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 168,
+  "fields": {
+    "club": 74,
+    "rider": 3086,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 169,
+  "fields": {
+    "club": 74,
+    "rider": 3089,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 170,
+  "fields": {
+    "club": 74,
+    "rider": 3029,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 171,
+  "fields": {
+    "club": 74,
+    "rider": 3106,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 172,
+  "fields": {
+    "club": 74,
+    "rider": 3036,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 173,
+  "fields": {
+    "club": 74,
+    "rider": 2931,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 174,
+  "fields": {
+    "club": 74,
+    "rider": 2979,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 175,
+  "fields": {
+    "club": 74,
+    "rider": 3028,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 176,
+  "fields": {
+    "club": 74,
+    "rider": 3048,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 177,
+  "fields": {
+    "club": 74,
+    "rider": 2998,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 178,
+  "fields": {
+    "club": 74,
+    "rider": 3041,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 179,
+  "fields": {
+    "club": 74,
+    "rider": 3044,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 180,
+  "fields": {
+    "club": 74,
+    "rider": 2946,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 181,
+  "fields": {
+    "club": 74,
+    "rider": 3030,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 182,
+  "fields": {
+    "club": 74,
+    "rider": 3039,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 183,
+  "fields": {
+    "club": 74,
+    "rider": 3016,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 184,
+  "fields": {
+    "club": 74,
+    "rider": 3051,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 185,
+  "fields": {
+    "club": 74,
+    "rider": 3061,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 186,
+  "fields": {
+    "club": 74,
+    "rider": 3003,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 187,
+  "fields": {
+    "club": 74,
+    "rider": 3105,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 188,
+  "fields": {
+    "club": 74,
+    "rider": 3112,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 189,
+  "fields": {
+    "club": 74,
+    "rider": 2945,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 190,
+  "fields": {
+    "club": 74,
+    "rider": 3049,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 191,
+  "fields": {
+    "club": 74,
+    "rider": 2960,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 192,
+  "fields": {
+    "club": 74,
+    "rider": 3116,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 193,
+  "fields": {
+    "club": 74,
+    "rider": 2997,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 194,
+  "fields": {
+    "club": 74,
+    "rider": 3102,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 195,
+  "fields": {
+    "club": 74,
+    "rider": 2965,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 196,
+  "fields": {
+    "club": 74,
+    "rider": 2943,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 197,
+  "fields": {
+    "club": 74,
+    "rider": 3040,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 198,
+  "fields": {
+    "club": 74,
+    "rider": 3001,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 199,
+  "fields": {
+    "club": 74,
+    "rider": 3008,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 200,
+  "fields": {
+    "club": 74,
+    "rider": 3117,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 201,
+  "fields": {
+    "club": 74,
+    "rider": 2976,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 202,
+  "fields": {
+    "club": 74,
+    "rider": 2942,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 203,
+  "fields": {
+    "club": 74,
+    "rider": 3109,
+    "grade": "E"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 204,
+  "fields": {
+    "club": 74,
+    "rider": 3014,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 205,
+  "fields": {
+    "club": 74,
+    "rider": 2930,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 206,
+  "fields": {
+    "club": 74,
+    "rider": 2937,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 207,
+  "fields": {
+    "club": 74,
+    "rider": 3015,
+    "grade": "D"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 208,
+  "fields": {
+    "club": 74,
+    "rider": 3090,
+    "grade": "C"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 209,
+  "fields": {
+    "club": 74,
+    "rider": 2999,
+    "grade": "B"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 210,
+  "fields": {
+    "club": 74,
+    "rider": 3056,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 211,
+  "fields": {
+    "club": 74,
+    "rider": 3032,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 212,
+  "fields": {
+    "club": 74,
+    "rider": 3004,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 213,
+  "fields": {
+    "club": 74,
+    "rider": 2954,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 214,
+  "fields": {
+    "club": 74,
+    "rider": 3094,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 215,
+  "fields": {
+    "club": 74,
+    "rider": 2964,
+    "grade": "A"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 216,
+  "fields": {
+    "club": 74,
+    "rider": 2956,
+    "grade": "F"
+  }
+},
+{
+  "model": "cabici.clubgrade",
+  "pk": 217,
+  "fields": {
+    "club": 74,
+    "rider": 3069,
+    "grade": "C"
+  }
+}
+]

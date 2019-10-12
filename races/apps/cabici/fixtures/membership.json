@@ -1,0 +1,2012 @@
+[
+{
+  "model": "cabici.membership",
+  "pk": 21655,
+  "fields": {
+    "rider": 2957,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21656,
+  "fields": {
+    "rider": 2991,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21657,
+  "fields": {
+    "rider": 2977,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21658,
+  "fields": {
+    "rider": 3083,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21659,
+  "fields": {
+    "rider": 3097,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21660,
+  "fields": {
+    "rider": 2934,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21661,
+  "fields": {
+    "rider": 3018,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21662,
+  "fields": {
+    "rider": 2993,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21663,
+  "fields": {
+    "rider": 2952,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21664,
+  "fields": {
+    "rider": 3022,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21665,
+  "fields": {
+    "rider": 3062,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21666,
+  "fields": {
+    "rider": 3125,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21667,
+  "fields": {
+    "rider": 3100,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21668,
+  "fields": {
+    "rider": 3076,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21669,
+  "fields": {
+    "rider": 2975,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21670,
+  "fields": {
+    "rider": 3053,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21671,
+  "fields": {
+    "rider": 3123,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21672,
+  "fields": {
+    "rider": 2992,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21673,
+  "fields": {
+    "rider": 2973,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21674,
+  "fields": {
+    "rider": 3006,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21675,
+  "fields": {
+    "rider": 3091,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21676,
+  "fields": {
+    "rider": 3111,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21677,
+  "fields": {
+    "rider": 3035,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21678,
+  "fields": {
+    "rider": 3095,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21679,
+  "fields": {
+    "rider": 3020,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21680,
+  "fields": {
+    "rider": 3122,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21681,
+  "fields": {
+    "rider": 2994,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21682,
+  "fields": {
+    "rider": 3077,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21683,
+  "fields": {
+    "rider": 2996,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21684,
+  "fields": {
+    "rider": 3115,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21685,
+  "fields": {
+    "rider": 3031,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21686,
+  "fields": {
+    "rider": 3057,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21687,
+  "fields": {
+    "rider": 2967,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21688,
+  "fields": {
+    "rider": 3065,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21689,
+  "fields": {
+    "rider": 3071,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21690,
+  "fields": {
+    "rider": 3025,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21691,
+  "fields": {
+    "rider": 3073,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21692,
+  "fields": {
+    "rider": 2936,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21693,
+  "fields": {
+    "rider": 3114,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21694,
+  "fields": {
+    "rider": 3099,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21695,
+  "fields": {
+    "rider": 16569,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21696,
+  "fields": {
+    "rider": 3110,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21697,
+  "fields": {
+    "rider": 2971,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21698,
+  "fields": {
+    "rider": 3007,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21699,
+  "fields": {
+    "rider": 2941,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21700,
+  "fields": {
+    "rider": 3023,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21701,
+  "fields": {
+    "rider": 2966,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21702,
+  "fields": {
+    "rider": 3060,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21703,
+  "fields": {
+    "rider": 2944,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21704,
+  "fields": {
+    "rider": 3079,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21705,
+  "fields": {
+    "rider": 3067,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21706,
+  "fields": {
+    "rider": 3064,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21707,
+  "fields": {
+    "rider": 2995,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21708,
+  "fields": {
+    "rider": 2984,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21709,
+  "fields": {
+    "rider": 3043,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21710,
+  "fields": {
+    "rider": 2938,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21711,
+  "fields": {
+    "rider": 2989,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21712,
+  "fields": {
+    "rider": 3000,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21713,
+  "fields": {
+    "rider": 3118,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21714,
+  "fields": {
+    "rider": 3108,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21715,
+  "fields": {
+    "rider": 3034,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21716,
+  "fields": {
+    "rider": 2985,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21717,
+  "fields": {
+    "rider": 2935,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21718,
+  "fields": {
+    "rider": 2990,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21719,
+  "fields": {
+    "rider": 2968,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21720,
+  "fields": {
+    "rider": 3012,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21721,
+  "fields": {
+    "rider": 3080,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21722,
+  "fields": {
+    "rider": 3026,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21723,
+  "fields": {
+    "rider": 2969,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21724,
+  "fields": {
+    "rider": 2958,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21725,
+  "fields": {
+    "rider": 3052,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21726,
+  "fields": {
+    "rider": 2953,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21727,
+  "fields": {
+    "rider": 3107,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21728,
+  "fields": {
+    "rider": 3017,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21729,
+  "fields": {
+    "rider": 3126,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21730,
+  "fields": {
+    "rider": 3093,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21731,
+  "fields": {
+    "rider": 3119,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21732,
+  "fields": {
+    "rider": 3124,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21733,
+  "fields": {
+    "rider": 3072,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21734,
+  "fields": {
+    "rider": 2961,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21735,
+  "fields": {
+    "rider": 2986,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21736,
+  "fields": {
+    "rider": 3127,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21737,
+  "fields": {
+    "rider": 2974,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21738,
+  "fields": {
+    "rider": 3075,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21739,
+  "fields": {
+    "rider": 3113,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21740,
+  "fields": {
+    "rider": 3005,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21741,
+  "fields": {
+    "rider": 2980,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21742,
+  "fields": {
+    "rider": 2959,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21743,
+  "fields": {
+    "rider": 3010,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21744,
+  "fields": {
+    "rider": 3063,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21745,
+  "fields": {
+    "rider": 3037,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21746,
+  "fields": {
+    "rider": 3054,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21747,
+  "fields": {
+    "rider": 2970,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21748,
+  "fields": {
+    "rider": 3078,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21749,
+  "fields": {
+    "rider": 3009,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21750,
+  "fields": {
+    "rider": 3038,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21751,
+  "fields": {
+    "rider": 3066,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21752,
+  "fields": {
+    "rider": 3096,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21753,
+  "fields": {
+    "rider": 2987,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21754,
+  "fields": {
+    "rider": 3070,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21755,
+  "fields": {
+    "rider": 2988,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21756,
+  "fields": {
+    "rider": 2933,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21757,
+  "fields": {
+    "rider": 2982,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21758,
+  "fields": {
+    "rider": 3085,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21759,
+  "fields": {
+    "rider": 2955,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21760,
+  "fields": {
+    "rider": 3098,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21761,
+  "fields": {
+    "rider": 3024,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21762,
+  "fields": {
+    "rider": 2963,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21763,
+  "fields": {
+    "rider": 3084,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21764,
+  "fields": {
+    "rider": 3047,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21765,
+  "fields": {
+    "rider": 3058,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21766,
+  "fields": {
+    "rider": 3027,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21767,
+  "fields": {
+    "rider": 3081,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21768,
+  "fields": {
+    "rider": 3120,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21769,
+  "fields": {
+    "rider": 3104,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21770,
+  "fields": {
+    "rider": 2962,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21771,
+  "fields": {
+    "rider": 3059,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21772,
+  "fields": {
+    "rider": 3101,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21773,
+  "fields": {
+    "rider": 3103,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21774,
+  "fields": {
+    "rider": 2978,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21775,
+  "fields": {
+    "rider": 2949,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21776,
+  "fields": {
+    "rider": 3129,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21777,
+  "fields": {
+    "rider": 3068,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21778,
+  "fields": {
+    "rider": 3013,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21779,
+  "fields": {
+    "rider": 3046,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21780,
+  "fields": {
+    "rider": 2951,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21781,
+  "fields": {
+    "rider": 3021,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21782,
+  "fields": {
+    "rider": 3042,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21783,
+  "fields": {
+    "rider": 2950,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21784,
+  "fields": {
+    "rider": 3092,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21785,
+  "fields": {
+    "rider": 3002,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21786,
+  "fields": {
+    "rider": 2948,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21787,
+  "fields": {
+    "rider": 3087,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21788,
+  "fields": {
+    "rider": 2972,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21789,
+  "fields": {
+    "rider": 2983,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21790,
+  "fields": {
+    "rider": 3121,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21791,
+  "fields": {
+    "rider": 3055,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21792,
+  "fields": {
+    "rider": 3033,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21793,
+  "fields": {
+    "rider": 2981,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21794,
+  "fields": {
+    "rider": 3045,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21795,
+  "fields": {
+    "rider": 2939,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21796,
+  "fields": {
+    "rider": 3019,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21797,
+  "fields": {
+    "rider": 3011,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21798,
+  "fields": {
+    "rider": 3050,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21799,
+  "fields": {
+    "rider": 3088,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21800,
+  "fields": {
+    "rider": 2940,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21801,
+  "fields": {
+    "rider": 3128,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21802,
+  "fields": {
+    "rider": 2947,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21803,
+  "fields": {
+    "rider": 3074,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21804,
+  "fields": {
+    "rider": 2932,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21805,
+  "fields": {
+    "rider": 3082,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21806,
+  "fields": {
+    "rider": 3086,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21807,
+  "fields": {
+    "rider": 3089,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21808,
+  "fields": {
+    "rider": 3029,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21809,
+  "fields": {
+    "rider": 3106,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21810,
+  "fields": {
+    "rider": 3036,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21811,
+  "fields": {
+    "rider": 2931,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21812,
+  "fields": {
+    "rider": 2979,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21813,
+  "fields": {
+    "rider": 3028,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21814,
+  "fields": {
+    "rider": 3048,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21815,
+  "fields": {
+    "rider": 2998,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21816,
+  "fields": {
+    "rider": 3041,
+    "club": 70,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21817,
+  "fields": {
+    "rider": 3044,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21818,
+  "fields": {
+    "rider": 2946,
+    "club": 67,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21819,
+  "fields": {
+    "rider": 3030,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21820,
+  "fields": {
+    "rider": 3039,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21821,
+  "fields": {
+    "rider": 3016,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21822,
+  "fields": {
+    "rider": 3051,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21823,
+  "fields": {
+    "rider": 3061,
+    "club": 71,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21824,
+  "fields": {
+    "rider": 3003,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21825,
+  "fields": {
+    "rider": 3105,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21826,
+  "fields": {
+    "rider": 3112,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21827,
+  "fields": {
+    "rider": 2945,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21828,
+  "fields": {
+    "rider": 3049,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21829,
+  "fields": {
+    "rider": 2960,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21830,
+  "fields": {
+    "rider": 3116,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21831,
+  "fields": {
+    "rider": 2997,
+    "club": 78,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21832,
+  "fields": {
+    "rider": 3102,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21833,
+  "fields": {
+    "rider": 2965,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21834,
+  "fields": {
+    "rider": 2943,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21835,
+  "fields": {
+    "rider": 3040,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21836,
+  "fields": {
+    "rider": 3001,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21837,
+  "fields": {
+    "rider": 3008,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21838,
+  "fields": {
+    "rider": 3117,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21839,
+  "fields": {
+    "rider": 2976,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21840,
+  "fields": {
+    "rider": 2942,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21841,
+  "fields": {
+    "rider": 3109,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21842,
+  "fields": {
+    "rider": 3014,
+    "club": 69,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21843,
+  "fields": {
+    "rider": 2930,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21844,
+  "fields": {
+    "rider": 2937,
+    "club": 68,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21845,
+  "fields": {
+    "rider": 3015,
+    "club": 72,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21846,
+  "fields": {
+    "rider": 3090,
+    "club": 79,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21847,
+  "fields": {
+    "rider": 2999,
+    "club": 77,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21848,
+  "fields": {
+    "rider": 3056,
+    "club": 63,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21849,
+  "fields": {
+    "rider": 3032,
+    "club": 66,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21850,
+  "fields": {
+    "rider": 3004,
+    "club": 73,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21851,
+  "fields": {
+    "rider": 2954,
+    "club": 76,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21852,
+  "fields": {
+    "rider": 3094,
+    "club": 65,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21853,
+  "fields": {
+    "rider": 2964,
+    "club": 74,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21854,
+  "fields": {
+    "rider": 2956,
+    "club": 64,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+},
+{
+  "model": "cabici.membership",
+  "pk": 21855,
+  "fields": {
+    "rider": 3069,
+    "club": 75,
+    "date": "2018-12-31",
+    "category": "race"
+  }
+}
+]

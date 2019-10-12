@@ -3,6 +3,7 @@ from unittest import skip
 from django.urls import reverse
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from django.db.models import Max
 
 import os
 import json
@@ -465,6 +466,39 @@ class APITests(TestCase):
         data = json.loads(response.content)
 
         self.assertEqual(1, len(data['results']))
+
+
+    def test_rider_list_updated(self):
+        """List riders that have been updated"""
+
+        url = "/api/riders/?changed="
+
+        self.client.force_login(self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        # get the max timestamp for all riders
+        maxtime = Rider.objects.all().aggregate(Max('updated'))['updated__max']
+        timestamp = int(maxtime.timestamp())
+
+        response = self.client.get(url + str(timestamp))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+
+        # should have just one result which is the ogeofficial user
+        self.assertEqual(1, len(data['results']))
+
+        # now update a couple of riders
+        changed = Rider.objects.all()[:3]
+        for rider in changed:
+            rider.save()
+        
+        response = self.client.get(url + str(timestamp))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+
+        # should now get our three changed riders + ogeofficial
+        self.assertEqual(4, len(data['results']))
+
+
 
     def test_auth_get_token(self):
         """Can get an authentication token for a user"""

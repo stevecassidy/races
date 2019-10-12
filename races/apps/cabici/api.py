@@ -358,7 +358,7 @@ class RiderSerializer(serializers.HyperlinkedModelSerializer):
                   'member_category',
                   'member_date',
                   'grades',
-                  'gender', 'emergencyphone', 'emergencyname' )
+                  'gender', 'emergencyphone', 'emergencyname', 'updated' )
 
 
 class RiderList(generics.ListCreateAPIView):
@@ -373,6 +373,7 @@ class RiderList(generics.ListCreateAPIView):
         clubid = self.request.query_params.get('club', None)
         commissaire = self.request.query_params.get('commissaire', None)
         prefix = self.request.query_params.get('prefix', None)
+        changed = self.request.query_params.get('changed', None)
 
         if clubid is not None:
             if commissaire is not None:
@@ -384,6 +385,14 @@ class RiderList(generics.ListCreateAPIView):
 
         if prefix is not None:
             riders = riders.filter(user__last_name__istartswith=prefix)
+
+        if changed:
+            try:
+                changed = datetime.datetime.fromtimestamp(int(changed), datetime.timezone.utc)
+                print("Getting riders changed since ", changed)
+                riders = riders.filter(user__rider__updated__gt=changed)
+            except ValueError:
+                raise APIException("Bad timestamp format for changed argument")
 
         riders = riders.select_related('user', 'club')
 
@@ -438,7 +447,7 @@ class PointScoreSerializer(serializers.HyperlinkedModelSerializer):
 
         return [{'rider': " ".join((tally.rider.user.first_name, tally.rider.user.last_name)),
                 'riderid': tally.rider.user.id,
-                'club': tally.rider.club.slug,
+                'club': tally.rider.club.slug if tally.rider.club else "Unknown",  # avoid crash if no club
                 'grade': tally.pointscore.club.grade(tally.rider),
                 'points': tally.points,
                 'eventcount': tally.eventcount}
@@ -641,6 +650,7 @@ class RaceResultList(generics.ListCreateAPIView):
                             # actually make a new membership
                             mnew = Membership(rider=rider, club=rider.club, category='race', date=record['member_date'])
                             mnew.save()
+                            rider.save() # to trigger timestamp update
                 elif 'club' in record and 'member_date' in record:
                     # no current membership so make one
                     m = Membership(rider=rider, club=record['club'], date=record['member_date'])
@@ -700,12 +710,14 @@ class RaceResultList(generics.ListCreateAPIView):
                 usual_grade = entry['grade']
                 # create a rider grade
                 ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
+                rider.save() # to trigger timestamp update
 
             if not usual_grade == entry['grade'] and 'grade_change' in entry and entry['grade_change'] == 'y':
                 # update rider grade
                 grade = ClubGrade.objects.get(rider=rider, club=race.club)
                 grade.grade = entry['grade']
                 grade.save()
+                rider.save() # to trigger timestamp update
 
             if 'dnf' in entry and entry['dnf']:
                 dnf = True

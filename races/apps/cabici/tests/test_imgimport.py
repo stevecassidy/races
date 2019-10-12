@@ -187,6 +187,7 @@ class TidyHQTests(TestCase):
         usernodob = User(first_name="No", last_name="DOB", username="NoDOB", email="nodob@example.com")
         usernodob.save()
         usernodob.rider = Rider(user=usernodob, licenceno="1234567")
+        usernodob.rider.club = cyclingnsw
         usernodob.rider.save()
 
         from .imgsampledict import rows
@@ -207,12 +208,17 @@ class TidyHQTests(TestCase):
 
             # expect two new riders
             self.assertEqual(2, len(result['added']))
+            # and their club should be set
+            self.assertEqual(club, result['added'][0].rider.club)
 
             # re-fetch this user to check db updates
             usernodob = User.objects.get(last_name="DOB")
             self.assertIn(usernodob, updated_users)
             self.assertEqual('F', usernodob.rider.gender)
             self.assertEqual('0415 999999', usernodob.rider.phone)
+
+            # club should be updated
+            self.assertEqual(club, usernodob.rider.club)
 
 
 class IMGWebTests(WebTest):
