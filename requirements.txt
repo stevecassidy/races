@@ -1,4 +1,4 @@
-Django==2.1
+Django==3.1.3
 PyYAML
 WebOb
 WebTest
@@ -12,11 +12,8 @@ django-appconf
 django-bootstrap-form
 django-cors-headers
 django-coverage
-# get a pre-release version of geoposition for 1.11 compatability
-#https://github.com/philippbosch/django-geoposition/archive/django-1.11.zip
-# and for Django 2.0
-https://github.com/elcolie/django-geoposition/archive/v0.3.2.tar.gz
-#django-geoposition==0.3.0
+# get a custom fork of djang-geoposition for updates
+https://github.com/stevecassidy/django-geoposition/archive/master.zip
 django-ical
 django-pagination
 django-webtest
