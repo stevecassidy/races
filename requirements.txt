@@ -48,6 +48,8 @@ wrapt
 xlrd
 xlwt
 django-debug-toolbar
+gunicorn
+whitenoise 
 
 # for deployment with postgres
-# psycopg2
+psycopg2
