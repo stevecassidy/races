@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web:
     build: .
-    command: gunicorn --bind=0.0.0.0 races.wsgi
+    command: gunicorn -c ./gunicorn.config.py races.wsgi
     volumes:
       - .:/usr/src/app/
     ports:
