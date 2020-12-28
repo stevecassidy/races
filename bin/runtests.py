@@ -6,12 +6,6 @@ if __name__ == "__main__":
 
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "races.settings.testing")
 
-    from django.core.management import call_command
-    from django.conf import settings
+    from django.core.management import execute_from_command_line
 
-    applen = len('races.apps.')
-
-    apps_for_testing = [app[applen:] for app in settings.INSTALLED_APPS
-            if app.startswith("races.apps")]
-
-    call_command("test", *apps_for_testing)
+    execute_from_command_line(['runtests.py', 'test'])
