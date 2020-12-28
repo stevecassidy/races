@@ -1,27 +1,26 @@
 from races.settings.base import *
 
-DEBUG = False
-TEMPLATE_DEBUG = False
+DEBUG = os.environ.get("DEBUG")
+TEMPLATE_DEBUG = DEBUG
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'cabici_pg',
-        'USER': 'cabici_pg',
-        'PASSWORD': 'pigeon59',
-        'HOST': '',
-        'PORT': '',
+    "default": {
+        "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
+        "NAME": os.environ.get("SQL_DATABASE", os.path.join(BASE_DIR, "db.sqlite3")),
+        "USER": os.environ.get("SQL_USER", "user"),
+        "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
+        "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }
 
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Absolute path to the directory static files should be collected to.
-# Don't put anything in this directory yourself; store your static files
-# in apps' "static/" subdirectories and in STATICFILES_DIRS.
-# Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = "/home/stevecassidy/webapps/cabicinet_static/"
+# 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
+# For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
-# should be customised on the production server and not kept in VC
-SECRET_KEY = '^g=q21r_nnmbz49d!vs*2gvplfsd((02l-y9b@&amp;t3k2r3c$*u&amp;2la5!%s'
 
-ALLOWED_HOSTS = ['cabici.net']
+GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
+GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
+

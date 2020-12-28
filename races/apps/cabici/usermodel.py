@@ -375,7 +375,7 @@ class RiderManager(models.Manager):
                 category = 'non-riding'
 
             # update membership record
-            if memberdate is not '':
+            if memberdate != '':
                 # dates are '1-Jan-19', convert to 2019-12-31
                 memberdate = datetime.datetime.strptime(memberdate, '%d %b %Y').strftime("%Y-%m-%d")
                 mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)

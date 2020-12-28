@@ -196,7 +196,7 @@ class Club(models.Model):
         recently.
         """
 
-        self.create_duty_helpers()
+        # self.create_duty_helpers()
 
         from .usermodel import RaceStaff, ClubRole
         clubrole, created = ClubRole.objects.get_or_create(name=role)
