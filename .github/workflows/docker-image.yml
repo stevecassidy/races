@@ -1,0 +1,21 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile -t docker.pkg.github.com/stevecassidy/races/web:latest
+    - name: Login to package repository
+      run: docker login docker.pkg.github.com -u stevecassidy -p ${{ secrets.DOCKER_TOKEN }}
+    - name: push new docker image
+      run: docker push docker.pkg.github.com/stevecassidy/races/web:latest
+      
