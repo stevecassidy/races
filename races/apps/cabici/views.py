@@ -221,14 +221,18 @@ class ClubRidersView(ListView):
             club = form.cleaned_data['club']
             fileformat = form.cleaned_data['fileformat']
 
-            if fileformat == 'IMG':
-                changed = Rider.objects.update_from_img_spreadsheet(club, parse_img_members(mf))
+            try:
+                if fileformat == 'IMG':
+                    changed = Rider.objects.update_from_img_spreadsheet(club, parse_img_members(mf))
 
-            elif fileformat == 'THQ':
-                changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-            else:
-                # unknown format
+                elif fileformat == 'THQ':
+                    changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
+                else:
+                    # unknown format
+                    changed = []
+            except ValueError as error:
                 changed = []
+                messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
 
             return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
         else:

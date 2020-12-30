@@ -7,7 +7,7 @@ certifi
 chardet
 contextlib2
 django-allauth
-django-anymail
+django-anymail[mailgun]
 django-appconf
 django-bootstrap-form
 django-cors-headers
@@ -45,7 +45,7 @@ urllib3
 vcrpy
 waitress
 wrapt
-xlrd
+xlrd<2
 xlwt
 django-debug-toolbar
 gunicorn

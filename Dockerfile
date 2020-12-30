@@ -19,3 +19,4 @@ RUN pip install -r requirements.txt
 # copy project
 COPY . .
 
+RUN python bin/production.py collectstatic

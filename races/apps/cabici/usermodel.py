@@ -285,8 +285,14 @@ class RiderManager(models.Manager):
                     row['Membership Status'] != 'Active':
                 continue
 
-            # remove 'CA' from the licence number
-            licenceno = row['ID'][2:]
+            # remove 'CA' from the licence number but check that it's there
+            # first
+            if 'ID Number' in row:
+                licenceno = row['ID Number'][2:]
+            else:
+                # really want to throw an error here
+                raise ValueError("No field 'ID Number' in uploaded spreadsheet")
+
             user = self.find_user(row['Email'], licenceno)
             updating = False
 
