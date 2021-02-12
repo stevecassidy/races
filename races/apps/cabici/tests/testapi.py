@@ -10,7 +10,7 @@ import json
 import datetime
 
 from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, RaceStaff, ClubGrade
+from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubRole, UserRole, RaceStaff, ClubGrade
 
 OGE = {
     "name": "ORICA GREENEDGE",
@@ -75,6 +75,79 @@ class APITests(TestCase):
         self.assertEqual(OGE, club)
 
         # TODO: test update
+
+    def test_get_club_roles(self):
+        """Can get a list of club roles"""
+
+        # set up some roles
+        riders = Rider.objects.filter(club=self.oge)
+        dh, created = ClubRole.objects.get_or_create(name="Duty Helper")
+        for rider in riders:
+            UserRole(role=dh, user=rider.user, club=self.oge).save()
+
+        response = self.client.get('/api/clubroles/OGE/')
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual('application/json', response['Content-Type'])
+
+        roles = json.loads(response.content)
+        self.assertEqual(len(riders), len(roles))
+        self.assertEqual('Duty Helper', roles[0]['role'])
+
+
+    def test_add_club_role(self):
+        """Can add a new club role for a rider"""
+
+        # get our target rider
+        rider = Rider.objects.filter(club=self.oge)[0]
+
+        self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        payload = {"role": 'Duty Helper', "user": rider.user.id, "club": self.oge.slug }
+        response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
+
+        self.assertEqual(201, response.status_code)
+        # should now find a new role in place
+        roles = UserRole.objects.filter(user=rider.user)
+        self.assertEqual(1, len(roles))
+        self.assertEqual('Duty Helper', roles[0].role.name)
+
+
+
+    def test_add_club_role_error(self):
+        """Do we handle errors with role submission"""
+
+        # get our target rider
+        rider = Rider.objects.filter(club=self.oge)[0]
+
+        self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
+
+        payload = {"role": 'Duty Helper', "user": 0, "club": self.oge.slug }
+        response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
+
+        self.assertEqual(400, response.status_code)
+        self.assertDictEqual({'user': 'invalid user id'}, response.json())
+
+
+    def test_delete_club_role(self):
+        """Can delete a club role instance"""
+
+        # set up some roles
+        rider = Rider.objects.filter(club=self.oge)[0]
+        dh, created = ClubRole.objects.get_or_create(name="Duty Helper")
+        role = UserRole(role=dh, user=rider.user, club=self.oge)
+        role.save()
+        roleid = role.id
+
+        self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
+        response = self.client.delete('/api/clubroles/OGE/{}/'.format(roleid) )
+
+        self.assertEqual(204, response.status_code)
+
+        # and our role should be gone
+        self.assertEqual(0, UserRole.objects.filter(id=roleid).count())
+
+
 
     def test_race_list(self):
         """Listing races"""

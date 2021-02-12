@@ -82,6 +82,23 @@ class OfficialsTests(WebTest):
 
         return riders
 
+    def test_rider_roles(self):
+        """We can get the list of roles for a rider"""
+
+        rider = Rider.objects.all()[0]
+        do, created = ClubRole.objects.get_or_create(name="Duty Officer")
+        dh, created = ClubRole.objects.get_or_create(name="Duty Helper")
+
+        self.assertEqual(rider.roles, [])
+
+        UserRole(user=rider.user, club=self.oge, role=do).save()
+
+        self.assertEqual(rider.roles, ["Duty Officer"])
+
+        UserRole(user=rider.user, club=self.oge, role=dh).save()
+
+        self.assertEqual(rider.roles, ["Duty Officer", "Duty Helper"])
+
     def test_club_create_officials(self):
         """Test creation of various roles"""
 

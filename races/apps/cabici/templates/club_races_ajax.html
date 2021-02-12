@@ -44,7 +44,7 @@ $(document).ready(
         {% else %}
         var auth = false;
         {% endif %}
-        populate_race_table('{{club.slug}}', auth, '{{club.manage_members}}');
+        populate_race_table('{{club.slug}}', auth, {% if club.manage_members %}true{% else %}false{% endif %});
     }
 );
 </script>

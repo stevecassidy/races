@@ -26,19 +26,20 @@ function addpeoplemodalbutton(race) {
 }
 
 function editmodalbutton(race) {
-    var val = "<div><a href='#' data-toggle='modal' data-target='#raceEditModal' title='Edit Race' data-clubslug='" + race.club.slug + "' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
+    var val = "<div><a href='#' data-toggle='modal' data-target='#raceEditModal' title='Edit Race' data-manage-members='" + race.club.manage_members + "' data-clubslug='" + race.club.slug + "' data-raceurl='" + race.url + "' data-raceid='" + race.id + "' data-racename='" + race.date + ", " + race.location.name + "><span aria-hidden='true' class='glyphicon glyphicon-pencil'></span></a></div>";
     return(val);
 }
 
 
 function populate_race_table(clubslug, auth, manage_members) {
+    console.log("populate_race_table", clubslug, auth, manage_members);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
                               var val = "";
                               val += editmodalbutton(row);
                               val += deletemodalbutton(row);
-                              if (manage_members=='True') {
+                              if (manage_members) {
                                   val += addpeoplemodalbutton(row);
                               }
                               return(val);
@@ -76,17 +77,17 @@ function populate_race_table(clubslug, auth, manage_members) {
                   }}
               ]
 
-    if (manage_members == 'True') {
-            columns.push({ data: "officials",
-                  render: function(data, type, row) {
-                      var val = "<dl class='dl-horizontal'>";
-                      val += formatnames(data.Commissaire, "Commissaire");
-                      val += formatnames(data['Duty Officer'], "Duty Officer");
-                      val += formatnames(data['Duty Helper'], "Duty Helper");
-                      val += "</dl>";
-                      return val;
-                  }
-              });
+    if (manage_members) {
+        columns.push({ data: "officials",
+                       render: function(data, type, row) {
+                            var val = "<dl class='dl-horizontal'>";
+                            val += formatnames(data.Commissaire, "Commissaire");
+                            val += formatnames(data['Duty Officer'], "Duty Officer");
+                            val += formatnames(data['Duty Helper'], "Duty Helper");
+                            val += "</dl>";
+                            return val;
+                        }
+            });
     }
 
     if (auth) {
@@ -206,6 +207,7 @@ function edit_race_modal_init() {
         var racename = button.data('racename');
         var raceid = button.data('raceid');
         var clubslug = button.data('clubslug');
+        var manage_members = button.data('manage-members');
         var modal = $(this);
 
         modal.find('.modal-title').text('Edit Race' );
@@ -239,15 +241,9 @@ function edit_race_modal_init() {
                 url: "/races/" + raceid + "/update/",
                 data: $('#raceeditform').serialize(),
                 success: function(msg){
-//                    if (msg['success']) {
-                       $("#raceEditModal").modal('hide');
-                       populate_race_table(clubslug, true);
-//                   } else {
-//                        for (field in msg) {
-//                            $("#id_"+field).parent().addClass("has-error");
-//                            $("#id_"+field).parent().children(".help-block").text(msg[field]);
-//                        }
-//                    }
+                    console.log("edit success ")
+                    $("#raceEditModal").modal('hide');
+                    populate_race_table(clubslug, true, manage_members);
                 }
             });
         });
@@ -461,3 +457,64 @@ function delete_result_init() {
     });
 
 }
+
+
+function club_duty_init() {
+    console.log("club_duty_init");
+    $('.clubDutyToggle').on('click', (event) => {
+
+        var input = $(event.target);
+        var rider = input.data('rider');
+        var role = input.data('role');
+        var club = input.data('club');
+        var id = input.data('id');
+        var status = input.prop('checked');
+        var url = '/api/clubroles/' + club + '/';
+
+        console.log(input[0]);
+        console.log(rider, role, club, id, status);
+        
+        if (status) {
+            // create a new one
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {rider, role, club},
+                success: (response) => {
+                    console.log("Success: ", response)
+                    // need to update the checkbox with the id of the role
+                    input.data('id', response.id);
+                    input.prop('checked', true);
+                    console.log(input[0]);
+                },
+                error: (response) => {
+                    console.log("Error", response);
+                }
+            })
+        } else {
+            // delete the existing one
+            if (id) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: url + id + '/',
+                    success: (response) => {
+                        console.log(response);
+                        input.attr('data-id', '');
+                        console.log(input);
+                        input.prop('checked', false);
+                    },
+                    error: (response) => {
+                        console.log("Error", response);
+                    }
+                })
+            } else {
+                console.log("Id is empty in ", input[0]);
+            }
+        }
+        // don't let the checkbox change state
+        return false;
+        
+
+    })
+}
+

@@ -122,8 +122,6 @@ MIDDLEWARE = (
 
 )
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 INTERNAL_IPS = ('127.0.0.1',)
 
 ROOT_URLCONF = 'races.urls'
