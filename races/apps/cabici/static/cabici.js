@@ -471,9 +471,6 @@ function club_duty_init() {
         var status = input.prop('checked');
         var url = '/api/clubroles/' + club + '/';
 
-        console.log(input[0]);
-        console.log(rider, role, club, id, status);
-        
         if (status) {
             // create a new one
             $.ajax({
@@ -481,11 +478,9 @@ function club_duty_init() {
                 url: url,
                 data: {rider, role, club},
                 success: (response) => {
-                    console.log("Success: ", response)
                     // need to update the checkbox with the id of the role
                     input.data('id', response.id);
                     input.prop('checked', true);
-                    console.log(input[0]);
                 },
                 error: (response) => {
                     console.log("Error", response);
@@ -498,9 +493,7 @@ function club_duty_init() {
                     type: 'DELETE',
                     url: url + id + '/',
                     success: (response) => {
-                        console.log(response);
                         input.attr('data-id', '');
-                        console.log(input);
                         input.prop('checked', false);
                     },
                     error: (response) => {

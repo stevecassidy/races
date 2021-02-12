@@ -211,7 +211,6 @@ class UserRoleSerializer(serializers.ModelSerializer):
         return result
 
     def to_internal_value(self, data):
-        print("DATA", data)
         role, created = ClubRole.objects.get_or_create(name=data['role'])
 
         rider = Rider.objects.filter(pk=data['rider'])
