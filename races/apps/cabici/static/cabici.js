@@ -32,7 +32,6 @@ function editmodalbutton(race) {
 
 
 function populate_race_table(clubslug, auth, manage_members) {
-    console.log("populate_race_table", clubslug, auth, manage_members);
 
     var edit_column = { data: "id",
                           render: function(data, type, row) {
@@ -460,7 +459,6 @@ function delete_result_init() {
 
 
 function club_duty_init() {
-    console.log("club_duty_init");
     $('.clubDutyToggle').on('click', (event) => {
 
         var input = $(event.target);

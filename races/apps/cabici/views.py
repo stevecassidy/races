@@ -203,41 +203,18 @@ class ClubDutyView(ListView):
         today = datetime.date.today()
 
         context = super(ClubDutyView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the future races
+
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
         context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
-        context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
+        # get any past members who still have duty roles
+        context['pastmembers'] = context['club'].rider_set.filter(user__userrole__isnull=False).exclude(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
 
         return context
 
-    def post(self, request, **kwargs):
-        """Handle upload of membership spreadsheets"""
 
-        form = MembershipUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            mf = request.FILES['memberfile']
-            club = form.cleaned_data['club']
-            fileformat = form.cleaned_data['fileformat']
-
-            try:
-                if fileformat == 'IMG':
-                    changed = Rider.objects.update_from_img_spreadsheet(club, parse_img_members(mf))
-
-                elif fileformat == 'THQ':
-                    changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-                else:
-                    # unknown format
-                    changed = []
-            except ValueError as error:
-                changed = []
-                messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
-
-            return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
-        else:
-            return HttpResponse("invalid form")
 
 
 class ClubRidersView(ListView):
