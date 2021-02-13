@@ -2,7 +2,10 @@
 FROM python:3.8.3-alpine
 
 ## install build dependencies
-RUN apk add build-base libffi-dev openssl-dev postgresql-dev
+RUN apk add build-base libffi-dev openssl-dev postgresql-dev python3-dev musl-dev curl
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
 
 # set work directory
 WORKDIR /usr/src/app
@@ -13,6 +16,7 @@ ENV PYTHONUNBUFFERED 1
 
 # install dependencies
 RUN pip install --upgrade pip
+RUN pip install cryptography
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
