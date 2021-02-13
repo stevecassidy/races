@@ -103,7 +103,7 @@ class APITests(TestCase):
 
         self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
-        payload = {"role": 'Duty Helper', "user": rider.user.id, "club": self.oge.slug }
+        payload = {"role": 'Duty Helper', "rider": rider.id, "club": self.oge.slug }
         response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
 
         self.assertEqual(201, response.status_code)
@@ -122,11 +122,11 @@ class APITests(TestCase):
 
         self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
-        payload = {"role": 'Duty Helper', "user": 0, "club": self.oge.slug }
+        payload = {"role": 'Duty Helper', "rider": 0, "club": self.oge.slug }
         response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
 
         self.assertEqual(400, response.status_code)
-        self.assertDictEqual({'user': 'invalid user id'}, response.json())
+        self.assertDictEqual({'rider': 'invalid rider id'}, response.json())
 
 
     def test_delete_club_role(self):

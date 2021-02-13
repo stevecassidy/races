@@ -217,7 +217,7 @@ class UserRoleSerializer(serializers.ModelSerializer):
 
         errors = {}
         if rider.count() == 0:
-            errors['rider'] = 'invalid user id'
+            errors['rider'] = 'invalid rider id'
         if club.count() == 0:
             errors['club'] = 'invalid club id'
         if errors != {}:
