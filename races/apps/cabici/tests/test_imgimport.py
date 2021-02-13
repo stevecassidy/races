@@ -54,7 +54,11 @@ def write_tidyhq_sample(outfile, rows):
 
     with open(outfile, 'w') as fd:
 
-        writer = csv.DictWriter(fd, ['Contact', 'ID', 'Email', 'Phone ', 'Membership Level', 'Membership Status', 'Subscription End Date', 'Gender ', 'Birthday '])
+        writer = csv.DictWriter(fd, ['Contact', 'ID Number', 'Email', 'Phone ', 
+                                    'Membership Level', 'Membership Status', 
+                                    'Subscription End Date', 'Gender', 'Date of Birth',
+                                    'CA: Commissaire Accreditation Level', 
+                                    'CA: Commissaire Accreditation Expiry'])
         writer.writeheader()
 
         for row in rows:
@@ -68,14 +72,16 @@ def write_tidyhq_sample(outfile, rows):
 
             trow = {
                 'Contact': row['First Name'] + " " + row['Last Name'],
-                'ID': "CA"+row['Member Number'],
+                'ID Number': "CA"+row['Member Number'],
                 'Email': row['Email Address'],
                 'Phone ': row['Mobile'],
                 'Membership Level': mmap[row['Member Types']],
                 'Membership Status': status,
                 'Subscription End Date': memberdate,
-                'Gender ': row['Gender'],
-                'Birthday ': row['DOB'].strftime('%Y-%m-%d'),
+                'Gender': row['Gender'],
+                'Date of Birth': row['DOB'].strftime('%Y-%m-%d'),
+                'CA: Commissaire Accreditation Level' : row['Commissaire Level (e.g. 2 Road Track MTB)'],
+                'CA: Commissaire Accreditation Expiry': row['Commissaire Accreditation Expiry Date']
             }
             writer.writerow(trow)
 
@@ -214,11 +220,16 @@ class TidyHQTests(TestCase):
             # re-fetch this user to check db updates
             usernodob = User.objects.get(last_name="DOB")
             self.assertIn(usernodob, updated_users)
-            self.assertEqual('F', usernodob.rider.gender)
+            self.assertEqual('M', usernodob.rider.gender)
             self.assertEqual('0415 999999', usernodob.rider.phone)
 
             # club should be updated
             self.assertEqual(club, usernodob.rider.club)
+
+            # user anotherrider@worldtour.com should be down as a commissaire
+            anotherrider = User.objects.get(email='anotherrider@worldtour.com')
+            self.assertEqual('1 R,T', anotherrider.rider.commissaire)
+            self.assertEqual(datetime.date(datetime.date.today().year+1, 12, 31), anotherrider.rider.commissaire_valid)
 
 
 class IMGWebTests(WebTest):

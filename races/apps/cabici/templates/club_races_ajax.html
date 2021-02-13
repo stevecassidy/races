@@ -44,7 +44,7 @@ $(document).ready(
         {% else %}
         var auth = false;
         {% endif %}
-        populate_race_table('{{club.slug}}', auth, '{{club.manage_members}}');
+        populate_race_table('{{club.slug}}', auth, {% if club.manage_members %}true{% else %}false{% endif %});
     }
 );
 </script>
@@ -107,6 +107,9 @@ $(document).ready(
             <div class="modal-body">
                 <p>This will allocate Duty Helpers and Duty Officers at random
                     for any future race where there is currently no allocation.</p>
+
+                <p>Also, any member who is no longer a duty officer or helper will
+                    be removed from duty.</p>
 
                 <form id='allocateForm' method='POST' action='officials/'>
                     {% csrf_token %}

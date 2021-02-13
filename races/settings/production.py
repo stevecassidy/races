@@ -44,3 +44,6 @@ SAVE_RESULT_UPLOADS = True
 SAVE_RESULT_UPLOADS_DIR = '/var/lib/cabici/cabici-uploads'
 
 STATIC_ROOT = '/var/lib/cabici/staticfiles'
+
+# enable whitenoise handling of static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

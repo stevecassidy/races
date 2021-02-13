@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from django.urls import path 
 from django.views.generic.base import TemplateView
 
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -35,6 +36,7 @@ urlpatterns = [
     url(r'^clubs/(?P<slug>[^/]*)/races/publish/$', views.RacePublishDraftView.as_view(), name='club_race_publish'),
     url(r'^clubs/(?P<slug>[^/]*)/results/$', views.ClubRaceResultsView.as_view(), name='club_results'),
     url(r'^clubs/(?P<slug>[^/]*)/riders/$', views.ClubRidersView.as_view(), name='club_riders'),
+    url(r'^clubs/(?P<slug>[^/]*)/duty/$', views.ClubDutyView.as_view(), name='club_duty'),
     url(r'^clubs/(?P<slug>[^/]*)/members.csv$', views.club_riders_csv_view, name='club_members_csv'),
     url(r'^clubs/(?P<slug>[^/]*)/pointscore/$', views.ClubPointscoreList.as_view(), name="pointscore_list"),
     url(r'^clubs/(?P<slug>[^/]*)/pointscore/(?P<pk>\d+)$', views.ClubPointscoreView.as_view(), name='pointscore'),
@@ -57,6 +59,8 @@ urlpatterns = [
 
     url(r'^api/clubs/$', api.ClubList.as_view(), name='club-list'),
     url(r'^api/clubs/(?P<slug>[^/]+)/$', api.ClubDetail.as_view(), name='club-detail'),
+    path('api/clubroles/<slug:slug>/', api.UserRolesView.as_view(), name='club-roles'),
+    path('api/clubroles/<slug:slug>/<int:pk>/', api.UserRoleDestroyView.as_view(), name='destroy-club-role'),
     url(r'^api/races/$', api.RaceList.as_view(), name='race-list'),
     url(r'^api/races/(?P<pk>[0-9]+)/$', api.RaceDetail.as_view(), name='race-detail'),
     url(r'^api/racestaff/$', api.RaceStaffList.as_view(), name='racestaff-list'),

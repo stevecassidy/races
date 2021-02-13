@@ -121,30 +121,6 @@ class Club(models.Model):
 
         return self.races.filter(date__lte=datetime.date.today()).order_by('-date')[:5]
 
-    def create_duty_helpers(self):
-        """Add all current race members as duty helpers"""
-
-        from .usermodel import ClubRole, Membership, UserRole
-
-        dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
-        today = datetime.date.today()
-
-        # remove all current helpers
-        self.userrole_set.filter(role=dutyhelper).delete()
-
-        # get the duty officers
-        dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
-        dofficers = [ur.user for ur in UserRole.objects.filter(club=self, role=dutyofficer)]
-
-        members = self.membership_set.filter(date__gte=today, category='race')
-        for membership in members:
-            user = membership.rider.user
-            # don't duplicate (eg. member current for this year and next)
-            existing = self.userrole_set.filter(role=dutyhelper, user=user)
-            if existing.count() == 0 and not user in dofficers:
-                role = UserRole(user=user, club=self, role=dutyhelper)
-                role.save()
-
     def get_officials_with_counts(self, role):
         """Get a list of people who can fill a given role ordered
         by the number of times they have done so in the last year
@@ -160,7 +136,7 @@ class Club(models.Model):
         import random
         # candidates are those members with a ClubRole with the
         # corresponding role
-        candidates = self.rider_set.filter(user__userrole__role__name__exact=role)
+        candidates = self.rider_set.filter(user__userrole__role__name__exact=role).distinct()
 
         # if we have no candidates we can't do anything
         if candidates.count() == 0:
@@ -196,9 +172,7 @@ class Club(models.Model):
         recently.
         """
 
-        # self.create_duty_helpers()
-
-        from .usermodel import RaceStaff, ClubRole
+        from .usermodel import RaceStaff, ClubRole, UserRole
         clubrole, created = ClubRole.objects.get_or_create(name=role)
 
         ordered = self.get_officials_with_counts(role)
@@ -210,6 +184,13 @@ class Club(models.Model):
             existing = RaceStaff.objects.filter(race=race, role=clubrole)
             if replace:
                 existing.delete()
+            else:
+                # remove any that aren't in this role any more
+                for staff in existing:
+                    if UserRole.objects.filter(user=staff.rider.user, club=self, role=clubrole).count() == 0:
+                        staff.delete()
+                # refresh existing in case we removed someone
+                existing = RaceStaff.objects.filter(race=race, role=clubrole)
 
             # allocate more if there are less than number already allocated
             for n in range(max(0,number-existing.count())):
@@ -432,7 +413,7 @@ class RaceCourseManager(models.Manager):
         location = ng.finditem(name)
 
         if location == None:
-            print("UNKNOWN LOCATION", name)
+            #print("UNKNOWN LOCATION", name)
             location, created = self.get_or_create(name="Unknown")
 
         return location

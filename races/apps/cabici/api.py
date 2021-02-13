@@ -19,7 +19,7 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from .models import Club, Race, RaceCourse
-from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, ClubGrade, Membership
+from .usermodel import Rider, PointScore, RaceResult, RaceStaff, ClubRole, UserRole, ClubGrade, Membership
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -40,7 +40,7 @@ def api_root(request, format=None):
         'riders': reverse('rider-list', request=request, format=format),
         'pointscores': reverse('pointscore-list', request=request, format=format),
         'raceresults': reverse('raceresult-list', request=request, format=format),
-    })
+        })
 
 
 class CustomAuthTokenSerializer(serializers.Serializer):
@@ -160,7 +160,9 @@ class ClubOfficialPermission(permissions.BasePermission):
             club = obj.club
         elif isinstance(obj, RaceResult):
             club = obj.race.club
-        else:
+        elif isinstance(obj, UserRole):
+            club = obj.club
+        else: 
             return False
 
         return request.user.rider.club == club
@@ -182,7 +184,7 @@ class ClubBriefSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Club
-        fields = ('name', 'id', 'slug')
+        fields = ('name', 'id', 'slug', 'manage_members')
 
 
 class ClubList(generics.ListCreateAPIView):
@@ -194,6 +196,49 @@ class ClubDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Club.objects.all()
     serializer_class = ClubSerializer
     lookup_field = 'slug'
+
+class UserRoleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UserRole
+        fields = ('id', 'user', 'club', 'role')
+    
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        result['role'] = instance.role.name
+        result['club'] = instance.club.slug
+        return result
+
+    def to_internal_value(self, data):
+        role, created = ClubRole.objects.get_or_create(name=data['role'])
+
+        rider = Rider.objects.filter(pk=data['rider'])
+        club = Club.objects.filter(slug=data['club'])
+
+        errors = {}
+        if rider.count() == 0:
+            errors['rider'] = 'invalid rider id'
+        if club.count() == 0:
+            errors['club'] = 'invalid club id'
+        if errors != {}:
+            raise serializers.ValidationError(errors)
+
+        return {'user': rider[0].user, 'club': club[0], 'role': role}
+
+class UserRolesView(generics.ListCreateAPIView):
+    
+    serializer_class = UserRoleSerializer 
+
+    def get_queryset(self):
+        
+        slug = self.request.resolver_match.kwargs['slug']
+        return UserRole.objects.filter(club__slug__exact=slug)
+
+@permission_classes((ClubOfficialPermission,))
+class UserRoleDestroyView(generics.RetrieveDestroyAPIView):
+    queryset = UserRole.objects.all()
+    serializer_class = UserRoleSerializer
+
 
 # ---------------RaceCourse------------------
 
@@ -389,7 +434,6 @@ class RiderList(generics.ListCreateAPIView):
         if changed:
             try:
                 changed = datetime.datetime.fromtimestamp(int(changed), datetime.timezone.utc)
-                print("Getting riders changed since ", changed)
                 riders = riders.filter(user__rider__updated__gt=changed)
             except ValueError:
                 raise APIException("Bad timestamp format for changed argument")

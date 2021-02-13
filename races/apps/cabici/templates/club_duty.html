@@ -1,0 +1,111 @@
+{% extends "site_base.html" %}
+{% load bootstrap %}
+{% load racetags %}
+
+{% block head_title %}{{club.name}}{% endblock %}
+
+    {% block extra_head %}
+    {% endblock %}
+
+    {% block extra_scripts %}
+    <script src="{{ STATIC_URL }}cabici.js"></script>
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(
+            function() {
+                club_duty_init();
+                $('.duty-table').DataTable({
+                    paging: false
+
+                });
+            })
+        </script>
+    {% endblock %}
+
+
+
+{% block content %}
+
+<h2>{{club.name}} Duty Officers and Helpers</h2>
+
+<table class='table duty-table'>
+    <thead>
+        <tr><th>Name</th>
+            {% if request.user.rider.club == club and request.user.rider.official %}
+            <th>Expiry Date</th>
+            <th>Membership</th>
+            <th>Duty Helper</th>
+            <th>Duty Officer</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for rider in members %}
+      {% with roles=rider.roles %}
+      <tr>
+          <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+          {% if request.user.rider.club == club and request.user.rider.official %}
+          <td>{{rider.member_date}}</td>
+          <td>{{rider.member_category.title}}</td>
+
+          {% if roles.dutyhelper %}
+          <td><input type='checkbox' checked data-id="{{roles.dutyhelper}}" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Helper" class="clubDutyToggle"></td>
+          {% else %}
+          <td><input type='checkbox' data-id="" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Helper" class="clubDutyToggle"></td>
+          {% endif %}
+
+          {% if roles.dutyofficer %}
+          <td><input type='checkbox' checked data-id="{{roles.dutyofficer}}" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Officer" class="clubDutyToggle"></td>
+          {% else %}
+          <td><input type='checkbox' data-id="" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Officer" class="clubDutyToggle"></td>
+          {% endif %}
+
+          {% endif %}
+      </tr>
+      {% endwith %}
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Past Members with Duty Status</h3>
+
+<table class='table duty-table'>
+    <thead>
+        <tr><th>Name</th>
+            {% if request.user.rider.club == club and request.user.rider.official %}
+            <th>Expiry Date</th>
+            <th>Membership</th>
+            <th>Duty Helper</th>
+            <th>Duty Officer</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+    {% for rider in pastmembers %}
+    {% with roles=rider.roles %}
+    <tr>
+        <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
+        {% if request.user.rider.club == club and request.user.rider.official %}
+        <td>{{rider.member_date}}</td>
+        <td>{{rider.member_category.title}}</td>
+
+        {% if roles.dutyhelper %}
+        <td><input type='checkbox' checked data-id="{{roles.dutyhelper}}" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Helper" class="clubDutyToggle"></td>
+        {% else %}
+        <td><input type='checkbox' data-id="" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Helper" class="clubDutyToggle"></td>
+        {% endif %}
+
+        {% if roles.dutyofficer %}
+        <td><input type='checkbox' checked data-id="{{roles.dutyofficer}}" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Officer" class="clubDutyToggle"></td>
+        {% else %}
+        <td><input type='checkbox' data-id="" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Officer" class="clubDutyToggle"></td>
+        {% endif %}
+
+        {% endif %}
+    </tr>
+    {% endwith %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

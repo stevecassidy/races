@@ -193,6 +193,30 @@ def club_riders_csv_view(request, slug):
     return response
 
 
+
+class ClubDutyView(ListView):
+    model = Club
+    template_name = 'club_duty.html'
+
+    def get_context_data(self, **kwargs):
+
+        today = datetime.date.today()
+
+        context = super(ClubDutyView, self).get_context_data(**kwargs)
+
+        slug = self.kwargs['slug']
+        context['club'] = Club.objects.get(slug=slug)
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
+            'user__last_name').select_related('club')
+        # get any past members who still have duty roles
+        context['pastmembers'] = context['club'].rider_set.filter(user__userrole__isnull=False).exclude(membership__date__gte=today).distinct().order_by(
+            'user__last_name').select_related('club')
+
+        return context
+
+
+
+
 class ClubRidersView(ListView):
     model = Club
     template_name = 'club_riders.html'
@@ -279,7 +303,7 @@ class ClubPointscoreAuditView(DetailView):
         try:
             tally = PointscoreTally.objects.get(pointscore=self.object, rider=rider)
         except Exception as e:
-            print(e)
+            # print(e)
             tally = None
 
         context['club'] = Club.objects.get(slug=club)
@@ -598,7 +622,7 @@ class RaceDetailView(DetailView):
                 result.save()
             messages.add_message(self.request, messages.SUCCESS, "Result added", extra_tags='safe')
         else:
-            print(form.errors.as_data())
+            # print(form.errors.as_data())
             msgtext = "Error in adding result: %s" % form.errors
             messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
@@ -758,7 +782,7 @@ class RaceUploadExcelView(FormView):
                     messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
             except Exception as e:
                 msgtext = "Error reading file, please check format."
-                print(e)
+                # print(e)
                 messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
@@ -858,6 +882,7 @@ class ClubRacesView(DetailView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
+        context['club'] = club
 
         if self.request.user.is_authenticated:
             context['races'] = Race.objects.filter(date__gte=datetime.date.today(), club__exact=club)

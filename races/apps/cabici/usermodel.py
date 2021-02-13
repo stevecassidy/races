@@ -401,6 +401,13 @@ class RiderManager(models.Manager):
                 if user in currentmembers:
                     currentmembers.remove(user)
 
+            if row['CA: Commissaire Accreditation Level'] != '':
+                user.rider.commissaire = row['CA: Commissaire Accreditation Level']
+                userchanges.append('commissaire')
+            if row['CA: Commissaire Accreditation Expiry']:
+                user.rider.commissaire_valid = row['CA: Commissaire Accreditation Expiry']
+                userchanges.append('commissaire_valid')
+
             if userchanges:
                 user.rider.save()
 
@@ -547,6 +554,16 @@ class Rider(models.Model):
 
         return result
 
+    @property
+    def roles(self):
+        """Return a list of the roles that this rider has"""
+
+        result = {}
+        roles = self.user.userrole_set.all()
+        for role in roles:
+            result[role.role.shortname] = role.id
+        return result
+
     def performancereport(self, when=None):
         """Generate a rider performance report for all clubs
         if the when arg is provided it should be a date
@@ -593,6 +610,9 @@ class ClubRole(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def shortname(self):
+        return self.name.replace(' ', '').lower()
 
 class UserRole(models.Model):
     """A role held by a person in a club, eg. president, handicapper, duty officer
