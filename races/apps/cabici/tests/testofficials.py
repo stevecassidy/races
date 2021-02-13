@@ -67,6 +67,28 @@ class OfficialsTests(WebTest):
             races.append(race)
         return races
 
+    def create_duty_helpers(self, club):
+        """Add all current race members as duty helpers"""
+
+        dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
+        today = datetime.date.today()
+
+        # remove all current helpers
+        club.userrole_set.filter(role=dutyhelper).delete()
+
+        # get the duty officers
+        dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
+        dofficers = [ur.user for ur in UserRole.objects.filter(club=club, role=dutyofficer)]
+
+        members = club.membership_set.filter(date__gte=today, category='race')
+        for membership in members:
+            user = membership.rider.user
+            # don't duplicate (eg. member current for this year and next)
+            existing = club.userrole_set.filter(role=dutyhelper, user=user)
+            if existing.count() == 0 and not user in dofficers:
+                role = UserRole(user=user, club=club, role=dutyhelper)
+                role.save()
+
     def make_role(self, club, n, rolename):
         """Choose n members to have the given role,
          return a list of riders"""
@@ -89,22 +111,22 @@ class OfficialsTests(WebTest):
         do, created = ClubRole.objects.get_or_create(name="Duty Officer")
         dh, created = ClubRole.objects.get_or_create(name="Duty Helper")
 
-        self.assertEqual(rider.roles, [])
+        self.assertEqual(rider.roles, {})
 
         UserRole(user=rider.user, club=self.oge, role=do).save()
 
-        self.assertEqual(rider.roles, ["Duty Officer"])
+        self.assertEqual(list(rider.roles.keys()), ['dutyofficer'])
 
         UserRole(user=rider.user, club=self.oge, role=dh).save()
 
-        self.assertEqual(rider.roles, ["Duty Officer", "Duty Helper"])
+        self.assertEqual(list(rider.roles.keys()), ["dutyofficer", "dutyhelper"])
 
     def test_club_create_officials(self):
         """Test creation of various roles"""
 
         dofficers = self.make_role(self.oge, 3, "Duty Officer")
 
-        self.oge.create_duty_helpers()
+        self.create_duty_helpers(self.oge)
         helpers = self.oge.userrole_set.filter(role__name__exact="Duty Helper")
         racers = self.oge.membership_set.filter(category__exact='race').count()
         self.assertEqual(racers-3, helpers.count())
@@ -119,7 +141,8 @@ class OfficialsTests(WebTest):
 
         races = self.make_races()
 
-        self.oge.create_duty_helpers()
+        self.create_duty_helpers(self.oge)
+
         dutyhelper, created = ClubRole.objects.get_or_create(name="Duty Helper")
 
         dhs = self.oge.rider_set.filter(user__userrole__role__exact=dutyhelper)
@@ -149,7 +172,7 @@ class OfficialsTests(WebTest):
 
         races = self.make_races()
 
-        self.oge.create_duty_helpers()
+        self.create_duty_helpers(self.oge)
 
         self.oge.allocate_officials("Duty Helper", 2, races)
 
@@ -231,10 +254,9 @@ class OfficialsTests(WebTest):
         officials randomly. This links to a modal that
         will achieve this allocation."""
 
-        self.oge.create_duty_helpers()
-
         races = self.make_races()
-
+        self.create_duty_helpers(self.oge)
+        
         url = reverse('club_races', kwargs={'slug': self.oge.slug})
         response = self.app.get(url, user=self.ogeofficial)
 

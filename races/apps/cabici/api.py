@@ -207,7 +207,6 @@ class UserRoleSerializer(serializers.ModelSerializer):
         result = super().to_representation(instance)
         result['role'] = instance.role.name
         result['club'] = instance.club.slug
-        print(result)
         return result
 
     def to_internal_value(self, data):
@@ -435,7 +434,6 @@ class RiderList(generics.ListCreateAPIView):
         if changed:
             try:
                 changed = datetime.datetime.fromtimestamp(int(changed), datetime.timezone.utc)
-                print("Getting riders changed since ", changed)
                 riders = riders.filter(user__rider__updated__gt=changed)
             except ValueError:
                 raise APIException("Bad timestamp format for changed argument")

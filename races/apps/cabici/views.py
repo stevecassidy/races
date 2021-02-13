@@ -303,7 +303,7 @@ class ClubPointscoreAuditView(DetailView):
         try:
             tally = PointscoreTally.objects.get(pointscore=self.object, rider=rider)
         except Exception as e:
-            print(e)
+            # print(e)
             tally = None
 
         context['club'] = Club.objects.get(slug=club)
@@ -622,7 +622,7 @@ class RaceDetailView(DetailView):
                 result.save()
             messages.add_message(self.request, messages.SUCCESS, "Result added", extra_tags='safe')
         else:
-            print(form.errors.as_data())
+            # print(form.errors.as_data())
             msgtext = "Error in adding result: %s" % form.errors
             messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
@@ -782,7 +782,7 @@ class RaceUploadExcelView(FormView):
                     messages.add_message(self.request, messages.INFO, msgtext, extra_tags='safe')
             except Exception as e:
                 msgtext = "Error reading file, please check format."
-                print(e)
+                # print(e)
                 messages.add_message(self.request, messages.ERROR, msgtext, extra_tags='safe')
 
         return HttpResponseRedirect(reverse('race', kwargs=self.kwargs))
