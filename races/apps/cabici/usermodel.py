@@ -274,26 +274,50 @@ class RiderManager(models.Manager):
         updated = []
         added = []
 
+        fields = {
+            'name': 'Contact',
+            'licence': 'ID Number',
+            'email': 'Email',
+            'phone': 'Phone',
+            'gender': 'Gender',
+            'dob': 'Date of Birth',
+            'membership': 'Membership Level',
+            'status': 'Membership Status',
+            'end_date': 'Subscription End Date',
+            'comm_level' : 'CA: Commissaire Accreditation Level',
+            'comm_expiry' : 'CA: Commissaire Accreditation Expiry',
+        }
+
         # get the current member list, check that all are in the spreadsheet
         today = datetime.date.today()
         currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today).distinct())
 
         for row in csv.DictReader(csvfile):
 
-            if 'Subscription End Date' not in row or \
-                    row['Subscription End Date'] is None or \
-                    row['Membership Status'] != 'Active':
+            if fields['end_date'] not in row or \
+                    row[fields['end_date']] is None or \
+                    row[fields['status']] != 'Active':
+                continue
+
+            # Work out membership category, skip this row if it's not one we recognise
+            if 'Race' in row[fields['membership']]:
+                category = 'race'
+            elif 'Ride' in row[fields['membership']]:
+                category = 'ride'
+            elif 'Lifestyle' in row[fields['membership']]:
+                category = 'non-riding'
+            else:
                 continue
 
             # remove 'CA' from the licence number but check that it's there
             # first
-            if 'ID Number' in row:
-                licenceno = row['ID Number'][2:]
+            if fields['licence'] in row:
+                licenceno = row[fields['licence']][2:]
             else:
                 # really want to throw an error here
-                raise ValueError("No field 'ID Number' in uploaded spreadsheet")
+                raise ValueError("No field %s in uploaded spreadsheet" % fields['licence'])
 
-            user = self.find_user(row['Email'], licenceno)
+            user = self.find_user(row[fields['email']], licenceno)
             updating = False
 
             if user is not None:
@@ -305,20 +329,20 @@ class RiderManager(models.Manager):
                 updating = True
             else:
                 # new rider
-                username = slugify(row['Contact'] + licenceno)[:30]
+                username = slugify(row[fields['name']] + licenceno)[:30]
 
                 # just in case we have used this username before
                 # it wasn't found above so can't be a complete record, so
                 # just re-use it and update
                 user, created = User.objects.get_or_create(username=username)
 
-                if row['Email'] is None:
+                if row[fields['email']] is None:
                     email = ''
                 else:
-                    email = row['Email']
+                    email = row[fields['email']]
 
                 # try to guess first and last names
-                first_name, last_name = row['Contact'].split(' ', 1)
+                first_name, last_name = row[fields['name']].split(' ', 1)
                 # but use the fields if they are present
                 if 'First Name' in row:
                     first_name = row['First Name']
@@ -349,36 +373,28 @@ class RiderManager(models.Manager):
             # Gender
             # Birthday
             # Phone
-            if 'Gender ' in row and row['Gender '] != '':
-                gender = row['Gender '][0]  # M/F
+            if fields['gender'] in row and row[fields['gender']] != '':
+                gender = row[fields['gender']][0]  # M/F
                 if user.rider.gender != gender:
                     user.rider.gender = gender
                     userchanges.append('Gender')
 
-            if 'Birthday ' in row and row['Birthday '] != '':
+            if fields['dob'] in row and row[fields['dob']] != '':
                 try:
-                    dob = datetime.date.fromisoformat(row['Birthday '])
+                    dob = datetime.date.fromisoformat(row[fields['dob']])
                     if dob != user.rider.dob:
                         user.rider.dob = dob
                         userchanges.append('DOB')
                 except ValueError:
                     pass
 
-            if 'Phone ' in row:
-                phone = row['Phone '].strip()
+            if fields['phone'] in row:
+                phone = row[fields['phone']].strip()
                 if user.rider.phone != phone:
                     user.rider.phone = phone
                     userchanges.append('Phone')
 
-            # membership category = Member Types, Financial Date
-            memberdate = row['Subscription End Date']
-
-            if 'Race' in row['Membership Level']:
-                category = 'race'
-            elif 'Ride' in row['Membership Level']:
-                category = 'ride'
-            elif 'Non Riding' in row['Membership Level']:
-                category = 'non-riding'
+            memberdate = row[fields['end_date']]
 
             # update membership record
             if memberdate != '':
@@ -401,11 +417,12 @@ class RiderManager(models.Manager):
                 if user in currentmembers:
                     currentmembers.remove(user)
 
-            if row['CA: Commissaire Accreditation Level'] != '':
-                user.rider.commissaire = row['CA: Commissaire Accreditation Level']
+            if fields['comm_level'] in row and row[fields['comm_level']] != '':
+                user.rider.commissaire = row[fields['comm_level']]
                 userchanges.append('commissaire')
-            if row['CA: Commissaire Accreditation Expiry']:
-                user.rider.commissaire_valid = row['CA: Commissaire Accreditation Expiry']
+
+            if fields['comm_expiry'] in row and row[fields['comm_expiry']]:
+                user.rider.commissaire_valid = row[fields['comm_expiry']]
                 userchanges.append('commissaire_valid')
 
             if userchanges:

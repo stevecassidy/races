@@ -47,14 +47,14 @@ def write_tidyhq_sample(outfile, rows):
     """Write out a sample TidyHQ csv file for testing"""
 
     mmap = {
-        'RACING Membership': 'Race - Masters U65 - Annual',
-        'RIDE Membership': 'Ride - Adult (19-64) - Annual',
-        'NON-RIDING Membership': 'Non Riding Member - Annual'
+        'RACING Membership': 'CA: Race - Masters U65 - Annual', 
+        'RIDE Membership': 'CA: Ride Plus - Senior (65+) - Annual',
+        'NON-RIDING Membership': 'Lifestyle - Adult - Annual'
     }
 
     with open(outfile, 'w') as fd:
 
-        writer = csv.DictWriter(fd, ['Contact', 'ID Number', 'Email', 'Phone ', 
+        writer = csv.DictWriter(fd, ['Contact', 'ID Number', 'Email', 'Phone', 
                                     'Membership Level', 'Membership Status', 
                                     'Subscription End Date', 'Gender', 'Date of Birth',
                                     'CA: Commissaire Accreditation Level', 
@@ -74,7 +74,7 @@ def write_tidyhq_sample(outfile, rows):
                 'Contact': row['First Name'] + " " + row['Last Name'],
                 'ID Number': "CA"+row['Member Number'],
                 'Email': row['Email Address'],
-                'Phone ': row['Mobile'],
+                'Phone': row['Mobile'],
                 'Membership Level': mmap[row['Member Types']],
                 'Membership Status': status,
                 'Subscription End Date': memberdate,
@@ -220,7 +220,7 @@ class TidyHQTests(TestCase):
             # re-fetch this user to check db updates
             usernodob = User.objects.get(last_name="DOB")
             self.assertIn(usernodob, updated_users)
-            self.assertEqual('M', usernodob.rider.gender)
+            self.assertEqual('F', usernodob.rider.gender)
             self.assertEqual('0415 999999', usernodob.rider.phone)
 
             # club should be updated
