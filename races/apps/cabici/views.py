@@ -12,6 +12,7 @@ from django.core.mail import EmailMessage, BadHeaderError, get_connection
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from anymail.exceptions import AnymailInvalidAddress
+from django.conf import settings
 
 from django.contrib.auth.models import User
 from races.apps.cabici.models import Race, Club
@@ -606,6 +607,7 @@ class RaceDetailView(DetailView):
         context['csvform'] = RaceCSVForm()
         context['resulteditform'] = RaceResultUpdateForm()
         context['resultaddform'] = RaceResultAddForm(initial={'race': self.object})
+        context['google_maps_api_key'] = settings.GEOPOSITION_GOOGLE_MAPS_API_KEY
 
         return context
 
