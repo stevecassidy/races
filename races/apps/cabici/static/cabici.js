@@ -269,12 +269,20 @@ function add_people_init() {
           $(form).find("input[name='raceid']").val(data.id);
 
           if (data.officials.Commissaire) {
-              $('select[name=commissaire]').val(data.officials.Commissaire[0].id);
+              var comms = [];
+              for(var i=0; i< data.officials.Commissaire.length; i++){
+                  comms.push(data.officials.Commissaire[i].id);
+              }
+              $('select[name=commissaire]').val(comms);
           } else {
               $('select[name=commissaire]').val('NONE');
           }
           if (data.officials['Duty Officer']) {
-              $('select[name=dutyofficer]').val(data.officials['Duty Officer'][0].id);
+              var doffs = [];
+              for(var i=0; i< data.officials['Duty Officer'].length; i++) {
+                  doffs.push(data.officials['Duty Officer'][i].id);
+              }
+              $('select[name=dutyofficer]').val(doffs);
           } else {
               $('select[name=dutyofficer]').val('NONE');
           }
@@ -310,10 +318,20 @@ function submit_add_people(event) {
         url = $form.attr( "action" );
 
     // get form values, special value 'NONE' gives us the empty list
-    var comms = [{id: commissaire}];
-    if (commissaire == "NONE") { comms = []; }
-    var dos = [{id: dutyofficer}];
-    if (dutyofficer == "NONE") { dos = []; }
+    var comms = [];
+    if (commissaire) {
+        for(var i=0; i<commissaire.length; i++) {
+            comms.push({id: commissaire[i]})
+        }
+    }
+
+    var dos = [];
+    if (dutyofficer) {
+        for(var i=0; i<dutyofficer.length; i++) {
+            dos.push({id: dutyofficer[i]});
+        }
+    }
+
     var dhs = [];
     if (dutyhelpers) {
         for (var i=0; i<dutyhelpers.length; i++) {
