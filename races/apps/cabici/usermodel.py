@@ -347,7 +347,7 @@ class RiderManager(models.Manager):
                 if 'First Name' in row:
                     first_name = row['First Name']
                 if 'Last Name' in row:
-                    first_name = row['Last Name']
+                    last_name = row['Last Name']
 
                 user.first_name = first_name
                 user.last_name = last_name
