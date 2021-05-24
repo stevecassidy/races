@@ -44,7 +44,7 @@ class Command(BaseCommand):
                     print("\nAll race results for '"+str(mergerider)+"' will be moved over to '"+str(rider)+"'")
                     response = input("Continue? [y/N]")
 
-                    if response is 'y':
+                    if response == 'y':
                         for result in mergeresults:
                             result.rider = rider
                             result.save()
