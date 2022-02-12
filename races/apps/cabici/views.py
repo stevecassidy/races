@@ -644,11 +644,11 @@ class RaceSummarySpreadsheet(View):
 
         results = RaceResult.objects.filter(race__exact=race)
 
-        ws.append(("Race Date", race.date, '', '', '', '', '', '', ''))
-        ws.append(("Race Name", race.title, '', '', '', '', '', '', ''))
-        ws.append(("Club", race.club.slug, '', '', '', '', '', '', ''))
-        ws.append(("Venue", race.location.name, '', '', '', '', '', '', ''))
-        ws.append(('', '', '', '', '', '', '', '', ''))
+        ws.append(("Race Date", race.date, '', '', '', '', '', '', '', ''))
+        ws.append(("Race Name", race.title, '', '', '', '', '', '', '', ''))
+        ws.append(("Club", race.club.slug, '', '', '', '', '', '', '', ''))
+        ws.append(("Venue", race.location.name, '', '', '', '', '', '', '', ''))
+        ws.append(('', '', '', '', '', '', '', '', '', ''))
 
         header = ('LastName',
                   'FirstName',
@@ -657,6 +657,7 @@ class RaceSummarySpreadsheet(View):
                   'Place',
                   'LicenceNo',
                   'Club',
+                  'Email',
                   'Id',
                   'Date',
                   )
@@ -678,6 +679,7 @@ class RaceSummarySpreadsheet(View):
                    result.place or '',
                    rider.licenceno,
                    clubslug,
+                   rider.user.email,
                    rider.id,
                    race.date,
                    )
