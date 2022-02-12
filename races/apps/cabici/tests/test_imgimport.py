@@ -104,10 +104,10 @@ class IMGTests(TestCase):
                 self.assertEqual(dict, type(row))
                 self.assertIn("First Name", list(row.keys()))
                 self.assertIn("Member Number", list(row.keys()))
-                if row['First Name'] is 'Anthony':
+                if row['First Name'] == 'Anthony':
                     self.assertEqual('DULWICH HILL', row['Suburb'])
-                if row['First Name'] is 'Stephen':
-                    self.assertEqual('123457', row['Member Number'])
+                if row['First Name'] == 'Stephen':
+                    self.assertEqual('160888', row['Member Number'])
 
             # expect two rows
             self.assertEqual(6, count)
