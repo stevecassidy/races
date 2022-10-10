@@ -195,14 +195,14 @@ class RiderManager(models.Manager):
                 user.rider.gender = row['Gender'][0]
                 userchanges.append('gender')
 
-            # update commissaire data
+            # don't update commissaire data
 
-            if ('rider', 'commissaire') in riderinfo and riderinfo[('rider', 'commissaire')] != '0':
-                user.rider.commissaire = riderinfo[('rider', 'commissaire')]
-                userchanges.append('commissaire')
-            if ('rider', 'commissaire_valid') in riderinfo:
-                user.rider.commissaire_valid = riderinfo[('rider', 'commissaire_valid')]
-                userchanges.append('commissaire_valid')
+            # if ('rider', 'commissaire') in riderinfo and riderinfo[('rider', 'commissaire')] != '0':
+            #     user.rider.commissaire = riderinfo[('rider', 'commissaire')]
+            #     userchanges.append('commissaire')
+            # if ('rider', 'commissaire_valid') in riderinfo:
+            #     user.rider.commissaire_valid = riderinfo[('rider', 'commissaire_valid')]
+            #     userchanges.append('commissaire_valid')
 
             user.rider.club = club
 
