@@ -41,8 +41,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "pinax_theme_bootstrap.context_processors.theme",
-
             )
         }
     },
@@ -156,7 +154,6 @@ INSTALLED_APPS = (
     'races.apps.tidyhq',
 
     "bootstrapform",
-    "pinax_theme_bootstrap",
 
     #'pagination',
     'geoposition',

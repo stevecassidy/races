@@ -921,54 +921,51 @@ class ClubRacesView(DetailView):
                  request.user.rider.club != club):
             return HttpResponseBadRequest("Only available for club officials")
 
-        if request.is_ajax():
-            if form.is_valid():
-                # process it
-                pointscore = form.cleaned_data['pointscore']
-                if form.cleaned_data['repeat'] == 'none':
+        if form.is_valid():
+            # process it
+            pointscore = form.cleaned_data['pointscore']
+            if form.cleaned_data['repeat'] == 'none':
 
-                    race = form.save()
+                race = form.save()
+
+                if pointscore:
+                    pointscore.races.add(race)
+
+                data = json.dumps({'success': 1})
+                return HttpResponse(data, content_type='application/json')
+            else:
+                startdate = form.cleaned_data['date']
+
+                number = form.cleaned_data['number']
+                repeat = form.cleaned_data['repeat']
+                repeatMonthN = form.cleaned_data['repeatMonthN']
+                repeatDay = form.cleaned_data['repeatDay']
+
+                if repeat == 'weekly':
+                    rule = rrule(WEEKLY, count=number, dtstart=startdate)
+                elif repeat == 'monthly':
+                    rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
+                else:
+                    # invalid option, raise an error
+                    return HttpResponseBadRequest("Invalid repeat option")
+
+                race = form.save(commit=False)
+                # now make N more races
+                for date in rule:
+                    # force 'save as new'
+                    race.pk = None
+
+                    race.date = date
+                    race.save()
 
                     if pointscore:
                         pointscore.races.add(race)
 
-                    data = json.dumps({'success': 1})
-                    return HttpResponse(data, content_type='application/json')
-                else:
-                    startdate = form.cleaned_data['date']
-
-                    number = form.cleaned_data['number']
-                    repeat = form.cleaned_data['repeat']
-                    repeatMonthN = form.cleaned_data['repeatMonthN']
-                    repeatDay = form.cleaned_data['repeatDay']
-
-                    if repeat == 'weekly':
-                        rule = rrule(WEEKLY, count=number, dtstart=startdate)
-                    elif repeat == 'monthly':
-                        rule = rrule(MONTHLY, count=number, dtstart=startdate, byweekday=DAYS[repeatDay](repeatMonthN))
-                    else:
-                        # invalid option, raise an error
-                        return HttpResponseBadRequest("Invalid repeat option")
-
-                    race = form.save(commit=False)
-                    # now make N more races
-                    for date in rule:
-                        # force 'save as new'
-                        race.pk = None
-
-                        race.date = date
-                        race.save()
-
-                        if pointscore:
-                            pointscore.races.add(race)
-
-                    data = json.dumps({'success': 1})
-                    return HttpResponse(data, content_type='application/json')
-            else:
-                data = json.dumps(dict([(k, [str(e) for e in v]) for k, v in list(form.errors.items())]))
+                data = json.dumps({'success': 1})
                 return HttpResponse(data, content_type='application/json')
         else:
-            return HttpResponseBadRequest("Only Ajax requests supported")
+            data = json.dumps(dict([(k, [str(e) for e in v]) for k, v in list(form.errors.items())]))
+            return HttpResponse(data, content_type='application/json')
 
 
 class ClubRacesOfficalUpdateView(DetailView):

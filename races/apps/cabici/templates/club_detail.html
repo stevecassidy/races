@@ -45,7 +45,7 @@
               <td class='racetime'>{{race.starttime}}</td>
               <td class='racetitle'>
                   <a href="{% url 'race' race.club.slug race.pk %}">{{ race.title }}</a>
-                  {% ifequal race.status 'c' %}CANCELLED{% endifequal %}
+                  {% if race.status == 'c' %}CANCELLED{% endif %}
               </td>
               <td class='racelocation'>{{ race.location }}</td>
           </tr>

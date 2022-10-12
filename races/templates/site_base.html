@@ -33,13 +33,13 @@
                             {% block nav %}
                                 {% get_flatpages as flatpages %}
                                 <ul class="nav navbar-nav">
-                                    <li {% ifequal request.path '/races/' %}class='active'{% endifequal %}><a href="{% url 'races' %}">Races</a></li>
-                                    <li {% ifequal request.path '/clubs/' %}class='active'{% endifequal %}><a href="{% url 'clubs' %}">Clubs</a></li>
-                                    <li {% ifequal request.path '/riders/' %}class='active'{% endifequal %}><a href="{% url 'riders' %}">Riders</a></li>
+                                    <li {% if request.path == '/races/' %}class='active'{% endif %}><a href="{% url 'races' %}">Races</a></li>
+                                    <li {% if request.path == '/clubs/' %}class='active'{% endif %}><a href="{% url 'clubs' %}">Clubs</a></li>
+                                    <li {% if request.path == '/riders/' %}class='active'{% endif %}><a href="{% url 'riders' %}">Riders</a></li>
                                     {% for page in flatpages %}
-                                        {% ifnotequal page.url '/' %}
-                                            <li {% ifequal request.path page.url %}class='active'{% endifequal %}><a href="{{ page.url }}">{{ page.title }}</a></li>
-                                        {% endifnotequal %}
+                                        {% if page.url != '/' %}
+                                            <li {% if request.path == page.url %}class='active'{% endif %}><a href="{{ page.url }}">{{ page.title }}</a></li>
+                                        {% endif %}
                                     {% endfor %}
                                 </ul>
                             {% endblock %}
@@ -69,9 +69,8 @@
     <div id='feed'><a href="{% url "feed" %}">Subscribe <img src='{% static "feed-icon-14x14.png" %}'></a></div>
     {%  endif %}
 
-    {% load pinax_theme_bootstrap_tags %}
     {% for message in messages %}
-        <div class="alert fade in {% get_message_tags message %}">
+        <div class="alert fade in">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ message|safe }}
         </div>

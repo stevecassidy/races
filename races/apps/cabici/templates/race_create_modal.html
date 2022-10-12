@@ -74,7 +74,7 @@
                         </div>
                         <div class='row'>
                             <div class='col-md-4'>
-                                {% ifequal mode "create" %}
+                                {% if mode == "create" %}
                                 <div class='row racecreate'>
                                     <div class='col-sm-4'>
                                         <label for='id_weekly'>Repeat</label>
@@ -99,7 +99,7 @@
                                         {{racecreateform.repeatDay|bootstrap_inline}}
                                     </div>
                                 </div>
-                                {% endifequal %}
+                                {% endif %}
                                 <div class='row'>
                                     <div class='col-sm-12'>
                                         {{racecreateform.pointscore|bootstrap_inline}}
@@ -136,7 +136,7 @@
                     <div class="modal-footer">
                       <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                       <button type="button" id="submitrace{{mode}}form" class="btn btn-primary">
-                         {% ifequal mode "create" %}Create Race(s){% else %}Save Changes{% endifequal %}
+                         {% if mode == "create" %}Create Race(s){% else %}Save Changes{% endif %}
                       </button>
                     </div>
                 </div>

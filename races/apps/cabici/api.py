@@ -1,5 +1,5 @@
 """Serializers for the REST API"""
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers, generics, permissions, relations
 from rest_framework.decorators import api_view, permission_classes

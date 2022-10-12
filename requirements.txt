@@ -1,4 +1,4 @@
-Django==3.2.12
+Django==4.1.2
 PyYAML
 WebOb
 WebTest
@@ -13,7 +13,7 @@ django-bootstrap-form
 django-cors-headers
 django-coverage
 # get a custom fork of djang-geoposition for updates
-https://github.com/stevecassidy/django-geoposition/archive/master.zip
+./django-geoposition/
 django-ical
 django-pagination
 django-webtest
@@ -29,7 +29,6 @@ ngram
 oauthlib
 openpyxl
 pbr
-pinax-theme-bootstrap
 # fixes bad app name...
 https://github.com/jacobwegner/pinax-webanalytics/archive/refs/heads/fix/app-label.zip
 pyexcel
