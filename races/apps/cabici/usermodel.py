@@ -115,158 +115,6 @@ class RiderManager(models.Manager):
         else:
             return None
 
-    def update_from_img_spreadsheet(self, club, rows):
-        """Update the membership list for a club,
-        return a list of updated riders"""
-
-        cyclingnsw, created = Club.objects.get_or_create(name="CyclingNSW", slug="CNSW")
-        updated = []
-        added = []
-
-        # get the current member list, check that all are in the spreadsheet
-        today = datetime.date.today()
-        currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today).distinct())
-
-        for row in rows:
-           # print("ROW:", row['Email Address'], row['Member Number'], row['Financial Date'])
-
-            # we will import old membership records if present to ensure database is complete
-            # but we don't want any with no financial date (usually 3-race memberships)
-            if row['Financial Date'] is None:
-                continue
-
-            # grab all values from row that are not None, map them
-            # to the keys via IMG_MAP
-            riderinfo = dict()
-            for key in list(row.keys()):
-                if key in IMG_MAP:
-                    if row[key] is not None and row[key] != '':
-                        riderinfo[IMG_MAP[key]] = row[key]
-            # riderinfo is our updated information
-
-            user = self.find_user(row['Email Address'], row['Member Number'])
-            updating = False
-
-            if user is not None:
-                try:
-                    user.rider
-                except ObjectDoesNotExist:
-                    user.rider = Rider()
-
-                updating = True
-            else:
-                # new rider
-                username = slugify(row['First Name'] + row['Last Name'] + row['Member Number'])[:30]
-
-                if row['Email Address'] is None:
-                    email = ''
-                else:
-                    email = row['Email Address']
-                user = User(first_name=row['First Name'],
-                            last_name=row['Last Name'],
-                            email=email,
-                            username=username)
-                user.save()
-                user.rider = Rider()
-
-                added.append(user)
-
-            userchanges = []
-            # add data from spreadsheet only if current entry is empty
-            for key in list(riderinfo.keys()):
-                if key[0] == 'user':
-                    if getattr(user, key[1]) == '':
-                        setattr(user, key[1], riderinfo[key])
-                        userchanges.append(key[1])
-                else:
-                    if getattr(user.rider, key[1]) in ['', None, '0', datetime.date(1970, 1, 1)]:
-                        setattr(user.rider, key[1], riderinfo[key])
-                        userchanges.append(key[1])
-
-            # some special cases that need reformatting
-            if user.rider.phone == '':
-                user.rider.phone = row['Mobile'] or row['Direct'] or row['Private']
-                userchanges.append('phone')
-            if user.rider.streetaddress == '':
-                user.rider.streetaddress = ' '.join([row['Address1'] or '', row['Address2'] or ''])
-                userchanges.append('streetaddress')
-
-            if user.rider.gender == '':
-                user.rider.gender = row['Gender'][0]
-                userchanges.append('gender')
-
-            # don't update commissaire data
-
-            # if ('rider', 'commissaire') in riderinfo and riderinfo[('rider', 'commissaire')] != '0':
-            #     user.rider.commissaire = riderinfo[('rider', 'commissaire')]
-            #     userchanges.append('commissaire')
-            # if ('rider', 'commissaire_valid') in riderinfo:
-            #     user.rider.commissaire_valid = riderinfo[('rider', 'commissaire_valid')]
-            #     userchanges.append('commissaire_valid')
-
-            user.rider.club = club
-
-            user.save()
-            user.rider.save()
-
-            # membership category = Member Types, Financial Date
-            memberdate = row['Financial Date']
-            category = 'race'
-            # Member Types: RACING Membership, RIDE Membership, NON-RIDING Membership
-            if 'RACING' in row['Member Types']:
-                category = 'race'
-            elif 'RIDE' in row['Member Types']:
-                category = 'ride'
-            elif 'NON-RIDING' in row['Member Types']:
-                category = 'non-riding'
-
-            # update membership record
-            if memberdate is not None:
-                mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
-                if len(mm) == 0:
-                    m = Membership(rider=user.rider, club=club, date=memberdate, category=category)
-                    m.save()
-                    userchanges.append('membership')
-                else:
-                    # check the category?
-                    m = mm[0]
-                    if m.category != category:
-                        m.category = category
-                        userchanges.append('membership')
-                        m.save()
-
-                # remove this user from the currentmembers list
-                if user in currentmembers:
-                    currentmembers.remove(user)
-
-            # u'NSW Road Handicap Data'
-            if row['NSW Road Handicap Data'] is not None:
-                stategrade = row['NSW Road Handicap Data']
-                try:
-                    grading = ClubGrade.objects.get(rider=user.rider, club=cyclingnsw)
-                    if grading.grade != stategrade:
-                        grading.grade = stategrade
-                        userchanges.append('stategrade')
-                except ObjectDoesNotExist:
-                    grading = ClubGrade(rider=user.rider, club=cyclingnsw, grade=stategrade)
-                    userchanges.append('stategrade')
-                grading.save()
-
-            if updating and userchanges != []:
-                updated.append({'user': user, 'changes': userchanges})
-
-                # u'NSW Track Handicap Data'
-
-        # check for any left over members in the currentmembers list
-        # we need to revoke the member record for these
-        revoked = currentmembers
-        for user in currentmembers:
-            mm = user.rider.membership_set.filter(date__gte=today)
-            for m in mm:
-                m.delete()
-
-        return {'added': added, 'updated': updated, 'revoked': revoked}
-
     def update_from_tidyhq_spreadsheet(self, club, csvfile):
         """Update the membership list for a club, from a spreadsheet
         downloaded from TidyHQ return a list of updated riders"""
@@ -284,13 +132,13 @@ class RiderManager(models.Manager):
             'membership': 'Membership Level',
             'status': 'Membership Status',
             'end_date': 'Subscription End Date',
-            'comm_level' : 'CA: Commissaire Accreditation Level',
-            'comm_expiry' : 'CA: Commissaire Accreditation Expiry',
         }
 
         # get the current member list, check that all are in the spreadsheet
         today = datetime.date.today()
         currentmembers = list(User.objects.filter(rider__club__exact=club, rider__membership__date__gte=today).distinct())
+
+        rider_updates = {}
 
         for row in csv.DictReader(csvfile):
 
@@ -300,6 +148,7 @@ class RiderManager(models.Manager):
                 continue
 
             # Work out membership category, skip this row if it's not one we recognise
+
             if 'Race' in row[fields['membership']]:
                 category = 'race'
             elif 'Ride' in row[fields['membership']]:
@@ -320,6 +169,7 @@ class RiderManager(models.Manager):
             user = self.find_user(row[fields['email']], licenceno)
             updating = False
 
+            ## find or create the rider
             if user is not None:
                 try:
                     user.rider
@@ -362,12 +212,25 @@ class RiderManager(models.Manager):
 
                 added.append(user)
 
+            # So, now we have our rider in the db, remainder is to
+            # find what properties we need to update
+            # since we may have more than one row per rider
+            # we may see them in later iterations, so we build a list
+            # of properties keyed on the username and make the changes
+            # only at the end
+
+            if user.username in rider_updates:
+                properties = rider_updates[user.username]
+            else:
+                properties = {
+                    'user': user
+                }
+            
             userchanges = []
 
             # update the club if missing or not the same as this club
             if user.rider.club != club:
-                user.rider.club = club
-                userchanges.append('Club')
+                properties['club'] = club
 
             # look for some optional fields in the csv
             # Gender
@@ -376,74 +239,145 @@ class RiderManager(models.Manager):
             if fields['gender'] in row and row[fields['gender']] != '':
                 gender = row[fields['gender']][0]  # M/F
                 if user.rider.gender != gender:
-                    user.rider.gender = gender
-                    userchanges.append('Gender')
+                    properties['gender'] = gender
 
             if fields['dob'] in row and row[fields['dob']] != '':
                 try:
                     dob = datetime.date.fromisoformat(row[fields['dob']])
                     if dob != user.rider.dob:
-                        user.rider.dob = dob
-                        userchanges.append('DOB')
+                        properties['dob'] = dob
                 except ValueError:
                     pass
 
             if fields['phone'] in row:
                 phone = row[fields['phone']].strip()
                 if user.rider.phone != phone:
-                    user.rider.phone = phone
-                    userchanges.append('Phone')
+                    properties['phone'] = phone
 
             memberdate = row[fields['end_date']]
 
             # update membership record
             if memberdate != '':
-                # dates are '1-Jan-19', convert to 2019-12-31
-                memberdate = datetime.datetime.strptime(memberdate, '%d %b %Y').strftime("%Y-%m-%d")
-                mm = Membership.objects.filter(rider=user.rider, club=club, date=memberdate)
-                if len(mm) == 0:
-                    m = Membership(rider=user.rider, club=club, date=memberdate, category=category)
-                    m.save()
-                    userchanges.append('Membership')
+                # dates are '1-Jan-19', convert to a date 
+                mdate = datetime.datetime.strptime(memberdate, '%d %b %Y').date()
+
+                # update membership record
+                # cases:
+                #  - no current membership for this year, just make one
+                #  - existing membership for this year, extend the end date
+                #  - treat 'Add-On' memberships differently
+                memberships = Membership.objects.filter(rider=user.rider, club=club, date__year=mdate.year)
+
+                is_addon = 'Add-On' in row[fields['membership']]
+                # but is overridden if we already noted that this is an add-on member
+                if 'membership' in properties and 'is_addon' in properties['membership'] and properties['membership']['is_addon']:
+                    is_addon = True
+
+                if len(memberships) == 0:
+                    # check if we have previously seen a membership for this rider
+                    if 'membership' in properties:
+                        # ok, so we update it if the date is more recent
+                        if mdate > properties['membership']['date']:
+                            properties['membership']['date'] = mdate
+                        
+                        properties['membership']['is_addon'] = is_addon or properties['membership']['is_addon']
+
+                    else:
+                        properties['membership'] = {
+                            'club': club, 
+                            'date': mdate, 
+                            'category': category,
+                            'is_addon': is_addon
+                            }
                 else:
+                    membership = memberships[0]
+
+                    properties['membership'] = {
+                        'club': membership.club, 
+                        'date': membership.date, 
+                        'category': membership.category,
+                        'is_addon': is_addon
+                    }
+
+                    # is the date more recent than we have stored? 
+                    if membership.date < mdate:
+                        properties['membership']['date'] = mdate
+
                     # check the category?
-                    m = mm[0]
-                    if m.category != category:
-                        m.category = category
-                        userchanges.append('Membership')
-                        m.save()
+                    if membership.category != category:
+                        properties['membership']['category'] = category
+                        
 
                 # remove this user from the currentmembers list
                 if user in currentmembers:
                     currentmembers.remove(user)
 
-            if fields['comm_level'] in row and row[fields['comm_level']] != '':
-                user.rider.commissaire = row[fields['comm_level']]
-                userchanges.append('commissaire')
+                #print(properties)
+                rider_updates[user.username] = properties
 
-            if fields['comm_expiry'] in row and row[fields['comm_expiry']]:
-                user.rider.commissaire_valid = row[fields['comm_expiry']]
-                userchanges.append('commissaire_valid')
+        # now iterate over the updates and make the changes in the db
+        for username, update in rider_updates.items():
+            user = update['user']
+            userchanges = []
+            if 'dob' in update:
+                user.rider.dob = update['dob']
+                userchanges.append('DOB')
+            if 'gender' in update:
+                user.rider.gender = update['gender']
+                userchanges.append('Gender')
+            if 'phone' in update:
+                user.rider.phone = update['phone']
+                userchanges.append('Phone')
+            # only update the club if this is not an addon member
+            if 'club' in update and not update['membership']['is_addon']:
+                user.rider.club = update['club']
+                userchanges.append('Club')
 
-            if userchanges:
-                user.rider.save()
+            # update the membership records
+            if 'membership' in update:
+                date = update['membership']['date']
+                memberships = Membership.objects.filter(rider=user.rider, date__year=date.year)
+                if memberships:
+                    # existing membership for this year so update it
+                    # first check that there is only one membership
+                    if len(memberships) > 1:
+                        # we could remove duplicates here
+                        keep = memberships[0]
+                        for membership in memberships[1:]:
+                            membership.delete()
+                        # now update this one and save 
+                        keep.category = update['membership']['category']
+                        keep.club = update['membership']['club']
+                        keep.date = update['membership']['date']
+                        keep.is_addon = update['membership']['is_addon']
+                        keep.save()
+                else:
+                    # new membership for this year
+                    membership = Membership(rider=user.rider, 
+                                            club=update['membership']['club'],
+                                            date=update['membership']['date'],
+                                            category=update['membership']['category'],
+                                            add_on=update['membership']['is_addon'])
+                    membership.save()
 
-            if updating and userchanges != []:
-                updated.append({'user': user, 'changes': userchanges})
+            updated.append({'user': user, 'changes': userchanges})
 
-        # check for any left over members in the currentmembers list
-        # we need to revoke the member record for these
+            user.rider.save()
+
+        # # check for any left over members in the currentmembers list
+        # # we need to revoke the member record for these
         revoked = currentmembers
         for user in currentmembers:
-            mm = user.rider.membership_set.filter(date__gte=today)
-            for m in mm:
-                m.delete()
+            memberships = user.rider.membership_set.filter(date__gte=today)
+            for membership in memberships:
+                membership.delete()
 
         return {'added': added, 'updated': updated, 'revoked': revoked}
 
 
 GENDER_CHOICES = (("M", "Male"),
-                  ("F", "Female"))
+                  ("F", "Female"),
+                  ("O", "Other"))
 
 
 class Rider(models.Model):
@@ -614,6 +548,7 @@ class Membership(models.Model):
     club = models.ForeignKey(Club, null=True, on_delete=models.CASCADE)
     date = models.DateField(null=True, blank=True)
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
+    add_on = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['date', 'category']

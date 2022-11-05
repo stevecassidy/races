@@ -401,16 +401,6 @@
 },
 {
   "model": "cabici.membership",
-  "pk": 21695,
-  "fields": {
-    "rider": 16569,
-    "club": 74,
-    "date": "2018-12-31",
-    "category": "race"
-  }
-},
-{
-  "model": "cabici.membership",
   "pk": 21696,
   "fields": {
     "rider": 3110,
