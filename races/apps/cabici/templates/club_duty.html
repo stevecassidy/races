@@ -46,7 +46,7 @@
           <td><a href="{% url 'rider' rider.user.id %}">{{rider.user.first_name}} {{rider.user.last_name}}</a></td>
           {% if request.user.rider.club == club and request.user.rider.official %}
           <td>{{rider.member_date}}</td>
-          <td>{{rider.member_category.title}}</td>
+          <td>{{rider.member_category.title}} {%if rider.member_add_on %}(Add On){% endif %}</td>
 
           {% if roles.dutyhelper %}
           <td><input type='checkbox' checked data-id="{{roles.dutyhelper}}" data-club="{{club}}" data-rider="{{rider.id}}" data-role="Duty Helper" class="clubDutyToggle"></td>

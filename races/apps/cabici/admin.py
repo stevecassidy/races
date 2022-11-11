@@ -9,15 +9,12 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 from races.apps.cabici.models import Club, RaceCourse, Race, STATUS_CHOICES
-from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole, ClubRole, RaceStaff
+from races.apps.cabici.usermodel import PointScore, Rider, RaceResult, ClubGrade, UserRole, ClubRole, RaceStaff, Membership
 
 admin.site.register(Club)
 
-
-
 class RaceStaffAdmin(admin.StackedInline):
     model = RaceStaff
-
 
 class RaceAdmin(admin.ModelAdmin):
 
@@ -47,25 +44,20 @@ class RaceAdmin(admin.ModelAdmin):
             message_bit = "%s races were" % rows_updated
         self.message_user(request, "%s successfully marked as %s." % (message_bit, status))
 
-
     class Meta:
         pass
 
 admin.site.register(Race, RaceAdmin)
-
-
 
 class PointScoreAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(PointScore, PointScoreAdmin)
 
-
 class RaceCourseAdmin(admin.ModelAdmin):
     pass
 
 admin.site.register(RaceCourse, RaceCourseAdmin)
-
 
 class ClubGradeAdmin(admin.ModelAdmin):
     pass
@@ -87,12 +79,12 @@ class UserRoleInline(admin.StackedInline):
     can_delete = True
 
 # Define a new User admin
-class UserAdmin(UserAdmin):
+class CabiciUserAdmin(UserAdmin):
     inlines = (RiderInline, UserRoleInline)
 
 # Re-register UserAdmin
 admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+admin.site.register(User, CabiciUserAdmin)
 
 
 class RaceResultAdmin(admin.ModelAdmin):

@@ -167,7 +167,6 @@ class RiderManager(models.Manager):
                 raise ValueError("No field %s in uploaded spreadsheet" % fields['licence'])
 
             user = self.find_user(row[fields['email']], licenceno)
-            updating = False
 
             ## find or create the rider
             if user is not None:
@@ -306,13 +305,11 @@ class RiderManager(models.Manager):
                     # check the category?
                     if membership.category != category:
                         properties['membership']['category'] = category
-                        
 
                 # remove this user from the currentmembers list
                 if user in currentmembers:
                     currentmembers.remove(user)
 
-                #print(properties)
                 rider_updates[user.username] = properties
 
         # now iterate over the updates and make the changes in the db
@@ -341,24 +338,27 @@ class RiderManager(models.Manager):
                     # existing membership for this year so update it
                     # first check that there is only one membership
                     if len(memberships) > 1:
-                        # we could remove duplicates here
-                        keep = memberships[0]
+                        # remove duplicates here
                         for membership in memberships[1:]:
                             membership.delete()
-                        # now update this one and save 
-                        keep.category = update['membership']['category']
-                        keep.club = update['membership']['club']
-                        keep.date = update['membership']['date']
-                        keep.is_addon = update['membership']['is_addon']
-                        keep.save()
+
+                    # just one left, update it
+                    keep = memberships[0]
+                    keep.category = update['membership']['category']
+                    keep.club = update['membership']['club']
+                    keep.date = update['membership']['date']
+                    keep.is_addon = update['membership']['is_addon']
+                    keep.save()
+                    userchanges.append("Membership Updated")
                 else:
                     # new membership for this year
-                    membership = Membership(rider=user.rider, 
+                    membership = Membership(rider=user.rider,
                                             club=update['membership']['club'],
                                             date=update['membership']['date'],
                                             category=update['membership']['category'],
                                             add_on=update['membership']['is_addon'])
                     membership.save()
+                    userchanges.append("Membership Added")
 
             updated.append({'user': user, 'changes': userchanges})
 
@@ -416,7 +416,6 @@ class Rider(models.Model):
         ordering = ['user__last_name', 'user__first_name']
 
     def get_absolute_url(self):
-
         return reverse('rider', kwargs={'pk': self.user.pk})
 
     def __str__(self):
@@ -448,6 +447,16 @@ class Rider(models.Model):
             return m.date
         else:
             return ''
+
+    @property
+    def member_add_on(self):
+        """Return the boolean addon flag from the current membership year"""
+
+        m = self.current_membership
+        if m:
+            return m.add_on
+        else:
+            return False
 
     @property
     def classification(self):
@@ -851,7 +860,6 @@ class PointscoreTally(models.Model):
     def add(self, points, reason):
         """Add points to the tally for a rider and record the reason"""
 
-        # print "POINTS", points, reason
         self.points += points
         self._add_reason(points, reason)
         self.eventcount += 1
