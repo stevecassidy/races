@@ -52,5 +52,6 @@ gunicorn
 whitenoise 
 tzdata
 
+
 # for deployment with postgres
 psycopg2
