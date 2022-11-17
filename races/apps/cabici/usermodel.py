@@ -676,6 +676,12 @@ class PointScore(models.Model):
     def __str__(self):
         return str(str(self.club) + " " + self.name)
 
+    def current(self):
+        """Does this pointscore contain current and future races"""
+
+        startdate = datetime.date.today() - datetime.timedelta(days=8)
+        return self.races.filter(date__gt=startdate).count() > 0
+
     def score(self, result, numberriders):
         """Calculate points for this placing according
         to some rules defined by method
