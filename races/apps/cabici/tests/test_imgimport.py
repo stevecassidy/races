@@ -127,7 +127,6 @@ class UploadToWebTests(WebTest):
         self.assertIn("TidyHQ Upload", str(buttons[0]))
 
         form = response.forms['imgssform']
-        form['fileformat'] = 'THQ'
         self.assertNotEqual(None, form)
         self.assertEqual(reverse('club_riders', kwargs={'slug': self.oge.slug}), form.action)
 

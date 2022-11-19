@@ -108,7 +108,7 @@ class APITests(APITestCase):
         self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         payload = {"role": 'Duty Helper', "rider": rider.id, "club": self.oge.slug }
-        response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
+        response = self.client.post('/api/clubroles/OGE/', json.dumps(payload), content_type='application/json')
 
         self.assertEqual(201, response.status_code)
         # should now find a new role in place
@@ -127,7 +127,7 @@ class APITests(APITestCase):
         self.client.force_login(user=self.ogeofficial, backend='django.contrib.auth.backends.ModelBackend')
 
         payload = {"role": 'Duty Helper', "rider": 0, "club": self.oge.slug }
-        response = self.client.post('/api/clubroles/OGE/', payload, content_type='application/json')
+        response = self.client.post('/api/clubroles/OGE/', json.dumps(payload), content_type='application/json')
 
         self.assertEqual(400, response.status_code)
         self.assertDictEqual({'rider': 'invalid rider id'}, response.json())
@@ -663,7 +663,7 @@ class APITests(APITestCase):
                     grade = "B"
                 ClubGrade(rider=rider, club=race.club, grade=grade).save()
 
-        response = self.client.post(url, payload,
+        response = self.client.post(url, json.dumps(payload),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION="Token %s" % token.key)
 
@@ -763,13 +763,13 @@ class APITests(APITestCase):
                 rider = Rider.objects.get(id=entry['rider'])
                 ClubGrade(rider=rider, club=race.club, grade='B').save()
 
-        response = self.client.post(url, payload,
+        response = self.client.post(url, json.dumps(payload),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION="Token %s" % token.key)
 
         self.assertEqual(200, response.status_code)
 
-        response = self.client.post(url, payload,
+        response = self.client.post(url, json.dumps(payload),
                                     content_type='application/json',
                                     HTTP_AUTHORIZATION="Token %s" % token.key)
 
