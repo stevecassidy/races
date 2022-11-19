@@ -187,7 +187,6 @@
                 <div class='well form-group'>
                     {{memberuploadform.errors}}
                     <input type='hidden' name='club' value='{{memberuploadform.club.value}}'>
-                    {{ memberuploadform.fileformat|bootstrap_inline }}
                     {{memberuploadform.memberfile|bootstrap_inline}}
 
                     <div class="modal-footer">
@@ -196,8 +195,6 @@
                     </div>
                 </div>
             </form>
-
-            <p>Note: upload of old IMG spreadsheet is still supported. Select <b>IMG Sports</b> above.</p>
         </div>
       </div>
    </div>

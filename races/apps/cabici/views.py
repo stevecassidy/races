@@ -244,17 +244,9 @@ class ClubRidersView(ListView):
         if form.is_valid():
             mf = request.FILES['memberfile']
             club = form.cleaned_data['club']
-            fileformat = form.cleaned_data['fileformat']
 
             try:
-                if fileformat == 'IMG':
-                    changed = Rider.objects.update_from_img_spreadsheet(club, parse_img_members(mf))
-
-                elif fileformat == 'THQ':
-                    changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-                else:
-                    # unknown format
-                    changed = []
+                changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
             except ValueError as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')

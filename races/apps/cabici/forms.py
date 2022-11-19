@@ -76,7 +76,6 @@ class MembershipUploadForm(forms.Form):
     """Form for uploading a membership list file in various formats"""
 
     club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
-    fileformat = forms.ChoiceField(label="File Format", required=True, choices=MEMBER_FILE_FORMATS)
     memberfile = forms.FileField(label="Membership File")
 
 
