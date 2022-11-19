@@ -1,3 +1,19 @@
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 function formatnames(data, title) {
     var val = "";
     if (typeof(data) != 'undefined') {
@@ -157,6 +173,8 @@ function populate_race_official_table(clubslug, auth) {
 
 function race_create_form_init(slug) {
 
+    const csrftoken = getCookie('csrftoken');
+
     // monthly disabled by default
     $("#id_repeatMonthN").addClass("disabled").attr("disabled", true);
     $("#id_repeatDay").addClass("disabled").attr("disabled", true);
@@ -182,6 +200,7 @@ function race_create_form_init(slug) {
             type: "POST",
             url: slug,
             data: $('#racecreateform').serialize(),
+            headers: {'X-CSRFToken': csrftoken},
             success: function(msg){
                 if (msg['success']) {
                    $("#raceCreateModal").modal('hide');
@@ -200,6 +219,8 @@ function race_create_form_init(slug) {
 
 function edit_race_modal_init() {
     $('#raceEditModal').on('show.bs.modal', function(event) {
+
+        const csrftoken = getCookie('csrftoken');
 
         var button = $(event.relatedTarget); // Button that triggered the modal
         var raceurl = button.data('raceurl');
@@ -239,6 +260,7 @@ function edit_race_modal_init() {
                 type: "POST",
                 url: "/races/" + raceid + "/update/",
                 data: $('#raceeditform').serialize(),
+                headers: {'X-CSRFToken': csrftoken},
                 success: function(msg){
                     console.log("edit success ")
                     $("#raceEditModal").modal('hide');
@@ -309,6 +331,9 @@ function add_people_init() {
 }
 
 function submit_add_people(event) {
+
+    const csrftoken = getCookie('csrftoken');
+
     event.preventDefault();
     var $form = $( this ),
         commissaire = $form.find( "select[name='commissaire']" ).val(),
@@ -351,6 +376,7 @@ function submit_add_people(event) {
         data: JSON.stringify(officials),
         contentType: 'application/json',
         processData: false,
+        headers: {'X-CSRFToken': csrftoken},
         success: function(msg) {
                     // update the page...
                     raceinfo = $('#racetable').DataTable().row('#'+raceid).data();
@@ -362,6 +388,9 @@ function submit_add_people(event) {
 }
 
 function delete_race_init() {
+
+    const csrftoken = getCookie('csrftoken');
+
     $('#raceDeleteModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
       var raceurl = button.data('raceurl'); // Extract info from data-* attributes
@@ -380,6 +409,7 @@ function delete_race_init() {
               type: "DELETE",
               url: racedeleteurl,
               data: $('#racedeleteform').serialize(),
+              headers: {'X-CSRFToken': csrftoken},
               success: function(msg){
                      $("#raceDeleteModal").modal('hide');
                      /* force a page refresh */
@@ -409,7 +439,7 @@ $('#editResultModal').on('show.bs.modal', function (event) {
   var modal = $(this);
   var theform = modal.find('form')[0];
 
-    console.log("usual grade", usual_grade);
+  console.log("usual grade", usual_grade);
 
   modal.find('.modal-title').text('Edit Result for ' + rider);
   modal.find('#id_place').val(place);
@@ -423,6 +453,7 @@ $('#editResultModal').on('show.bs.modal', function (event) {
 
 function submit_result_update_form(event) {
     event.preventDefault();
+    const csrftoken = getCookie('csrftoken');
 
     var theform = $( this ),
         resulturl = theform.attr( "action" );
@@ -431,6 +462,7 @@ function submit_result_update_form(event) {
         type: "PATCH",
         url: resulturl,
         data: theform.serialize(),
+        headers: {'X-CSRFToken': csrftoken},
         success: function(msg){
                $("#editResultModal").modal('hide');
                /* force a page refresh */
@@ -445,6 +477,9 @@ function submit_result_update_form(event) {
 
 
 function delete_result_init() {
+
+    const csrftoken = getCookie('csrftoken');
+
     $('#resultDeleteModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var rider = button.data('rider'); // Extract info from data-* attributes
@@ -460,6 +495,7 @@ function delete_result_init() {
             $.ajax({
                 type: "DELETE",
                 url: resulturl,
+                headers: {'X-CSRFToken': csrftoken},
                 success: function(msg){
                     $("#resultDeleteModal").modal('hide');
                     /* force a page refresh */
@@ -479,13 +515,15 @@ function delete_result_init() {
 function club_duty_init() {
     $('.clubDutyToggle').on('click', (event) => {
 
+        const csrftoken = getCookie('csrftoken');
+
         var input = $(event.target);
         var rider = input.data('rider');
         var role = input.data('role');
         var club = input.data('club');
         var id = input.data('id');
         var status = input.prop('checked');
-        var url = '/api/clubroles/' + club + '/';
+        var url = '/api/clubroles/' + club + '/'; 
 
         if (status) {
             // create a new one
@@ -493,6 +531,7 @@ function club_duty_init() {
                 type: 'POST',
                 url: url,
                 data: {rider, role, club},
+                headers: {'X-CSRFToken': csrftoken},
                 success: (response) => {
                     // need to update the checkbox with the id of the role
                     input.data('id', response.id);
@@ -508,6 +547,7 @@ function club_duty_init() {
                 $.ajax({
                     type: 'DELETE',
                     url: url + id + '/',
+                    headers: {'X-CSRFToken': csrftoken},
                     success: (response) => {
                         input.attr('data-id', '');
                         input.prop('checked', false);

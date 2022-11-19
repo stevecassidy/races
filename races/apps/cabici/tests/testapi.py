@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from django.db.models import Max
 
+from rest_framework.test import APITestCase
+
+
 import os
 import json
 import datetime
@@ -21,7 +24,8 @@ OGE = {
 }
 
 
-class APITests(TestCase):
+class APITests(APITestCase):
+    
     fixtures = ['clubs', 'courses', 'races', 'users', 'riders', 'clubroles']
 
     def setUp(self):
