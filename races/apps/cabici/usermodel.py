@@ -174,8 +174,6 @@ class RiderManager(models.Manager):
                     user.rider
                 except ObjectDoesNotExist:
                     user.rider = Rider()
-
-                updating = True
             else:
                 # new rider
                 username = slugify(row[fields['name']] + licenceno)[:30]
@@ -209,7 +207,8 @@ class RiderManager(models.Manager):
                     user.rider = Rider()
                     user.rider.save()
 
-                added.append(user)
+                if created:
+                    added.append(user)
 
             # So, now we have our rider in the db, remainder is to
             # find what properties we need to update

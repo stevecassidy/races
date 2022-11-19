@@ -216,8 +216,6 @@ class ClubDutyView(ListView):
         return context
 
 
-
-
 class ClubRidersView(ListView):
     model = Club
     template_name = 'club_riders.html'
@@ -254,7 +252,6 @@ class ClubRidersView(ListView):
             return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
         else:
             return HttpResponse("invalid form")
-
 
 class ClubPointscoreView(DetailView):
     model = PointScore
