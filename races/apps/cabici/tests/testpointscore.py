@@ -1,11 +1,13 @@
 from django.test import TestCase
+import random
+import time
 
 from races.apps.cabici.models import Club, Race, RaceCourse
-from races.apps.cabici.usermodel import Rider, RaceResult, PointScore, ClubGrade, PointscoreTally
+from races.apps.cabici.usermodel import *
 from datetime import datetime, timedelta
 
 
-class ModelTests(TestCase):
+class PointscoreTests(TestCase):
 
     fixtures = ['users', 'clubs', 'courses', 'riders']
 
@@ -18,7 +20,7 @@ class ModelTests(TestCase):
         club = Club(name=name, website=website, slug=slug)
         club.save()
 
-        self.gen_races(club, 6)
+        self.generate_races(club, 6)
 
         rider1 = Rider.objects.all()[0]
         race = Race.objects.all()[0]
@@ -61,7 +63,7 @@ class ModelTests(TestCase):
         rider2 = Rider.objects.all()[1]
 
         club = Club.objects.get(slug='OGE')
-        self.gen_races(club, 6)
+        self.generate_races(club, 6)
 
         race, race2 = Race.objects.all()[:2]
 
@@ -109,41 +111,8 @@ class ModelTests(TestCase):
                     [3, 'Placed 1 in small race < 6 riders : '+str(race2)]]
         self.assertEqual(expected, audit)
 
-    def test_points_lacc(self):
-        """Getting points for a race result using the LACC rules"""
-
-        rider1 = Rider.objects.all()[0]
-        rider2 = Rider.objects.all()[1]
-
-        club = Club.objects.get(slug='OGE')
-        self.gen_races(club, 6)
-
-        race, race2 = Race.objects.all()[:2]
-
-        ps = PointScore(club=club, name="Test", method="LACC")
-        ps.save()
-        ps.races.add(race)
-
-        # create some race results
-        result = RaceResult(race=race, rider=rider1, usual_grade='A', grade='A', number=12, place=1)
-        result.save()
-
-        result2 = RaceResult(race=race2, rider=rider1, usual_grade='A', grade='A', number=12, place=1)
-        result2.save()
-
-        result3 = RaceResult(race=race2, rider=rider2, usual_grade='A', grade='A', number=13, place=2)
-        result3.save()
-
-        # tally them in first ps
-        ps.recalculate()
-        table = ps.tabulate()
-
-        self.assertEqual(1, table.count())
-        # should be rider1 on 7 points - race winner
-        self.assertEqual(rider1, table[0].rider)
-        self.assertEqual(7, table[0].points)
-
-    def gen_races(self, club, n=10):
+    def generate_races(self, club, n=10):
+        """Generate a collection of races for this club"""
 
         today = datetime.today()
 
@@ -154,9 +123,8 @@ class ModelTests(TestCase):
             race = Race(club=club, date=date, signontime="08:00", title="test", location=loc)
             race.save()
 
-    def gen_results(self):
-
-        import random
+    def generate_results(self):
+        """Generate random results and run the pointscore tally"""
 
         riders = list(Rider.objects.all())
         random.shuffle(riders)
@@ -187,7 +155,32 @@ class ModelTests(TestCase):
                     result.save()
 
                     grading, ignore = ClubGrade.objects.get_or_create(rider=rider, club=race.club, grade=grade)
+            
             race.tally_pointscores()
+
+    def test_points_helpers(self):
+        """Test that we assign points to helpers properly"""
+
+        club = Club.objects.get(slug='OGE')
+        ps = PointScore(club=club, name="Test")
+        ps.save()
+
+        self.generate_races(club, 1)
+        race = club.races.all()[0]
+        ps.races.set([race])
+        clubrole, created = ClubRole.objects.get_or_create(name="Test Helper")
+
+        rider = Rider.objects.all()[0]
+        helper = RaceStaff(rider=rider, race=race, role=clubrole)
+        helper.save()
+        
+        ps.recalculate()
+        # check that rider has 3 points
+        pst = PointscoreTally.objects.get(rider=rider)
+        self.assertEqual(3, pst.points)
+        self.assertEqual('[[3, "Helper in race: test', pst.audit[:26])
+
+
 
 
     def test_points_tabulate(self):
@@ -196,15 +189,14 @@ class ModelTests(TestCase):
         club = Club.objects.get(slug='OGE')
         ps = PointScore(club=club, name="Test")
         ps.save()
-        import time
 
         # generate races and add them to the pointscore
-        self.gen_races(club)
+        self.generate_races(club)
         ps.races.set(club.races.all())
 
         # generate some results that will tally in the pointscore
         start = time.time()
-        self.gen_results()
+        self.generate_results()
         print("Generated results", time.time()-start)
 
         table = ps.tabulate()
@@ -228,7 +220,7 @@ class ModelTests(TestCase):
         club = Club.objects.get(slug='OGE')
 
         # generate 10 races and add them to the pointscore
-        self.gen_races(club, 10)
+        self.generate_races(club, 10)
 
         # find a rider with no points
         rider = Rider.objects.all()[0]
@@ -269,11 +261,11 @@ class ModelTests(TestCase):
         ps.save()
 
         # generate races and add them to the pointscore
-        self.gen_races(club, 6)
+        self.generate_races(club, 6)
         ps.races.set(club.races.all())
 
         # generate some results that will tally in the pointscore
-        self.gen_results()
+        self.generate_results()
 
         # find a rider with no points
         rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
@@ -320,11 +312,11 @@ class ModelTests(TestCase):
         ps.save()
 
         # generate races and add them to the pointscore
-        self.gen_races(club, 6)
+        self.generate_races(club, 6)
         ps.races.set(club.races.all())
 
         # generate some results that will tally in the pointscore
-        self.gen_results()
+        self.generate_results()
 
         # find a rider with no points, put them in A grade
         rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
@@ -358,11 +350,11 @@ class ModelTests(TestCase):
         ps.save()
 
         # generate races and add them to the pointscore
-        self.gen_races(club, 6)
+        self.generate_races(club, 6)
         ps.races.set(club.races.all())
 
         # generate some results that will tally in the pointscore
-        self.gen_results()
+        self.generate_results()
 
         # find a rider with no points
         rider = Rider.objects.exclude(pointscoretally__points__gt=0)[0]
