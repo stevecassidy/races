@@ -19,7 +19,7 @@ services:
       environment:
         - POSTGRES_USER=cabici
         - POSTGRES_PASSWORD=cabici
-        - POSTGRES_DB=cabici_dev
+        - POSTGRES_DB=cabici
 
 volumes:
   postgres_data:

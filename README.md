@@ -51,3 +51,20 @@ zcat cabici_pg-20201128.sql.gz | psql -U cabici -W --host=localhost
 ```shell
 docker-compose run web python bin/production.py test
 ```
+
+## Development under Docker Compose
+
+Run under docker componse to get a postgres database.  
+
+```shell
+docker compose run -d
+```
+
+Should start web server on port 8000.
+
+Restore database from backup into compose container:
+
+```shell
+docker compose exec -T db psql -U cabici -W --host=localhost < cabici_2023-01-01.Sunday.sql
+```
+
