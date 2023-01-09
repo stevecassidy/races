@@ -33,7 +33,7 @@ class Command(BaseCommand):
             pointscores = PointScore.objects.all()
             for p in pointscores:
                 if p.current():
-                    print("Rescoring", p)u
+                    print("Rescoring", p)
                     p.recalculate()
                 else:
                     print("Not rescoring", p)

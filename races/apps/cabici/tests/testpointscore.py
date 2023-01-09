@@ -178,7 +178,7 @@ class PointscoreTests(TestCase):
         # check that rider has 3 points
         pst = PointscoreTally.objects.get(rider=rider)
         self.assertEqual(3, pst.points)
-        self.assertEqual('[[3, "Helper in race: test', pst.audit[:26])
+        self.assertEqual('[[3, "Test Helper in race: test', pst.audit[:26])
 
 
 

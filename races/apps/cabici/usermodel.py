@@ -754,7 +754,7 @@ class PointScore(models.Model):
 
             tally, created = PointscoreTally.objects.get_or_create(rider=staff.rider, pointscore=self)
 
-            reason = "Helper in race: " + str(race)
+            reason = staff.role.name + " in race: " + str(race)
 
             tally.add(3, reason)
 
