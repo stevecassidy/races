@@ -28,18 +28,18 @@
 
 
 {% block extra_head %}
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
     <script>
 function initialize() {
 
-  var myLatlng = new google.maps.LatLng({{race.location.location.latitude}}, {{race.location.location.longitude}});
+    var myLatlng = new google.maps.LatLng({{race.location.location.latitude}}, {{race.location.location.longitude}});
 
-  var mapOptions = {
-    zoom: 12,
-    center: myLatlng
-  };
+    var mapOptions = {
+        zoom: 12,
+        center: myLatlng
+    };
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     var marker = new google.maps.Marker({
         position: myLatlng,
@@ -48,8 +48,8 @@ function initialize() {
     });
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+window.initMap = initialize;
+</script>
 
 {% endblock %}
 
