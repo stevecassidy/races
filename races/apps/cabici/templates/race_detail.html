@@ -8,6 +8,7 @@
     <script src="{%  static 'cabici.js' %}"></script>
 
     <script src="{% static 'js/bloodhound.min.js' %}"></script>
+    <script src="{% static 'bootstrap-select/js/bootstrap-select.min.js' %}"></script>
     <script src="{% static 'js/bootstrap3-typeahead.min.js' %}"></script>
     <script src="{% static 'js/riders.js' %}"></script>
     <script>
@@ -20,14 +21,16 @@
                     return d.grades['{{ race.club }}']
                 }
             });
-
-            delete_result_init()
+            delete_result_init();
+            add_people_init('racedetail');
         })
     </script>
 {%  endblock %}
 
 
 {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'bootstrap-select/css/bootstrap-select.min.css' %}">
+
     <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&v=weekly" defer></script>
     <script>
 function initialize() {
@@ -55,12 +58,9 @@ window.initMap = initialize;
 
 {% block content %}
 
-{% if user.is_staff or user.is_authenticated and user.rider.official and user.rider.club == race.club %}
-
-{% include "race_upload_modal.html" %}
-
-{% endif %}
-
+<script>
+    console.log("{{dutyofficers}}");
+</script>
 <div class='container'>
 
     <ul class='breadcrumb'>
@@ -81,8 +81,13 @@ window.initMap = initialize;
                 <a role="button" class='btn btn-default' href="{% url 'race_update' race.id %}">Edit Race Detail</a>
                 {% endif %}
                 {% if race.club.manage_results %}
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resultUploadModal">
-                    Upload Results
+                <button type="button" class="btn btn-primary" 
+                        data-toggle="modal" 
+                        data-target="#addPeopleModal"
+                        data-raceurl="/api/races/{{race.id}}" 
+                        data-raceid="{{race.id}}" 
+                        data-racename="{{race.location.name}}">
+                    Edit Race Staff
                 </button>
                 {% endif %}
             </div>
@@ -258,6 +263,7 @@ window.initMap = initialize;
 
 <p>Report a problem with this race listing: email <a href="mailto:steve.cassidy@gmail.com?subject=Problem with race {{race.id}} on cabici.net&body=Reporting a problem with http://cabici.net{% url 'race' race.club.slug race.pk %}">steve.cassidy@gmail.com</a></p>
 
+{% include "add_people_modal.html" %}
 
 
 <div class='modal fade' id='editResultModal' tabindex='-2' role='dialog' aria-labelledby="editResultModalLabel">

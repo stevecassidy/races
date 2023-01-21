@@ -271,7 +271,7 @@ function edit_race_modal_init() {
     });
 };
 
-function add_people_init() {
+function add_people_init(success) {
 
     $('#addPeopleModal').on('show.bs.modal', function (event) {
       var button = $(event.relatedTarget); // Button that triggered the modal
@@ -281,6 +281,7 @@ function add_people_init() {
       var modal = $(this);
 
       // get the race details via ajax
+      
       $.ajax({
           url: raceurl
       }).done(function(data) {
@@ -324,68 +325,85 @@ function add_people_init() {
 
           // attach the submit handler, replace any existing
           $(form).off('submit');
-          $(form).submit(submit_add_people);
+          $(form).submit(submit_add_people(success));
 
       })
   });
 }
 
-function submit_add_people(event) {
+function submit_add_people(successfn) {
 
-    const csrftoken = getCookie('csrftoken');
 
-    event.preventDefault();
-    var $form = $( this ),
-        commissaire = $form.find( "select[name='commissaire']" ).val(),
-        dutyofficer = $form.find( "select[name='dutyofficer']" ).val(),
-        dutyhelpers = $form.find( "select[name='dutyhelper']" ).val(),
-        raceid = $form.find( "input[name='raceid']").val(),
-        url = $form.attr( "action" );
+    return function(event) {
 
-    // get form values, special value 'NONE' gives us the empty list
-    var comms = [];
-    if (commissaire) {
-        for(var i=0; i<commissaire.length; i++) {
-            comms.push({id: commissaire[i]})
+        const csrftoken = getCookie('csrftoken');
+
+        event.preventDefault();
+        var $form = $( this ),
+            commissaire = $form.find( "select[name='commissaire']" ).val(),
+            dutyofficer = $form.find( "select[name='dutyofficer']" ).val(),
+            dutyhelpers = $form.find( "select[name='dutyhelper']" ).val(),
+            raceid = $form.find( "input[name='raceid']").val(),
+            url = $form.attr( "action" );
+
+        // get form values, special value 'NONE' gives us the empty list
+        var comms = [];
+        if (commissaire) {
+            for(var i=0; i<commissaire.length; i++) {
+                comms.push({id: commissaire[i]})
+            }
         }
-    }
 
-    var dos = [];
-    if (dutyofficer) {
-        for(var i=0; i<dutyofficer.length; i++) {
-            dos.push({id: dutyofficer[i]});
+        var dos = [];
+        if (dutyofficer) {
+            for(var i=0; i<dutyofficer.length; i++) {
+                dos.push({id: dutyofficer[i]});
+            }
         }
-    }
 
-    var dhs = [];
-    if (dutyhelpers) {
-        for (var i=0; i<dutyhelpers.length; i++) {
-            dhs.push({id: dutyhelpers[i]});
+        var dhs = [];
+        if (dutyhelpers) {
+            for (var i=0; i<dutyhelpers.length; i++) {
+                dhs.push({id: dutyhelpers[i]});
+            }
         }
-    }
-    var officials = {
-        'Commissaire': comms,
-        'Duty Officer': dos,
-        'Duty Helper': dhs
-    }
+        var officials = {
+            'Commissaire': comms,
+            'Duty Officer': dos,
+            'Duty Helper': dhs
+        }
 
-    // post request to add the person to the race
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: JSON.stringify(officials),
-        contentType: 'application/json',
-        processData: false,
-        headers: {'X-CSRFToken': csrftoken},
-        success: function(msg) {
-                    // update the page...
-                    raceinfo = $('#racetable').DataTable().row('#'+raceid).data();
-                    raceinfo.officials = msg;
-                    $('#racetable').DataTable().row('#'+raceid).data( raceinfo );
-                    $('#addPeopleModal').modal('hide');
-                 }
-    });
+        if (successfn === 'racetable') {
+            function success(msg) {
+                // update the page...
+                raceinfo = $('#racetable').DataTable().row('#'+raceid).data();
+                raceinfo.officials = msg;
+                $('#racetable').DataTable().row('#'+raceid).data( raceinfo );
+                $('#addPeopleModal').modal('hide');
+            }
+        } else {
+            function success(msg) {
+                // update the page...
+                window.location.reload();
+            }
+        }
+    
+
+        // post request to add the person to the race
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: JSON.stringify(officials),
+            contentType: 'application/json',
+            processData: false,
+            headers: {'X-CSRFToken': csrftoken},
+            success: success
+        });
+    }
 }
+
+
+
 
 function delete_race_init() {
 
