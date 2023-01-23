@@ -682,72 +682,38 @@ class PointScore(models.Model):
         return self.races.filter(date__gt=startdate).count() > 0
 
     def score(self, result, numberriders):
-        """Calculate points for this placing according
-        to some rules defined by method
-        """
-
-        if self.method == "LACC":
-            return self.score_lacc(result)
-        else:
-            return self.score_wmcc(result, numberriders)
-
-    def score_wmcc(self, result, numberriders):
         """Calculate the points for this placing
         according to the Waratah CC pointscore rules
 
         Return a tuple: (points, reason)
         where reason is a string explaining the score
         """
-        # TODO: we might want to generalise this if some other
-        # club want's to run a different kind of pointscore
 
         points = [7, 6, 5, 4, 3]
         smallpoints = [5, 4]
         participation = 2
-
         # is the rider eligible for promotion or riding down a grade
         promote = result.race.club.promotion(result.rider, when=result.race.date)
 
         if not result.place:
             return participation, "Participation"
-        elif promote:
+        if promote:
             return participation, "Rider eligible for promotion"
-        elif result.grade > result.usual_grade:
+        if result.grade > result.usual_grade:
             return participation, "Riding below normal grade"
-        elif numberriders < 6:
+        if numberriders < 6:
             # only 3 points to the winner
             if result.place == 1:
                 return 3, "Placed 1 in small race < 6 riders"
-            else:
-                return participation, "Participation, small race < 6 riders"
-        elif numberriders <= 12:
+            return participation, "Participation, small race < 6 riders"
+        if numberriders <= 12:
             if result.place - 1 < len(smallpoints):
                 return smallpoints[result.place - 1], "Placed %s in race <= 12 riders" % result.place
-            else:
-                return participation, "Participation, race <= 12 riders"
+            return participation, "Participation, race <= 12 riders"
         else:
             if result.place - 1 < len(points):
                 return points[result.place - 1], "Placed %s in race" % result.place
-            else:
-                return participation, "Participation"
-
-    def score_lacc(self, result):
-        """Calculate the points for this placing
-        according to the LACC pointscore rules
-
-        Return a tuple: (points, reason)
-        where reason is a string explaining the score
-        """
-
-        points = [int(x) for x in self.points.split(',')]
-
-        if not result.place:
-            return self.participation, "Participation"
-        else:
-            if result.place - 1 < len(points):
-                return points[result.place - 1], "Placed %s in race" % result.place
-            else:
-                return self.participation, "Participation"
+            return participation, "Participation"
 
     def get_points(self):
         "Return a list of integers from the points field"
@@ -765,25 +731,6 @@ class PointScore(models.Model):
 
         return self.smallpointslist
 
-    def default_score(self, place, numberriders):
-        """Return the points corresponding to this place in the race
-        and this number of riders"""
-
-        if place is None:
-            return self.participation
-
-        if numberriders < self.smallthreshold:
-            if place - 1 < len(self.get_smallpoints()):
-                return self.get_smallpoints()[place - 1]
-            else:
-                return self.participation
-
-        else:
-            if place - 1 < len(self.get_points()):
-                return self.get_points()[place - 1]
-            else:
-                return self.participation
-
     def tally(self, result):
         """Add points for this result to the tally"""
 
@@ -796,14 +743,21 @@ class PointScore(models.Model):
 
         tally, created = PointscoreTally.objects.get_or_create(rider=result.rider, pointscore=self)
 
-        if result.grade == "Helper" and tally.eventcount > 0:
-            # points is average points so far for this rider
-            points = int(round(float(tally.points) / float(tally.eventcount)))
-            reason = "Helper " + str(points)
-
         reason += " : " + str(result.race)
 
         tally.add(points, reason)
+
+    def tally_helpers(self, race):
+        """Add points for helpers in this race to the pointscore"""
+
+        for staff in RaceStaff.objects.filter(race=race):
+
+            tally, created = PointscoreTally.objects.get_or_create(rider=staff.rider, pointscore=self)
+
+            reason = staff.role.name + " in race: " + str(race)
+
+            tally.add(3, reason)
+
 
     def recalculate(self):
         """Recalculate all points from scratch"""
@@ -813,6 +767,8 @@ class PointScore(models.Model):
         for race in self.races.all().order_by('date'):
             for result in race.raceresult_set.all():
                 self.tally(result)
+            # add points for helpers in this race
+            self.tally_helpers(race)
 
     def tabulate(self):
         """Generate a queryset of point tallys in order"""
