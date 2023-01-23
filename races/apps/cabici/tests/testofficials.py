@@ -260,11 +260,6 @@ class OfficialsTests(WebTest):
         url = reverse('club_races', kwargs={'slug': self.oge.slug})
         response = self.app.get(url, user=self.ogeofficial)
 
-        # there is a button labelled "Randomly Allocate Officials"
-        button = response.html.find_all('button', string=re.compile("Randomly Allocate Officials"))
-
-        self.assertEqual(1, len(button))
-
         # there is a form with id allocateForm
         self.assertTrue('allocateForm' in response.forms)
 

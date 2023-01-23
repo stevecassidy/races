@@ -131,7 +131,7 @@ class RoleViewTests(WebTest):
 
         # get a race page, should not see any admin controls
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
-        self.assertNotContains(response, "Upload Results")
+        self.assertNotContains(response, "Edit Race Detail")
 
         # now login as the MOV admin
         self.client.force_login(user=self.movofficial, backend='django.contrib.auth.backends.ModelBackend')
@@ -139,13 +139,12 @@ class RoleViewTests(WebTest):
         # check we have the edit control on the page for a MOV race
         response = self.client.get(reverse('race', kwargs={'slug': 'MOV', 'pk': 1}))
 
-        self.assertContains(response, "Edit")
-        self.assertContains(response, "Upload Results")
+        self.assertContains(response, "Edit Race Detail")
+        self.assertContains(response, "Edit Race Staff")
 
         # for another club it shouldn't be there
         response = self.client.get(reverse('race', kwargs={'slug': 'KAT', 'pk': 4}))
-        #self.assertNotContains(response, "Edit")  # edit is there for individual results
-        self.assertNotContains(response, "Upload Results")
+        self.assertNotContains(response, "Edit Race Detail")
 
     def test_rider_update(self):
         """Rider update form is only available to rider and club officials"""

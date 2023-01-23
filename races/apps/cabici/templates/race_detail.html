@@ -79,8 +79,6 @@ window.initMap = initialize;
             <div id='buttons' class='btn-group' role='group'>
                 {% if race.club.manage_races %}
                 <a role="button" class='btn btn-default' href="{% url 'race_update' race.id %}">Edit Race Detail</a>
-                {% endif %}
-                {% if race.club.manage_results %}
                 <button type="button" class="btn btn-primary" 
                         data-toggle="modal" 
                         data-target="#addPeopleModal"
