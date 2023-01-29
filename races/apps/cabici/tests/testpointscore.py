@@ -170,15 +170,33 @@ class PointscoreTests(TestCase):
         ps.races.set([race])
         clubrole, created = ClubRole.objects.get_or_create(name="Test Helper")
 
-        rider = Rider.objects.all()[0]
-        helper = RaceStaff(rider=rider, race=race, role=clubrole)
-        helper.save()
-        
+        riderA = Rider.objects.all()[0]
+        helperA = RaceStaff(rider=riderA, race=race, role=clubrole)
+        helperA.save()
+
+        riderB = Rider.objects.all()[1]
+        helperB = RaceStaff(rider=riderB, race=race, role=clubrole)
+        helperB.save()
+        # riderB also races in the race, getting 2 points for participation
+        result = RaceResult(rider=riderB, race=race, grade='A',
+                                            usual_grade='A',
+                                            number=123, place=0)
+        result.save()
+
         ps.recalculate()
         # check that rider has 3 points
-        pst = PointscoreTally.objects.get(rider=rider)
-        self.assertEqual(3, pst.points)
-        self.assertEqual('[[3, "Test Helper in race: test', pst.audit[:31])
+        pstA = PointscoreTally.objects.get(rider=riderA)
+        self.assertEqual(3, pstA.points)
+        auditA = pstA.audit_trail()
+        self.assertEqual(1, len(auditA))
+        self.assertEqual("Test Helper in race:", auditA[0][1][:20])
+
+        pstB = PointscoreTally.objects.get(rider=riderB)
+        self.assertEqual(3, pstB.points)
+        auditB = pstB.audit_trail()
+        self.assertEqual(2, len(auditB))
+        self.assertEqual("Test Helper in race:", auditB[1][1][:20])
+        self.assertEqual("Participation : test", auditB[0][1][:20])
 
 
 

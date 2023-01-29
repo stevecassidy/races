@@ -754,9 +754,17 @@ class PointScore(models.Model):
 
             tally, created = PointscoreTally.objects.get_or_create(rider=staff.rider, pointscore=self)
 
-            reason = staff.role.name + " in race: " + str(race)
+            # if staff also got points for the race, they get a max
+            # of 3 points for helping
+            print(tally, created)
+            if not created:
+                points = 3 - tally.points
+            else:
+                points = 3
 
-            tally.add(3, reason)
+            if points > 0:
+                reason = staff.role.name + " in race: " + str(race)
+                tally.add(points, reason)
 
 
     def recalculate(self):
