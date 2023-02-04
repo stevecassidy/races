@@ -258,13 +258,15 @@ class RiderManager(models.Manager):
             if memberdate != '':
                 # dates are '1-Jan-19', convert to a date 
                 mdate = datetime.datetime.strptime(memberdate, '%d %b %Y').date()
+                thisyear = datetime.datetime.now().year
 
                 # update membership record
                 # cases:
                 #  - no current membership for this year, just make one
                 #  - existing membership for this year, extend the end date
                 #  - treat 'Add-On' memberships differently
-                memberships = Membership.objects.filter(rider=user.rider, club=club, date__year=mdate.year)
+                memberships = Membership.objects.filter(rider=user.rider, club=club, date__year=thisyear)
+
 
                 is_addon = 'Add-On' in row[fields['membership']]
                 # but is overridden if we already noted that this is an add-on member
@@ -289,7 +291,6 @@ class RiderManager(models.Manager):
                             }
                 else:
                     membership = memberships[0]
-
                     properties['membership'] = {
                         'club': membership.club, 
                         'date': membership.date, 
@@ -756,7 +757,6 @@ class PointScore(models.Model):
 
             # if staff also got points for the race, they get a max
             # of 3 points for helping
-            print(tally, created)
             if not created:
                 points = 3 - tally.points
             else:
