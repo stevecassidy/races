@@ -235,7 +235,7 @@ function edit_race_modal_init() {
         $.ajax({
             url: raceurl
         }).done(function(data) {
-            form = modal.find('form')[0];
+            form = modal.find('form')[0]; 
 
             // fill in form values from this race
             $('input[id=id_date]').val(data.date);
@@ -248,6 +248,7 @@ function edit_race_modal_init() {
             $('input[id=id_website]').val(data.website);
             $('textarea[id=id_description]').val(data.description);
 
+            $('select[id=id_pointscore]').val(data.pointscore.key);
             $('select[id=id_category]').val(data.category.key);
             $('select[id=id_licencereq]').val(data.licencereq.key);
             $('select[id=id_discipline]').val(data.discipline.key);

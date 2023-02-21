@@ -745,12 +745,34 @@ class RaceOfficialUpdateView(View):
             return HttpResponseBadRequest("could not parse JSON body")
 
 
-class RaceUpdateView(ClubOfficialRequiredMixin, UpdateView):
+class RaceUpdateView(ClubOfficialRequiredMixin, View):
     model = Race
     template_name = "race_form.html"
     fields = ['title', 'date', 'signontime', 'starttime',
               'website', 'location', 'status', 'description',
               'licencereq', 'category', 'discipline', 'grading']
+
+    def post(self, request, *args, **kwargs):
+        race = get_object_or_404(Race, **kwargs)
+
+        print('updating race:', race)
+
+        form = RaceCreateForm(request.POST)
+        if form.is_valid():
+                
+            for field in self.fields:
+                print(field, form.cleaned_data[field])
+                setattr(race, field, form.cleaned_data[field])
+
+            print('pointscore', form.cleaned_data['pointscore'])
+            pointscore = form.cleaned_data['pointscore']
+            if pointscore:
+                # remove from other pointscores?
+                pointscore.races.add(race)
+
+            return HttpResponse(1)
+        else:
+            return HtttpResponse(form.errors.as_json())
 
 
 class RaceUploadExcelView(FormView):

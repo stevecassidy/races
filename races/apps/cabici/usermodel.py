@@ -751,13 +751,23 @@ class PointScore(models.Model):
     def tally_helpers(self, race):
         """Add points for helpers in this race to the pointscore"""
 
+        # no points if there are no results for this race yet
+        results = race.raceresult_set.all()
+        if results.count() == 0:
+            return
+
         for staff in RaceStaff.objects.filter(race=race):
-
             tally, created = PointscoreTally.objects.get_or_create(rider=staff.rider, pointscore=self)
-
+            
+            in_this_race = False
+            if not created:
+                # staff has some results already, check if they are in this race
+                for reason in tally.audit_trail():
+                    if str(race) in reason[1]:
+                        in_this_race = True
             # if staff also got points for the race, they get a max
             # of 3 points for helping
-            if not created:
+            if in_this_race:
                 points = 3 - tally.points
             else:
                 points = 3

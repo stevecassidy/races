@@ -165,35 +165,54 @@ class PointscoreTests(TestCase):
         ps = PointScore(club=club, name="Test")
         ps.save()
 
-        self.generate_races(club, 1)
-        race = club.races.all()[0]
-        ps.races.set([race])
+        self.generate_races(club, 3)
+        races = club.races.all()
+        ps.races.set(races)
         clubrole, created = ClubRole.objects.get_or_create(name="Test Helper")
 
         riderA = Rider.objects.all()[0]
-        helperA = RaceStaff(rider=riderA, race=race, role=clubrole)
+        helperA = RaceStaff(rider=riderA, race=races[1], role=clubrole)
         helperA.save()
-
-        riderB = Rider.objects.all()[1]
-        helperB = RaceStaff(rider=riderB, race=race, role=clubrole)
-        helperB.save()
-        # riderB also races in the race, getting 2 points for participation
-        result = RaceResult(rider=riderB, race=race, grade='A',
+        # riderA is also a helper in race 3 which has no results, so gets no points
+        helperA1 = RaceStaff(rider=riderA, race=races[2], role=clubrole)
+        helperA1.save()
+        # riderA raced in another race
+        resultA = RaceResult(rider=riderA, race=races[0], grade='A',
                                             usual_grade='A',
                                             number=123, place=0)
-        result.save()
+        resultA.save()
+
+        riderB = Rider.objects.all()[1]
+        helperB = RaceStaff(rider=riderB, race=races[0], role=clubrole)
+        helperB.save()
+        # riderB also races in the race, getting 2 points for participation
+        resultB = RaceResult(rider=riderB, race=races[0], grade='A',
+                                            usual_grade='A',
+                                            number=234, place=0)
+        resultB.save()
+
+
+        riderC = Rider.objects.all()[2]
+        # riderC races in race 2 so that ricerA gets helper points
+        resultC = RaceResult(rider=riderC, race=races[1], grade='A',
+                                            usual_grade='A',
+                                            number=444, place=0)
+        resultC.save()
+
+
 
         ps.recalculate()
         # check that rider has 3 points
         pstA = PointscoreTally.objects.get(rider=riderA)
-        self.assertEqual(3, pstA.points)
+        self.assertEqual(5, pstA.points)  # 3 for helping + 2 for racing
         auditA = pstA.audit_trail()
-        self.assertEqual(1, len(auditA))
-        self.assertEqual("Test Helper in race:", auditA[0][1][:20])
+        self.assertEqual(2, len(auditA))
+        self.assertEqual("Test Helper in race:", auditA[1][1][:20])
 
         pstB = PointscoreTally.objects.get(rider=riderB)
-        self.assertEqual(3, pstB.points)
         auditB = pstB.audit_trail()
+        self.assertEqual(3, pstB.points)
+
         self.assertEqual(2, len(auditB))
         self.assertEqual("Test Helper in race:", auditB[1][1][:20])
         self.assertEqual("Participation : test", auditB[0][1][:20])

@@ -300,10 +300,12 @@ class RaceSerializer(serializers.ModelSerializer):
     discipline = serializers.SerializerMethodField()
     category = serializers.SerializerMethodField()
     licencereq = serializers.SerializerMethodField()
+    pointscore = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Race
-        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials', 'discipline', 'category', 'licencereq', 'grading')
+        fields = ('id', 'url', 'club', 'location', 'title', 'date', 'signontime', 'starttime', 'website', 'status', 'description', 'officials', 'discipline', 'category', 'licencereq', 'grading', 'pointscore')
 
     def get_discipline(self, obj):
         return {'key': obj.discipline, 'display': obj.get_discipline_display()}
@@ -313,6 +315,13 @@ class RaceSerializer(serializers.ModelSerializer):
 
     def get_licencereq(self, obj):
         return {'key': obj.licencereq, 'display': obj.get_licencereq_display()}
+
+    def get_pointscore(self, obj):
+        pointscore = obj.pointscore_set.all()
+        if pointscore.count() > 0:
+           return {'key': pointscore[0].id, 'display': str(pointscore[0])}
+        else:
+            return {'key': None, 'display': ''}
 
 
 @permission_classes((ClubOfficialPermission,))
