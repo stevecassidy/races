@@ -755,20 +755,17 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         race = get_object_or_404(Race, **kwargs)
 
-        print('updating race:', race)
-
         form = RaceCreateForm(request.POST)
         if form.is_valid():
                 
             for field in self.fields:
-                print(field, form.cleaned_data[field])
                 setattr(race, field, form.cleaned_data[field])
 
-            print('pointscore', form.cleaned_data['pointscore'])
             pointscore = form.cleaned_data['pointscore']
             if pointscore:
                 # remove from other pointscores?
                 pointscore.races.add(race)
+            race.save()
 
             return HttpResponse(1)
         else:

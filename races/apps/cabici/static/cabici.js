@@ -252,7 +252,7 @@ function edit_race_modal_init() {
             $('select[id=id_category]').val(data.category.key);
             $('select[id=id_licencereq]').val(data.licencereq.key);
             $('select[id=id_discipline]').val(data.discipline.key);
-            $('select[id=id_grading]').val(data.grading);
+            $('input[id=id_grading]').val(data.grading);
         });
 
         $("#submitraceeditform").off("click");
