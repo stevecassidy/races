@@ -36,6 +36,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "really_secret")
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(" ")
+CSRF_TRUSTED_ORIGINS = ['https://cabici.waratahmasters.com.au']
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
 GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
