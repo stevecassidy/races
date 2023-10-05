@@ -41,11 +41,11 @@ CSRF_TRUSTED_ORIGINS = ['https://cabici.waratahmasters.com.au']
 GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
 GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
 
-DEFAULT_FROM_EMAIL = os.environ.get("ADMIN_EMAIL")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("ADMIN_EMAIL")
 
 ADMINS = (
-    ('Steve Cassidy', os.environ.get("ADMIN_EMAIL")),
+    ('admin', os.environ.get("ADMIN_EMAIL")),
 )
 
 # django-anymail configuration
