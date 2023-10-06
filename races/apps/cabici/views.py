@@ -1081,6 +1081,7 @@ class ClubMemberEmailView(FormView, ClubOfficialRequiredMixin):
         today = datetime.date.today()
         # sender will be the logged in user
         sender = self.request.user.email
+        sender = settings.DEFAULT_FROM_EMAIL
 
         sendto = form.cleaned_data['sendto']
         reply_to = 'dontreply@cabici.net'
