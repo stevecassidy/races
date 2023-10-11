@@ -44,9 +44,10 @@ GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-ADMINS = (
-    ('admin', os.environ.get("ADMIN_EMAIL")),
-)
+# ADMINS = (
+#     ('admin', os.environ.get("ADMIN_EMAIL")),
+#)
+ADMINS = []
 
 # django-anymail configuration
 ANYMAIL = {
