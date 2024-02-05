@@ -768,15 +768,15 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
               'website', 'location', 'status', 'description',
               'licencereq', 'category', 'discipline', 'grading']
 
-    def get(self, request, *args, **kwargs):
-        race = get_object_or_404(Race, pk=self.kwargs.get('pk'))  # Assuming the URL captures a 'pk' parameter for the race
-        form = RaceCreateForm(instance=race)  # Prefill the form with the current race data
+    # def get(self, request, *args, **kwargs):
+    #     race = get_object_or_404(Race, pk=self.kwargs.get('pk'))  # Assuming the URL captures a 'pk' parameter for the race
+    #     form = RaceCreateForm(instance=race)  # Prefill the form with the current race data
 
-        context = {
-            'form': form,
-            'race': race,
-        }
-        return render(request, self.template_name, context)
+    #     context = {
+    #         'form': form,
+    #         'race': race,
+    #     }
+    #     return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         race = get_object_or_404(Race, **kwargs)
