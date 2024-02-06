@@ -20,7 +20,7 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
@@ -795,9 +795,9 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
                 pointscore.races.add(race)
             race.save()
 
-            return HttpResponse(1)
+            return redirect('race_update', pk=race.pk)
         else:
-            return HtttpResponse(form.errors.as_json())
+            return HttpResponse(form.errors.as_json(), content_type="application/json")
 
 
 class RaceUploadExcelView(FormView):
