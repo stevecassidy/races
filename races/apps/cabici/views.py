@@ -254,6 +254,7 @@ class ClubRidersView(ListView):
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
 
+        slug = self.kwargs['slug']
         form = MembershipUploadForm(request.POST, request.FILES)
         if form.is_valid():
             mf = request.FILES['memberfile']
@@ -266,7 +267,7 @@ class ClubRidersView(ListView):
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
 
             # return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
-            return redirect('club_riders', slug=club)
+            return redirect('club_riders', slug=slug)
         else:
             return HttpResponse("invalid form")
 
