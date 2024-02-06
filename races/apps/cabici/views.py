@@ -244,6 +244,7 @@ class ClubRidersView(ListView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
+        return context
         context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
         context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
