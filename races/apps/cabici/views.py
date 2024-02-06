@@ -778,6 +778,7 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
             'race': race,
         }
         return render(request, self.template_name, context)
+    
 
     def post(self, request, *args, **kwargs):
         race = get_object_or_404(Race, **kwargs)
