@@ -244,7 +244,6 @@ class ClubRidersView(ListView):
         # Add in a QuerySet of all the future races
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        return context
         context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
         context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
@@ -266,7 +265,8 @@ class ClubRidersView(ListView):
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
 
-            return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
+            # return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
+            return redirect('club_riders', slug=club)
         else:
             return HttpResponse("invalid form")
 
