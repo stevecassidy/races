@@ -253,23 +253,23 @@ class ClubRidersView(ListView):
 
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
+        return HttpResponse("adsasd", content_type="application/json")
+        # slug = self.kwargs['slug']
+        # form = MembershipUploadForm(request.POST, request.FILES)
+        # if form.is_valid():
+        #     mf = request.FILES['memberfile']
+        #     club = form.cleaned_data['club']
 
-        slug = self.kwargs['slug']
-        form = MembershipUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            mf = request.FILES['memberfile']
-            club = form.cleaned_data['club']
+        #     try:
+        #         changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
+        #     except ValueError as error:
+        #         changed = []
+        #         messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
 
-            try:
-                changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-            except ValueError as error:
-                changed = []
-                messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
-
-            # return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
-            return redirect('club_riders', slug=slug)
-        else:
-            return HttpResponse("invalid form")
+        #     # return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
+        #     return redirect('club_riders', slug=slug)
+        # else:
+        #     return HttpResponse(form.errors.as_json(), content_type="application/json")
 
 class ClubPointscoreView(DetailView):
     model = PointScore
