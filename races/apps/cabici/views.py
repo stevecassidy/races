@@ -262,7 +262,7 @@ class ClubRidersView(ListView):
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
                 return HttpResponse(changed.__str__())
-            except ValueError as error:
+            except Exception as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
                 return HttpResponse(error.__str__())
