@@ -255,6 +255,7 @@ class ClubRidersView(ListView):
         """Handle upload of membership spreadsheets"""
 
         slug = self.kwargs['slug']
+        HttpResponse(slug.__str__())
         form = MembershipUploadForm(request.POST, request.FILES)
         if form.is_valid():
             mf = request.FILES['memberfile']
