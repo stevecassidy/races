@@ -259,6 +259,7 @@ class ClubRidersView(ListView):
             club = form.cleaned_data['club']
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
+                messages.add_message(self.request, messages.SUCCESS, "membership changed", extra_tags='safe')
             except Exception as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
