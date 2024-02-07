@@ -261,11 +261,11 @@ class ClubRidersView(ListView):
             mf = request.FILES['memberfile']
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-                return HttpResponse(changed.__str__())
+                # return HttpResponse(changed.__str__())
             except Exception as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
-                return HttpResponse(error.__str__())
+                # return HttpResponse(error.__str__())
 
             return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
         else:
