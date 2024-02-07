@@ -259,7 +259,6 @@ class ClubRidersView(ListView):
         
         if form.is_valid():
             mf = request.FILES['memberfile']
-            return HttpResponse(len(mf).__str__());
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
                 return HttpResponse(changed.__str__())
