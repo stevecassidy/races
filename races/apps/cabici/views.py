@@ -252,9 +252,10 @@ class ClubRidersView(ListView):
         return context
 
     def post(self, request, **kwargs):
-        """Handle upload of membership spreadsheets"""
+        # """Handle upload of membership spreadsheets"""
 
         slug = self.kwargs['slug']
+        return HttpResponse("aaaa")
         club = Club.objects.get(slug=slug)
         form = MembershipUploadForm(request.POST, request.FILES)
         return HttpResponse("aaaa")
