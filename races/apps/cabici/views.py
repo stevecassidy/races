@@ -253,14 +253,13 @@ class ClubRidersView(ListView):
 
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
-
-        return HttpResponse("form")
-        slug = self.kwargs['slug']
-        club = Club.objects.get(slug=slug)
+        # slug = self.kwargs['slug']
+        # club = Club.objects.get(slug=slug)
+        return HttpResponse("aaaa")
         form = MembershipUploadForm(request.POST, request.FILES)
         if form.is_valid():
             mf = request.FILES['memberfile']
-            # club = form.cleaned_data['club']
+            club = form.cleaned_data['club']
 
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
