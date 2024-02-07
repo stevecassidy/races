@@ -253,23 +253,33 @@ class ClubRidersView(ListView):
 
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
-        return HttpResponse("adsasd", content_type="application/json")
-        # slug = self.kwargs['slug']
-        # form = MembershipUploadForm(request.POST, request.FILES)
-        # if form.is_valid():
-        #     mf = request.FILES['memberfile']
-        #     club = form.cleaned_data['club']
 
-        #     try:
-        #         changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-        #     except ValueError as error:
-        #         changed = []
-        #         messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
+        slug = self.kwargs['slug']
+        form = MembershipUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            mf = request.FILES['memberfile']
+            club = form.cleaned_data['club']
 
-        #     # return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
-        #     return redirect('club_riders', slug=slug)
-        # else:
-        #     return HttpResponse(form.errors.as_json(), content_type="application/json")
+            try:
+                changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
+            except ValueError as error:
+                changed = []
+                messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
+                
+            # Update context with any changes
+            today = datetime.date.today()
+            context = self.get_context_data()
+            context['changed'] = changed
+            context['club'] = Club.objects.get(slug=slug)
+            context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
+                'user__last_name').select_related('club')
+            context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
+                'user__last_name').select_related('club')
+
+            # Render the page again with the updated context
+            return render(request, 'club_riders.html', context)
+        else:
+            return HttpResponse(form.errors.as_json(), content_type="application/json")
 
 class ClubPointscoreView(DetailView):
     model = PointScore
