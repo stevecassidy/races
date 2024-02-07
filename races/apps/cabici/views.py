@@ -257,12 +257,13 @@ class ClubRidersView(ListView):
         slug = self.kwargs['slug']
         club = Club.objects.get(slug=slug)
         form = MembershipUploadForm(request.POST, request.FILES)
+        return HttpResponse("aaaa")
         if form.is_valid():
             mf = request.FILES['memberfile']
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
                 messages.add_message(request, messages.SUCCESS, 'Members updated successfully.')
-                return HttpResponse('club', {club: club})
+                return HttpResponse('club')
                 return redirect('club_riders', slug=slug)
             except ValueError as error:
                 changed = []
@@ -273,8 +274,6 @@ class ClubRidersView(ListView):
         else:
             messages.add_message(request, messages.ERROR, 'There was an error with the form submission', extra_tags='safe')
             return render(request, 'club_rider_update.html', {'form': form, 'club': club})
-
-
 
 class ClubPointscoreView(DetailView):
     model = PointScore
