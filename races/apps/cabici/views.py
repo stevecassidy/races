@@ -255,19 +255,20 @@ class ClubRidersView(ListView):
         """Handle upload of membership spreadsheets"""
 
         slug = self.kwargs['slug']
-        club = get_object_or_404(Club, slug=slug)
-        # HttpResponse(slug.__str__())
+        club = Club.objects.get(slug=slug)
         form = MembershipUploadForm(request.POST, request.FILES)
         if form.is_valid():
             mf = request.FILES['memberfile']
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
                 messages.add_message(request, messages.SUCCESS, 'Members updated successfully.')
+                return HttpResponse('club' + club.__str__() + 'changed' + changed.__str__())
                 return redirect('club_riders', slug=slug)
             except ValueError as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
                 form.add_error(None, error)
+                return HttpResponse('error' + error.__str__())
                 return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})           
         else:
             messages.add_message(request, messages.ERROR, 'There was an error with the form submission', extra_tags='safe')
