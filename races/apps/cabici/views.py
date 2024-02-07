@@ -254,6 +254,7 @@ class ClubRidersView(ListView):
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
         slug = self.kwargs['slug']
+        return HttpResponse(slug.__str__())
         club = Club.objects.get(slug=slug)
         form = MembershipUploadForm(request.POST, request.FILES)
         
