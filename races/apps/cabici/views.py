@@ -265,21 +265,9 @@ class ClubRidersView(ListView):
             except ValueError as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
-                
-            # Update context with any changes
-            today = datetime.date.today()
-            context = self.get_context_data()
-            context['changed'] = changed
-            context['club'] = Club.objects.get(slug=slug)
-            context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
-                'user__last_name').select_related('club')
-            context['pastmembers'] = context['club'].rider_set.exclude(membership__date__gte=today).distinct().order_by(
-                'user__last_name').select_related('club')
-
-            # Render the page again with the updated context
-            return render(request, 'club_riders.html', context)
+            HttpResponseRedirect(reverse('club_riders', kwargs={'slug': slug}))
         else:
-            return HttpResponse(form.errors.as_json(), content_type="application/json")
+            return HttpResponse("invalid form")
 
 class ClubPointscoreView(DetailView):
     model = PointScore
