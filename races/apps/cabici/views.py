@@ -252,29 +252,24 @@ class ClubRidersView(ListView):
         return context
 
     def post(self, request, **kwargs):
-        # """Handle upload of membership spreadsheets"""
+        """Handle upload of membership spreadsheets"""
 
         slug = self.kwargs['slug']
-        return HttpResponse("aaaa")
-        club = Club.objects.get(slug=slug)
+        club = Club.objects.get(slug=slug);
         form = MembershipUploadForm(request.POST, request.FILES)
-        return HttpResponse("aaaa")
         if form.is_valid():
             mf = request.FILES['memberfile']
+            # club = form.cleaned_data['club']
+
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-                messages.add_message(request, messages.SUCCESS, 'Members updated successfully.')
-                return HttpResponse('club')
-                return redirect('club_riders', slug=slug)
             except ValueError as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
-                form.add_error(None, error)
-                return HttpResponse("error", {error: error})
-                return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})           
+
+            return render(request, 'club_rider_update.html', {'club': club, 'changed': changed})
         else:
-            messages.add_message(request, messages.ERROR, 'There was an error with the form submission', extra_tags='safe')
-            return render(request, 'club_rider_update.html', {'form': form, 'club': club})
+            return HttpResponse("invalid form")
 
 class ClubPointscoreView(DetailView):
     model = PointScore
