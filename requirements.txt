@@ -52,7 +52,6 @@ gunicorn
 whitenoise 
 tzdata
 sentry_sdk
-DjangoIntegration
 
 
 # for deployment with postgres
