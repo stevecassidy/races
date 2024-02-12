@@ -16,13 +16,6 @@
 
 from django.apps import AppConfig
 
-import sentry_sdk
-
-sentry_sdk.init(
-    dsn="https://efc591c7ff76a7d9a33f13660bde13f0@o4505898812964864.ingest.sentry.io/4505898820501504",
-    # Any other additional settings like `traces_sample_rate`
-)
-
 class CabiciConfig(AppConfig):
     name = 'races.apps.cabici'
     verbose_name = 'Cabici Race Manager'
