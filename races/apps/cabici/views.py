@@ -1035,12 +1035,19 @@ class ClubRacesOfficalUpdateView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name')
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
-            'user__last_name')
-        context['dutyhelpers'] = Rider.objects.filter(club__exact=club,
-                                                      user__userrole__role__name__exact='Duty Helper').order_by(
-            'user__last_name')
+        # Changes requested by WM to allow selection of all clubs on Race schedules
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name')
+        # Populate duty officers with any user assigned to that role
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
+            'user__last_name').distinct()
+        
+        #context['dutyhelpers'] = Rider.objects.filter(club__exact=club,
+        #                                              user__userrole__role__name__exact='Duty Helper').order_by(
+        #    'user__last_name')
+        context['dutyhelpers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Helper').order_by(
+            'user__last_name').distinct()
 
         return context
 
