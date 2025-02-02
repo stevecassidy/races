@@ -617,8 +617,11 @@ class RaceDetailView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name').distinct()
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name').distinct()
+        # Remove Club filter
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
         context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
@@ -943,8 +946,11 @@ class ClubRacesView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name').distinct()
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name').distinct()
+        # Remove club filter
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
         context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
@@ -1123,7 +1129,9 @@ class ClubMemberEmailView(FormView, ClubOfficialRequiredMixin):
             emails = [ur.user.email for ur in uroles]
             footer += "you are a commisaire with %s." % (club.name,)
         elif sendto == 'dutyofficers':
-            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            #uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            # Remove Club filter
+            uroles = UserRole.objects.filter(role__name__exact='Duty Officer')
             emails = [ur.user.email for ur in uroles]
             footer += "you are a duty officer with %s." % (club.name,)
         elif sendto == 'self':
