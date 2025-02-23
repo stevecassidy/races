@@ -150,9 +150,11 @@ class Club(models.Model):
         """
 
         import random
-        # candidates are those members with a ClubRole with the
-        # corresponding role
-        candidates = self.rider_set.filter(user__userrole__role__name__exact=role).distinct()
+        from .usermodel import Rider
+        # candidates are all riders with a UserRole for this club
+        candidates = Rider.objects.filter(user__userrole__club__exact=self, user__userrole__role__name__exact=role).distinct()
+
+        #candidates = self.rider_set.filter(user__userrole__role__name__exact=role).distinct()
 
         # if we have no candidates we can't do anything
         if candidates.count() == 0:
