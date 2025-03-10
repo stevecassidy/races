@@ -223,8 +223,13 @@ class ClubDutyView(ListView):
 
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
+
+        # possible duty helpers are all racing members of this club
+        # plus all riders who have raced with this club in the last year
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today, membership__category__exact='race').distinct().order_by(
             'user__last_name').select_related('club')
+        lastyear = datetime.date.today() - datetime.timedelta(days=365)
+        context['othermembers'] = Rider.objects.filter(raceresult__race__club__exact=context['club'], raceresult__race__date__gte=lastyear).exclude(club__exact=context['club']).distinct()
         # get any past members who still have duty roles
         context['pastmembers'] = context['club'].rider_set.filter(user__userrole__isnull=False).exclude(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
