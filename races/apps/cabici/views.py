@@ -13,7 +13,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
 from django.views.generic.edit import UpdateView
@@ -629,7 +628,7 @@ class RaceDetailView(DetailView):
         context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
-        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
+        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper', skip_club_filter=True)
 
         return context
 
@@ -958,8 +957,7 @@ class ClubRacesView(DetailView):
         context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
-        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
-
+        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper', skip_club_filter=True)
         return context
 
     def post(self, request, **kwargs):

@@ -137,7 +137,7 @@ class Club(models.Model):
 
         return self.races.filter(date__lte=datetime.date.today()).order_by('-date')[:5]
 
-    def get_officials_with_counts(self, role):
+    def get_officials_with_counts(self, role, skip_club_filter=False):
         """Get a list of people who can fill a given role ordered
         by the number of times they have done so in the last year
 
@@ -152,7 +152,10 @@ class Club(models.Model):
         import random
         from .usermodel import Rider
         # candidates are all riders with a UserRole for this club
-        candidates = Rider.objects.filter(user__userrole__club__exact=self, user__userrole__role__name__exact=role).distinct()
+        candidates = Rider.objects.filter(user__userrole__role__name__exact=role).distinct()
+
+        if not skip_club_filter:
+            candidates = candidates.filter(user__userrole__club__exact=self)
 
         #candidates = self.rider_set.filter(user__userrole__role__name__exact=role).distinct()
 
