@@ -13,14 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from django.views.generic import View, ListView, DetailView, FormView
 from django.contrib.flatpages.models import FlatPage
 from django.views.generic.edit import UpdateView
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed, JsonResponse
 from django.db import IntegrityError
 from django.contrib.auth.mixins import AccessMixin
@@ -223,8 +222,13 @@ class ClubDutyView(ListView):
 
         slug = self.kwargs['slug']
         context['club'] = Club.objects.get(slug=slug)
-        context['members'] = context['club'].rider_set.filter(membership__date__gte=today).distinct().order_by(
+
+        # possible duty helpers are all racing members of this club
+        # plus all riders who have raced with this club in the last year
+        context['members'] = context['club'].rider_set.filter(membership__date__gte=today, membership__category__exact='race').distinct().order_by(
             'user__last_name').select_related('club')
+        lastyear = datetime.date.today() - datetime.timedelta(days=365)
+        context['othermembers'] = Rider.objects.filter(raceresult__race__club__exact=context['club'], raceresult__race__date__gte=lastyear).exclude(club__exact=context['club']).distinct()
         # get any past members who still have duty roles
         context['pastmembers'] = context['club'].rider_set.filter(user__userrole__isnull=False).exclude(membership__date__gte=today).distinct().order_by(
             'user__last_name').select_related('club')
@@ -253,15 +257,14 @@ class ClubRidersView(ListView):
 
     def post(self, request, **kwargs):
         """Handle upload of membership spreadsheets"""
-
         form = MembershipUploadForm(request.POST, request.FILES)
         if form.is_valid():
             mf = request.FILES['memberfile']
             club = form.cleaned_data['club']
-
             try:
                 changed = Rider.objects.update_from_tidyhq_spreadsheet(club, codecs.iterdecode(mf, 'utf-8'))
-            except ValueError as error:
+                messages.add_message(self.request, messages.SUCCESS, "membership changed", extra_tags='safe')
+            except Exception as error:
                 changed = []
                 messages.add_message(self.request, messages.ERROR, error, extra_tags='safe')
 
@@ -618,11 +621,14 @@ class RaceDetailView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name').distinct()
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name').distinct()
+        # Remove Club filter
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
-        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
+        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper', skip_club_filter=True)
 
         return context
 
@@ -768,6 +774,18 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
               'website', 'location', 'status', 'description',
               'licencereq', 'category', 'discipline', 'grading']
 
+    # add get url for edit race page
+    def get(self, request, *args, **kwargs):
+        race = get_object_or_404(Race, pk=self.kwargs.get('pk'))  # Assuming the URL captures a 'pk' parameter for the race
+        form = RaceCreateForm(instance=race)  # Prefill the form with the current race data
+
+        context = {
+            'form': form,
+            'race': race,
+        }
+        return render(request, self.template_name, context)
+    
+
     def post(self, request, *args, **kwargs):
         race = get_object_or_404(Race, **kwargs)
 
@@ -783,9 +801,9 @@ class RaceUpdateView(ClubOfficialRequiredMixin, View):
                 pointscore.races.add(race)
             race.save()
 
-            return HttpResponse(1)
+            return redirect('race_update', pk=race.pk)
         else:
-            return HtttpResponse(form.errors.as_json())
+            return HttpResponse(form.errors.as_json(), content_type="application/json")
 
 
 class RaceUploadExcelView(FormView):
@@ -932,12 +950,14 @@ class ClubRacesView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name').distinct()
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name').distinct()
+        # Remove club filter
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
             'user__last_name').distinct()
 
-        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper')
-
+        context['dutyhelpers'] = club.get_officials_with_counts('Duty Helper', skip_club_filter=True)
         return context
 
     def post(self, request, **kwargs):
@@ -1024,12 +1044,19 @@ class ClubRacesOfficalUpdateView(DetailView):
         context['commissaires'] = Rider.objects.filter(club__exact=club,
                                                        commissaire_valid__gt=datetime.date.today()).order_by(
             'user__last_name')
-        context['dutyofficers'] = Rider.objects.filter(club__exact=club,
-                                                       user__userrole__role__name__exact='Duty Officer').order_by(
-            'user__last_name')
-        context['dutyhelpers'] = Rider.objects.filter(club__exact=club,
-                                                      user__userrole__role__name__exact='Duty Helper').order_by(
-            'user__last_name')
+        # Changes requested by WM to allow selection of all clubs on Race schedules
+        #context['dutyofficers'] = Rider.objects.filter(club__exact=club,
+        #                                               user__userrole__role__name__exact='Duty Officer').order_by(
+        #    'user__last_name')
+        # Populate duty officers with any user assigned to that role
+        context['dutyofficers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Officer').order_by(
+            'user__last_name').distinct()
+        
+        #context['dutyhelpers'] = Rider.objects.filter(club__exact=club,
+        #                                              user__userrole__role__name__exact='Duty Helper').order_by(
+        #    'user__last_name')
+        context['dutyhelpers'] = Rider.objects.filter(user__userrole__role__name__exact='Duty Helper').order_by(
+            'user__last_name').distinct()
 
         return context
 
@@ -1081,6 +1108,7 @@ class ClubMemberEmailView(FormView, ClubOfficialRequiredMixin):
         today = datetime.date.today()
         # sender will be the logged in user
         sender = self.request.user.email
+        sender = settings.DEFAULT_FROM_EMAIL
 
         sendto = form.cleaned_data['sendto']
         reply_to = 'dontreply@cabici.net'
@@ -1104,7 +1132,9 @@ class ClubMemberEmailView(FormView, ClubOfficialRequiredMixin):
             emails = [ur.user.email for ur in uroles]
             footer += "you are a commisaire with %s." % (club.name,)
         elif sendto == 'dutyofficers':
-            uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            #uroles = UserRole.objects.filter(club__exact=club, role__name__exact='Duty Officer')
+            # Remove Club filter
+            uroles = UserRole.objects.filter(role__name__exact='Duty Officer')
             emails = [ur.user.email for ur in uroles]
             footer += "you are a duty officer with %s." % (club.name,)
         elif sendto == 'self':
