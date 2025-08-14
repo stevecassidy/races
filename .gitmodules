@@ -1,3 +1,3 @@
 [submodule "django-geoposition"]
 	path = django-geoposition
-	url = git@github.com:Cabici-Raceday-Juuce/django-geoposition.git
+	url = https://github.com/stevecassidy/django-geoposition
