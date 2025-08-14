@@ -135,7 +135,7 @@ MIDDLEWARE = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-
+    'allauth.account.middleware.AccountMiddleware',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
