@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from allauth.socialaccount.tests import OAuth2TestsMixin
-from allauth.tests import MockedResponse, TestCase
+# from allauth.socialaccount.tests import OAuth2TestsMixin
+# from allauth.tests import MockedResponse, TestCase
 
-from .provider import StravaProvider
+# from .provider import StravaProvider
 
 
 # class StravaOAuth2Tests(OAuth2TestsMixin, TestCase):

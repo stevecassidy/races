@@ -21,6 +21,5 @@ DATABASES['default']['NAME'] = 'races_development'
 # email to the console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-
-GEOPOSITION_GOOGLE_MAPS_API_KEY = 'something'
+GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
 GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
