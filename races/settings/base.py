@@ -248,8 +248,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ACCOUNT_OPEN_SIGNUP = False
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 # long sessions by default
 ACCOUNT_SESSION_REMEMBER=True
 

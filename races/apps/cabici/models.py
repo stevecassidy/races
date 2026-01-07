@@ -65,6 +65,91 @@ class Club(models.Model):
     manage_races = models.BooleanField(default=False)
     manage_members = models.BooleanField(default=False)
     manage_results = models.BooleanField(default=False)
+    
+    # AusCycling API credentials
+    auscycling_client_id = models.CharField(max_length=200, blank=True, default='',
+                                            help_text='AusCycling API OAuth2 Client ID')
+    auscycling_client_secret = models.CharField(max_length=200, blank=True, default='',
+                                                help_text='AusCycling API OAuth2 Client Secret')
+    auscycling_club_id = models.CharField(max_length=50, blank=True, default='',
+                                          help_text='AusCycling Club ID for membership verification')
+
+    def has_auscycling_credentials(self):
+        """Check if club has AusCycling API credentials configured"""
+        return bool(self.auscycling_client_id and self.auscycling_client_secret)
+
+    def validate_membership(self, rider, check_date=None):
+        """
+        Validate a rider's Race membership with AusCycling API
+        
+        Args:
+            rider: Rider instance to validate
+            check_date: Date to check validity for (default: next Sunday)
+            
+        Returns:
+            tuple: (success: bool, message: str)
+        """
+        from .auscycling import AusCyclingClient, AusCyclingAPIError
+        from .usermodel import Membership
+        
+        if not self.has_auscycling_credentials():
+            return False, f"Club {self.slug} has no AusCycling API credentials configured"
+        
+        if not rider.licenceno:
+            return False, "Rider has no licence number"
+        
+        if not rider.user.last_name:
+            return False, "Rider has no last name"
+        
+        # Default to next Sunday
+        if check_date is None:
+            today = datetime.date.today()
+            days_until_sunday = (6 - today.weekday()) % 7
+            if days_until_sunday == 0:
+                days_until_sunday = 7
+            check_date = today + datetime.timedelta(days=days_until_sunday)
+        
+        try:
+            client = AusCyclingClient(
+                self.auscycling_client_id,
+                self.auscycling_client_secret
+            )
+            
+            result = client.verify_membership(
+                member_id=rider.licenceno,
+                last_name=rider.user.last_name,
+                check_date=check_date,
+                club_id=self.auscycling_club_id if self.auscycling_club_id else None
+            )
+            
+            # Get or create Race membership for this rider and this club
+            race_membership, created = Membership.objects.get_or_create(
+                rider=rider,
+                club=self,
+                category='race',
+                defaults={'date': datetime.date.today()}
+            )
+            
+            race_membership.last_validated = datetime.datetime.now(tz=pytz.UTC)
+            
+            if result['success']:
+                # Update membership date to the check_date
+                race_membership.date = check_date
+                race_membership.validation_error = ''
+                message = f"Valid until {check_date}: {result['message']}"
+            else:
+                # Don't update date - leave it in the past
+                race_membership.validation_error = result['message']
+                message = f"Validation failed: {result['message']}"
+            
+            race_membership.save()
+            
+            return result['success'], message
+            
+        except AusCyclingAPIError as e:
+            return False, f"API Error: {str(e)}"
+        except Exception as e:
+            return False, f"Unexpected error: {str(e)}"
 
     def __str__(self):
         return self.slug
@@ -434,7 +519,6 @@ class RaceCourseManager(models.Manager):
         location = ng.finditem(name)
 
         if location == None:
-            #print("UNKNOWN LOCATION", name)
             location, created = self.get_or_create(name="Unknown")
 
         return location
@@ -737,3 +821,4 @@ class Race(models.Model):
         for ps in self.pointscore_set.all():
             for result in self.raceresult_set.all():
                 ps.tally(result)
+
