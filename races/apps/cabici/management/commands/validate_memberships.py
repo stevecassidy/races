@@ -6,7 +6,6 @@ Usage:
 """
 
 from django.core.management.base import BaseCommand
-from django.utils import timezone
 from races.apps.cabici.models import Club
 from races.apps.cabici.usermodel import Rider, RaceResult
 import datetime
@@ -47,7 +46,7 @@ class Command(BaseCommand):
         dry_run = options['dry_run']
         check_date_str = options['check_date']
         
-        # Calculate check date (next Sunday by default)
+        # Calculate check date if provided
         if check_date_str:
             try:
                 check_date = datetime.datetime.strptime(check_date_str, '%Y-%m-%d').date()
@@ -55,13 +54,8 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.ERROR(f'Invalid date format: {check_date_str}'))
                 return
         else:
-            today = datetime.date.today()
-            days_until_sunday = (6 - today.weekday()) % 7
-            if days_until_sunday == 0:
-                days_until_sunday = 7
-            check_date = today + datetime.timedelta(days=days_until_sunday)
-        
-        self.stdout.write(f'Validating memberships for {check_date}')
+            ## will default to next Sunday
+            check_date = None
         
         # Get clubs to process
         if club_slug:
@@ -88,15 +82,11 @@ class Command(BaseCommand):
             self.stdout.write(f'\n{self.style.SUCCESS(f"Processing club: {club.name} ({club.slug})")}')
             
             # Find riders who have raced recently for this club
-            recent_results = RaceResult.objects.filter(
-                race__club=club,
-                race__date__gte=cutoff_date
-            ).values_list('rider_id', flat=True).distinct()
-            
-            riders = Rider.objects.filter(
-                id__in=recent_results,
-                licenceno__isnull=False
-            ).exclude(licenceno='').select_related('user', 'club')[:10]
+            riders = Rider.objects.filter(  
+                raceresult__race__club=club,  
+                raceresult__race__date__gte=cutoff_date,  
+                licenceno__isnull=False  
+            ).exclude(licenceno='').select_related('user', 'club').distinct()[:10]
             
             rider_count = riders.count()
             self.stdout.write(f'Found {rider_count} riders who have raced in the last {months} months')

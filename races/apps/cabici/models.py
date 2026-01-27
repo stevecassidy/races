@@ -69,6 +69,8 @@ class Club(models.Model):
     # AusCycling API credentials
     auscycling_client_id = models.CharField(max_length=200, blank=True, default='',
                                             help_text='AusCycling API OAuth2 Client ID')
+    # TODO: that we're storing client secret in plaintext here for simplicity
+    # for better security we should use encrypted fields or a secrets manager
     auscycling_client_secret = models.CharField(max_length=200, blank=True, default='',
                                                 help_text='AusCycling API OAuth2 Client Secret')
     auscycling_club_id = models.CharField(max_length=50, blank=True, default='',
@@ -130,7 +132,7 @@ class Club(models.Model):
                 defaults={'date': datetime.date.today()}
             )
             
-            race_membership.last_validated = datetime.datetime.now(tz=pytz.UTC)
+            race_membership.last_validated = django.utils.timezone.now()
             
             if result['success']:
                 # Update membership date to the check_date
@@ -138,7 +140,11 @@ class Club(models.Model):
                 race_membership.validation_error = ''
                 message = f"Valid until {check_date}: {result['message']}"
             else:
-                # Don't update date - leave it in the past
+                # not valid
+                # update membership date to today if it is in the future 
+                # so that it will show as expired
+                if (race_membership.date > datetime.date.today()):
+                    race_membership.date = datetime.date.today()
                 race_membership.validation_error = result['message']
                 message = f"Validation failed: {result['message']}"
             

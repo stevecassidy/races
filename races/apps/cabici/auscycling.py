@@ -5,7 +5,6 @@ AusCycling Verification API Client
 import requests
 import logging
 from datetime import datetime, timedelta
-from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -56,14 +55,34 @@ class AusCyclingClient:
             
             # Set expiry to 5 minutes before actual expiry for safety
             expires_in = token_data.get('expires_in', 3600)
-            self.token_expiry = datetime.now() + timedelta(seconds=expires_in - 300)
+            self.token_expiry = datetime.now(timezone.utc) + timedelta(seconds=expires_in - 300)
             
             logger.info("Successfully obtained AusCycling API access token")
             return self.access_token
             
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Failed to obtain access token: {e}")
-            raise AusCyclingAPIError(f"Authentication failed: {e}")
+        except requests.exceptions.Timeout as e:  
+            logger.error("Timeout while obtaining AusCycling API access token", exc_info=True)  
+            raise AusCyclingAPIError("Authentication request to AusCycling API timed out") from e  
+
+        except requests.exceptions.HTTPError as e:  
+            status_code = None  
+            response_body = None  
+            if e.response is not None:  
+                status_code = e.response.status_code  
+                # Log the raw text body; if bodies are large or sensitive, this may need revisiting.  
+                response_body = e.response.text  
+                logger.error(  
+                    "HTTP error while obtaining AusCycling API access token: status=%s, body=%s",  
+                    status_code,  
+                    response_body,  
+                    exc_info=True,  
+                )  
+            message = f"Authentication failed with HTTP status {status_code}" if status_code is not None else "Authentication failed with HTTP error"  
+            raise AusCyclingAPIError(message) from e  
+
+        except requests.exceptions.RequestException as e:  
+            logger.error("Network error while obtaining AusCycling API access token: %s", e, exc_info=True)  
+            raise AusCyclingAPIError("Authentication failed due to a network error") from e  
     
     def verify_membership(self, member_id, last_name, check_date, club_id=None):
         """
