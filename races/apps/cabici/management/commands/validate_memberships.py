@@ -86,7 +86,7 @@ class Command(BaseCommand):
                 raceresult__race__club=club,  
                 raceresult__race__date__gte=cutoff_date,  
                 licenceno__isnull=False  
-            ).exclude(licenceno='').select_related('user', 'club').distinct()[:10]
+            ).exclude(licenceno='').select_related('user', 'club').distinct()
             
             rider_count = riders.count()
             self.stdout.write(f'Found {rider_count} riders who have raced in the last {months} months')
