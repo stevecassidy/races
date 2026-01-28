@@ -14,15 +14,16 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-
-# copy project
-COPY . .
-
 # install dependencies
+# 
+COPY requirements.txt .
+
 RUN pip install --upgrade pip
 RUN pip install cryptography
 
 RUN pip install -r requirements.txt
 
+# copy project
+COPY . .
 
 RUN python bin/production.py collectstatic

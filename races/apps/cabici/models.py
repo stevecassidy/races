@@ -125,19 +125,24 @@ class Club(models.Model):
                 club_id=self.auscycling_club_id if self.auscycling_club_id else None
             )
             
-            # Get or create Race membership for this rider and this club
-            race_membership, created = Membership.objects.get_or_create(
-                rider=rider,
-                club=self,
-                category='race',
-                defaults={'date': datetime.date.today()}
-            )
+            # Update the membership record for this rider
+            # 
+            race_membership = rider.current_membership
+            if (not race_membership):
+                # create a new membership record
+                race_membership = Membership(
+                    rider=rider, 
+                    club=rider.club, 
+                    category='race', 
+                    date=datetime.date.today()
+                )
             
             race_membership.last_validated = timezone.now()
             
             if result['success']:
-                # Update membership date to the check_date
-                race_membership.date = check_date
+                # Update membership date to the check_date if it is in the past
+                if (race_membership.date < check_date):
+                    race_membership.date = check_date
                 race_membership.validation_error = ''
                 message = f"Valid until {check_date}: {result['message']}"
             else:
