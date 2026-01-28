@@ -22,6 +22,7 @@ from django.db import IntegrityError
 from importlib import import_module
 from django.contrib.auth.models import User
 from django.db import transaction
+from django.utils import timezone
 
 import icalendar
 import pytz
@@ -132,7 +133,7 @@ class Club(models.Model):
                 defaults={'date': datetime.date.today()}
             )
             
-            race_membership.last_validated = django.utils.timezone.now()
+            race_membership.last_validated = timezone.now()
             
             if result['success']:
                 # Update membership date to the check_date

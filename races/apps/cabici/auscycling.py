@@ -4,6 +4,7 @@ AusCycling Verification API Client
 
 import requests
 import logging
+from django.utils import timezone
 from datetime import datetime, timedelta
 
 logger = logging.getLogger(__name__)
