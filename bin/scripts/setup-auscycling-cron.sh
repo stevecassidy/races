@@ -12,7 +12,7 @@ cat > "$PROJECT_DIR/scripts/validate_memberships_cron.sh" << 'EOF'
 #!/bin/bash
 cd /workspaces/races-git
 source venv/bin/activate
-python manage.py validate_memberships --months 6 >> /var/log/membership_validation.log 2>&1
+docker exec cabici python bin/production.py validate_memberships >> /var/log/membership_validation.log 2>&1
 EOF
 
 chmod +x "$PROJECT_DIR/scripts/validate_memberships_cron.sh"
