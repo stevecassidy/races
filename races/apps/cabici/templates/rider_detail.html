@@ -80,14 +80,22 @@ Rider - {{user.first_name}} {{user.last_name}}
         {% if user.rider.commissaire != "0" and user.rider.commissaire != '' %}
         <tr><th>Commissaire</th><td>{{user.rider.commissaire}} ({{user.rider.commissaire_valid}})</td></tr>
         {% endif %}
-        <tr><th>Membership Status</th><td>
-        {% for m in user.rider.membership_set.all %}
-            {{m.date.year}}
-            {% if m.category != 'race' %}{{m.category|capfirst}}{% endif %}
-            {% if m.add_on %}Add On{% endif %}{% if not forloop.last %},
-            {% endif %}
-        {% endfor %}
-        </td></tr>
+        <tr><th>Membership Status</th>
+            <td>
+                Valid to {{user.rider.member_date}}
+            </td>
+        </tr>
+        <tr><th>Membership Category</th>
+            <td>{{user.rider.member_category|capfirst}}</td>
+        </tr>
+        <tr><th>Last Validated</th>
+            <td>
+                {% if user.rider.current_membership.last_validated %}
+                    {{user.rider.current_membership.last_validated}}
+                {% else %}
+                    Never Validated
+                {% endif %}
+                </td>
     </table>
     {% endif %}
 

@@ -571,9 +571,21 @@ class Membership(models.Model):
 
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, null=True, on_delete=models.CASCADE)
-    date = models.DateField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True) # membership valid to this date
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
     add_on = models.BooleanField(default=False)
+
+    # AusCycling validation fields
+    last_validated = models.DateTimeField(null=True, blank=True,
+                                          help_text='Last time membership was validated with AusCycling API')
+    validation_error = models.TextField(blank=True, default='',
+                                        help_text='Last validation error message if any')
+
+    def is_valid_on(self, check_date=None):
+        """Check if membership is valid on the given date (default: today)"""
+        if check_date is None:
+            check_date = datetime.date.today()
+        return self.date and self.date >= check_date
 
     class Meta:
         ordering = ['date', 'category']
