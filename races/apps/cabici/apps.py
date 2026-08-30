@@ -16,6 +16,27 @@
 
 from django.apps import AppConfig
 
+
 class CabiciConfig(AppConfig):
     name = 'races.apps.cabici'
     verbose_name = 'Cabici Race Manager'
+
+    def ready(self):
+        # Django 5.1's BaseContext.__copy__ is incompatible with Python 3.14,
+        # where copying a template Context fails during rendered-template
+        # assertions in the test client. Patch it at startup so the legacy app
+        # continues to function under the modern runtime.
+        if getattr(self, '_compat_patch_applied', False):
+            return
+
+        from django.template import context as template_context
+
+        def _patched_basecontext_copy(self):
+            duplicate = self.__class__.__new__(self.__class__)
+            duplicate.__dict__ = self.__dict__.copy()
+            if hasattr(self, 'dicts'):
+                duplicate.dicts = self.dicts[:]
+            return duplicate
+
+        template_context.BaseContext.__copy__ = _patched_basecontext_copy
+        self._compat_patch_applied = True

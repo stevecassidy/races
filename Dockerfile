@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.11-alpine
+FROM python:3.14-alpine
 
 ## install build dependencies
 RUN apk add --no-cache build-base libffi-dev openssl-dev postgresql-dev python3-dev musl-dev curl

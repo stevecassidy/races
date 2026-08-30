@@ -1,4 +1,4 @@
-Django==4.2.23
+Django==5.1.12
 setuptools<81
 PyYAML
 WebOb
@@ -30,8 +30,6 @@ ngram
 oauthlib
 openpyxl
 pbr
-# fixes bad app name...
-https://github.com/jacobwegner/pinax-webanalytics/archive/refs/heads/fix/app-label.zip
 pyexcel
 pyexcel-io
 pyexcel-xls

@@ -19,7 +19,7 @@ The current production application remains stable while modernization work happe
 
 **Target State:**
 - Django 5.1 LTS (latest stable)
-- Python 3.11+
+- Python 3.14
 - API-only backend with comprehensive REST endpoints
 - React SPA frontend
 - Modern authentication (JWT + session)

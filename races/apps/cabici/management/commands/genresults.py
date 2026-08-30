@@ -54,7 +54,7 @@ class Command(BaseCommand):
 
         for race in Race.objects.all():
             for grade in list(grades.keys()):
-                who = random.sample(grades[grade], random.randint(k/2, k-1))
+                who = random.sample(grades[grade], random.randint(k // 2, k - 1))
                 numbers = list(range(len(who)))
                 random.shuffle(numbers)
                 place = 0
