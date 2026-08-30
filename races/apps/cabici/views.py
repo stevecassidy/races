@@ -517,8 +517,9 @@ class RiderUpdateView(UpdateView, ClubOfficialRequiredMixin):
     def dispatch(self, *args, **kwargs):
 
         # only ok if logged in user is this rider or
-        # a club official
-        if str(self.request.user.pk) == kwargs['pk'] or self.request.user.rider.official:
+        # a club official. The regex route used string IDs while
+        # the path() route passes ints, so compare by value.
+        if str(self.request.user.pk) == str(kwargs['pk']) or self.request.user.rider.official:
             return super(RiderUpdateView, self).dispatch(*args, **kwargs)
         else:
             return HttpResponseBadRequest()

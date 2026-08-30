@@ -7,13 +7,13 @@ This is a condensed checklist version of the full modernization plan. Use this f
 ## ✅ Phase 1: Foundation (Weeks 1-4)
 
 ### Django Upgrade
-- [ ] Create modernization branch (`git checkout -b modernization`)
-- [ ] Backup production database
-- [ ] Update requirements.txt: Django 5.1
-- [ ] Run migrations in test environment
-- [ ] Fix deprecation warnings
-- [ ] Update URL patterns (re_path → path)
-- [ ] Run full test suite
+- [x] Create modernization branch (`git checkout -b modernization`)
+- [x] Backup production database
+- [x] Update requirements.txt: Django 5.1
+- [x] Run migrations in test environment
+- [x] Fix deprecation warnings
+- [x] Update URL patterns (re_path → path)
+- [x] Run full test suite
 
 ### Dependency Updates
 - [ ] Remove obsolete frontend packages (Bootstrap, jQuery, etc.)
