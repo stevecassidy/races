@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a comprehensive plan to modernize the Cabici cycling application from Django 4.2 + jQuery/Bootstrap 3 to Django 5.1 + React TypeScript frontend.
+This is a comprehensive plan to modernize the Cabici cycling application from Django 4.2 + jQuery/Bootstrap 3 to Django 5.2 + React TypeScript frontend.
 
 ## Key Approach: Development Branch Strategy
 
@@ -44,7 +44,7 @@ Production (master branch)     Development (modernization branch)
 
 | Phase | Duration | Focus |
 |-------|----------|-------|
-| **Phase 1: Foundation** | 4 weeks | Django 5.1, dependencies, tooling |
+| **Phase 1: Foundation** | 4 weeks | Django 5.2, dependencies, tooling |
 | **Phase 2: Backend API** | 8 weeks | Complete REST API, JWT auth, docs |
 | **Phase 3: React Frontend** | 14 weeks | Full React SPA with TypeScript |
 | **Phase 4: Integration & Deploy** | 4 weeks | Testing, cleanup, production deploy |
@@ -55,12 +55,12 @@ Production (master branch)     Development (modernization branch)
 
 ### Phase 1: Foundation (Weeks 1-4)
 **What:** Upgrade Django and modernize tooling
-- Update Django 4.2 → 5.1
+- Update Django 4.2 → 5.2
 - Remove obsolete dependencies (Bootstrap, jQuery)
 - Set up Black, ruff, mypy
 - Configure CI/CD
 
-**Output:** Modern Django 5.1 foundation
+**Output:** Modern Django 5.2 foundation
 
 ### Phase 2: Backend API (Weeks 5-12)
 **What:** Complete the REST API
@@ -113,7 +113,7 @@ Production (master branch)     Development (modernization branch)
 
 | Component | Current | Future |
 |-----------|---------|--------|
-| **Backend Framework** | Django 4.2 | Django 5.1 LTS |
+| **Backend Framework** | Django 4.2 | Django 5.2 |
 | **Frontend Framework** | jQuery + Bootstrap 3 | React 18 + TypeScript |
 | **Build Tool** | None | Vite |
 | **API** | Partial DRF | Complete REST API |
@@ -126,7 +126,7 @@ Production (master branch)     Development (modernization branch)
 ## Key Deliverables
 
 ### By End of Phase 2
-- ✅ Django 5.1 running
+- ✅ Django 5.2 running
 - ✅ Complete REST API
 - ✅ API documentation
 - ✅ JWT authentication
@@ -199,7 +199,7 @@ pip install -r requirements.txt
 ### Step 2: Phase 1 Kickoff
 ```bash
 # Update Django
-# Edit requirements.txt: Django==5.1.x
+# Edit requirements.txt: Django==5.2.x
 pip install -r requirements.txt
 
 # Run tests

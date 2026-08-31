@@ -18,7 +18,7 @@ The current production application remains stable while modernization work happe
 - Docker deployment
 
 **Target State:**
-- Django 5.1 LTS (latest stable)
+- Django 5.2 (latest stable)
 - Python 3.14
 - API-only backend with comprehensive REST endpoints
 - React SPA frontend
@@ -94,11 +94,11 @@ Developers work on the `modernization` branch with:
 ### 1.1 Django Version Upgrade (Week 1-2)
 
 **Tasks:**
-- [ ] Update Django 4.2.23 → Django 5.1 LTS
-- [ ] Update Python dependencies in requirements.txt
-- [ ] Address deprecation warnings
-- [ ] Update URL patterns from `re_path` to `path` with converters
-- [ ] Test all existing functionality
+- [x] Update Django 4.2.23 → Django 5.2
+- [x] Update Python dependencies in requirements.txt
+- [x] Address deprecation warnings
+- [x] Update URL patterns from `re_path` to `path` with converters
+- [x] Test all existing functionality
 - [ ] Update Django REST Framework to latest version
 
 **Breaking Changes to Address:**
@@ -108,7 +108,7 @@ Developers work on the `modernization` branch with:
 - Update settings for new defaults
 
 **Success Criteria:**
-- All tests pass with Django 5.1
+- All tests pass with Django 5.2
 - No deprecation warnings
 - Database migrations successful
 - Development environment functional
@@ -802,7 +802,7 @@ While working through the full plan on the development branch:
 
 ### Week 1-2
 - Create development branch
-- Update to Django 5.1
+- Update to Django 5.2
 - Set up CI/CD pipeline
 - Configure code formatting (Black, ruff)
 
@@ -907,7 +907,7 @@ export function RaceList() {
 ### C. Useful Resources
 
 **Django:**
-- [Django 5.1 Release Notes](https://docs.djangoproject.com/en/5.1/releases/5.1/)
+- [Django 5.2 Release Notes](https://docs.djangoproject.com/en/5.2/releases/5.2/)
 - [Django REST Framework Documentation](https://www.django-rest-framework.org/)
 - [DRF Spectacular](https://drf-spectacular.readthedocs.io/)
 - [Django CORS Headers](https://github.com/adamchainz/django-cors-headers)
@@ -921,7 +921,7 @@ export function RaceList() {
 - [Tailwind CSS](https://tailwindcss.com/)
 
 **Testing:**
-- [Django Testing](https://docs.djangoproject.com/en/5.1/topics/testing/)
+- [Django Testing](https://docs.djangoproject.com/en/5.2/topics/testing/)
 - [React Testing Library](https://testing-library.com/react)
 - [Playwright](https://playwright.dev/)
 

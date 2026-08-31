@@ -4,7 +4,7 @@ Cabici is a Django-based web application for managing cycling races, clubs, ride
 
 ## 🚧 Modernization Project
 
-**Important:** This project is undergoing a comprehensive modernization to Django 5.1 + React.
+**Important:** This project is undergoing a comprehensive modernization to Django 5.2 + React.
 
 📖 **See [MODERNIZATION_README.md](MODERNIZATION_README.md) for complete details.**
 

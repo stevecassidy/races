@@ -1,6 +1,6 @@
 # 🚀 Cabici Modernization Project
 
-Welcome to the Cabici application modernization project! This directory contains all documentation for transforming the application from Django 4.2 + jQuery/Bootstrap 3 to Django 5.1 + React TypeScript.
+Welcome to the Cabici application modernization project! This directory contains all documentation for transforming the application from Django 4.2 + jQuery/Bootstrap 3 to Django 5.2 + React TypeScript.
 
 ## 📁 Documentation Overview
 
@@ -16,7 +16,7 @@ Welcome to the Cabici application modernization project! This directory contains
 
 Transform the Cabici cycling application into a modern, maintainable system:
 
-- ✅ Update Django 4.2 → 5.1 LTS
+- ✅ Update Django 4.2 → 5.2
 - ✅ Replace jQuery/Bootstrap 3 → React + TypeScript
 - ✅ Complete REST API implementation
 - ✅ Modern authentication (JWT)
@@ -42,7 +42,7 @@ Transform the Cabici cycling application into a modern, maintainable system:
 ### After (Target)
 ```
 ┌──────────────────┐    ┌──────────────────┐
-│   React 18 +     │◄───│   Django 5.1     │
+│   React 18 +     │◄───│   Django 5.2     │
 │   TypeScript     │    │                  │
 │   (Vite)         │    │  Complete REST   │
 │                  │    │  API (DRF)       │
@@ -125,7 +125,7 @@ Overall Progress:                 [░░░░░░░░░░] 0%
 
 ### Milestones
 
-- [ ] Week 4: Django 5.1 upgraded
+- [ ] Week 4: Django 5.2 upgraded
 - [ ] Week 12: Complete REST API
 - [ ] Week 26: React frontend complete
 - [ ] Week 32: 🎉 Production deployment
@@ -134,7 +134,7 @@ Overall Progress:                 [░░░░░░░░░░] 0%
 ## 🛠️ Technology Stack
 
 ### Backend
-- Django 5.1 LTS
+- Django 5.2
 - Django REST Framework
 - PostgreSQL
 - Redis (caching)
@@ -204,7 +204,7 @@ Use clear, descriptive commit messages:
 ```
 ✅ Good:
 - "Add JWT authentication to API"
-- "Update Django to 5.1"
+- "Update Django to 5.2"
 - "Implement race list component"
 
 ❌ Avoid:
@@ -216,7 +216,7 @@ Use clear, descriptive commit messages:
 ## 📖 Additional Resources
 
 ### Django
-- [Django 5.1 Documentation](https://docs.djangoproject.com/en/5.1/)
+- [Django 5.2 Documentation](https://docs.djangoproject.com/en/5.2/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 
 ### React

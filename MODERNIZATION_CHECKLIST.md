@@ -9,7 +9,7 @@ This is a condensed checklist version of the full modernization plan. Use this f
 ### Django Upgrade
 - [x] Create modernization branch (`git checkout -b modernization`)
 - [x] Backup production database
-- [x] Update requirements.txt: Django 5.1
+- [x] Update requirements.txt: Django 5.2
 - [x] Run migrations in test environment
 - [x] Fix deprecation warnings
 - [x] Update URL patterns (re_path → path)
@@ -249,7 +249,7 @@ This is a condensed checklist version of the full modernization plan. Use this f
 These items are blocking for subsequent work:
 
 1. ⚠️ **Create Development Branch** - All work happens here, production stays stable
-2. ⚠️ **Django 5.1 Upgrade** - Must complete before API work
+2. ⚠️ **Django 5.2 Upgrade** - Must complete before API work
 3. ⚠️ **API Authentication** - Must complete before frontend development
 4. ⚠️ **Complete API Endpoints** - Must complete before frontend can be fully functional
 5. ⚠️ **Testing Infrastructure** - Should be in place early
@@ -318,7 +318,7 @@ docker-compose exec web python manage.py shell
 
 ## Weekly Milestones
 
-- **Week 4:** Django 5.1 running in development ✅
+- **Week 4:** Django 5.2 running in development ✅
 - **Week 8:** 50% of API endpoints complete
 - **Week 12:** Full API with documentation
 - **Week 16:** React authentication working

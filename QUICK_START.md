@@ -39,7 +39,7 @@ python bin/develop.py test
 ```bash
 # Edit requirements.txt
 # Change: Django==4.2.23
-# To:     Django==5.1.0
+# To:     Django==5.2.0
 
 # Install
 pip install -r requirements.txt
@@ -76,7 +76,7 @@ python bin/develop.py test
 ┌─────────────────────────────────────────────────────────┐
 │              DEVELOPMENT (modernization)                │
 │                                                         │
-│  Week 1-4:   Django 5.1 + Dependencies                 │
+│  Week 1-4:   Django 5.2 + Dependencies                 │
 │  Week 5-12:  Complete REST API                         │
 │  Week 13-26: Build React Frontend                      │
 │  Week 27-32: Integration & Testing                     │
@@ -102,12 +102,12 @@ python bin/develop.py test
 ## 📋 Week-by-Week Roadmap
 
 ### Month 1 (Weeks 1-4): Foundation
-- **Week 1:** Django 5.1 upgrade, run tests
+- **Week 1:** Django 5.2 upgrade, run tests
 - **Week 2:** Update/remove dependencies
 - **Week 3:** Set up Black, ruff, CI/CD
 - **Week 4:** Code quality improvements
 
-**Milestone:** Modern Django 5.1 with clean dependencies ✅
+**Milestone:** Modern Django 5.2 with clean dependencies ✅
 
 ### Month 2-3 (Weeks 5-12): Backend API
 - **Week 5:** API audit and planning
@@ -183,7 +183,7 @@ git push origin modernization
 
 Open `MODERNIZATION_CHECKLIST.md` and check off completed items:
 ```markdown
-- [x] Update Django to 5.1
+- [x] Update Django to 5.2
 - [x] Update dependencies
 - [ ] Set up Black
 - [ ] Configure CI/CD
@@ -273,7 +273,7 @@ python bin/develop.py test --warnings
 ### Issue: Package conflicts
 **Solution:** Use exact versions, update one at a time
 ```bash
-pip install Django==5.1.0
+pip install Django==5.2.0
 pip install djangorestframework==3.14.0
 ```
 
@@ -326,8 +326,8 @@ Use this to get started:
 
 ## 🎓 Learning Resources
 
-### Django 5.1
-- [Django 5.1 Release Notes](https://docs.djangoproject.com/en/5.1/releases/5.1/)
+### Django 5.2
+- [Django 5.2 Release Notes](https://docs.djangoproject.com/en/5.2/releases/5.2/)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 
 ### React + TypeScript
