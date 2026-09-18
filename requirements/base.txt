@@ -1,0 +1,27 @@
+# Shared runtime dependencies for both local development and production
+Django==5.2.6
+setuptools<81
+
+djangorestframework==3.18.1
+
+django-allauth==65.19.4
+django-anymail[mailersend]==15.1
+django-cors-headers==4.9.0
+
+django-ical==1.9.2
+# Local fork of django-geoposition kept for the GeopositionField model field.
+./django-geoposition/
+
+# HTTP, timezone and date support
+requests==2.32.4
+python-dateutil==2.9.0.post0
+pytz==2025.2
+tzdata==2026.4
+
+# Feed, parsing and spreadsheet imports
+beautifulsoup4==4.13.5
+icalendar==7.3.0
+ngram==4.0.3
+openpyxl==3.1.5
+pyexcel==0.7.4
+pyexcel-xls==0.7.0

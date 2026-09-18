@@ -1,0 +1,8 @@
+-r base.txt
+
+# Production web server / deployment assets
+gunicorn==26.2.0
+whitenoise==6.12.0
+
+# Deployment / database notes
+# psycopg[binary] is kept commented for environments that use Postgres.
