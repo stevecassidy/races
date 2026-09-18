@@ -165,9 +165,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     #'allauth.socialaccount.providers.facebook',
 
-    # our own auth provider for strava
-    'races.apps.strava',
-    'races.apps.tidyhq',
 
     "bootstrapform",
 

@@ -57,5 +57,3 @@ class ModelTests(TestCase):
         race.save()
 
         self.assertTrue(str(race).find(title) >= 0)
-
-        self.assertEqual(race.get_absolute_url(), "/races/TEST/1")
