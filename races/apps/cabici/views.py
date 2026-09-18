@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -68,12 +68,6 @@ class HomePage(ListView):
         else:
             context['page'] = {'title': 'Content', }
         return context
-
-
-# class TestPageView(TemplateView):
-
-#    template_name = "test.html"
-
 
 class ClubListView(ListView):
     model = Club

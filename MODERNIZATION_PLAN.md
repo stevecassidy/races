@@ -99,7 +99,7 @@ Developers work on the `modernization` branch with:
 - [x] Address deprecation warnings
 - [x] Update URL patterns from `re_path` to `path` with converters
 - [x] Test all existing functionality
-- [ ] Update Django REST Framework to latest version
+- [x] Update Django REST Framework to latest version
 
 **Breaking Changes to Address:**
 - `django.utils.translation` → use `gettext_lazy` consistently
