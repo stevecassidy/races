@@ -169,7 +169,6 @@ INSTALLED_APPS = (
     "bootstrapform",
 
     #'pagination',
-    'geoposition',
 
     'rest_framework',
     'rest_framework.authtoken',

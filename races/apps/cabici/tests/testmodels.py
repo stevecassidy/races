@@ -14,9 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from decimal import Decimal
 from django.test import TestCase
 from django.urls import reverse
 
+from races.apps.cabici.geoposition import Geoposition
 from races.apps.cabici.models import Club, RaceCourse, Race
 import datetime
 
@@ -57,3 +59,17 @@ class ModelTests(TestCase):
         race.save()
 
         self.assertTrue(str(race).find(title) >= 0)
+
+    def test_geoposition_field_round_trip(self):
+        """The model should keep the existing lat,long string representation."""
+
+        loc = RaceCourse(name="Test Course", location="-33.8688,151.2093")
+        loc.save()
+
+        self.assertIsInstance(loc.location, Geoposition)
+        self.assertEqual(str(loc.location), "-33.8688,151.2093")
+        self.assertEqual(loc.location.latitude, Decimal('-33.8688'))
+        self.assertEqual(loc.location.longitude, Decimal('151.2093'))
+
+        reloaded = RaceCourse.objects.get(pk=loc.pk)
+        self.assertEqual(str(reloaded.location), "-33.8688,151.2093")

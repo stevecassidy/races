@@ -9,8 +9,6 @@ django-anymail[mailersend]==15.1
 django-cors-headers==4.9.0
 
 django-ical==1.9.2
-# Local fork of django-geoposition kept for the GeopositionField model field.
-./django-geoposition/
 
 # HTTP, timezone and date support
 requests==2.32.4

@@ -15,8 +15,8 @@
 # limitations under the License.
 
 from django.db import models
-from geoposition.fields import GeopositionField
 from django.urls import reverse
+from races.apps.cabici.geoposition import GeopositionField
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from importlib import import_module
