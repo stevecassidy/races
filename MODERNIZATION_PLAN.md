@@ -116,19 +116,19 @@ Developers work on the `modernization` branch with:
 ### 1.2 Modernize Dependencies (Week 2-3)
 
 **Tasks:**
-- [ ] Remove obsolete packages (frontend being replaced):
+- [x] Remove obsolete packages (frontend being replaced):
   - Bootstrap, jQuery libraries (no longer needed)
   - `django-bootstrap-form` (not needed for API)
   - `django-pagination` (use Django's built-in)
   - `webtest/webob` (if not essential for testing)
   - Review need for `pinax-webanalytics`
-- [ ] Update third-party packages:
+- [x] Update third-party packages:
   - django-allauth (latest)
   - django-cors-headers (latest)
   - djangorestframework (latest)
   - gunicorn (latest)
   - whitenoise (latest)
-- [ ] Pin all package versions for reproducibility
+- [x] Pin all package versions for reproducibility
 
 **Success Criteria:**
 - All dependencies up to date

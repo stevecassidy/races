@@ -16,15 +16,15 @@ This is a condensed checklist version of the full modernization plan. Use this f
 - [x] Run full test suite
 
 ### Dependency Updates
-- [ ] Remove obsolete frontend packages (Bootstrap, jQuery, etc.)
-- [ ] Remove django-bootstrap-form
-- [ ] Remove django-pagination
-- [ ] Update django-allauth
-- [ ] Update django-cors-headers
-- [ ] Update djangorestframework
-- [ ] Update gunicorn, whitenoise
-- [ ] Pin all versions
-- [ ] Test application functionality
+- [x] Remove obsolete frontend packages (Bootstrap, jQuery, etc.)
+- [x] Remove django-bootstrap-form
+- [x] Remove django-pagination
+- [x] Update django-allauth
+- [x] Update django-cors-headers
+- [x] Update djangorestframework
+- [x] Update gunicorn, whitenoise
+- [x] Pin all versions
+- [x] Test application functionality
 
 ### Code Quality
 - [ ] Install and configure Black
