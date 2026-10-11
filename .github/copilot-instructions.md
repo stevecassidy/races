@@ -129,6 +129,26 @@ python bin/runtests.py      # Run tests (uses races/settings/testing.py)
 coverage run bin/runtests.py && coverage report   # Coverage gate (floor 42%)
 ```
 
+### Commit & PR attribution
+
+Assistant attribution must name the model **actually running**. Check it rather
+than assuming:
+
+```bash
+env | grep -E '^PI_MODEL=|^PI_PROVIDER='
+```
+
+- Footer form, in commit messages and PR bodies:
+
+  ```
+  Assisted by: <model name> (<PI_MODEL> via <PI_PROVIDER>)
+  ```
+
+- **Do not** use a `Co-Authored-By:` trailer for the assistant — GitHub resolves
+  it to a real account, so it means inventing an identity and an email address.
+- **Never** name a model that is not the one in the session. Attributing work to
+  the wrong model is a factual error in the permanent record, not a courtesy.
+
 ### Testing Requirements
 
 - **Write tests for all new code**
