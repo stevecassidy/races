@@ -435,7 +435,7 @@ against the real API.
 
 | App | Status | Role here |
 |---|---|---|
-| Angular (`cabici-raceday`, Angular 8 / TS 3.5, 5,164 lines, 11 components, last touched 2022) | **deployed and reliable** | Keeps running untouched. **The compatibility target** for the new results endpoint, and the only correct record of the upload/download wire format |
+| Angular (`cabici-raceday`, Angular 8 / TS 3.5, 5,164 lines, 11 components, last touched 2022) | **Deployed race-day system, retires at cutover alongside the new API** | Reference for legacy wire format in `docs/raceday-contract.md` — not carried forward into the new endpoint |
 | React (`cabici-raceday-react`, 3,724 lines, 8 pages/components, last commit 2026-09-05) | **unfinished**, predates the server work | Vendored as `frontend/apps/raceday`; the thing we finish |
 | `frontend/apps/web` | to be built | The SPA replacing the Django template screens |
 
@@ -490,9 +490,8 @@ against the real API.
 - [ ] **D1:** the app sends `newriders`, `api.py:654` reads `riders` → **riders
       registered at the track are never saved**, their entries are dropped into an
       `errors` array the app discards, and the response is HTTP 200
-      `"race results uploaded"`. Reproduced against the real API. **Not live —
-      Angular, which is deployed, sends `riders`.** Fix by restoring the Angular
-      mapping (internal `newriders` → wire `riders`)
+      `"race results uploaded"`. Reproduced against the real API at cutover — an artifact of the legacy interface.
+      The new API uses `newriders[]` natively.
 - [ ] **D2:** the app looks riders up by `String(entry.rider)` but the API returns
       `rider` as a **display string** and the ID as `riderid` → **downloading
       existing entries always returns an empty sheet**. Angular used
@@ -540,8 +539,7 @@ types left in either app.
 ### 2.3 Resource Model & API Contract (Week 7)
 
 Replaces the old "map current views to endpoints" task — the old views are going
-away, so resources are derived from the domain instead. **One contract now serves
-both clients**, and the generated client is the only sanctioned way to talk to it.
+away, so resources are derived from the domain instead. **One contract, designed for the React app alone**, and the generated client is the only sanctioned way to talk to it.
 
 - [ ] Enumerate resources from the merged models: clubs, races, racecourses,
       riders, memberships, club roles, user roles, club grades, race staff, race
@@ -601,10 +599,9 @@ few specific tasks.
       back the current home page content. With `/` owned by the SPA, either
       expose pages as a resource (`GET /api/pages/<path>/`) or reorder the
       middleware
-- [ ] **Delete DRF token auth** once the vendored raceday app is on JWT in the
-      same cutover. Note the sequencing: **Angular is still deployed and uses
-      token auth**, so token auth must survive until Angular is retired (Phase 4
-      gate), not until the React app is vendored
+- [ ] **Delete DRF token auth** at cutover alongside Angular — neither the React
+      raceday app nor the SPA needs it; both use JWT (refresh in httpOnly cookie)
+      from the start.
 - [ ] Migrate `frontend/apps/raceday` off `AUTH_HEADER_PREFIX = 'Token'` and its
       `localStorage` token storage
 
@@ -1033,16 +1030,12 @@ separate build outputs.
 - ~~Update DNS/routing as needed~~ · ~~Update CORS settings for production domain~~
   — both eliminated by same-origin
 
-**Angular retirement (new gate, third revision):**
-- [ ] **Do not retire Angular at cutover.** It is the deployed race-day system and
-      the React replacement is unfinished. It keeps running against the API's
-      compatibility surface
-- [ ] Keep DRF **token auth** alive until Angular actually goes
-- [ ] Define the exit criteria for `apps/raceday` (parity with Angular's 11
-      components + D1/D2/D4 fixed + A8/A9 honoured + offline behaviour verified)
-      and retire Angular only in a separate, deliberate step after a race or two
-      on the new app
-- [ ] Only then delete the legacy API surface and token auth
+**Angular retirement (cutover, not a separate gate):**
+- [ ] Angular retires at cutover alongside the new API, `apps/web`, and
+      `apps/raceday`. No phased withdrawal — all three deploy together.
+- [ ] Before cutover, confirm parity: `apps/raceday` has equivalent features for all
+      11 Angular components, D1/D2/D4 are fixed, A8/A9 honored, offline behavior
+      verified on a real race.
 
 **Post-Deployment:**
 - [ ] Monitor application for 24-48 hours

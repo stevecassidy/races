@@ -112,9 +112,11 @@ Briefing facts that changed the plan:
 > 3. **WMCC is the only client club** — do not design for multi-tenancy.
 > 4. **The React race-day app is vendored into `frontend/`; deployment is
 >    same-origin** (Django serves both builds, so **CORS is deleted**).
-> 5. **Angular is the deployed system and stays deployed.** It is the
->    **compatibility target** for the new results endpoint and the reference for
->    the wire format; **token auth survives until Angular retires** (Phase 4 gate).
+> 5. **Cutover deploys new API + `apps/web` + `apps/raceday` together.**
+>    Angular retires at cutover alongside them — no phased withdrawal. The old
+>    Angular interface (`payload.riders`, display-string `rider`) is not carried
+>    forward; the new API uses the correct keys (`newriders[]`, `riderid`) natively.
+>    DRF token auth goes at cutover with Angular.
 > 6. D1/D2 are **React-only, not live** — no hotfix, no urgency. **A9 is the one
 >    live production bug.** A8 is unblocked membership work sitting in an
 >    unfinished client.
@@ -188,16 +190,16 @@ Briefing facts that changed the plan:
 
 ### 2.2 Monorepo: Vendor the Race-Day App (Week 6)
 
-**Topology** — Angular is deployed and stays deployed; the React app is unfinished
-and is the forward path.
+**Cutover deploys both React apps together.** `apps/web` replaces the Django views;
+`apps/raceday` replaces Angular at cutover with no phased withdrawal.
 - [ ] **Do not vendor Angular as a buildable app** (Angular 8 in CI is cost with no
       benefit, and a third race-day implementation invites "which is live?")
 - [ ] **Extract Angular's wire semantics into `docs/raceday-contract.md`** — the
       `_buildUploadPayload()` field list (`payload.riders`) and the
       `getRider(e.riderid)` download mapping — so the spec does not depend on a
       sibling checkout surviving
-- [ ] **Keep the new results endpoint acceptable to Angular unchanged**, so the
-      deployed system works through Phases 2–3 and its retirement is a deletion
+- [ ] **Design the upload/download semantics cleanly for the React app** (no legacy
+      shapes needed)
 - [ ] `git subtree add --prefix=frontend/apps/raceday stevecassidy/cabici-raceday-react main`
       (preserve history — the blame is the D1/D2 provenance evidence)
 - [ ] pnpm workspaces root under `frontend/`; Node pinned; apps stay **two
@@ -229,7 +231,7 @@ and is the forward path.
       authenticated user can replace any race's results, and a mid-request failure
       leaves it half-populated (reproduced: 3 → 1, HTTP 200). Add
       `transaction.atomic()`, a permission class, and an explicit overwrite
-      contract instead of silent replace-all — **while staying Angular-compatible**
+      contract instead of silent replace-all
 - [ ] **A8:** honour `member_category` + `verifiedMemberDate` (track (a) above)
 - [ ] **Preserve the offline contract:** full paginated load + `localStorage`
       cache + `?changed=<unix>` merge-by-`rider.id`. Load-bearing at the
@@ -270,8 +272,8 @@ and is the forward path.
       or reorder the middleware
 - [ ] Migrate `frontend/apps/raceday` off `AUTH_HEADER_PREFIX = 'Token'` and its
       `localStorage` token storage
-- [ ] **DRF token auth stays until Angular retires** (Phase 4 gate) — the deployed
-      client uses it, so it cannot go when the React app is vendored
+- [ ] **Delete DRF token auth at cutover alongside Angular.** Neither app needs
+      legacy token auth — both use JWT from day one (refresh in httpOnly cookie).
 
 ### 2.5 Core CRUD Implementation (Weeks 9-10)
 - [ ] ViewSets + routers under `/api/v1/` (no hand-wired URL pairs)
