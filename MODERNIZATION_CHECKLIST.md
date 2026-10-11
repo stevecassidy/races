@@ -27,12 +27,59 @@ This is a condensed checklist version of the full modernization plan. Use this f
 - [x] Test application functionality
 
 ### Code Quality
-- [ ] Install and configure Black
-- [ ] Install and configure ruff
-- [ ] Set up pre-commit hooks
-- [ ] Configure GitHub Actions CI
-- [ ] Run formatters on codebase
-- [ ] Fix linting issues
+- [x] Install and configure Black
+- [x] Install and configure ruff
+- [x] Set up pre-commit hooks
+- [x] Configure GitHub Actions CI
+- [x] Run formatters on codebase
+- [x] Fix linting issues (legacy debt quarantined, see below)
+- [x] Add mypy for type checking (shallow: `check_untyped_defs = false`)
+
+### Phase 1 Exit Notes (2026-10-11)
+
+Verified on a throwaway virtualenv built from `requirements/dev.txt`:
+
+```bash
+ruff check .                 # clean
+black --check .              # clean
+python bin/develop.py check  # no issues
+python bin/develop.py makemigrations --check --dry-run   # no changes
+mypy races                   # no issues (68 files)
+python bin/runtests.py       # 49 tests, OK, 1 skipped
+coverage report              # 44% (CI floor 42%)
+```
+
+What the phase actually uncovered and fixed (the branch did **not** boot on a
+clean install before this):
+
+1. `bootstrapform` was still in `INSTALLED_APPS` after the package was dropped →
+   `ModuleNotFoundError` for CI, Docker and any new developer.
+2. `debug_toolbar` was wired into the shared base settings but only installed in
+   `dev.txt` → same failure for production settings.
+3. `0001_initial` still imported `geoposition.fields` (submodule removed) → any
+   `migrate` on a clean install crashed.
+4. The vendored `GeopositionField` lost its descriptor, so in-memory instances
+   held strings while reloaded ones held `Geoposition` (failing test).
+5. `SECRET_KEY` was a committed literal; it now comes from the environment and
+   production refuses to start without it.
+6. CI only ran on `master`, so the modernization branch was untested.
+7. The Docker image installed the dev toolchain and had no PostgreSQL driver.
+
+Known gaps carried into Phase 2:
+
+- Coverage 44% vs the >80% target; `forms.py`, `auscycling.py`, `feeds.py` and
+  all management commands are at 0%.
+- `races/apps/cabici/forms.py` is now imported by nothing (the template views
+  that used it are gone) - port or delete.
+- `races/apps/cabici/feeds.py` (iCal/Atom) is still unrouted - decide whether to
+  expose it as an API endpoint or drop it.
+- `usermodel.save_rider()` is a dead Strava social-auth callback.
+- Lint debt is quarantined by `per-file-ignores` in `pyproject.toml` for
+  `races/ingest/*` (bare excepts that are load-bearing for scraper fallbacks) and
+  `races/apps/cabici/tests/*` (star imports, unused locals). Clear them as those
+  modules are rewritten.
+- `TIME_ZONE = 'Europe/Helsinki'` in base settings for a NSW racing app -
+  unresolved, needs an owner decision (changing it shifts displayed times).
 
 ## ✅ Phase 2: Backend API (Weeks 5-12)
 
@@ -42,6 +89,28 @@ This is a condensed checklist version of the full modernization plan. Use this f
 - [ ] Design API structure
 - [ ] Create API specification document
 - [ ] Plan permission model
+
+#### Findings from the Phase 1 review of `api.py` (829 lines, single module)
+
+- No routers/ViewSets: 7 hand-wired list/detail URL pairs, no `/api/v1/`, no
+  filtering/search/ordering backends, pagination on `RiderList` only.
+- `ClubOfficialPermission` reads `request.user.rider` unguarded → any
+  authenticated user without a Rider gets a 500 instead of 403 (the view code
+  uses `getattr`, the permission class does not).
+- `CustomAuthTokenSerializer.validate` calls `User.objects.get(email__iexact=…)`
+  → 500 on an unknown email instead of 401, and the response assumes
+  `user.rider` exists.
+- `RaceResultList.post` (the result uploader) has **no permission class** (it
+  inherits `IsAuthenticatedOrReadOnly`), deletes every result for the race and
+  re-inserts them without `transaction.atomic`, and swallows `IntegrityError`.
+  Highest-risk endpoint in the app.
+- `RaceOfficialField.to_internal_value()` still has a debug `print()`.
+- `fields = '__all__'` on the `RaceCourse`, `RaceStaff` and `RaceResult`
+  serializers exposes every writable model field.
+- No endpoints for `Membership`, `ClubGrade` or `ClubRole`, all of which the
+  planned club-management screens need.
+- CSV/XLS exports and the iCal/Atom feeds have no API equivalent.
+- `testapi.py:464` is `@skip('create not implemented yet')`.
 
 ### API Development
 - [ ] Create serializers for all models
@@ -177,6 +246,31 @@ This is a condensed checklist version of the full modernization plan. Use this f
 - [ ] Remove frontend middleware
 - [ ] Update INSTALLED_APPS
 - [ ] Final code cleanup
+
+#### Template reachability (analysed during Phase 1, delete in this phase)
+
+`races/templates/` (a `TEMPLATES DIRS` entry) shadows the same-named files in
+`races/apps/cabici/templates/`, so the app copies below are unreachable and can
+ go with the rest of the template layer:
+
+- `cabici/templates/account/{login,signup,password_reset,password_change,settings,delete}.html`
+  and the pinax-era `password_reset_token*.html`, `email_confirmation_sent.html`,
+  `email_confirmed.html`, `password_reset_sent.html`, `_login_sidebar.html`,
+  `_signup_sidebar.html` — none of these template names exist in allauth 65
+- `cabici/templates/account/email/{invite_user,password_reset,password_change}*.txt`
+  (allauth uses `password_reset_key_*`)
+- `cabici/templates/pagination/*` (django-pagination removed), `test.html`,
+  `theme_bootstrap/*` (uses `{% load staticfiles %}`, gone in Django 4.0),
+  `cabici/templates/_account_bar.html`
+- `races/templates/registration/*` — Django auth views that are no longer routed
+- 3.3 MB of `cabici/static/` (bootstrap, bootstrap-select, bootstrap-datetimepicker,
+  datepicker, jQuery)
+
+Still live until the React app replaces them: `cabici/templates/index.html`
+(`HomePage`), `site_base.html`, `_messages.html`, `404/500.html`,
+`flatpages/default.html`, `races/templates/account/*` (allauth login/reset flow,
+still the only way officials sign in until JWT lands) and
+`races/templates/rest_framework/api.html`.
 
 ### Integration Testing
 - [ ] Full end-to-end testing

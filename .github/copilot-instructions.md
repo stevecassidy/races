@@ -8,6 +8,12 @@ This is the Cabici cycling race management application, currently undergoing a c
 
 **Critical:** This project is in active modernization from Django 4.2 + jQuery to Django 5.2 + React.
 
+**Status (2026-10-11):** Phase 1 (Foundation) is complete — Django 5.2 / Python 3.14,
+clean-install boot verified, black + ruff + mypy + coverage gated in CI on the
+`modernization` branch. Work now starts at Phase 2.1 (API audit & planning). See
+[MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) → "Phase 1 Exit Notes"
+for verified state and carried-forward debt.
+
 ### Key Documents
 
 - **[MODERNIZATION_README.md](../MODERNIZATION_README.md)** - Project overview
@@ -60,10 +66,12 @@ This is the Cabici cycling race management application, currently undergoing a c
 ### Code Quality Standards
 
 ```bash
-# Before committing, always run:
+# Before committing, always run (or just `pre-commit run --all-files`):
 black .                      # Format Python code
 ruff check --fix .          # Lint and fix Python
-python bin/develop.py test   # Run tests
+mypy races                  # Type check
+python bin/runtests.py      # Run tests (uses races/settings/testing.py)
+coverage run bin/runtests.py && coverage report   # Coverage gate (floor 42%)
 ```
 
 ### Testing Requirements
@@ -184,12 +192,15 @@ class RaceViewSet(viewsets.ModelViewSet):
 ```bash
 # Development
 python bin/develop.py runserver
-python bin/develop.py test
+python bin/runtests.py
 python bin/develop.py makemigrations
+python bin/develop.py migrate
 
 # Code quality
 black .
 ruff check --fix .
+mypy races
+pre-commit run --all-files
 
 # React (when available)
 npm run dev

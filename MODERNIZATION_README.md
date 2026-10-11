@@ -87,19 +87,20 @@ Transform the Cabici cycling application into a modern, maintainable system:
 ### Quick Start (15 minutes)
 
 ```bash
-# 1. Create development branch
-git checkout -b modernization
+# 1. Switch to the development branch (already created)
+git checkout modernization
 
 # 2. Set up environment
-python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate
-pip install -r requirements.txt
+python -m venv .venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+pip install -r requirements/dev.txt
+pre-commit install
 
-# 3. Run tests to verify
-python bin/develop.py test
+# 3. Run the quality gates and tests
+ruff check . && black --check . && python bin/runtests.py
 
-# 4. Start Phase 1!
-# See QUICK_START.md for detailed steps
+# 4. Start Phase 2 work!
+# See MODERNIZATION_CHECKLIST.md for the current task list
 ```
 
 ### What to Read First
@@ -114,18 +115,23 @@ python bin/develop.py test
 ### Current Status
 
 ```
-Phase 1: Foundation               [░░░░░░░░░░] 0%
+Phase 1: Foundation               [██████████] 100% ✅
 Phase 2: Backend API              [░░░░░░░░░░] 0%
 Phase 3: React Frontend           [░░░░░░░░░░] 0%
 Phase 4: Integration & Deployment [░░░░░░░░░░] 0%
 Phase 5: Optimization             [░░░░░░░░░░] 0%
 ───────────────────────────────────────────────
-Overall Progress:                 [░░░░░░░░░░] 0%
+Overall Progress:                 [█░░░░░░░░░] 10%
 ```
+
+Verified state of the `modernization` branch (2026-10-11): Django 5.2 / Python
+3.14, clean-install boot, 49 tests passing, coverage 44%, lint/format/type
+checks gated in CI. See "Phase 1 Exit Notes" in
+[`MODERNIZATION_CHECKLIST.md`](MODERNIZATION_CHECKLIST.md).
 
 ### Milestones
 
-- [ ] Week 4: Django 5.2 upgraded
+- [x] Week 4: Django 5.2 upgraded
 - [ ] Week 12: Complete REST API
 - [ ] Week 26: React frontend complete
 - [ ] Week 32: 🎉 Production deployment
@@ -243,21 +249,30 @@ Use clear, descriptive commit messages:
 
 ## 🎯 Next Steps
 
-Ready to begin? Here's your path forward:
+Phase 1 (Foundation) is complete. From here:
 
 1. ✅ **Read this README** - You're here!
-2. ⬜ **Review [QUICK_START.md](QUICK_START.md)** - Set up your environment
-3. ⬜ **Scan [MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** - Understand the plan
-4. ⬜ **Create modernization branch** - Start developing
-5. ⬜ **Begin Phase 1** - Django upgrade
-6. ⬜ **Track progress** - Use the checklist daily
+2. ⬜ **Scan [MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** - Understand the plan
+3. ⬜ **Read the Phase 1 Exit Notes** in [MODERNIZATION_CHECKLIST.md](MODERNIZATION_CHECKLIST.md) - what works, what's owed
+4. ⬜ **Start Phase 2.1** - API audit & planning (endpoint map is already drafted)
+5. ⬜ **Track progress** - Use the checklist daily
+
+```bash
+# set up a development environment
+git checkout modernization
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements/dev.txt
+pre-commit install
+python bin/runtests.py
+```
 
 ## 📝 Project Status
 
-**Status:** 📋 Planning Complete - Ready to Begin Development  
+**Status:** ✅ Phase 1 complete - Moving to Phase 2 (Backend API)  
 **Created:** 2026-08-29  
+**Last Updated:** 2026-10-11  
 **Target Completion:** Q2 2027 (9 months from start)  
-**Current Phase:** Phase 0 - Pre-Development
+**Current Phase:** Phase 2 - Backend API Completion
 
 ---
 
@@ -265,13 +280,6 @@ Ready to begin? Here's your path forward:
 
 This modernization will transform the Cabici application into a maintainable, performant, and user-friendly system. The foundation is solid, the plan is clear, and the path forward is well-defined.
 
-**Ready?** Create your development branch and let's get started! 🚀
-
-```bash
-git checkout -b modernization
-echo "The journey of a thousand miles begins with a single commit!" 
-```
-
 ---
 
-*Last Updated: 2026-08-29*
+*Last Updated: 2026-10-11*

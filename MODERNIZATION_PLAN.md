@@ -7,7 +7,7 @@ This document outlines a comprehensive plan to modernize the Cabici racing appli
 **Development Approach:**
 The current production application remains stable while modernization work happens in parallel on a development branch. Once all phases are complete and tested, the new version will be deployed to production. This allows for more aggressive refactoring without concern for intermediate states or maintaining backward compatibility during development.
 
-**Current State:**
+**Current State (as delivered on `master`):**
 - Django 4.2.23
 - Python 3.11
 - Template-based frontend with Bootstrap 3
@@ -16,6 +16,14 @@ The current production application remains stable while modernization work happe
 - Mixed class-based and function-based views
 - SQLite dev / PostgreSQL production
 - Docker deployment
+
+**State on the `modernization` branch (after Phase 1, 2026-10-11):**
+- Django 5.2, Python 3.14, all versions pinned in `requirements/{base,dev,production}.txt`
+- Template views stripped down to `HomePage`; ~61 legacy templates and 3.3 MB of
+  Bootstrap/jQuery static assets remain for Phase 4
+- Partial REST API in a single 829-line `api.py` (token auth, no routers)
+- PostgreSQL driver + production dependency set in the Docker image
+- Black / ruff / mypy / coverage / pre-commit / CI in place
 
 **Target State:**
 - Django 5.2 (latest stable)
@@ -139,17 +147,41 @@ Developers work on the `modernization` branch with:
 ### 1.3 Code Quality & Standards (Week 3-4)
 
 **Tasks:**
-- [ ] Set up pre-commit hooks
-- [ ] Configure Black for code formatting
-- [ ] Configure ruff or flake8 for linting
-- [ ] Add mypy for type checking
-- [ ] Run formatters on existing codebase
-- [ ] Add GitHub Actions / CI pipeline for testing
+- [x] Set up pre-commit hooks
+- [x] Configure Black for code formatting
+- [x] Configure ruff or flake8 for linting
+- [x] Add mypy for type checking
+- [x] Run formatters on existing codebase
+- [x] Add GitHub Actions / CI pipeline for testing
 
 **Success Criteria:**
-- Consistent code formatting
-- CI/CD pipeline running tests
-- Linting integrated into workflow
+- [x] Consistent code formatting
+- [x] CI/CD pipeline running tests
+- [x] Linting integrated into workflow
+
+### 1.4 Phase 1 Exit Summary (2026-10-11)
+
+Phase 1 is complete. The branch now installs and boots from a clean virtualenv,
+and CI gates every push to `modernization` and PRs against it with: `ruff`,
+`black --check`, `manage.py check`, `makemigrations --check`, `mypy` and the test
+suite under `coverage` (floor 42%, measured 44%).
+
+Tooling configuration lives in `pyproject.toml`; `.pre-commit-config.yaml` runs
+the same tools locally from `requirements/dev.txt`. Black is set to
+`line-length = 120` and both tools exclude
+`races/apps/cabici/migrations/` (machine-generated history).
+
+Two structural fixes were needed before any of that worked, because the branch
+had been left in a state where **only the original author's virtualenv could run
+it**: dangling `bootstrapform`/`debug_toolbar` app registrations for packages that
+had been removed from the requirements files, and a `0001_initial` migration that
+still imported the deleted `django-geoposition` submodule. See
+`MODERNIZATION_CHECKLIST.md` → "Phase 1 Exit Notes" for the full list, the
+verification commands, and the debt carried into Phase 2 (including the
+`api.py` review findings and the unresolved `TIME_ZONE` question).
+
+**Definition of done for Phase 2 entry:** nothing outstanding — start at 2.1 with
+the endpoint inventory, using the `api.py` notes already recorded.
 
 ---
 
