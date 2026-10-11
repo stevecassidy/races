@@ -16,22 +16,13 @@
 
 import datetime
 
-import ngram
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 
 from races.apps.cabici.geoposition import GeopositionField
 
 
-class ClubManager(models.Manager):
-
-    pass
-
-
 class Club(models.Model):
-
-    objects = ClubManager()
 
     name = models.CharField(max_length=100)
     website = models.URLField(max_length=400)
@@ -241,79 +232,9 @@ class Club(models.Model):
         promotable.sort(key=lambda x: x.user.last_name)
         return promotable
 
-    def ingest_race_list(self, races):
-        """Create races from a list of dictionaries containing
-        the race properties
-        Required properties are:
-        title
-        date - ISO date string YYYY-MM-DD
-        time - ISO time string HH:MM
-        location - a string that we can use to guess the race course
-        url
-        hash - unique has for the race to spot duplicates
-
-        Return a tuple of (races, errors) where races is a list of
-        Race instances and errors is a list of any errors produced
-        during the process
-
-        """
-
-        racelist = []
-        errors = []
-        for r in races:
-            # do we already have this race?
-            if Race.objects.filter(hash=r["hash"]).count() == 0:
-                location = RaceCourse.objects.find_location(r["location"])
-
-                # title may need truncating
-                if len(r["title"]) > 100:
-                    r["title"] = r["title"][:99]
-
-                try:
-                    race = Race(
-                        title=r["title"],
-                        date=r["date"],
-                        starttime=r["time"],
-                        club=self,
-                        location=location,
-                        website=r["url"],
-                        hash=r["hash"],
-                    )
-
-                    race.save()
-                    racelist.append(race)
-                except ValidationError as e:
-                    # report the error?
-                    errors.append(str(e))
-                    # print "Race ingest error: ", e
-        # else:
-        # print "Race duplicate", r['title'], r['date']
-
-        return (racelist, errors)
-
-
-class RaceCourseManager(models.Manager):
-
-    def find_location(self, name):
-        """Find a RaceCourse using an approximate match to
-        the given name, return the best matching RaceCourse instance"""
-
-        courses = self.all()
-
-        ng = ngram.NGram(courses, key=str)
-
-        location = ng.finditem(name)
-
-        if location is None:
-            location, created = self.get_or_create(name="Unknown")
-
-        return location
-
 
 class RaceCourse(models.Model):
     """A place where a race happens"""
-
-    objects = RaceCourseManager()
 
     name = models.CharField(max_length=100)
     shortname = models.CharField(max_length=20, default="")

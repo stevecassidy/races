@@ -149,7 +149,7 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 5. Optimization (Weeks 33-38)
 
 Phase 2 runs **2.0 Retirement Pass** (delete the out-of-date ingest pipelines and
-the withdrawn AusCycling polling — 2,742 measured lines) → **2.1 Model Hardening** →
+the withdrawn AusCycling polling — 3,463 Python lines) → **2.1 Model Hardening** →
 **2.2 Vendor & audit the race-day React app** (it moves into `frontend/`, and its
 upload path currently loses data — D1/D2/D3) → 2.3 Resource model & OpenAPI
 contract for **both** clients → 2.4 Auth (JWT same-origin, CORS deleted, token

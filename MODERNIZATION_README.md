@@ -141,8 +141,8 @@ depend on a sibling checkout surviving.
 
 The owner briefing established that the **ingest pipelines are out of date** and
 that **AusCycling membership polling has been withdrawn**, pending a new API
-provider. Phase 2 therefore opens with a retirement pass — **2,742 measured lines** and
-nine dependencies — which resolves four of the nine model defects by removal
+provider. Phase 2 therefore opens with a retirement pass — **3,463 Python lines and
+11 dependencies** — which resolves four of the nine model defects by removal
 rather than repair. **WMCC is the only client club**, so the API must not be
 designed for multi-tenancy, and the hardcoded pointscale becomes data instead of
 a bug. Membership categories are to be redesigned around the new AusCycling

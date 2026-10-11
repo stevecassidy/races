@@ -71,7 +71,7 @@ no change lands unseen
 **What:** Retire the dead subsystems, then replace the ad-hoc API with a
 contract-first `/api/v1/`
 - Retirement pass: ingest pipelines, withdrawn AusCycling polling, dead import
-  paths, unreachable export views (2,742 measured lines, 9 dependencies)
+  paths, unreachable export views (3,463 Python lines, 11 dependencies)
 - Harden the models (defects, DB constraints, `services/` extraction)
 - Vendor the **race-day React app** into `frontend/` and audit its upload path —
   it currently loses rider creations (D1) and can wipe a meeting's results (D3)
