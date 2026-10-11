@@ -59,13 +59,26 @@ for verified state and carried-forward debt.
 6. **Do not add endpoints to `races/apps/cabici/api.py`** - it is frozen and
    scheduled for deletion; new work goes in the `api/` package (see API Rules)
 
-### When Working on Frontend (Future `cabici-frontend/` directory)
+### When Working on Frontend (`frontend/` — monorepo, decided 2026-10-11)
 
-1. **Use TypeScript** - All React code should be typed
-2. **React Query for API state** - Use TanStack Query
-3. **Tailwind or MUI for styling** - Not Bootstrap
-4. **Component-based architecture** - Reusable components
-5. **API client in `/src/api/`** - Centralized API calls
+Two React apps live in this repo under a pnpm workspace root:
+`frontend/apps/raceday` (vendored from `stevecassidy/cabici-raceday-react` — the
+offline, race-day entry app and the only way riders are created today) and
+`frontend/apps/web` (the SPA replacing the Django template views). Both consume
+`frontend/packages/api-client`.
+
+1. **Never hand-write API types or calls** - import them from
+   `packages/api-client`, generated from the server's OpenAPI schema. This is the
+   control that prevents a repeat of D1/D2 (a hand-maintained payload key
+   silently lost rider data across two repos)
+2. **TypeScript** - all React code is typed
+3. **Stack is fixed by the vendored app** - React 18 + Vite + **MUI** +
+   react-hook-form + axios + Vitest. Not Bootstrap; not Tailwind
+4. **TanStack Query for server state** - introduce in `apps/web` first; do not
+   break `apps/raceday`'s offline `localStorage` + delta-sync behaviour
+5. **Keep the two apps as separate deployables** - race day is high-stakes
+6. **Changing an endpoint shape means changing the schema first**, then
+   regenerating, then fixing both apps in the same commit
 
 ### Code Quality Standards
 
@@ -98,10 +111,13 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 5. Optimization (Weeks 33-38)
 
 Phase 2 runs **2.0 Retirement Pass** (delete the out-of-date ingest pipelines and
-the withdrawn AusCycling polling — ~2,400 lines) → **2.1 Model Hardening** →
-**2.2 The Race-Day Contract** (the one frozen external contract, designed before
-the general API). Findings it acts on (A1-A9 defects, B1-B9 integrity, C1-C12
-structure) are numbered in [MODEL_REVIEW.md](../MODEL_REVIEW.md).
+the withdrawn AusCycling polling — 2,742 measured lines) → **2.1 Model Hardening** →
+**2.2 Vendor & audit the race-day React app** (it moves into `frontend/`, and its
+upload path currently loses data — D1/D2/D3) → 2.3 Resource model & OpenAPI
+contract for **both** clients → 2.4 Auth (JWT; token auth deleted) → 2.5 CRUD →
+2.6 Docs → 2.7 Tests + delete `api.py`. Findings it acts on (A1-A9 and D1-D4
+defects, B1-B9 integrity, C1-C12 structure) are numbered in
+[MODEL_REVIEW.md](../MODEL_REVIEW.md).
 
 ## Important Notes
 
@@ -147,19 +163,18 @@ races/
       tests/              # Test files
 ```
 
-### Frontend Structure (To Be Created)
+### Frontend Structure (monorepo)
 
 ```
-cabici-frontend/
-  src/
-    api/              # Generated + hand-written API client
-    components/       # Reusable components
-    features/         # Feature modules
-      clubs/
-      races/
-      riders/
-    hooks/            # Custom hooks
-    pages/            # Page components
+frontend/
+  package.json          # pnpm workspaces root
+  packages/
+    api-client/         # GENERATED from the OpenAPI schema - the only sanctioned
+                        # way to call the API
+    ui/                 # shared components (only with a real 2nd consumer)
+  apps/
+    raceday/            # vendored offline entry app (apps/raceday): the upload path
+    web/                # new SPA replacing the Django views
 ```
 
 ## API Rules
@@ -168,12 +183,18 @@ The pre-existing `races/apps/cabici/api.py` was built ad-hoc for the jQuery
 screens and is **replaced, not extended** (rationale and evidence:
 [MODEL_REVIEW.md](../MODEL_REVIEW.md)). When building the new API:
 
-- **The race-day contract is frozen.** The external race-day entry application
-  (not in this repo) authenticates with a DRF token, downloads
-  `GET /clubs/<slug>/riders.xlsx`, and posts `POST /api/raceresults/` with
-  `{race, entries[], riders[]}` expecting `{message, errors, ridermap}`. It is
-  the app's only rider-creation path. Reproduce it compatibly until it is
-  formally retired — do **not** treat it as free to redesign.
+- **The race-day upload path is the highest-risk surface in the app.** The
+  vendored client posts `{race, entries[], newriders[]}` while `api.py` reads
+  `data["riders"]` (D1: rider creations are silently lost) and returns `rider` as
+  a display string where the client expects an ID (D2: downloads always come back
+  empty); together, a re-upload from an empty sheet **wipes the meeting's
+  results** (D3). The contract is **co-designed, not frozen** - the client is in
+  this repo now - but it must be fixed with regression tests that exercise the
+  real HTTP boundary, and the Angular `entry.service.ts` is the reference
+  implementation of the correct mapping.
+- **Offline is a requirement.** `apps/raceday` does a full paginated rider load,
+  caches it in `localStorage`, and refreshes with `?changed=<unix>`, merging by
+  rider ID. Any replacement (`?updated_after=`) must preserve all of that.
 - **Contract-first.** Define the resource, filters and payload shapes in the
   OpenAPI spec before implementing; the React client is generated from it.
 - **Never `fields = '__all__'`.** Declare read and write shapes explicitly.

@@ -111,11 +111,11 @@ python bin/develop.py test
 
 ### Month 2-3 (Weeks 5-12): Backend API Rebuild
 - **Week 5:** Retirement pass (ingest, withdrawn AusCycling polling, dead import
-  paths) + model hardening
-- **Week 6:** Race-day contract design (frozen external client) + resource model
-  and OpenAPI contract
-- **Week 7:** Publish contract, generate TypeScript client
-- **Week 8:** JWT authentication (token auth retained for the entry app)
+  paths, unreachable exports) + model hardening
+- **Week 6:** Vendor the race-day React app into `frontend/` and audit its upload
+  path (D1–D4); publish the resource model + OpenAPI contract for both clients
+- **Week 7:** Generate the TypeScript client; wire `apps/raceday` onto it
+- **Week 8:** JWT authentication (token auth deleted at cutover)
 - **Week 9-10:** Core CRUD as ViewSets under `/api/v1/`
 - **Week 11:** API documentation
 - **Week 12:** API test suite; delete legacy `api.py`

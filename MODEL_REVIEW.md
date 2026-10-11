@@ -14,9 +14,123 @@ Every claim below was checked at runtime against the shipped fixtures, not read
 off the screen. The probes are reproduced in [Verification](#verification) so
 you can re-run them after changes.
 
-> **Read the revision first.** The evidence in Parts 1 and 2 stands, but the
-> *dispositions* changed after the owner briefing on 2026-10-11. See
-> [Revision](#-revision-2026-10-11-after-owner-briefing) immediately below.
+> **Read the revisions first.** The evidence in Parts 1 and 2 stands, but the
+> *dispositions* changed twice on 2026-10-11 as the owner briefing landed. See
+> [Revision](#-revision-2026-10-11-after-owner-briefing) and
+> [Second revision](#-second-revision-the-raceday-client-is-in-house-react)
+> immediately below. Where a later section contradicts a revision, **the revision
+> wins**.
+
+---
+
+## ⚠️ Second revision — the race-day client is in-house React
+
+The briefing added two facts that overturn the "frozen contract" framing: the
+race-day app **was rewritten in React in-house**, and the decision is to
+**bring it into this repository** alongside the SPA that will replace the Django
+views.
+
+Both repos are on this machine, so this revision is based on reading the actual
+client rather than inferring it from the server:
+
+| Artefact | Location |
+|---|---|
+| Race-day React app (current) | `../cabici-raceday-react` — `stevecassidy/cabici-raceday-react`, Vite + React 18 + TS + MUI + pnpm, Vitest, PWA/offline, Sentry. Last commit 2026-09-05; upload feature landed 2026-08-29 (`c2e029c`) |
+| Angular predecessor (reference) | `../cabici-race-manager-owen` — remote `stevecassidy/cabici-raceday`, Angular 8 + Material |
+| Its own context doc | `PROJECT_CONTEXT.md`: *"React 18 rewrite of Angular 8 race management application … Backend API remains unchanged (separate repository)"*, *"in regular production use"* |
+
+### This overturns the "frozen contract"
+
+The first revision concluded that `POST /api/raceresults/` and
+`GET /clubs/<slug>/riders.xlsx` were a **frozen external contract** to be
+reproduced byte-compatibly. Wrong on both counts:
+
+- **The client is in-house and updatable**, so the contract is *co-designed*, not
+  frozen. Token auth can be deleted rather than preserved, and the API can be
+  shaped around what the React app actually needs.
+- **The XLS export has no live consumer.** `grep -rn "xlsx|xls\b|octet-stream|blob"
+  src index.html public` across the React app returns **nothing** — it fetches
+  riders as JSON via `/api/riders/` (paginated) and `?changed=` (delta). The
+  `riders.xlsx` route and its *"the java desktop app requires a number"* comment
+  belong to the superseded desktop workflow. **`pyexcel`, `pyexcel-xls` and
+  `openpyxl` can go in the retirement pass after all** — the first revision's
+  "hold pyexcel" instruction is rescinded.
+
+And freezing it would have been actively harmful, because the contract as it
+stands carries **two silent data-loss defects** (D1, D2 below). A frozen contract
+would have preserved them in the new API by design.
+
+### D1–D4: what reading the real client revealed
+
+| # | Finding | Evidence |
+|---|---|---|
+| **D1** | **⚠️ CRITICAL — new riders are silently dropped on every upload.** The React app sends the key `newriders`; `api.py:654` reads `data.get("riders", [])`. Reproduced against the real API with the app's exact payload shape: `ridermap: {}`, `errors: ["Ignored result record with unknown temporary rider ID (A/8)"]`, HTTP **200**, message `"race results uploaded"`, and `Rider` count for the new rider **0**. | React `src/context/EntryContext.tsx:59` builds `newriders: newRiders`; server reads `"riders"`. **This is a React regression** — the Angular `_buildUploadPayload()` keeps `newriders` as *internal* state name and maps it to `payload.riders` on the wire (`entry.service.ts:261`). The rewrite copied the state name into the wire format and dropped the mapping step. `git log -S newriders` in races-git across **all** branches: no hits — the server never accepted it. |
+| **D2** | **⚠️ CRITICAL — downloading existing entries always yields nothing.** `GET /api/raceresults/?race=N` returns `rider` as a **display string** (`"Jane Known"`) and the ID as `riderid`; the React app looks riders up by `String(entry.rider)` in a map keyed by `rider.id`. Reproduced: `riderMap.get(String(entry.rider)) -> None`, so every row is skipped. `grade_change` is absent from the response entirely, so it also resets to `false`. | React `EntryContext.tsx:211-224`. **Also a React regression** — Angular used `this.ridersService.getRider(e.riderid)` (`entry.service.ts:199`). |
+| **D3** | **D1+D2 compound into result destruction.** The upload deletes every result for the race and re-inserts only what the payload contains. A clerk whose app downloaded an empty sheet (D2), adds one rider and uploads, **wipes the whole meeting's results** — and pointscores are recalculated over the wiped set. Reproduced: 3 results → upload 1 → **1 result remains**, HTTP 200, no conflict signal. The server has no `If-Match`/version check and the app's `uploadedSignaturesByRace` guard is per-session client state, which does not survive a reload or a second device. | probe output in [Verification](#verification) |
+| **D4** | **The React app discards the server's `errors` array.** `EntryService.uploadEntries()` returns only `ridermap`; `errors` is never read, so D1's "Ignored result record" messages are invisible to the race director. | `src/services/EntryService.ts:17-42` |
+
+**A9 is also confirmed, and it is older than React.** Both SPAs send
+`grade_change` as a JSON boolean (Angular `entry.ts:10`, React `models.ts:85`);
+`api.py:821` compares `== "y"`. So in-race grade promotions have never worked
+through the API — the `"y"` is template-era residue. **A8** (`member_category`
+dropped) is likewise confirmed and now matters more, since the React
+`Rider` type carries both `member_category` and a `verifiedMemberDate` field
+commented *"sent to server on upload"* that the server has never handled.
+
+### Why the drift happened — and the one-line lesson for the plan
+
+Two repos hand-maintained the same wire format, and **neither side's tests could
+catch the mismatch**:
+
+- races-git: `test_upload_results` posts a fixture JSON built with the server's
+  own key (`riders`), so it passes forever.
+- cabici-raceday-react: `results-upload.integration.test.tsx` **mocks
+  `EntryService.uploadEntries`** and asserts the app's own payload; 23/23 green.
+
+Every layer mocks the layer below it. This is the concrete argument for
+contract-first with a **generated client**: if the React app had imported types
+and a client generated from the server's OpenAPI schema, `newriders` would not
+have compiled. It is also the argument for vendoring: one repo, one CI run, one
+contract test that exercises both ends.
+
+### What changes in the plan
+
+1. **Monorepo, decided.** `frontend/` workspace root with `apps/raceday` (the
+   vendored React app), `apps/web` (the SPA replacing the Django views) and
+   `packages/api-client` (generated from the schema). This finally resolves the
+   standing contradiction between the instructions (*"future `cabici-frontend/`
+   directory"*) and PLAN §3.1 (*"Recommended: separate repository"*). Phase 3.1
+   is updated.
+2. **2.2 is no longer "reproduce a frozen contract"** — it is *vendor, audit,
+   then co-design*. The Angular repo becomes the reference implementation for
+   the upload/download semantics the React rewrite lost.
+3. **Token auth is deleted, not retained** (2.4). The only token-auth client is
+   now in-house and updated in the same repo, in the same cutover.
+4. **The offline requirement is now a first-class API constraint.** The React app
+   is a PWA that caches the full rider list in `localStorage` and refreshes with
+   `?changed=<unix>`; that is load-bearing at a velodrome with poor reception.
+   `?updated_after=` must preserve delta sync **and** pagination **and** survive
+   the app's merge-by-id logic. Do not trade it for `ETag`-only caching.
+5. **New urgent question, replacing the old one:** *which client is live on race
+   day right now?* If the React app with D1/D2 is already in use, riders signed
+   up at the track are being lost **today** and this needs an out-of-band hotfix,
+   not a Phase 2 slot. See *Decisions*.
+
+### Urgent: the hotfix decision
+
+Independent of the modernization plan, and small:
+
+- **Server-side (this repo, ~3 lines, deployable to `master`):** accept both
+  keys — iterate `data.get("riders") or data.get("newriders") or []` — and stop
+  the replace-all wipe by requiring an explicit overwrite flag or version check.
+- **Client-side (`cabici-raceday-react`, 2 one-line fixes):** send `riders`
+  instead of `newriders`; map downloads with `entry.riderid` instead of
+  `entry.rider`.
+
+The client fixes are the correct ones; the server change is the safe one that
+helps immediately. **Recommendation: answer question 1 below first, then patch
+whatever is live.**
+
 
 ---
 
@@ -46,7 +160,7 @@ system — a forward requirement, not merely the inverted-choices bug in A2.
 A4 (dead relation), A5 (Python-2 `except` form), A6 (broken `ingest_ical()`) and
 A7 (disabled ingest tests) all live in code that should be retired. That removes
 the largest single scare from this review — a silently broken core feature —
-without a fix, and it takes roughly **2,400 lines** with it (see
+without a fix, and it takes **2,742 measured lines** with it (see
 *Retirement pass* below).
 
 **My Part 2 conclusion was partly wrong, and the correction matters.** I wrote
@@ -88,45 +202,59 @@ scale as data. See *Decisions*.
 ### The retirement pass (new Phase 2.0)
 
 Verified unreferenced by any live code path — the only callers are tests or
-deleted features:
+deleted features. Line counts are **measured on the current branch** (after the
+Phase 1 formatting pass), not estimated:
 
 | Retire | Lines | Evidence |
 |---|---|---|
 | `races/ingest/` entirely (lacc, penrith, waratahs, csvingest) | 384 | fact 1; only `manage.py ingest` and the disabled tests reach it |
 | Commands: `ingest`, `csvingest`, `harvestclubs`, `loadusers`, `wmccimport` | 645 | one-off historical imports / scrapers |
-| `auscycling.py` + `validate_memberships.py` + `Club.validate_membership()` | ~375 | fact 2 — withdrawn pending a new provider |
+| `auscycling.py` (169) + `validate_memberships.py` (136) + `Club.validate_membership()` (72) | 377 | fact 2 — withdrawn pending a new provider |
 | `Club.auscycling_client_id/_secret/_club_id`, `Membership.last_validated`/`validation_error` | 5 fields | same; also removes the plaintext-secret finding C9 |
-| `Race.load_excel_results()` | ~150 | **only** callers are 4 tests in `testresults.py`; the production caller `RaceUploadExcelView` exists on master and is gone here |
-| `RiderManager.update_from_tidyhq_spreadsheet()`, `parse_img_members()`, `IMG_MAP` | ~300 | tidyhq app already removed (`f5d37e4`) |
-| `save_rider()` (Strava callback) | ~25 | never registered as an allauth pipeline |
-| `Club.icalurl`, `Club.icalpatterns`, `RacePrototype` | 2 fields + 1 model | ingest-only / never referenced outside its own migration |
-| `ClubManager.closest()`, `RaceCourseManager.find_location()` | ~30 | sole users of `ngram`; every caller is retired above, so both managers reduce to `models.Manager` |
-| `tests/testingest.py`, `imgsampledict.py`, 7 VCR cassettes | ~590 | tests the code they cover no longer exists |
-| **Dependencies**: `icalendar`, `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz` | 6 packages | `icalendar`/`ngram` → ingest only; `bs4` → scrapers + tidyhq; `requests` → **auscycling only**; `vcrpy` → ingest tests; `pytz` → one `timezone()` call, replaceable with `zoneinfo` |
+| `Race.load_excel_results()` | 168 | **only** callers are 4 tests in `testresults.py`; the production caller `RaceUploadExcelView` exists on master and is gone here |
+| `RiderManager.update_from_tidyhq_spreadsheet()` (255) + `parse_img_members()`/`IMG_MAP` (49) | 304 | tidyhq app already removed (`f5d37e4`) |
+| `save_rider()` (Strava callback) | 27 | never registered as an allauth pipeline |
+| `RacePrototype` | 15 | never referenced outside its own migration (closes C4) |
+| `ClubManager.closest()` + `RaceCourseManager.find_location()` | 22 | sole users of `ngram`; every caller is retired above, so both managers reduce to `models.Manager` |
+| Three unrouted export views in `views.py` (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`) | 200 | **already unrouted on this branch**; the live React client uses none of them |
+| `tests/testingest.py` (230), `imgsampledict.py` (370) | 600 | tests the code they cover no longer exists (closes A7) |
+| 7 VCR cassettes in `fixtures/vcr_cassettes/` | 428 KB | unused once `testingest.py` goes |
+| `Club.icalurl`, `Club.icalpatterns` | 2 fields | ingest-only |
+| **Dependencies**: `icalendar`, `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz`, `pyexcel`, `pyexcel-xls`, `openpyxl` | 9 packages | each verified used only by code deleted in this pass |
+| **Total Python lines removed** | **2,742** | plus 5+2 model fields, 428 KB of cassettes, 9 dependencies |
 
 **Keep, but move into `services/`** (these encode real domain rules):
 `PointScore.score()`/`tally()`/`recalculate()`, `Race.tally_pointscores()`,
 `fix_small_races()`, `Club.allocate_officials()`/`promotion()`/`performancereport()`,
-`Rider.classification()`, and the XLS/CSV export builders in `views.py`.
+`Rider.classification()`.
 
-**Hold, do not delete yet:** `pyexcel`/`pyexcel-xls`/`openpyxl` — the XLS rider
-export is step 2 of the live contract. Drop them only once the race-day client is
-replaced.
+**Correction (Second revision): `pyexcel` is *not* held.** The three export views
+in `views.py` (`club_riders_csv_view`, `ClubRidersExcelView`,
+`RaceSummarySpreadsheet`) are **already unrouted on the `modernization` branch**
+— unreachable — and the live React client uses none of them (no `xlsx`/`blob`
+reference anywhere in its source; it fetches riders as JSON). So the spreadsheet
+stack retires with the rest of the pass. If any of the three exports is still
+wanted for humans or the desktop workflow, it comes back as an explicit
+`services/exports.py` + action endpoint in 2.5, not as inherited dead code.
 
 ### Decisions this briefing created
 
-1. **Is the race-day front end in scope?** This is now the single most
-   important open question in the project. If the entry app will be rewritten as
-   part of the React frontend, the contract is negotiable, token auth can go,
-   the XLS export disappears, and Phase 2 simplifies a lot. If it stays
-   external, then `POST /api/raceresults/` and `GET /clubs/<slug>/riders.xlsx`
-   must be reproduced **byte-compatible**, token auth must keep working until
-   that app is retired, and A8/A9 below are production bugs to fix rather than
-   design notes.
+> Superseded where relevant by the **Second revision** above: decision 1 is now
+> answered (in scope, vendored), and the XLS export is retired rather than held.
+
+1. ~~Is the race-day front end in scope?~~ **Answered: yes, and it moves into
+   this repo.** Consequences — the contract is co-designed not frozen, token auth
+   is deleted not retained, and the XLS export disappears (no live consumer).
+   **New question in its place: which client is live on race day today?** See
+   *Urgent: the hotfix decision*.
 2. **Membership categories are blocked on the new AusCycling spec.** Don't ship
    two migrations: fix the inverted tuple (A2) *as part of* adopting the new
-   category set, in one migration. Note the upload payload already carries
-   `member_category` — see A8.
+   category set, in one migration. The upload payload already carries
+   `member_category` (A8) and the React app also sends a `verifiedMemberDate`
+   the server has never handled — settle all three together. Historical note:
+   the Angular app once used a `'trial'` category (`2e838ef Change membership
+   types`, 2022), so this vocabulary has churned before; pin it in the schema
+   rather than letting clients invent values.
 3. **Pointscale:** wire `score()` to its config fields (WMCC scale becomes
    data, behaviour unchanged, landmine removed) — recommended — or delete the
    fields and state the WMCC-only assumption explicitly. Do not leave them
@@ -374,6 +502,15 @@ The 80% coverage of `api.py` measures the old shapes, not reusable ones.
 
 ### The live race-day contract
 
+> **Superseded in part by the Second revision.** The shape below is accurate as
+> far as it goes, but two readings were wrong: the XLS export (**step 2**) has
+> **no live consumer** — the React app fetches riders as JSON — so it retires
+> rather than freezes; and the contract is **co-designed**, not frozen, because
+> the client is in-house. Most importantly, the payload as the current client
+> actually sends it is broken in two ways (**D1** `newriders` vs `riders`, **D2**
+> `rider` vs `riderid`) that this pass could not see, because it was reading the
+> server side only.
+
 Reconstructed from `origin/master` (the routes are already gone from the
 `modernization` branch — removed in `b5bd661 remove view references`), plus
 `tests/result-upload.json`, which is the only in-repo artefact of the payload:
@@ -417,17 +554,27 @@ Phase 2, not the last — everything else is ordinary CRUD that can follow.
 
 ### What to salvage (do not lose this domain knowledge)
 
-- **`tests/result-upload.json` + `testapi.py`'s upload tests (790 lines total)**
-  as the executable specification of the contract above. Mine them before
-  rewriting; the sample payload is the only record of the external client's
-  shape that exists in this repo.
-- **The `ridermap` temporary-ID mechanism.** Non-obvious, load-bearing, and easy
-  to lose in a rewrite. Reproduce it deliberately.
-- **The XLS rider export** (`ClubRidersExcelView`, 13 columns) — until the entry
-  app is replaced. This is why `pyexcel` is *held*, not dropped, in the
-  retirement pass.
-- **The delta-sync idea** (`?changed=<unix>`) — a genuinely good feature for a
-  4k-row rider list. Re-express as `?updated_after=<iso8601>` + `ETag`.
+- **The Angular `_buildUploadPayload()` / download mapping**
+  (`../cabici-race-manager-owen/src/app/services/entry.service.ts`) — the
+  **reference implementation** of the upload semantics. It maps internal
+  `newriders` state to the wire key `riders`, and reads entries back via
+  `e.riderid`. The React rewrite lost both. Restore them from here, not from the
+  server code.
+- **`tests/result-upload.json` + `testapi.py`'s upload tests (790 lines)** as a
+  partial specification of the round trip. **Caveat:** this fixture encodes the
+  *server's* key (`riders`), not what the live client sends (`newriders`) — which
+  is precisely why D1 survived both test suites.
+- **The `ridermap` temporary-ID mechanism.** Non-obvious, load-bearing, and the
+  first thing to break when the payload key drifts (D1). Reproduce it deliberately.
+- ~~The XLS rider export (`ClubRidersExcelView`, 13 columns)~~ — **retired**, not
+  held. The React app never calls it; it belonged to the superseded Java desktop
+  workflow. `pyexcel`, `pyexcel-xls` and `openpyxl` drop in the retirement pass.
+- **The delta-sync feature** (`?changed=<unix>`) — not merely a good idea: it is
+  **in live use** by `RiderService.loadChangedRiders()`, on top of a full
+  paginated load and a `localStorage` cache, in a PWA built for velodromes with
+  poor reception. It is a hard API requirement, not a nice-to-have: preserve
+  delta sync + pagination + merge-by-`rider.id` when re-expressing it as
+  `?updated_after=`.
 - **`ClubOfficialPermission`'s intent** (safe methods open; writes need club
   affiliation) — right logic, wrong implementation (unguarded `.rider` → 500).
 - **`StandardResultsSetPagination`** (200/page, max 1000) — sensible defaults.
@@ -436,12 +583,18 @@ Phase 2, not the last — everything else is ordinary CRUD that can follow.
 
 ### Revised Phase 2
 
+> **Superseded by the Second revision**, which reorders this as: 2.0 Retirement
+> pass → 2.1 Model hardening → **2.2 Monorepo scaffold + vendor & audit the
+> raceday app** → 2.3 Resource model & contract covering *both* clients → 2.4
+> Auth (JWT only; token auth deleted, not retained) → 2.5 CRUD → 2.6 Docs → 2.7
+> Tests + delete `api.py`. `MODERNIZATION_PLAN.md` carries the task lists.
+
 Contract-first, and the race-day contract first:
 
 1. **2.0 Retirement pass** *(new, from the briefing)* — delete the ingest
    pipelines, the withdrawn AusCycling polling, the tidyhq/IMG import paths,
    `load_excel_results`, `RacePrototype` and the dead tests/cassettes
-   (~2,400 lines, 6 dependencies). Resolves A4–A7 by removal. Do this before
+   (2,742 measured lines, 9 dependencies). Resolves A4–A7 by removal. Do this before
    anything else: it shrinks every subsequent estimate.
 2. **2.1 Model hardening** — A1 (wire the pointscale config), A3 (fix or drop
    `get_absolute_url`), Tier B constraints, then C1 (merge `usermodel.py` →
@@ -571,4 +724,59 @@ for model in (Club, Race, RaceCourse, RacePrototype, Membership, PointScore,
 # ad-hoc query params: api.py lines 370-372 (club/select/count),
 #   477-480 (club/commissaire/prefix/changed), 531 (club), 607-608 (race/placed)
 # legacy JS clients: cabici.js 588 lines, riders.js 81 lines
+
+# ---------------------------------------------------------------------------
+# Second revision: the race-day client, and D1-D4
+#
+# React app: /Users/Steve/projects/cabici-raceday-react (stevecassidy/cabici-raceday-react)
+#   Vite + React 18 + TS + MUI + pnpm + Vitest + vite-plugin-PWA + @sentry/react
+#   last commit 2026-09-05; upload feature c2e029c (2026-08-29); payload key
+#   introduced by c338416 "implement upload/download of entries"
+# Angular reference: /Users/Steve/projects/cabici-race-manager-owen (cabici-raceday)
+#
+# No XLS consumer in the live client:
+#   $ grep -rn "xlsx\|xls\b\|octet-stream\|blob" src index.html public   -> nothing
+#
+# D1 - key mismatch, reproduced against the real API with the app's payload shape:
+#   POST /api/raceresults/ {race, entries[... "rider":"ID9001" ...], newriders:[...]}
+#   -> 200 {'message': 'race results uploaded', 'ridermap': {},
+#           'errors': ['Ignored result record with unknown temporary rider ID (A/8)']}
+#   Rider.objects.filter(user__last_name='Rider').count()  -> 0   # never created
+#   server reads: api.py:654  for record in data.get("riders", [])
+#   client writes: EntryContext.tsx:59  newriders: newRiders
+#   Angular does it right: entry.service.ts:261  payload.riders.unshift(r)
+#
+# D2 - download mapping, same probe:
+#   GET /api/raceresults/?race=N -> keys ['club','dnf','grade','id','number',
+#     'place','race','rider','riderid','usual_grade']
+#   row['rider'] == 'Jane Known' (display string), row['riderid'] == 2
+#   app: riderMap keyed by String(rider.id), looked up with String(entry.rider)
+#      -> None, so every downloaded entry is skipped
+#   Angular does it right: entry.service.ts:199  getRider(e.riderid)
+#
+# D3 - compound wipe, reproduced:
+#   1st upload: 3 entries -> results in DB: 3 [('Ann',1),('Ben',2),('Caz',3)]
+#   2nd upload: 1 entry   -> results in DB: 1 [('Ben',2)]   # Ann and Caz GONE
+#   both HTTP 200, message 'race results uploaded', no conflict signal
+#
+# D4 - errors discarded: EntryService.uploadEntries() returns ridermap only
+#
+# Why neither test suite caught it:
+#   races-git: test_upload_results posts result-upload.json, which uses the
+#              SERVER key ('riders') - so it passes regardless of the client
+#   React app: results-upload.integration.test.tsx does
+#              vi.spyOn(EntryService, 'uploadEntries').mockResolvedValue(null)
+#              and asserts the app's own payload -> 23/23 green, no real HTTP
+#   => every layer mocks the layer beneath it
+#
+# A9 confirmed on both clients:
+#   Angular entry.ts:10  grade_change: boolean = false
+#   React   models.ts:85 grade_change: boolean
+#   server  api.py:821   entry["grade_change"] == "y"      # template-era residue
+#
+# The three export views are unreachable on the modernization branch:
+#   $ grep -n "club_riders_csv_view\|ClubRidersExcelView\|RaceSummarySpreadsheet" \
+#       races/apps/cabici/urls.py        -> no matches
+#   $ git show origin/master:races/apps/cabici/urls.py | grep -cE "xlsx|members.csv"
+#       -> 3
 ```

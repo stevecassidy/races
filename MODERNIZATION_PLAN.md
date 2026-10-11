@@ -205,22 +205,30 @@ writes, an unpermissioned and non-transactional result uploader, no schema, no
 versioning, no refresh auth, and 5 of 13 models unexposed. Adapting it would
 touch ~100% of the file while inheriting every inconsistency.
 
-**The one exception, which shapes the whole phase.** The API does have a live
-external consumer: the **race-day entry application**, which is not in this
-repository. Its loop is token auth → `GET /clubs/<slug>/riders.xlsx` (rider list;
-`urls.py` on master: *"get rider csv file for race entry front end"*) →
-`POST /api/raceresults/` (`{race, entries[], riders[]}` → `{message, errors,
-ridermap}`). It is currently the app's **only way to add riders**. So the question
-is not "adapt or scrap" but **"where is the boundary between the part we throw
-away and the one contract we must reproduce?"** Everything below that boundary is
-free; the race-day contract is frozen until the entry app is retired.
+**The client that changed the plan is in-house, and it moves in.** The race-day
+entry application is the app's **only way to add riders** today. It was rewritten
+from Angular 8 to React 18 in a separate repo (`stevecassidy/cabici-raceday-react`),
+and the decision is to **vendor it into this repo** alongside the SPA that will
+replace the Django views. So this is not a "frozen external contract to reproduce"
+situation at all — the contract is **co-designed**, token auth can be deleted
+rather than preserved, and both clients share one generated API client.
 
-Both routes are already gone from the `modernization` branch (`b5bd661 remove
-view references`), which is harmless while the branch is undeployed but blocks
-cutover until section 2.2 delivers a replacement.
+What reading that client revealed is more important than the topology: **its
+upload path is broken in two ways that neither codebase's tests could catch**
+(`D1` the app sends `newriders`, the server reads `riders` → riders created at the
+track are silently lost; `D2` the app maps entries by `entry.rider`, the server
+returns a display string there → downloading existing entries always yields an
+empty sheet; together, `D3` a re-upload from an empty sheet **wipes the whole
+meeting's results**, HTTP 200, no conflict signal). The Angular predecessor has
+both right. This is why Phase 2 opens with a vendoring-and-audit step and why the
+API is contract-first with a **generated** client — hand-maintained wire formats
+across two repos is what produced the defect in the first place.
 
-**Domain context** (owner briefing, 2026-10-11) — none of it visible from the
-code, all of it reflected in the plan below:
+Details, reproduction and remediation: 2.2 and
+[`MODEL_REVIEW.md`](MODEL_REVIEW.md).
+
+**Domain context** (owner briefings, 2026-10-11) — none of it visible from the
+server code alone, all of it reflected in the plan below:
 
 - The **ingest pipelines are out of date** (club scrapers, iCal ingestion,
   historical imports). Nothing is maintained there.
@@ -230,14 +238,18 @@ code, all of it reflected in the plan below:
   which is why its scale is hardcoded.
 - **Membership categories must be redesigned** around AusCycling's new membership
   system.
+- **The race-day client is an in-house React app**, and it is being brought into
+  this repo.
 
-Full evidence, the nine model defects (A1–A9), nine integrity gaps (B1–B9) and
-twelve structural findings (C1–C12): [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
+Full evidence — nine model defects (A1–A9), four client/contract defects (D1–D4),
+nine integrity gaps (B1–B9) and twelve structural findings (C1–C12):
+[`MODEL_REVIEW.md`](MODEL_REVIEW.md).
 
 **Sequencing rationale:** retire first (it shrinks every later estimate), then
 harden the models (the API surface follows the domain, and A1/A2/A8 change API
-responses if deferred), then design the one frozen contract, then everything
-else.
+responses if deferred), then vendor and audit the race-day client (its real shapes
+are inputs to the contract), then design the contract for both clients, then build
+the rest.
 
 ### 2.0 Retirement Pass (Week 5)
 
@@ -267,6 +279,10 @@ Resolves defects **A4–A7 by removal** rather than repair.
       callers are all retired above (`load_excel_results`, `ingest_ical`,
       `ingest_race_list`, `wmccimport`), so both custom managers reduce to
       `models.Manager` and can go
+- [ ] **Unreachable export views** in `views.py` — `club_riders_csv_view`,
+      `ClubRidersExcelView`, `RaceSummarySpreadsheet`: all three are **already
+      unrouted on this branch** (master had 3 such routes) and the live React
+      client uses none of them, so they delete rather than migrate
 - [ ] **Dead tests and fixtures** — `tests/testingest.py`, `imgsampledict.py`,
       the 7 VCR cassettes in `fixtures/vcr_cassettes/` *(closes **A7**)*
 - [ ] **Dependencies** — drop `icalendar`, `ngram`, `beautifulsoup4`,
@@ -274,15 +290,19 @@ Resolves defects **A4–A7 by removal** rather than repair.
       `auscycling.py`; `pytz` only at `models.py:25` and `:420`, inside
       `ingest_ical()`; `icalendar`/`ngram` only in the ingest paths; `bs4` only in
       the scrapers, `parse_img_members()` and `harvestclubs`
-- [ ] **Hold, do not delete:** `pyexcel`, `pyexcel-xls`, `openpyxl` — the XLS
-      rider export is step 2 of the live race-day contract. Revisit after 2.2.
+- [ ] **Also drop** `pyexcel`, `pyexcel-xls`, `openpyxl` — their three export
+      views (`club_riders_csv_view`, `ClubRidersExcelView`,
+      `RaceSummarySpreadsheet`) are **already unrouted on this branch**, and the
+      live React client uses none of them (it fetches riders as JSON). Reinstate
+      any that are still wanted in 2.5 as an explicit `services/exports.py`
+      action, not inherited dead code
 - [ ] **Keep, relocate into `services/`** (real domain rules):
       `PointScore.score()`/`tally()`/`recalculate()`, `Race.tally_pointscores()`,
       `fix_small_races()`, `Club.allocate_officials()`/`promotion()`/
-      `performancereport()`, `Rider.classification()`, and the export builders in
-      `views.py`
+      `performancereport()`, `Rider.classification()`
 
-**Success Criteria:** ~2,400 fewer lines; `manage.py check`,
+**Success Criteria:** 2,742 fewer Python lines (measured, plus 7 VCR cassettes
+and 5 model fields); `manage.py check`,
 `makemigrations --check` and the test suite green with the dead tests removed;
 no reference to any retired module remains in `races/`.
 
@@ -355,44 +375,90 @@ Prerequisite for serializers. Referenced items are the findings in
 tests for each fix; `makemigrations --check` clean; constraints verified against
 a copy of production data; no model method performs network or filesystem I/O.
 
-### 2.2 The Race-Day Contract (Week 6)
+### 2.2 Monorepo: Vendor & Audit the Race-Day App (Week 6)
 
-The one part of the API with an external client, and the app's only
-rider-creation path. Design it before the general contract so the rest can be
-built around it.
+The race-day client moves into this repo. That is not just a file move: reading
+the client revealed that **its upload path is broken in two ways that the server
+could not see and neither test suite could catch** (D1, D2 in
+[`MODEL_REVIEW.md`](MODEL_REVIEW.md)). Vendoring without auditing would carry
+silent race-day data loss into the new API.
 
-- [ ] **Decide the entry app's fate** — rewritten as part of the React frontend
-  (contract negotiable, token auth and the XLS export can go), or kept external
-  (contract frozen). This is the highest-leverage open decision in the project
-- [ ] Specify `POST /races/{id}/results/` reproducing the payload and response
-  shapes **byte-compatibly** if the app stays external:
-  `{race, entries[{rider, grade, number, place, dnf, grade_change}],
-  riders[{id|"ID…", first_name, last_name, email, clubslug, licenceno,
-  member_date, member_category, phone, gender, dob}]}` →
-  `{message, errors[], ridermap{temp_id: real_id}}`
-- [ ] A8: honour `member_category` instead of hardcoding `category="race"`
-      (`api.py:694,757`) — currently the field is silently dropped, and no test
-      asserts it
-- [ ] A9: resolve the `grade_change` mismatch — `api.py:821` compares to `"y"`
-      while the sample payload sends booleans; if the live client sends
-      booleans, in-race grade promotions have never applied
-- [ ] Wrap the whole delete-then-reinsert in `transaction.atomic()`
-- [ ] Apply a permission class — the current endpoint has none, inheriting
-      `IsAuthenticatedOrReadOnly`, so any authenticated user can overwrite any
-      race's results
-- [ ] Preserve the `ridermap` temporary-ID mechanism
-- [ ] Provide a replacement for `GET /clubs/<slug>/riders.xlsx` (or confirm the
-      export is retired with the app)
-- [ ] Turn `tests/result-upload.json` and `testapi.py`'s upload tests into the
-      executable specification for the new endpoint
+**What is being vendored** (verified, not assumed):
 
-**Success Criteria:** the contract is documented, tested for both success and
-failure shapes, atomic, permission-checked, and A8/A9 are closed.
+| Source | Target |
+|---|---|
+| `../cabici-raceday-react` — Vite + React 18 + TS + MUI + pnpm, Vitest (23 tests), PWA/offline, Sentry; last commit 2026-09-05 | `frontend/apps/raceday` |
+| (to be built) the SPA replacing the Django views | `frontend/apps/web` |
+| generated from the OpenAPI schema (2.3) | `frontend/packages/api-client` |
+
+**Mechanics:**
+
+- [ ] Vendor with history preserved — `git subtree add --prefix=frontend/apps/raceday
+      <repo> main` (simple, keeps the app buildable immediately) or
+      `git filter-repo` + merge if a flattened tree is preferred. Do **not**
+      copy files; losing the blame history loses the D1/D2 provenance evidence
+- [ ] Root `package.json` workspaces (`frontend/apps/*`, `frontend/packages/*`),
+      pnpm (the app already ships `pnpm-lock.yaml`), Node pinned in
+      `.nvmrc`/`packageManager`
+- [ ] Keep the two apps **separate deployables**. Race day is high-stakes and the
+      entry app is offline-first; do not merge it into the club SPA. They share
+      `packages/api-client` and (later) `packages/ui`
+- [ ] Frontend CI: new workflow on `frontend/**` — `pnpm install --frozen-lockfile`,
+      `lint`, `tsc --noEmit`, `vitest run`, `build`. Existing Python workflow
+      gains path filters so each side only runs on its own changes
+- [ ] Bring `PROJECT_CONTEXT.md` from the app repo into `frontend/apps/raceday/`
+      (it is the design record for the Angular→React rewrite)
+- [ ] Update `.devcontainer` (still Python 3.10 + pylint-era settings) so the
+      monorepo has one reproducible dev environment
+
+**Audit & fix — the urgent part:**
+
+- [ ] **D1:** the app sends `newriders`, `api.py:654` reads `riders` → **riders
+      registered at the track are never saved**, their entries are dropped into an
+      `errors` array the app discards, and the response is HTTP 200
+      `"race results uploaded"`. Reproduced against the real API. Fix by
+      restoring the Angular mapping (internal `newriders` → wire `riders`)
+- [ ] **D2:** the app looks riders up by `String(entry.rider)` but the API returns
+      `rider` as a **display string** and the ID as `riderid` → **downloading
+      existing entries always returns an empty sheet**. Angular used
+      `e.riderid`. Fix accordingly
+- [ ] **D3:** D1+D2 compound into result destruction — the upload deletes all
+      results then re-inserts only what is sent, so a clerk with an empty sheet
+      who adds one rider wipes the meeting. Reproduced: 3 results → 1. Add
+      `transaction.atomic()`, a permission class, and an explicit overwrite
+      contract (confirmation flag or version/`If-Match` check) rather than
+      silent replace-all
+- [ ] **D4:** surface the server's `errors[]` to the race director instead of
+      dropping it in `EntryService.uploadEntries()`
+- [ ] **A9:** both SPAs send `grade_change` as a boolean; `api.py:821` compares to
+      `"y"` → in-race promotions have never applied through the API (template-era
+      residue). Fix on both ends and cover with a contract test
+- [ ] **A8:** honour `member_category` (and decide `verifiedMemberDate`, which the
+      React app sends and the server ignores) instead of hardcoding
+      `category="race"` — settle with the membership redesign in 2.1
+- [ ] **Preserve the offline contract:** `RiderService` does a full paginated
+      load, caches riders in `localStorage`, and refreshes with
+      `?changed=<unix>`, merging by `rider.id`. That is load-bearing at a
+      velodrome with poor reception. Any replacement (`?updated_after=`) must
+      keep delta sync, pagination and stable IDs, and must not silently drop
+      deleted riders
+- [ ] **Adopt the Angular app as the reference implementation** for upload/download
+      semantics — `../cabici-race-manager-owen/src/app/services/entry.service.ts`
+      is the only place the correct wire mapping still exists
+
+**Why this is a Phase 2 task, not Phase 3:** the API contract is being designed in
+2.3, and both clients' shapes are inputs to it. Discovering D1 after the contract
+was published would mean redesigning it.
+
+**Success Criteria:** both apps build and test green in this repo's CI; D1–D4
+closed with regression tests; one shared generated client; no hand-written API
+types left in either app.
 
 ### 2.3 Resource Model & API Contract (Week 7)
 
 Replaces the old "map current views to endpoints" task — the old views are going
-away, so resources are derived from the domain instead.
+away, so resources are derived from the domain instead. **One contract now serves
+both clients**, and the generated client is the only sanctioned way to talk to it.
 
 - [ ] Enumerate resources from the merged models: clubs, races, racecourses,
       riders, memberships, club roles, user roles, club grades, race staff, race
@@ -409,13 +475,17 @@ away, so resources are derived from the domain instead.
       `POST /pointscores/{id}/recalculate/`,
       `POST /clubs/{slug}/officials/allocate/`
 - [ ] Publish the OpenAPI spec **before** implementing and generate the
-      TypeScript client from it (`openapi-typescript` / `orval`) so Django and
-      React cannot drift
-- [ ] Re-express delta sync as `?updated_after=<iso8601>` + `ETag`
+      TypeScript client from it (`openapi-typescript` / `orval`) into
+      `frontend/packages/api-client`, which **both** apps must consume — this is
+      the control that prevents a repeat of D1/D2
+- [ ] Re-express delta sync as `?updated_after=<iso8601>` while preserving the
+      offline behaviour listed in 2.2
+- [ ] Contract test in CI: the served schema, the generated client and the
+      raceday app's upload payload are checked against each other end-to-end
 
-**Success Criteria:** written contract covering 100% of the operations the
-Phase 3 screens need; OpenAPI spec committed and served; generated TS client
-compiles against it.
+**Success Criteria:** written contract covering 100% of the operations both
+clients need; OpenAPI spec committed and served; generated TS client compiles in
+both apps; the contract test fails if either side drifts.
 
 ### 2.4 Authentication (Week 8)
 
@@ -424,10 +494,15 @@ compiles against it.
 - [ ] Logout / token blacklist or short-lived access + rotating refresh
 - [ ] allauth → JWT for the social/session path; keep session auth for `/admin/`
 - [ ] Fix the carried-over defects: unknown email must return 401 (not 500), and
-      a user without a `Rider` must not 500 on `user.rider.club`
+      a user without a `Rider` must not 500 on `user.rider.club` — the raceday
+      login depends on `club` and `official` being present
 - [ ] CORS scoped to the frontend origin (replace allow-all + GET-only)
-- [ ] **Keep DRF token auth working** until the race-day entry app is retired
-      (per 2.2) — it is in live external use
+- [ ] **Delete DRF token auth** once the vendored raceday app is on JWT in the
+      same cutover — no external client depends on it any more, so it does not
+      have to be retained
+- [ ] Migrate `frontend/apps/raceday` off `AUTH_HEADER_PREFIX = 'Token'` and its
+      `localStorage` token storage; decide httpOnly cookie vs in-memory +
+      refresh while it is in scope
 
 **Success Criteria:** every auth endpoint tested, including the failure paths
 that currently 500.
@@ -525,70 +600,130 @@ gone.
 
 **Goal:** Build modern React frontend consuming the API
 
-### 3.1 Frontend Architecture Decision (Week 13)
+### 3.1 Frontend Architecture — DECIDED: monorepo (Week 13)
 
-**Recommended Approach: Separate Frontend Repository**
+**Decision (2026-10-11): both React apps live in this repository**, under a
+`frontend/` workspace root. This supersedes the previous recommendation here
+(*"Separate repository approach for maximum flexibility"*) and resolves the
+contradiction with `.github/copilot-instructions.md`, which had always described
+an in-repo frontend directory.
 
-**Pros:**
-- Clean separation of concerns
-- Independent deployment
-- Different tech stacks can evolve independently
-- Easier to have separate frontend developers
-- Can use create-react-app or Vite
+**Why the earlier recommendation is now wrong.** "Separate repository" was
+written when the only frontend was the Django template layer. Since then the
+race-day app was rewritten in React in its own repo, and the D1/D2 defects are
+the direct product of that split: two repos hand-maintaining one wire format,
+with every layer mocking the layer beneath it, so neither test suite could see
+the mismatch. A monorepo with a schema-generated client makes that class of bug
+uncompilable — which is the whole reason it is worth more than the flexibility it
+costs.
 
-**Cons:**
-- Two repositories to manage
-- CORS configuration required
-- Separate deployment pipeline
+**Layout:**
 
-**Alternative Approach: Django + React Integration**
+```
+frontend/
+  package.json            # pnpm workspaces root
+  pnpm-lock.yaml
+  packages/
+    api-client/           # GENERATED from the Django OpenAPI schema (2.3)
+    ui/                   # shared components, added when a second consumer needs it
+  apps/
+    raceday/              # vendored from stevecassidy/cabici-raceday-react (2.2)
+    web/                  # new SPA replacing the Django template views (Phase 3)
+```
 
-Options:
-1. **django-webpack-loader**: Bundle React with Django
-2. **Serve React build as Django static files**: Build React separately, serve via Django
-3. **Django as API backend only**: Separate React app, Nginx routes
+**Pros:** one contract and one generated client for both clients; atomic changes
+across backend and frontend; a single CI run can test both ends of the upload
+path (the control that would have caught D1); shared tooling, types and
+components; one place to look for a new contributor.
 
-**Recommended:** Separate repository approach for maximum flexibility
+**Cons, and mitigations:** heavier root-level tooling (Node pinned, workspaces
+scoped entirely under `frontend/`); CI needs path filters so Python and JS runs
+stay independent; two apps tempt premature abstraction — keep `packages/ui` empty
+until a real second consumer exists.
+
+**Kept deliberately separate:** `apps/raceday` and `apps/web` remain two
+deployables. Race day is high-stakes, offline-first and used by volunteers on
+tablets; merging it into the club SPA would put that reliability in the same
+release train as routine feature work.
+
+**Newly-opened decision — deployment topology.** With both apps in-repo, serving
+their builds from Django via WhiteNoise (one origin, one Docker image, **no CORS
+at all**) becomes practical, and it fits the existing single-cutover deployment
+story better than the previously recommended Vercel split. Trade-offs:
+
+| | Same-origin (Django serves the SPA builds) | Separate hosting (Vercel/Cloudflare Pages) |
+|---|---|---|
+| CORS | none to configure or reason about | required for both apps |
+| Auth | httpOnly cookie + CSRF, tokens never in `localStorage` | in-memory + refresh, or bearer in cookie scope |
+| Deploys | one image, one cutover — matches the plan's approach | frontend ships independently of the API |
+| Static assets | WhiteNoise (already in use) | CDN, image optimisation, preview deploys |
+| Risk | frontend redeploy restarts the backend container | two places to monitor |
+
+**Recommendation:** same-origin for the cutover (it removes a whole class of
+Phase 4 integration work — CORS policy, credential handling, two-host smoke
+tests — and WhiteNoise is already configured), keeping the split open afterwards
+since the apps are already separate build outputs. This needs an owner decision
+before 3.2, because it determines how JWT is stored and whether `CORS_*` settings
+survive at all.
+
+**Also decided by the vendoring:** the stack is whatever the raceday app already
+uses — **React 18 + TypeScript + Vite + MUI + react-hook-form + axios + Vitest**.
+That settles two questions the plan had left open ("Tailwind or MUI", and the
+choice of HTTP client and form library): `apps/web` should match `apps/raceday`
+so `packages/ui` and the generated client are used identically by both. React
+Query is still worth adding for server state (the raceday app hand-rolls
+`localStorage` caching and pagination, which is exactly what it replaces) —
+introduce it in `apps/web` first, then retro-fit `apps/raceday` only if it helps
+the offline path.
 
 ### 3.2 Frontend Setup (Week 13-14)
 
-**Technology Stack:**
-- React 18+
-- TypeScript (strongly recommended)
-- Vite (build tool)
-- React Router 6 (routing)
-- TanStack Query (React Query) - API state management
-- Zustand or Context API - UI state management
-- Axios - HTTP client
-- React Hook Form - form handling
-- Zod - validation
-- Tailwind CSS or Material UI - styling
-- Vitest + Testing Library - testing
+**Technology Stack** — fixed by the app already in production (see 2.2 and 3.1);
+`apps/web` matches `apps/raceday` so both use the generated client and any shared
+components identically:
+- React 18 + TypeScript (already in use)
+- Vite (already in use)
+- **Material UI** + Emotion (already in use — this settles the "Tailwind or MUI"
+  question in favour of MUI)
+- React Router 6 (already in use)
+- React Hook Form (already in use)
+- Axios (already in use) — but replaced by the **generated `packages/api-client`**
+  for all API calls
+- **TanStack Query** — to add. `apps/raceday` hand-rolls pagination, `localStorage`
+  caching and delta merge; that is precisely server-state management. Introduce it
+  in `apps/web` first and retro-fit `apps/raceday` only where it helps the offline
+  path
+- Zustand or Context API for UI state (raceday uses Context today)
+- Zod for validation, where schemas are not already derivable from the OpenAPI
+  types
+- Vitest + React Testing Library (already in use)
 
 **Initial Setup:**
 ```bash
-npm create vite@latest cabici-frontend -- --template react-ts
-cd cabici-frontend
-npm install @tanstack/react-query axios react-router-dom
-npm install -D tailwindcss postcss autoprefixer
+# 2.2 vendors apps/raceday with `git subtree`; apps/web is scaffolded alongside it
+mkdir -p frontend/apps/web frontend/packages/api-client
+cd frontend && pnpm create vite@latest apps/web -- --template react-ts
+pnpm add -D openapi-typescript   # in packages/api-client, from the served schema
 ```
 
 **Project Structure:**
 ```
-cabici-frontend/
-  src/
-    api/           # API client and endpoints
-    components/    # Reusable components
-    features/      # Feature-based modules
-      clubs/
-      races/
-      riders/
-      auth/
-    hooks/         # Custom hooks
-    lib/           # Utilities
-    pages/         # Page components
-    routes/        # Route configuration
-    types/         # TypeScript types
+frontend/
+  package.json            # pnpm workspaces root
+  packages/
+    api-client/           # GENERATED from the Django OpenAPI schema - the only
+                          # sanctioned way either app talks to the API
+    ui/                   # shared components (only once a 2nd consumer needs it)
+  apps/
+    raceday/              # vendored React entry app (offline PWA)
+      src/
+        components/  context/  hooks/  pages/  services/  types/  utils/
+    web/                  # new SPA replacing the Django template views
+      src/
+        components/    # Reusable components
+        features/      # clubs/ races/ riders/ auth/
+        hooks/  lib/  pages/  routes/  types/
+```
     App.tsx
     main.tsx
   public/
@@ -1083,14 +1218,18 @@ While working through the full plan on the development branch:
 **Recommendation:** Zustand for UI state, React Query for server state
 
 #### Styling
+
+**Decided (2026-10-11): Material UI.** The vendored race-day app is already built
+on MUI 5 + Emotion, and `apps/web` matches it so shared components and the
+generated client are used identically by both. The options below are kept only as
+the record of what was considered.
+
 | Option | Pros | Cons |
 |--------|------|------|
 | Tailwind CSS | Utility-first, fast | Verbose HTML |
-| Material UI | Complete component library | Large bundle |
+| **Material UI** | Complete component library; **already in production use** | Large bundle |
 | Chakra UI | Accessible, themeable | Smaller ecosystem |
 | CSS Modules | Scoped CSS | Manual work |
-
-**Recommendation:** Tailwind CSS for flexibility or Material UI for speed
 
 ### B. Code Examples
 

@@ -42,15 +42,24 @@ Transform the Cabici cycling application into a modern, maintainable system:
 
 ### After (Target)
 ```
-┌──────────────────┐    ┌──────────────────┐
-│   React 18 +     │◄───│   Django 5.2     │
-│   TypeScript     │    │                  │
-│   (Vite)         │    │  Complete REST   │
-│                  │    │  API (DRF)       │
-│  Tailwind CSS    │    │                  │
-└──────────────────┘    │  JWT Auth        │
-                        └──────────────────┘
+            one repo, two apps, one generated client
+┌──────────────────────────────┐   ┌───────────────────────┐
+│ frontend/apps/raceday        │   │ Django 5.2            │
+│  (vendored, offline PWA)     │──►│  /api/v1/  (DRF)      │
+├──────────────────────────────┤   │                       │
+│ frontend/apps/web            │   │  OpenAPI schema ──────┼──► frontend/
+│  (replaces the Django views) │──►│                       │    packages/api-client
+├──────────────────────────────┤   │  JWT auth             │    (generated types)
+│ React 18 + TS + Vite + MUI   │   │                       │
+└──────────────────────────────┘   └───────────────────────┘
 ```
+
+The stack is fixed by the app already in production: **React 18 + TypeScript +
+Vite + MUI + react-hook-form + axios + Vitest** — which settles the plan's earlier
+open questions (“Tailwind or MUI”, HTTP client, form library). The deployment
+topology (serve both builds from Django via WhiteNoise on one origin, dropping
+CORS entirely, versus separate static hosting) is an open decision recorded in
+MODERNIZATION_PLAN §3.1.
 
 ## ⏱️ Timeline
 
@@ -72,19 +81,38 @@ clients are deleted in Phase 4. It is replaced by a contract-first `/api/v1/`
 generated from an OpenAPI spec, with the model layer hardened first. Rationale
 and evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
-**One exception, and it is the most important thing in Phase 2.** The API does
-have a live external consumer: the **race-day entry application**, which is not in
-this repository and is currently the only way to add riders. Its loop is token
-auth → `GET /clubs/<slug>/riders.xlsx` → `POST /api/raceresults/`. That contract
-is **frozen** until the app is retired or rewritten (an open decision), so Phase 2
-designs it first and rebuilds everything else around it.
+**The client that changed the plan is in-house, and it moves in.** The race-day
+entry app — currently the only way to add riders — was rewritten from Angular 8 to
+React 18 in its own repo (`stevecassidy/cabici-raceday-react`) and is being
+**vendored into this repository** (see “Key Decision: one repo, two apps”). So
+there is no frozen external contract: the API is co-designed with both clients,
+token auth is deleted rather than preserved, and the XLS rider export retires
+unused (the React app fetches riders as JSON).
+
+Auditing that client is what made it a Phase 2 task rather than a Phase 3 one: its
+upload path is broken in ways neither codebase's tests could see — **D1** the app
+sends `newriders`, the server reads `riders`, so riders created at the track are
+silently lost; **D2** the app maps entries by `entry.rider`, where the API returns
+a display string, so downloading existing entries always returns an empty sheet;
+**D3** those two combine so a re-upload from an empty sheet **wipes the whole
+meeting's results** with an HTTP 200. The Angular predecessor has both right.
+
+### Key Decision: one repo, two apps (monorepo)
+
+Both React apps live under a `frontend/` workspace root — `apps/raceday` (the
+vendored entry app), `apps/web` (the SPA replacing the Django views) and
+`packages/api-client` (generated from the server's OpenAPI schema). This supersedes
+the earlier “separate frontend repository” recommendation, and the reason is D1/D2
+themselves: two repos hand-maintaining one wire format, with every layer mocking
+the layer beneath it, is exactly how a silent data-loss bug survived. A generated
+shared client makes that class of bug uncompilable.
 
 ### Key Decision: retire before rebuilding
 
 The owner briefing established that the **ingest pipelines are out of date** and
 that **AusCycling membership polling has been withdrawn**, pending a new API
-provider. Phase 2 therefore opens with a retirement pass — roughly 2,400 lines
-and six dependencies — which resolves four of the nine model defects by removal
+provider. Phase 2 therefore opens with a retirement pass — **2,742 measured lines** and
+nine dependencies — which resolves four of the nine model defects by removal
 rather than repair. **WMCC is the only client club**, so the API must not be
 designed for multi-tenancy, and the hardcoded pointscale becomes data instead of
 a bug. Membership categories are to be redesigned around the new AusCycling
@@ -181,7 +209,8 @@ checks gated in CI. See "Phase 1 Exit Notes" in
 - Vite (build tool)
 - React Router 6
 - TanStack Query (React Query)
-- Tailwind CSS or Material UI
+- React 18 + TypeScript + Vite + **Material UI** (fixed by the vendored race-day
+  app), pnpm workspaces under `frontend/`
 - Axios
 
 ### Development Tools
@@ -283,7 +312,7 @@ Phase 1 (Foundation) is complete. From here:
 2. ⬜ **Scan [MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** - Understand the plan
 3. ⬜ **Read the Phase 1 Exit Notes** in [MODERNIZATION_CHECKLIST.md](MODERNIZATION_CHECKLIST.md) - what works, what's owed
 4. ⬜ **Read [MODEL_REVIEW.md](MODEL_REVIEW.md)** — why the API is being rebuilt,
-   what the models need, and the frozen race-day contract
+   what the models need, and the D1–D4 race-day upload defects
 5. ⬜ **Start Phase 2.0** — the retirement pass, then model hardening
 6. ⬜ **Track progress** — Use the checklist daily
 

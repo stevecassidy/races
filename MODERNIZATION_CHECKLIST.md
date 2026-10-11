@@ -105,12 +105,16 @@ Briefing facts that changed the plan:
 ## ✅ Phase 2: Backend API Rebuild (Weeks 5-12)
 
 > **Decisions (2026-10-11):**
-> 1. `api.py` is **scrapped, not adapted** — but one endpoint is a **frozen
->    external contract** (see 2.2).
+> 1. `api.py` is **scrapped, not adapted**.
 > 2. A **retirement pass comes first**: the ingest pipelines, the withdrawn
->    AusCycling polling and the dead import paths are deleted, not repaired, which
->    resolves four of the nine model defects by removal.
+>    AusCycling polling, the dead import paths **and the unreachable export views**
+>    are deleted, not repaired — which resolves four of the nine model defects by
+>    removal.
 > 3. **WMCC is the only client club** — do not design for multi-tenancy.
+> 4. **The race-day React app is vendored into this repo** (monorepo), so the
+>    contract is co-designed rather than frozen, and token auth is deleted rather
+>    than retained. Auditing it found **four client-side contract defects (D1–D4),
+>    two of which lose race data silently** — see 2.2.
 >
 > Evidence for all of it: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
@@ -129,10 +133,13 @@ Briefing facts that changed the plan:
       of `ngram`)
 - [ ] Delete dead tests: `testingest.py`, `imgsampledict.py`, 7 VCR cassettes
       (closes A7)
+- [ ] Delete the three unreachable export views in `views.py`
+      (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`) —
+      already unrouted on this branch, and the React client uses none of them
 - [ ] Drop dependencies: `icalendar`, `ngram`, `beautifulsoup4`, `requests`,
       `vcrpy`, `pytz` — each verified used only by code deleted in this pass
-- [ ] **Hold** `pyexcel`/`pyexcel-xls`/`openpyxl` — the rider XLS export is part of
-      the live race-day contract
+- [ ] Also drop `pyexcel`/`pyexcel-xls`/`openpyxl` — the three export views are
+      already unrouted on this branch and the live React client uses none of them
 - [ ] **Keep, move to `services/`**: pointscore score/tally/recalculate,
       `tally_pointscores`, `fix_small_races`, official allocation, promotion and
       performance reports, `classification`, export builders
@@ -165,24 +172,45 @@ Briefing facts that changed the plan:
 - [ ] C8: make `Rider.updated` delta tracking explicit
 - [ ] C11/C12: eliminate N+1 paths and normalise `Club.statistics()`
 
-### 2.2 The Race-Day Contract (Week 6) ⚠️ highest priority
-- [ ] **Decide the entry app's fate** — rewritten in React (contract negotiable,
-      token auth + XLS export can go) or kept external (contract frozen).
-      Highest-leverage open decision in the project
-- [ ] Reproduce `POST /races/{id}/results/` byte-compatibly if external:
-      `{race, entries[], riders[]}` → `{message, errors, ridermap}`
-- [ ] A8: honour `member_category` from the payload — `api.py:694,757` hardcode
-      `category="race"` and silently drop the client's value; no test covers it
-- [ ] A9: resolve the `grade_change` mismatch (`== "y"` vs JSON booleans) — if the
-      live client sends booleans, in-race promotions have never applied
-- [ ] `transaction.atomic()` around the delete-then-reinsert
-- [ ] Apply a permission class (the endpoint currently has none, so any
-      authenticated user can overwrite any race's results)
-- [ ] Preserve the `ridermap` temporary-ID mechanism
-- [ ] Replacement for `GET /clubs/<slug>/riders.xlsx` (already unrouted on this
-      branch), or confirm it retires with the app
-- [ ] Turn `tests/result-upload.json` + `testapi.py` upload tests into the
-      executable specification
+### 2.2 Monorepo: Vendor & Audit the Race-Day App (Week 6) ⚠️ highest priority
+
+**Vendoring**
+- [ ] `git subtree add --prefix=frontend/apps/raceday stevecassidy/cabici-raceday-react main`
+      (preserve history — the blame is the D1/D2 provenance evidence)
+- [ ] pnpm workspaces root under `frontend/`; Node pinned; apps kept as **two
+      separate deployables** (raceday is offline-first and high-stakes)
+- [ ] `frontend/packages/api-client` (generated, 2.3) + `frontend/apps/web`
+      skeleton for the Phase 3 SPA
+- [ ] Frontend CI workflow (`install --frozen-lockfile`, lint, `tsc --noEmit`,
+      `vitest run`, `build`) on `frontend/**`; path filters on the Python workflow
+- [ ] Carry over `PROJECT_CONTEXT.md`; refresh `.devcontainer` (still Python 3.10)
+
+**Audit & fix — the data-loss part**
+- [ ] **D1 (critical):** app sends `newriders`, `api.py:654` reads `riders` →
+      track-day rider creations are **silently lost**; response is HTTP 200
+      "race results uploaded". Restore the Angular mapping (internal `newriders` →
+      wire `riders`)
+- [ ] **D2 (critical):** app maps entries by `String(entry.rider)` but the API
+      returns a **display string** there (ID is `riderid`) → downloading existing
+      entries **always returns an empty sheet**. Angular used `e.riderid`
+- [ ] **D3:** D1+D2 compound — an upload from an empty sheet **wipes the whole
+      meeting's results** (reproduced: 3 → 1, HTTP 200, no conflict signal). Add
+      `transaction.atomic()`, a permission class, and an explicit overwrite
+      contract instead of silent replace-all
+- [ ] **D4:** surface the server's `errors[]` to the race director (currently
+      discarded by `EntryService.uploadEntries()`)
+- [ ] **A9:** both SPAs send `grade_change` as a boolean, `api.py:821` compares to
+      `"y"` → in-race promotions have never applied via the API. Fix both ends
+- [ ] **A8:** honour `member_category` (and decide the React app's
+      `verifiedMemberDate`, which the server ignores) instead of hardcoding
+      `category="race"` — settle with the 2.1 membership redesign
+- [ ] **Preserve the offline contract:** full paginated load + `localStorage`
+      cache + `?changed=<unix>` merge-by-`rider.id`. Load-bearing at the
+      velodrome; `?updated_after=` must keep all three behaviours
+- [ ] Treat the Angular `entry.service.ts` as the **reference implementation** of
+      upload/download semantics
+- [ ] Regression tests for D1–D4 that exercise the **real** HTTP boundary, not a
+      mock of the layer beneath
 
 ### 2.3 Resource Model & API Contract (Week 7)
 - [ ] Derive remaining resources from the domain (not from the old views)
@@ -193,7 +221,11 @@ Briefing facts that changed the plan:
 - [ ] Domain operations as explicit actions (`POST /races/bulk/`,
       `POST /pointscores/{id}/recalculate/`,
       `POST /clubs/{slug}/officials/allocate/`)
-- [ ] Publish OpenAPI before implementing; generate the TypeScript client from it
+- [ ] Publish OpenAPI before implementing; generate the TypeScript client into
+      `frontend/packages/api-client` and consume it from **both** apps (the control
+      that prevents a repeat of D1/D2)
+- [ ] Contract test in CI covering served schema ↔ generated client ↔ raceday
+      upload payload
 
 ### 2.4 Authentication (Week 8)
 - [ ] Install djangorestframework-simplejwt; JWT access + refresh endpoints
@@ -202,7 +234,10 @@ Briefing facts that changed the plan:
 - [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
       must not 500
 - [ ] Scope CORS to the frontend origin (replace allow-all + GET-only)
-- [ ] **Keep DRF token auth** until the race-day entry app is retired (per 2.2)
+- [ ] **Delete DRF token auth** once the vendored raceday app is on JWT in the same
+      cutover (no external client depends on it any more)
+- [ ] Migrate `frontend/apps/raceday` off `AUTH_HEADER_PREFIX = 'Token'` and its
+      `localStorage` token storage
 
 ### 2.5 Core CRUD Implementation (Weeks 9-10)
 - [ ] ViewSets + routers under `/api/v1/` (no hand-wired URL pairs)
