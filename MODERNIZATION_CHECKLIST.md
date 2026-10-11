@@ -116,7 +116,7 @@ Briefing facts that changed the plan:
 
 ### 2.0 Retirement Pass (Week 5)
 - [ ] Delete `races/ingest/` + commands `ingest`, `csvingest`, `harvestclubs`,
-      `loadusers`, `wmccimport` (out-of-date pipelines, ≈ 1,145 lines)
+      `loadusers`, `wmccimport` (out-of-date pipelines, 1,029 lines)
 - [ ] Delete the withdrawn AusCycling polling: `auscycling.py`,
       `validate_memberships.py`, `Club.validate_membership()`, the 3 `Club`
       credential fields and 2 `Membership` validation fields (closes C9)

@@ -92,8 +92,8 @@ deleted features:
 
 | Retire | Lines | Evidence |
 |---|---|---|
-| `races/ingest/` entirely (lacc, penrith, waratahs, csvingest) | ~399 | fact 1; only `manage.py ingest` and the disabled tests reach it |
-| Commands: `ingest`, `csvingest`, `harvestclubs`, `loadusers`, `wmccimport` | ~745 | one-off historical imports / scrapers |
+| `races/ingest/` entirely (lacc, penrith, waratahs, csvingest) | 384 | fact 1; only `manage.py ingest` and the disabled tests reach it |
+| Commands: `ingest`, `csvingest`, `harvestclubs`, `loadusers`, `wmccimport` | 645 | one-off historical imports / scrapers |
 | `auscycling.py` + `validate_memberships.py` + `Club.validate_membership()` | ~375 | fact 2 — withdrawn pending a new provider |
 | `Club.auscycling_client_id/_secret/_club_id`, `Membership.last_validated`/`validation_error` | 5 fields | same; also removes the plaintext-secret finding C9 |
 | `Race.load_excel_results()` | ~150 | **only** callers are 4 tests in `testresults.py`; the production caller `RaceUploadExcelView` exists on master and is gone here |

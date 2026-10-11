@@ -246,8 +246,8 @@ path — the only callers are tests or features the briefing confirms are dead.
 Resolves defects **A4–A7 by removal** rather than repair.
 
 - [ ] **Ingest pipelines** — `races/ingest/` entirely (lacc, penrith, waratahs,
-      csvingest ≈ 399 lines) and the commands `ingest`, `csvingest`,
-      `harvestclubs`, `loadusers`, `wmccimport` (≈ 745 lines) *(fact 1)*
+      csvingest = 384 lines) and the commands `ingest`, `csvingest`,
+      `harvestclubs`, `loadusers`, `wmccimport` (645 lines) *(fact 1)*
 - [ ] **Withdrawn AusCycling polling** — `auscycling.py` (169),
       `validate_memberships.py` (136), `Club.validate_membership()` (≈ 70 lines in
       `models.py`), and the fields `Club.auscycling_client_id` /
