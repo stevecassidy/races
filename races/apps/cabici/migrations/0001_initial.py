@@ -22,8 +22,7 @@ import datetime
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-#import djangoyearlessdate.models
-import geoposition.fields
+import races.apps.cabici.geoposition
 
 
 class Migration(migrations.Migration):
@@ -125,7 +124,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
-                ('location', geoposition.fields.GeopositionField(max_length=42)),
+                ('location', races.apps.cabici.geoposition.GeopositionField(max_length=42)),
             ],
         ),
         migrations.CreateModel(
