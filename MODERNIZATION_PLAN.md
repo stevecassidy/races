@@ -205,24 +205,43 @@ writes, an unpermissioned and non-transactional result uploader, no schema, no
 versioning, no refresh auth, and 5 of 13 models unexposed. Adapting it would
 touch ~100% of the file while inheriting every inconsistency.
 
-**The client that changed the plan is in-house, and it moves in.** The race-day
-entry application is the app's **only way to add riders** today. It was rewritten
-from Angular 8 to React 18 in a separate repo (`stevecassidy/cabici-raceday-react`),
-and the decision is to **vendor it into this repo** alongside the SPA that will
-replace the Django views. So this is not a "frozen external contract to reproduce"
-situation at all — the contract is **co-designed**, token auth can be deleted
-rather than preserved, and both clients share one generated API client.
+**The race-day client is in-house, and it moves in — but it is not the deployed
+one.** The race-day entry application is the app's **only way to add riders**
+today, and the system doing that today is the **Angular 8 app** (old, reliable, in
+production). It was rewritten in React 18 in a separate repo
+(`stevecassidy/cabici-raceday-react`) which is **unfinished and predates the
+server-side work**. The decision is to **vendor the React app into this repo**
+alongside the SPA that will replace the Django views, and to deploy **same-origin**
+(Django serves both builds) for now.
 
-What reading that client revealed is more important than the topology: **its
-upload path is broken in two ways that neither codebase's tests could catch**
-(`D1` the app sends `newriders`, the server reads `riders` → riders created at the
-track are silently lost; `D2` the app maps entries by `entry.rider`, the server
-returns a display string there → downloading existing entries always yields an
-empty sheet; together, `D3` a re-upload from an empty sheet **wipes the whole
-meeting's results**, HTTP 200, no conflict signal). The Angular predecessor has
-both right. This is why Phase 2 opens with a vendoring-and-audit step and why the
-API is contract-first with a **generated** client — hand-maintained wire formats
-across two repos is what produced the defect in the first place.
+So the contract is **co-designed for the future and compatibility-bound in the
+present**: the new API must keep satisfying **Angular unchanged**, which is what
+buys the whole of Phases 2–3 their safety — the deployed system keeps running and
+Angular's retirement becomes a clean deletion rather than a migration. Token auth
+cannot be deleted at vendoring time for the same reason: Angular uses it.
+
+Reading the actual clients produced the review's most valuable findings, and the
+briefing corrected their severity:
+
+- **D1/D2 are React-only** (it sends `newriders` where the server reads `riders`,
+  and maps downloads by `entry.rider` where the server returns a display string).
+  **Not live — Angular gets both right.** They are fix-on-vendoring work, and
+  Angular is therefore the reference implementation for the wire format.
+- **A9 is the one live production bug:** `api.py:821` compares `grade_change` to
+  `"y"` while **both** clients send a boolean, so in-race grade changes have never
+  applied in production.
+- **D3's server half is real regardless of client:** the upload endpoint has no
+  permission class and no transaction, so any authenticated user can replace a
+  race's results and a mid-request failure leaves it half-populated.
+- **A8 is the unblocked membership work everyone assumed was blocked:** the React
+  app already ships a complete manual at-the-track membership verification flow
+  sending `verifiedMemberDate`, and the server ignores it entirely. With
+  AusCycling polling withdrawn, production has **no verification at all** and the
+  interim design is sitting in an unfinished client.
+
+This is also why the API is contract-first with a **generated** client:
+hand-maintained wire formats across two repos, with every layer mocking the layer
+beneath it, is exactly how D1 survived both test suites.
 
 Details, reproduction and remediation: 2.2 and
 [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
@@ -319,22 +338,49 @@ Prerequisite for serializers. Referenced items are the findings in
       stored as data *(confirm)*
 - [ ] A1b: delete `PointScore.method` — it offers `WMCC`/`LACC`, only WMCC exists
       in code, and LACC was one of the retired scrapers
-- [ ] A2: **deferred to the membership redesign below** — fix the inverted
-      `MEMBERSHIP_CATEGORY_CHOICES` tuple *in the same migration* that adopts the
-      new category set, so the data is migrated once
+- [ ] A2: **fix now, not deferred** (third revision) — the inverted
+      `MEMBERSHIP_CATEGORY_CHOICES` tuple is a live admin bug: writing `'Race'`
+      makes a membership invisible to the seven `category="race"` sites. Correct
+      the tuple and normalise any capitalised rows in this phase. Adopting
+      AusCycling's *new* vocabulary can follow later as a second migration; the
+      inversion should not wait on an unspecified provider date
 - [ ] A3: remove or repair `Race.get_absolute_url()` / `Rider.get_absolute_url()`
       (they reverse URL names that no longer exist → admin "View on site" 500s,
       verified through `/admin/r/<content_type>/<id>/`); admin is the one UI we
       keep through Phase 4. `feeds.py` `item_link` has the same fault
+- [ ] **A9: the one live production bug** — `api.py:821` compares
+      `entry["grade_change"] == "y"` while both clients send a JSON boolean, so
+      in-race grade changes have never applied in production. Fix the comparison
+      (and the response, which omits `grade_change` entirely so a download
+      resets it to `false`), with a regression test through the real HTTP
+      boundary
 
-**Membership categories (new work from the briefing):**
-- [ ] Capture AusCycling's new membership category set *(blocked on the new
-      provider's spec)*
-- [ ] One migration: correct the inverted tuple, replace the category values, and
-      normalise any capitalised legacy rows (fixtures verified clean)
+**Membership — two tracks (third revision):**
+
+*Track (a): local verification — **unblocked, do now**.* The React app already
+ships a complete manual at-the-track verification flow (`MembershipVerificationDialog`,
+`membershipUtils`: `isCurrentMember`, `needsMembershipVerification`,
+`isValidMemberDate`, `getEffectiveMemberDate`) that sends `verifiedMemberDate`,
+and the server has **zero** support for it (`grep -rn "verifiedMemberDate" races`
+→ no matches). With AusCycling polling withdrawn, production currently has **no
+membership verification at all**.
+
+- [ ] Store a verified membership date on `Membership` (or `Rider`) and honour it
+      on upload alongside `member_category` (A8)
+- [ ] Expose membership as a first-class resource, not an upload side effect
 - [ ] Fix `Rider.current_membership` (C10) to select by category and validity
       window instead of max date across all categories
-- [ ] Honour `member_category` from the upload payload — see A8 in 2.2
+- [ ] Port the verification semantics out of the client into the server so they
+      are enforced once rather than per client
+
+*Track (b): provider integration — **blocked** on the new API provider's spec.*
+
+- [ ] Capture AusCycling's new membership category set when the spec lands
+- [ ] Define the seam now (a `MembershipSource` interface or equivalent) so the
+      provider supplements track (a) rather than rewriting it — and so (a) is
+      **not** held hostage to (b)
+- [ ] Never re-introduce a model field holding a provider client secret (C9 —
+      the lesson from the withdrawn polling)
 
 **Database integrity (one additive migration):**
 - [ ] `UniqueConstraint` on `Club.slug`, `ClubRole.name`,
@@ -375,13 +421,36 @@ Prerequisite for serializers. Referenced items are the findings in
 tests for each fix; `makemigrations --check` clean; constraints verified against
 a copy of production data; no model method performs network or filesystem I/O.
 
-### 2.2 Monorepo: Vendor & Audit the Race-Day App (Week 6)
+### 2.2 Monorepo: Vendor the Race-Day App (Week 6)
 
-The race-day client moves into this repo. That is not just a file move: reading
-the client revealed that **its upload path is broken in two ways that the server
-could not see and neither test suite could catch** (D1, D2 in
-[`MODEL_REVIEW.md`](MODEL_REVIEW.md)). Vendoring without auditing would carry
-silent race-day data loss into the new API.
+The unfinished React client moves into this repo. **Third revision framing:** it
+is *not* the deployed system — **Angular is**, and Angular maps the upload
+payload correctly — so there is no live data loss and nothing urgent. Vendoring
+matters for a different reason: the React app is the forward path, it already
+contains the post-AusCycling local-verification design (A8), and its D1/D2
+defects are cheap to fix precisely *because* it is now in-repo and can be tested
+against the real API.
+
+**Three clients, one forward path — deliberate:**
+
+| App | Status | Role here |
+|---|---|---|
+| Angular (`cabici-raceday`, Angular 8 / TS 3.5, 5,164 lines, 11 components, last touched 2022) | **deployed and reliable** | Keeps running untouched. **The compatibility target** for the new results endpoint, and the only correct record of the upload/download wire format |
+| React (`cabici-raceday-react`, 3,724 lines, 8 pages/components, last commit 2026-09-05) | **unfinished**, predates the server work | Vendored as `frontend/apps/raceday`; the thing we finish |
+| `frontend/apps/web` | to be built | The SPA replacing the Django template screens |
+
+- [ ] **Do not vendor Angular as a buildable app.** Building Angular 8 in this
+      repo's CI is cost with no benefit, and a third race-day implementation in
+      the tree invites "which one is live?" confusion at the worst time
+- [ ] **Extract Angular's wire semantics into this repo as documentation**
+      (`docs/raceday-contract.md`): the `_buildUploadPayload()` field list
+      (`payload.riders`, with `id, first_name, last_name, email, clubslug,
+      licenceno, member_date, dob, gender, phone`) and the
+      `getRider(e.riderid)` download mapping. That specification must not depend
+      on a sibling checkout surviving
+- [ ] **Keep the new results endpoint acceptable to Angular unchanged**, so the
+      deployed system works throughout Phases 2–3 and its retirement is a clean
+      deletion rather than a migration
 
 **What is being vendored** (verified, not assumed):
 
@@ -400,6 +469,11 @@ silent race-day data loss into the new API.
 - [ ] Root `package.json` workspaces (`frontend/apps/*`, `frontend/packages/*`),
       pnpm (the app already ships `pnpm-lock.yaml`), Node pinned in
       `.nvmrc`/`packageManager`
+- [ ] **Mount `apps/raceday` on a subpath** (e.g. `/raceday/`) — required by
+      same-origin, and the app is **not** configured for it today: `vite.config.ts`
+      sets no `base`, `App.tsx` uses `<BrowserRouter>` with no `basename`, and it
+      has a catch-all `<Route path="*" element={<Navigate to="/login"/>}>`.
+      Narrow the PWA service-worker scope to the subpath as well
 - [ ] Keep the two apps **separate deployables**. Race day is high-stakes and the
       entry app is offline-first; do not merge it into the club SPA. They share
       `packages/api-client` and (later) `packages/ui`
@@ -411,44 +485,53 @@ silent race-day data loss into the new API.
 - [ ] Update `.devcontainer` (still Python 3.10 + pylint-era settings) so the
       monorepo has one reproducible dev environment
 
-**Audit & fix — the urgent part:**
+**Fixes — client-side (React only, so not urgent):**
 
 - [ ] **D1:** the app sends `newriders`, `api.py:654` reads `riders` → **riders
       registered at the track are never saved**, their entries are dropped into an
       `errors` array the app discards, and the response is HTTP 200
-      `"race results uploaded"`. Reproduced against the real API. Fix by
-      restoring the Angular mapping (internal `newriders` → wire `riders`)
+      `"race results uploaded"`. Reproduced against the real API. **Not live —
+      Angular, which is deployed, sends `riders`.** Fix by restoring the Angular
+      mapping (internal `newriders` → wire `riders`)
 - [ ] **D2:** the app looks riders up by `String(entry.rider)` but the API returns
       `rider` as a **display string** and the ID as `riderid` → **downloading
       existing entries always returns an empty sheet**. Angular used
-      `e.riderid`. Fix accordingly
-- [ ] **D3:** D1+D2 compound into result destruction — the upload deletes all
-      results then re-inserts only what is sent, so a clerk with an empty sheet
-      who adds one rider wipes the meeting. Reproduced: 3 results → 1. Add
-      `transaction.atomic()`, a permission class, and an explicit overwrite
-      contract (confirmation flag or version/`If-Match` check) rather than
-      silent replace-all
+      `e.riderid`. **Not live.** Fix accordingly
 - [ ] **D4:** surface the server's `errors[]` to the race director instead of
       dropping it in `EntryService.uploadEntries()`
-- [ ] **A9:** both SPAs send `grade_change` as a boolean; `api.py:821` compares to
-      `"y"` → in-race promotions have never applied through the API (template-era
-      residue). Fix on both ends and cover with a contract test
-- [ ] **A8:** honour `member_category` (and decide `verifiedMemberDate`, which the
-      React app sends and the server ignores) instead of hardcoding
-      `category="race"` — settle with the membership redesign in 2.1
+- [ ] Add regression tests that exercise the **real HTTP boundary** for all of the
+      above — the absence of exactly this is why D1/D2 survived both test suites
+
+**Fixes — server-side (affects the deployed Angular app):**
+
+- [ ] **A9 (live production bug):** `api.py:821` compares `grade_change == "y"`
+      while **both** clients send a JSON boolean, so in-race grade changes have
+      never applied in production. Also absent from the GET response, so a
+      download resets it to `false`. Fix both ends
+- [ ] **D3 (server half):** the upload deletes all results then re-inserts only
+      what is sent, with no permission class and no transaction — so *any*
+      authenticated user can replace any race's results, and a mid-request failure
+      leaves the race half-populated. Reproduced: 3 results → 1, HTTP 200, no
+      conflict signal. Add `transaction.atomic()`, a permission class, and an
+      explicit overwrite contract (confirmation flag or version/`If-Match`)
+      instead of silent replace-all — **while staying acceptable to Angular**
+- [ ] **A8:** honour `member_category` and `verifiedMemberDate` instead of
+      hardcoding `category="race"` — this is track (a) of the membership work in
+      2.1, and it is what makes the React app finishable
 - [ ] **Preserve the offline contract:** `RiderService` does a full paginated
       load, caches riders in `localStorage`, and refreshes with
       `?changed=<unix>`, merging by `rider.id`. That is load-bearing at a
       velodrome with poor reception. Any replacement (`?updated_after=`) must
       keep delta sync, pagination and stable IDs, and must not silently drop
       deleted riders
-- [ ] **Adopt the Angular app as the reference implementation** for upload/download
+- [ ] **Treat Angular as the reference implementation** for upload/download
       semantics — `../cabici-race-manager-owen/src/app/services/entry.service.ts`
-      is the only place the correct wire mapping still exists
+      is the only place the correct wire mapping still exists, which is why its
+      extraction into `docs/` is a task above
 
 **Why this is a Phase 2 task, not Phase 3:** the API contract is being designed in
-2.3, and both clients' shapes are inputs to it. Discovering D1 after the contract
-was published would mean redesigning it.
+2.3, and both clients' shapes are inputs to it — Angular's because it is the
+compatibility target, the React app's because it is what we are finishing.
 
 **Success Criteria:** both apps build and test green in this repo's CI; D1–D4
 closed with regression tests; one shared generated client; no hand-written API
@@ -487,7 +570,10 @@ both clients**, and the generated client is the only sanctioned way to talk to i
 clients need; OpenAPI spec committed and served; generated TS client compiles in
 both apps; the contract test fails if either side drifts.
 
-### 2.4 Authentication (Week 8)
+### 2.4 Authentication & Same-Origin Wiring (Week 8)
+
+Same-origin (decided — see 3.1) removes a whole category of work here and adds a
+few specific tasks.
 
 - [ ] `djangorestframework-simplejwt` with access + refresh endpoints
 - [ ] Register, password reset (request + confirm), profile read/patch
@@ -496,16 +582,35 @@ both apps; the contract test fails if either side drifts.
 - [ ] Fix the carried-over defects: unknown email must return 401 (not 500), and
       a user without a `Rider` must not 500 on `user.rider.club` — the raceday
       login depends on `club` and `official` being present
-- [ ] CORS scoped to the frontend origin (replace allow-all + GET-only)
+- [ ] **Token storage settled by same-origin:** access token in memory, refresh
+      token in an **httpOnly SameSite cookie**. The previous
+      "memory vs httpOnly cookie" question is closed, and bearer-in-`localStorage`
+      is off the table. Cookie-authenticated writes need CSRF protection (DRF's
+      `SessionAuthentication` provides it; a cookie-JWT authentication class must
+      too)
+- [ ] **Delete CORS entirely** rather than scoping it: `corsheaders` from
+      `INSTALLED_APPS`, `CorsMiddleware`, and `CORS_ALLOW_ALL_ORIGINS` /
+      `CORS_URLS_REGEX` / `CORS_ALLOW_METHODS` all go. Also drop
+      `django-cors-headers` from `requirements/base.txt`
+- [ ] **allauth links must resolve into the SPA.** Password-reset and
+      email-confirmation URLs are currently rendered as absolute template links;
+      with those flows moving to SPA screens they must point at SPA routes —
+      needs allauth URL/adapter configuration, not just endpoints. Previously
+      untasked anywhere
+- [ ] **Flatpages need a decision:** `FlatpageFallbackMiddleware` + the `/` flatpage
+      back the current home page content. With `/` owned by the SPA, either
+      expose pages as a resource (`GET /api/pages/<path>/`) or reorder the
+      middleware
 - [ ] **Delete DRF token auth** once the vendored raceday app is on JWT in the
-      same cutover — no external client depends on it any more, so it does not
-      have to be retained
+      same cutover. Note the sequencing: **Angular is still deployed and uses
+      token auth**, so token auth must survive until Angular is retired (Phase 4
+      gate), not until the React app is vendored
 - [ ] Migrate `frontend/apps/raceday` off `AUTH_HEADER_PREFIX = 'Token'` and its
-      `localStorage` token storage; decide httpOnly cookie vs in-memory +
-      refresh while it is in scope
+      `localStorage` token storage
 
 **Success Criteria:** every auth endpoint tested, including the failure paths
-that currently 500.
+that currently 500; no CORS configuration anywhere in the project; password reset
+and email confirmation work end-to-end against the SPA routes.
 
 ### 2.5 Core CRUD Implementation (Weeks 9-10)
 
@@ -646,10 +751,26 @@ deployables. Race day is high-stakes, offline-first and used by volunteers on
 tablets; merging it into the club SPA would put that reliability in the same
 release train as routine feature work.
 
-**Newly-opened decision — deployment topology.** With both apps in-repo, serving
-their builds from Django via WhiteNoise (one origin, one Docker image, **no CORS
-at all**) becomes practical, and it fits the existing single-cutover deployment
-story better than the previously recommended Vercel split. Trade-offs:
+**Newly-opened decision — deployment topology. DECIDED (2026-10-11): same-origin
+for now.** Django serves both SPA builds via WhiteNoise; the split stays open
+later because the apps are already separate build outputs. Rationale and the
+consequences it commits us to:
+
+| | **Same-origin (DECIDED)** | Separate hosting (deferred) |
+|---|---|---|
+| CORS | **none to configure or reason about** | required for both apps |
+| Auth | httpOnly cookie + CSRF; access token in memory | in-memory + refresh across origins |
+| Deploys | one image, one cutover — matches the plan's approach | frontend ships independently of the API |
+| Static assets | WhiteNoise (already in use) | CDN, image optimisation, preview deploys |
+| Risk | frontend redeploy restarts the backend container | two places to monitor |
+
+It removes a whole class of Phase 4 integration work (CORS policy, credential
+handling, two-host smoke tests) and it is reversible later. What it commits to is
+enumerated in 2.2 (subpath mounting), 2.4 (CORS deleted, cookie auth, allauth
+links into the SPA, flatpage disposition) and 4.3 (multi-stage Docker, the
+static-storage trap, `.dockerignore`).
+
+The trade-offs considered, kept as the record of what was weighed:
 
 | | Same-origin (Django serves the SPA builds) | Separate hosting (Vercel/Cloudflare Pages) |
 |---|---|---|
@@ -659,12 +780,10 @@ story better than the previously recommended Vercel split. Trade-offs:
 | Static assets | WhiteNoise (already in use) | CDN, image optimisation, preview deploys |
 | Risk | frontend redeploy restarts the backend container | two places to monitor |
 
-**Recommendation:** same-origin for the cutover (it removes a whole class of
-Phase 4 integration work — CORS policy, credential handling, two-host smoke
-tests — and WhiteNoise is already configured), keeping the split open afterwards
-since the apps are already separate build outputs. This needs an owner decision
-before 3.2, because it determines how JWT is stored and whether `CORS_*` settings
-survive at all.
+**~~Recommendation~~ → DECIDED: same-origin for now** (2026-10-11). Django serves
+both builds via WhiteNoise; the split remains open later because the apps are
+already separate build outputs. See the table above for what this commits to, and
+2.2 / 2.4 / 4.3 for the resulting tasks.
 
 **Also decided by the vendoring:** the stack is whatever the raceday app already
 uses — **React 18 + TypeScript + Vite + MUI + react-hook-form + axios + Vitest**.
@@ -849,48 +968,81 @@ frontend/
 
 ### 4.3 Production Deployment (Week 32)
 
-**Deployment Architecture Options:**
+**Architecture: Option 3 — Django serves both SPA builds (DECIDED, same-origin).**
+The options below are kept as the record of what was considered; Options 1 and 2
+are not being taken.
 
-**Option 1: Separate Frontend Hosting**
 ```
-Frontend: Vercel/Netlify/Cloudflare Pages
-Backend: Current Django setup (Docker/Digital Ocean)
-```
-
-**Option 2: Unified Nginx Routing**
-```
-Nginx
-  ├── /api/* → Django backend
-  ├── /admin/* → Django admin
-  └── /* → React SPA (served as static files)
-```
-
-**Option 3: Django Serves React Build**
-```
-Django collectstatic includes React build
-Whitenoise serves React SPA
-API at /api/*
+Docker container (python:3.14-alpine, multi-stage)
+  ├── node stage: pnpm install && pnpm -r build  → frontend/apps/*/dist
+  └── python stage: collectstatic + gunicorn
+        ├── /            → apps/web   (SPA index.html via a catch-all view)
+        ├── /raceday/    → apps/raceday (vendored entry app, SW scoped to subpath)
+        ├── /admin/      → Django admin (session auth)
+        ├── /accounts/   → allauth (email confirmation / reset links resolve to SPA routes)
+        ├── /api/        → DRF (/api/v1/ + legacy shapes for Angular until retirement)
+        └── /static/     → WhiteNoise, both builds' hashed assets
 ```
 
-**Recommended:** Option 1 for best performance and deployment flexibility
+No CORS, no second host, one image, one cutover — which is why same-origin was
+chosen. The split (Option 1) stays available later because the apps are already
+separate build outputs.
+
+**Build & packaging work this decides:**
+
+- [ ] **Multi-stage Dockerfile.** Today it is `python:3.14-alpine` with no Node:
+      add a `node` stage that runs `pnpm install --frozen-lockfile && pnpm -r
+      build`, and copy the `dist` outputs into the Python image
+- [ ] **`.dockerignore` must exclude `node_modules`** — verified absent today
+      (zero matches); without it the build context carries every sibling app's
+      dependencies
+- [ ] **Resolve the static-storage/manifest trap ⚠️.** Vite emits
+      content-hashed filenames; `CompressedManifestStaticFilesStorage` re-hashes
+      them and rewrites references inside collected CSS/JS **but not inside
+      `index.html`** (served as a template), so asset URLs break. Manifest hashing
+      adds nothing for already-fingerprinted files → use
+      `whitenoise.storage.CompressedStaticFilesStorage` (compression, no
+      rewriting), keeping manifest hashing only if Django's own static needs it
+- [ ] **CI smoke test for exactly that trap:** run `collectstatic` against a real
+      frontend build and assert every `src`/`href` in the emitted `index.html`
+      resolves to a collected file. Cheap to write, and it is the difference
+      between discovering this in CI and discovering it at 11pm before race day
+- [ ] **SPA catch-all routing** for both apps, with the admin/api paths ordered
+      before it, plus `404.html`/`500.html` handling that does not assume the
+      template layer
+- [ ] `STATICFILES_DIRS` gains both builds; `ALLOWED_HOSTS` /
+      `SECURE_*` / `CSRF_TRUSTED_ORIGINS` reviewed for one-origin operation
 
 **Preparation:**
 - [ ] Final database backup before deployment
 - [ ] Prepare rollback plan (previous Docker image)
-- [ ] Set up frontend hosting (Vercel recommended)
 - [ ] Configure production environment variables
-- [ ] Set up monitoring (Sentry)
-- [ ] Configure CDN if needed
+- [ ] Set up monitoring (Sentry — already a dependency of `apps/raceday`)
 - [ ] Verify SSL certificates
+- ~~Set up frontend hosting (Vercel recommended)~~ — not applicable same-origin
+- ~~Configure CDN if needed~~ — deferred; WhiteNoise + immutable cache headers
+  cover the interim
 
 **Deployment Steps:**
-- [ ] Deploy Django API to production (Docker)
+- [ ] Build the image (Node stage compiles both frontends)
+- [ ] Deploy Django to production (Docker) — one image, one cutover
 - [ ] Run database migrations
-- [ ] Deploy React frontend to hosting
-- [ ] Update DNS/routing as needed
-- [ ] Update CORS settings for production domain
-- [ ] Smoke test all critical functionality
+- [ ] Confirm both SPAs load through `collectstatic` output
+- [ ] Run migrations and smoke test all critical functionality
 - [ ] Monitor logs and error rates
+- ~~Update DNS/routing as needed~~ · ~~Update CORS settings for production domain~~
+  — both eliminated by same-origin
+
+**Angular retirement (new gate, third revision):**
+- [ ] **Do not retire Angular at cutover.** It is the deployed race-day system and
+      the React replacement is unfinished. It keeps running against the API's
+      compatibility surface
+- [ ] Keep DRF **token auth** alive until Angular actually goes
+- [ ] Define the exit criteria for `apps/raceday` (parity with Angular's 11
+      components + D1/D2/D4 fixed + A8/A9 honoured + offline behaviour verified)
+      and retire Angular only in a separate, deliberate step after a race or two
+      on the new app
+- [ ] Only then delete the legacy API surface and token auth
 
 **Post-Deployment:**
 - [ ] Monitor application for 24-48 hours

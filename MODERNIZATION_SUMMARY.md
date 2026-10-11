@@ -73,7 +73,7 @@ contract-first `/api/v1/`
 - Define resources + OpenAPI contract for **both** React clients before implementing,
   with a generated shared client as the only sanctioned API access
 - Build all endpoints as ViewSets with explicit serializers and filters
-- Implement JWT authentication (DRF token auth is deleted at cutover)
+- Implement JWT authentication (DRF token auth survives until Angular retires)
 - Write comprehensive tests, then delete the legacy `api.py`
 
 **Output:** Feature-complete REST API

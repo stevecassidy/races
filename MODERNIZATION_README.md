@@ -81,23 +81,34 @@ clients are deleted in Phase 4. It is replaced by a contract-first `/api/v1/`
 generated from an OpenAPI spec, with the model layer hardened first. Rationale
 and evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
-**The client that changed the plan is in-house, and it moves in.** The race-day
-entry app — currently the only way to add riders — was rewritten from Angular 8 to
-React 18 in its own repo (`stevecassidy/cabici-raceday-react`) and is being
-**vendored into this repository** (see “Key Decision: one repo, two apps”). So
-there is no frozen external contract: the API is co-designed with both clients,
-token auth is deleted rather than preserved, and the XLS rider export retires
-unused (the React app fetches riders as JSON).
+**The race-day client is in-house, and the React version moves in.** The race-day
+entry app is the only way to add riders today. The system doing that is the
+**Angular 8 app** — deployed, old, reliable. It was rewritten in React 18 in its
+own repo (`stevecassidy/cabici-raceday-react`), which is **unfinished and predates
+the server-side modernization**; that React app is what gets **vendored into this
+repository** (see “Key Decision: one repo, two apps”). So the contract is
+co-designed rather than frozen externally — but **Angular remains the
+compatibility target**, its wire format is the reference, and **DRF token auth
+survives until Angular is deliberately retired after cutover**. The XLS rider
+export retires unused: the React app fetches riders as JSON.
 
-Auditing that client is what made it a Phase 2 task rather than a Phase 3 one: its
-upload path is broken in ways neither codebase's tests could see — **D1** the app
-sends `newriders`, the server reads `riders`, so riders created at the track are
-silently lost; **D2** the app maps entries by `entry.rider`, where the API returns
-a display string, so downloading existing entries always returns an empty sheet;
-**D3** those two combine so a re-upload from an empty sheet **wipes the whole
-meeting's results** with an HTTP 200. The Angular predecessor has both right.
+Reading both clients is what made this a Phase 2 task rather than a Phase 3 one:
 
-### Key Decision: one repo, two apps (monorepo)
+- **D1/D2 are React-only, so not live and not urgent** — the app sends
+  `newriders` where the server reads `riders` (rider creations vanish), and maps
+  downloads by `entry.rider` where the API returns a display string (loading a
+  race always yields an empty sheet). Angular gets both right.
+- **A9 is the one live production bug:** the server compares `grade_change` to
+  `"y"` while **both** clients send a boolean, so in-race grade changes have never
+  applied in production.
+- **D3's server half is real regardless of client:** no permission class, no
+  transaction — any authenticated user can replace a race's results.
+- **A8 is unblocked work everyone assumed was blocked:** the React app already
+  ships a complete manual membership-verification flow sending
+  `verifiedMemberDate`, and the server ignores it. With AusCycling polling
+  withdrawn, production has no verification at all.
+
+### Key Decision: one repo, two apps (monorepo), served same-origin
 
 Both React apps live under a `frontend/` workspace root — `apps/raceday` (the
 vendored entry app), `apps/web` (the SPA replacing the Django views) and
@@ -106,6 +117,25 @@ the earlier “separate frontend repository” recommendation, and the reason is
 themselves: two repos hand-maintaining one wire format, with every layer mocking
 the layer beneath it, is exactly how a silent data-loss bug survived. A generated
 shared client makes that class of bug uncompilable.
+
+**Deployment is same-origin:** Django serves both builds via WhiteNoise, so
+**CORS is deleted outright**, the refresh token can be an httpOnly cookie, and
+there is one image and one cutover. `apps/raceday` must therefore mount on a
+subpath (`/raceday/`) — it is not configured for that today. The split remains
+available later because the apps are already separate build outputs.
+
+### Key Decision: Angular is live, and it is the compatibility target
+
+The deployed race-day system is the **Angular 8 app** — old, reliable, and
+working. The React rewrite is **unfinished and predates the server-side
+modernization**. So Angular keeps running untouched through Phases 2 and 3, the new
+results endpoint must accept what Angular sends unchanged, and **DRF token auth
+survives until Angular is deliberately retired in a separate step after
+cutover**. Angular is also the only correct record of the upload/download wire
+format — the React app got two details wrong (D1/D2), and because it is not
+deployed those are fix-on-vendoring work rather than production incidents. Its
+semantics are extracted into this repo's `docs/` so the specification does not
+depend on a sibling checkout surviving.
 
 ### Key Decision: retire before rebuilding
 
@@ -222,10 +252,11 @@ checks gated in CI. See "Phase 1 Exit Notes" in
 - GitHub Actions (CI/CD)
 
 ### Infrastructure
-- Docker + Docker Compose
-- Vercel or Netlify (frontend)
+- Docker + Docker Compose (multi-stage: Node builds both SPAs)
+- **Same-origin:** Django + WhiteNoise serve the SPA builds — no separate frontend
+  hosting, no CORS ~~Vercel or Netlify~~ (deferred; the split stays available)
 - Digital Ocean (backend)
-- Sentry (monitoring)
+- Sentry (monitoring — already a dependency of `apps/raceday`)
 
 ## 📈 Success Metrics
 

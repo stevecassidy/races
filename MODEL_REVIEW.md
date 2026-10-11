@@ -15,11 +15,154 @@ off the screen. The probes are reproduced in [Verification](#verification) so
 you can re-run them after changes.
 
 > **Read the revisions first.** The evidence in Parts 1 and 2 stands, but the
-> *dispositions* changed twice on 2026-10-11 as the owner briefing landed. See
-> [Revision](#-revision-2026-10-11-after-owner-briefing) and
-> [Second revision](#-second-revision-the-raceday-client-is-in-house-react)
-> immediately below. Where a later section contradicts a revision, **the revision
-> wins**.
+> *dispositions* changed three times on 2026-10-11 as the owner briefings landed.
+> **The third revision is the operative one** — where anything below contradicts
+> it, the third revision wins. See
+> [Third revision](#-third-revision-angular-is-live-react-is-not)
+> immediately below, then the earlier revisions it corrects.
+
+---
+
+## ⚠️ Third revision — Angular is live, React is not
+
+The briefing that settles the client question: **the Angular app is what is
+actually deployed on race day** (old, reliable, in production), and **the React
+rewrite is unfinished and predates the server-side modernization work**. The
+monorepo is confirmed, and **same-origin deployment (Django serves the SPA
+builds) is decided for now**, with a split left open later.
+
+### My "urgent data loss" claim was wrong — retracted
+
+The second revision warned that D1–D3 might be losing race data *today* and
+recommended an out-of-band hotfix. That was wrong, and the cause is worth
+recording because it is a reasoning error rather than a missing fact: I treated
+the only client I could find in the tree as the deployed client.
+
+- **D1/D2 do not affect production.** They are in the *unfinished React* app.
+  Angular — the deployed system — maps internal `newriders` state to the wire key
+  `riders` and reads entries back with `getRider(e.riderid)`. Both correct.
+- **No hotfix is needed.** Nothing is losing rider data or wiping meetings at
+  race time.
+- **D3's server-side half still stands.** Independent of any client, the upload
+  endpoint has no permission class and no transaction, so *any* authenticated
+  user can replace a race's results and a mid-request failure leaves the race
+  half-populated. That is a Phase 2 fix, not an emergency, and it is why the
+  endpoint needs an explicit overwrite contract rather than silent replace-all.
+
+### A9 is the one live production bug, and A8 is not
+
+Re-reading both clients against the server separates these cleanly:
+
+| | Who sends it | Status |
+|---|---|---|
+| **A9** `grade_change` | **Angular (deployed)** — `entry.ts:10` `grade_change: boolean = false`, forwarded verbatim into the payload (`entry.service.ts:240`) | **Live production bug.** `api.py:821` compares `== "y"`, so the comparison never matches and **in-race grade changes have never applied in production**. Low severity (no data loss; riders keep their recorded grade) but real, and it has been silently no-oping since the Angular app shipped. |
+| **A8** `member_category` | **React only** — Angular's payload builder sends exactly `id, first_name, last_name, email, clubslug, licenceno, member_date, dob, gender, phone` and **no `member_category`** | **Forward requirement, not a production bug.** It becomes relevant when the React app is finished. |
+
+The `"y"` is template-era residue: `forms.py` had a `ChoiceField` whose values were
+`'y'`/`'n'`, and the API inherited the comparison after the form layer was
+deleted. So this is a genuine server bug that both clients trip over.
+
+### The finding that outranks all of the above: the post-AusCycling workflow already exists, client-side, unsupported
+
+The React app ships `MembershipVerificationDialog` (105 lines) and
+`membershipUtils` (`isCurrentMember`, `needsMembershipVerification`,
+`isValidMemberDate`, `getEffectiveMemberDate`) — a complete **manual,
+at-the-track membership verification** flow: when a rider isn't current, the
+race director enters the expiry date from their card and it is sent upstream as
+`verifiedMemberDate`.
+
+The server has **zero support for any of it**:
+
+- `grep -rn "verifiedMemberDate\|verified_member" races --include="*.py"` → **no
+  matches**. The field is dropped on upload, exactly like `member_category` (A8).
+- Angular has none of this either — it just stamps `member_date` to year-end or
+  today (`new-rider-dialog.component.ts:70-78`). No verification concept at all.
+- Meanwhile the AusCycling polling that *was* the verification mechanism has been
+  **withdrawn** (fact 2), and its replacement provider has no spec yet.
+
+So the app currently has **no membership verification whatsoever** in production,
+and the unfinished React client contains the design for the interim one. This
+splits the membership work in 2.1 into two tracks with very different blocking
+status:
+
+- **(a) Local verification — unblocked, do now.** Store a verified date,
+honour `member_category` and `verifiedMemberDate` on upload, expose membership
+as a resource. No provider dependency. This is the workflow race directors
+actually need today, and it is what makes the React app finishable.
+- **(b) Provider integration — blocked** on the new API provider's spec. Design
+  the seam (a `MembershipSource` interface or equivalent) so (a) can be
+  supplemented rather than rewritten when the spec lands. Do **not** hold (a)
+  hostage to (b).
+
+That also revises the earlier "fix A2 when the new categories land" instruction:
+the inverted `MEMBERSHIP_CATEGORY_CHOICES` tuple (A2) is a **live bug in the
+admin** today — writing `'Race'` makes a membership invisible to the seven
+`category="race"` sites — and it should be fixed with track (a), not deferred to
+an unspecified provider date. Adopting the new category vocabulary can follow
+later as a second migration; the inversion should not wait.
+
+### What same-origin actually commits us to
+
+Decided: Django serves both SPA builds on one origin, split later if warranted.
+Concrete consequences, several of which are easy to miss until cutover:
+
+| Consequence | Detail |
+|---|---|
+| **CORS disappears entirely** | `corsheaders` app, `CorsMiddleware`, `CORS_ALLOW_ALL_ORIGINS`, `CORS_URLS_REGEX`, `CORS_ALLOW_METHODS` all go. Phase 2.4's "scope CORS to the frontend origin" becomes "delete CORS"; Phase 4's "Update DNS/CORS settings" task disappears. Also removes a whole class of credential/CORS preflight bugs from Phase 4. |
+| **Refresh token can be an httpOnly cookie** | Resolves the standing "memory vs httpOnly cookie" question: access token in memory, refresh in an httpOnly SameSite cookie. Requires CSRF protection for cookie-authenticated writes (DRF's `SessionAuthentication` does this; a cookie-JWT class must too). Worth revisiting whether JWT is needed at all vs Django sessions now that we are same-origin — recommendation: keep JWT (stateless, works for non-browser clients, cleaner generated client) but stop treating bearer-in-`localStorage` as an option. |
+| **Two apps, one origin ⇒ path allocation is mandatory** | `apps/raceday` must mount under a subpath (e.g. `/raceday/`). The React app is **not** configured for this: `vite.config.ts` sets no `base`, `App.tsx` uses `<BrowserRouter>` with no `basename`, and it has a catch-all `<Route path="*" element={<Navigate to="/login"/>}>`. The PWA service worker scope must be narrowed to the subpath too. Real 2.2 work, not a deploy-time detail. |
+| **`ManifestStaticFilesStorage` fights Vite's hashing** ⚠️ | Vite already emits content-hashed filenames. Django's manifest storage re-hashes them and rewrites references inside collected CSS/JS **but not inside `index.html`** (served as a template), so the asset URLs break at cutover. Manifest hashing adds nothing for already-fingerprinted files. Resolution: `whitenoise.storage.CompressedStaticFilesStorage` (compression, no rewriting) for the SPA assets, keeping manifest hashing only if Django's own static needs it — plus a CI smoke test that loads the built `index.html` through `collectstatic`. This is the kind of thing that eats a day at 11pm before race day if it is discovered late. |
+| **Dockerfile gains a Node stage** | Currently `python:3.14-alpine` with no Node. Needs a multi-stage build (node ⇒ `pnpm build`, copy `dist` into the Python image). And `.dockerignore` does **not** currently exclude `node_modules` (verified: zero matches) — it must, once `frontend/` lands. |
+| **URL space is reassigned, not just cleaned up** | `/` is currently `HomePage` (a Django `ListView`); under same-origin it becomes the web SPA. `/admin/` and `/api/` stay. So Phase 4's "remove template views" becomes a **URL allocation** task: `/` → `apps/web`, `/raceday/` → `apps/raceday`, `/admin/`, `/api/`. |
+| **allauth's email links must point into the SPA** | Password-reset and email-confirmation URLs are rendered as absolute links from templates. With the flows moving to SPA screens, they must resolve to SPA routes — needs allauth URL/adapter configuration, not just endpoint work. Currently untasked anywhere; added to 2.4. |
+| **Flatpages need a home** | `FlatpageFallbackMiddleware` + the `/` flatpage back the current home page content. With `/` owned by the SPA, either expose pages as a resource (`GET /api/pages/<path>/`) or reorder the middleware. Small, but it must be decided. |
+
+### Angular's status: production system and executable specification
+
+Angular 8 / TypeScript 3.5, 5,164 lines, 11 components, last touched 2022 — and
+**it is the thing that runs race day**. It is also the only remaining record of
+correct upload/download semantics. Recommendation:
+
+- **Keep it deployed and untouched** until `apps/raceday` is finished against the
+  new API. It is reliable; there is no urgency to move it off its own stack.
+- **Do not vendor it as a buildable app.** Building Angular 8 in this repo's CI
+  is cost with no benefit, and a third race-day implementation in the tree invites
+  the question "which one is live?" at the worst time.
+- **Do extract its wire semantics into the repo as documentation** — the
+  `_buildUploadPayload()` field list and the `getRider(e.riderid)` download
+  mapping, committed under `docs/` with the source file referenced. That is the
+  specification the new contract must satisfy, and it should not depend on a
+  sibling checkout surviving.
+- **Design the new results endpoint to accept what Angular sends.** This is the
+  useful part of the earlier "frozen contract" idea, correctly attributed: the
+  frozen contract exists, it is the Angular app, and it happens to be *right*.
+  Keeping the API Angular-compatible means the deployed system keeps working
+  through the whole of Phase 2 and 3, and retirement becomes a clean deletion
+  rather than a migration.
+
+### Net effect on the phase plan
+
+- **2.2** becomes "finish-ready vendoring": bring `apps/raceday` in, mount it on
+  a subpath, fix D1/D2/D4 (client-side correctness, no longer urgent), keep D3's
+  server-side hardening, and treat Angular's payload as the compatibility target.
+- **2.3** the contract must be satisfiable by *both* Angular (unchanged,
+  deployed) and the React app (evolving in-repo). The generated client serves the
+  React side; Angular is the regression baseline.
+- **2.1** membership splits into track (a) unblocked now and track (b) blocked on
+  the provider; **A2 is fixed now**, not deferred.
+- **2.4** deletes CORS, adds the allauth-link-into-SPA task, and settles token
+  storage as httpOnly cookie + in-memory access.
+- **Phase 4** gains: multi-stage Docker with a Node build, the
+  static-storage/manifest trap and its CI smoke test, `.dockerignore`
+  `node_modules`, URL-space allocation, flatpage disposition, and **Angular
+  retirement** as an explicit cutover gate.
+- **New open question (much smaller than before):** does `apps/web` (the SPA
+  replacing the Django template screens) get built on the unfinished React app's
+  codebase, or start fresh with the React app mined for parts? Its stack is
+  already the chosen one, and it is ~70% of Angular's surface (3,724 vs 5,164
+  lines, 8 pages/components vs 11 components), so building on it is probably
+  right — but it predates all the server work, so it should be assessed rather
+  than assumed.
 
 ---
 
@@ -40,6 +183,13 @@ client rather than inferring it from the server:
 | Its own context doc | `PROJECT_CONTEXT.md`: *"React 18 rewrite of Angular 8 race management application … Backend API remains unchanged (separate repository)"*, *"in regular production use"* |
 
 ### This overturns the "frozen contract"
+
+> **Partly corrected by the third revision.** The XLS finding stands. But
+> "token auth can be deleted" does not — **Angular is the deployed client and it
+> uses token auth**, so it survives until Angular retires. And the contract is not
+> wholly co-designed either: it must keep **accepting what Angular sends
+> unchanged**, which is a real compatibility binding, just a correctly attributed
+> one (in-house, and right — unlike the React app's D1/D2).
 
 The first revision concluded that `POST /api/raceresults/` and
 `GET /clubs/<slug>/riders.xlsx` were a **frozen external contract** to be
@@ -64,10 +214,10 @@ would have preserved them in the new API by design.
 
 | # | Finding | Evidence |
 |---|---|---|
-| **D1** | **⚠️ CRITICAL — new riders are silently dropped on every upload.** The React app sends the key `newriders`; `api.py:654` reads `data.get("riders", [])`. Reproduced against the real API with the app's exact payload shape: `ridermap: {}`, `errors: ["Ignored result record with unknown temporary rider ID (A/8)"]`, HTTP **200**, message `"race results uploaded"`, and `Rider` count for the new rider **0**. | React `src/context/EntryContext.tsx:59` builds `newriders: newRiders`; server reads `"riders"`. **This is a React regression** — the Angular `_buildUploadPayload()` keeps `newriders` as *internal* state name and maps it to `payload.riders` on the wire (`entry.service.ts:261`). The rewrite copied the state name into the wire format and dropped the mapping step. `git log -S newriders` in races-git across **all** branches: no hits — the server never accepted it. |
-| **D2** | **⚠️ CRITICAL — downloading existing entries always yields nothing.** `GET /api/raceresults/?race=N` returns `rider` as a **display string** (`"Jane Known"`) and the ID as `riderid`; the React app looks riders up by `String(entry.rider)` in a map keyed by `rider.id`. Reproduced: `riderMap.get(String(entry.rider)) -> None`, so every row is skipped. `grade_change` is absent from the response entirely, so it also resets to `false`. | React `EntryContext.tsx:211-224`. **Also a React regression** — Angular used `this.ridersService.getRider(e.riderid)` (`entry.service.ts:199`). |
-| **D3** | **D1+D2 compound into result destruction.** The upload deletes every result for the race and re-inserts only what the payload contains. A clerk whose app downloaded an empty sheet (D2), adds one rider and uploads, **wipes the whole meeting's results** — and pointscores are recalculated over the wiped set. Reproduced: 3 results → upload 1 → **1 result remains**, HTTP 200, no conflict signal. The server has no `If-Match`/version check and the app's `uploadedSignaturesByRace` guard is per-session client state, which does not survive a reload or a second device. | probe output in [Verification](#verification) |
-| **D4** | **The React app discards the server's `errors` array.** `EntryService.uploadEntries()` returns only `ridermap`; `errors` is never read, so D1's "Ignored result record" messages are invisible to the race director. | `src/services/EntryService.ts:17-42` |
+| **D1** | **CRITICAL in the React app; NOT live in production** (third revision) — new riders are silently dropped on every upload. The React app sends the key `newriders`; `api.py:654` reads `data.get("riders", [])`. Reproduced against the real API with the app's exact payload shape: `ridermap: {}`, `errors: ["Ignored result record with unknown temporary rider ID (A/8)"]`, HTTP **200**, message `"race results uploaded"`, and `Rider` count for the new rider **0**. | React `src/context/EntryContext.tsx:59` builds `newriders: newRiders`; server reads `"riders"`. **This is a React regression** — the Angular `_buildUploadPayload()` keeps `newriders` as *internal* state name and maps it to `payload.riders` on the wire (`entry.service.ts:261`). The rewrite copied the state name into the wire format and dropped the mapping step. `git log -S newriders` in races-git across **all** branches: no hits — the server never accepted it. |
+| **D2** | **CRITICAL in the React app; NOT live in production** (third revision) — downloading existing entries always yields nothing. `GET /api/raceresults/?race=N` returns `rider` as a **display string** (`"Jane Known"`) and the ID as `riderid`; the React app looks riders up by `String(entry.rider)` in a map keyed by `rider.id`. Reproduced: `riderMap.get(String(entry.rider)) -> None`, so every row is skipped. `grade_change` is absent from the response entirely, so it also resets to `false`. | React `EntryContext.tsx:211-224`. **Also a React regression** — Angular used `this.ridersService.getRider(e.riderid)` (`entry.service.ts:199`). |
+| **D3** | **D1+D2 compound into result destruction.** *Client half not live; the server half (no permission class, no transaction) is a genuine defect independent of any client.* The upload deletes every result for the race and re-inserts only what the payload contains. A clerk whose app downloaded an empty sheet (D2), adds one rider and uploads, **wipes the whole meeting's results** — and pointscores are recalculated over the wiped set. Reproduced: 3 results → upload 1 → **1 result remains**, HTTP 200, no conflict signal. The server has no `If-Match`/version check and the app's `uploadedSignaturesByRace` guard is per-session client state, which does not survive a reload or a second device. | probe output in [Verification](#verification) |
+| **D4** | **The React app discards the server's `errors` array** (React-only, so not live). `EntryService.uploadEntries()` returns only `ridermap`; `errors` is never read, so D1's "Ignored result record" messages are invisible to the race director. | `src/services/EntryService.ts:17-42` |
 
 **A9 is also confirmed, and it is older than React.** Both SPAs send
 `grade_change` as a JSON boolean (Angular `entry.ts:10`, React `models.ts:85`);
@@ -111,26 +261,22 @@ contract test that exercises both ends.
    `?changed=<unix>`; that is load-bearing at a velodrome with poor reception.
    `?updated_after=` must preserve delta sync **and** pagination **and** survive
    the app's merge-by-id logic. Do not trade it for `ETag`-only caching.
-5. **New urgent question, replacing the old one:** *which client is live on race
-   day right now?* If the React app with D1/D2 is already in use, riders signed
-   up at the track are being lost **today** and this needs an out-of-band hotfix,
-   not a Phase 2 slot. See *Decisions*.
+5. ~~**New urgent question:** which client is live on race day?~~ — **Answered by
+   the third revision: Angular.** No live data loss and no hotfix; the React app's
+   D1/D2 defects become ordinary fix-on-vendoring work.
 
-### Urgent: the hotfix decision
+### ~~Urgent: the hotfix decision~~ — **retracted by the third revision**
 
-Independent of the modernization plan, and small:
+This section proposed an out-of-band hotfix for D1/D2 on the assumption that the
+React app was the deployed client. **It is not** — Angular is deployed and maps
+both correctly — so there is no live data loss and no hotfix. It is retained
+because the reasoning error is instructive (see the third revision) and because
+two elements survive as ordinary Phase 2 work:
 
-- **Server-side (this repo, ~3 lines, deployable to `master`):** accept both
-  keys — iterate `data.get("riders") or data.get("newriders") or []` — and stop
-  the replace-all wipe by requiring an explicit overwrite flag or version check.
-- **Client-side (`cabici-raceday-react`, 2 one-line fixes):** send `riders`
-  instead of `newriders`; map downloads with `entry.riderid` instead of
-  `entry.rider`.
-
-The client fixes are the correct ones; the server change is the safe one that
-helps immediately. **Recommendation: answer question 1 below first, then patch
-whatever is live.**
-
+- the upload endpoint needs an explicit overwrite contract instead of silent
+  replace-all, plus `transaction.atomic()` and a permission class — a genuine
+  server defect independent of any client;
+- when `apps/raceday` is finished, D1/D2 are two one-line client fixes.
 
 ---
 
@@ -239,14 +385,15 @@ wanted for humans or the desktop workflow, it comes back as an explicit
 
 ### Decisions this briefing created
 
-> Superseded where relevant by the **Second revision** above: decision 1 is now
-> answered (in scope, vendored), and the XLS export is retired rather than held.
+> Superseded where relevant by the **Second and Third revisions**: decision 1 is
+> answered (in scope, vendored, and the deployed client is Angular), and the XLS
+> export is retired rather than held.
 
 1. ~~Is the race-day front end in scope?~~ **Answered: yes, and it moves into
    this repo.** Consequences — the contract is co-designed not frozen, token auth
    is deleted not retained, and the XLS export disappears (no live consumer).
-   **New question in its place: which client is live on race day today?** See
-   *Urgent: the hotfix decision*.
+   ~~**New question in its place: which client is live on race day?**~~ —
+   **Answered by the third revision: Angular.** No live data loss, no hotfix.
 2. **Membership categories are blocked on the new AusCycling spec.** Don't ship
    two migrations: fix the inverted tuple (A2) *as part of* adopting the new
    category set, in one migration. The upload payload already carries
@@ -303,13 +450,14 @@ four are retired with the code they live in rather than repaired.
 | A5 | **`except ValueError, Rider.DoesNotExist:`** — Python 2 syntax that only parses because PEP 758 landed in 3.14; invisible to ruff, breaks on ≤3.13. | `models.py:706` | **Delete** — it lives inside `load_excel_results()`, whose only callers are 4 tests. |
 | A6 | **`Club.ingest_ical()` raises `TypeError` on every call** — builds `Race(date=…, time=…)`; `Race` has no `time` field. Reproduced against `tests/cccc.ical`. Invisible because `manage.py ingest` catches per club and only *prints*, and the sibling `ingest_by_module()` path works, so half the subsystem functions. | `models.py:461-470` | **Delete** with the retirement pass (fact 1). Was flagged "check production"; moot once ingest is retired. |
 | A7 | **The whole ingest test suite is disabled** — `testingest.py` declares `class IngestTests():` with the `TestCase` base commented out, so **0 tests collect** (verified) and 7 VCR cassettes are dead. The direct cause of A6 surviving for years. | `tests/testingest.py:26` | **Delete** with the retirement pass. Keep the lesson: untested surfaces rot silently. |
-| A8 | **⚠️ The upload endpoint silently drops `member_category`.** The external client sends it (`tests/result-upload.json` → `"member_category": "race"`), but `api.py` hardcodes `category="race"` at lines 694 and 757. No test asserts the category — `test_upload_results` checks club, phone, DOB and gender but never this. | `api.py:694,757` | **Fix, and it is now load-bearing** — it collides head-on with the new membership categories: race-day entries would file every rider as `race` whatever the entry app sends. *(decisions 1, 2)* |
-| A9 | **⚠️ `grade_change` type mismatch in the live contract.** `api.py:821` tests `entry["grade_change"] == "y"`; the sample payload sends JSON booleans (`true`/`false`). If the real client sends booleans, **in-race grade promotions never apply.** | `api.py:821` | **Needs the real client to resolve** — either the sample is stale or this is a production bug. *(decision 1)* |
+| A8 | **The upload endpoint silently drops `member_category`** — and, more importantly, **the entire `verifiedMemberDate` mechanism**. The React app ships a complete manual at-the-track membership verification flow (`MembershipVerificationDialog`, `membershipUtils`) that sends `verifiedMemberDate`; `grep -rn "verifiedMemberDate\|verified_member" races --include=*.py` returns **nothing**. Angular sends neither field. | `api.py:694,757` | **Forward requirement, not a production bug** (third revision). Becomes load-bearing when the React app is finished, and it is the core of *track (a)* of the membership work — which is **unblocked** and should not wait for the new provider. |
+| A9 | **⚠️ LIVE PRODUCTION BUG — `grade_change` never applies.** Both clients send a JSON boolean; `api.py:821` compares `== "y"`. Angular (deployed) forwards it verbatim (`entry.service.ts:240`), so **in-race grade changes have never worked in production**. The `"y"` is template-era residue from a `ChoiceField` whose form layer was deleted. | `api.py:821` | **Fix now-ish in Phase 2.1/2.2** — low severity (no data loss; riders keep their recorded grade) but it is the one genuine live bug this review found. |
 
-A1, A2, A8 and A9 change computed results, stored data, or the behaviour of a
-live feature, so each needs an owner decision before it is touched. A8 and A9
-were found only because the briefing revealed that the upload endpoint has an
-external client — they are the two highest-value findings in this review.
+A1 and A2 change computed results or stored data. **A9 is the one live
+production bug** in the review; **A8 is a forward requirement** that gates
+finishing the React client and is the substance of the unblocked half of the
+membership work (third revision). A8 and A9 were both found only by reading the
+actual clients rather than inferring them from the server.
 
 ### Tier B — Integrity that belongs in the database
 

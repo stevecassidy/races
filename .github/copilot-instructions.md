@@ -114,7 +114,8 @@ Phase 2 runs **2.0 Retirement Pass** (delete the out-of-date ingest pipelines an
 the withdrawn AusCycling polling — 2,742 measured lines) → **2.1 Model Hardening** →
 **2.2 Vendor & audit the race-day React app** (it moves into `frontend/`, and its
 upload path currently loses data — D1/D2/D3) → 2.3 Resource model & OpenAPI
-contract for **both** clients → 2.4 Auth (JWT; token auth deleted) → 2.5 CRUD →
+contract for **both** clients → 2.4 Auth (JWT same-origin, CORS deleted, token
+auth kept until Angular retires) → 2.5 CRUD →
 2.6 Docs → 2.7 Tests + delete `api.py`. Findings it acts on (A1-A9 and D1-D4
 defects, B1-B9 integrity, C1-C12 structure) are numbered in
 [MODEL_REVIEW.md](../MODEL_REVIEW.md).
@@ -183,15 +184,29 @@ The pre-existing `races/apps/cabici/api.py` was built ad-hoc for the jQuery
 screens and is **replaced, not extended** (rationale and evidence:
 [MODEL_REVIEW.md](../MODEL_REVIEW.md)). When building the new API:
 
-- **The race-day upload path is the highest-risk surface in the app.** The
-  vendored client posts `{race, entries[], newriders[]}` while `api.py` reads
-  `data["riders"]` (D1: rider creations are silently lost) and returns `rider` as
-  a display string where the client expects an ID (D2: downloads always come back
-  empty); together, a re-upload from an empty sheet **wipes the meeting's
-  results** (D3). The contract is **co-designed, not frozen** - the client is in
-  this repo now - but it must be fixed with regression tests that exercise the
-  real HTTP boundary, and the Angular `entry.service.ts` is the reference
-  implementation of the correct mapping.
+- **Angular is deployed; the React app is not.** The race-day entry app in
+  production is the **Angular 8** app (`cabici-raceday`). The React rewrite
+  (`frontend/apps/raceday`, vendored into this repo) is **unfinished** and
+  predates the server work. So the new results endpoint **must keep accepting
+  what Angular sends unchanged**, and **DRF token auth stays alive until Angular
+  is deliberately retired after cutover** — it is not deleted when the React app
+  is vendored.
+- **The race-day upload path is the highest-risk surface in the app.** The React
+  client posts `{race, entries[], newriders[]}` while `api.py` reads
+  `data["riders"]` (D1: rider creations silently lost) and returns `rider` as a
+  display string where the client expects an ID (D2: downloads always come back
+  empty); the server also has **no permission class and no transaction**, so any
+  authenticated user can replace a race's results and a mid-request failure
+  leaves them half-populated (D3). D1/D2 are React-only, so not live — **D3's
+  server half and A9 (`grade_change` compared to `"y"` while both clients send a
+  boolean, so in-race grade changes have never applied in production) are real.**
+  Fix with regression tests that exercise the **real HTTP boundary**, and treat
+  the Angular `entry.service.ts` as the reference implementation of the wire
+  format.
+- **Offline is a hard API constraint.** `apps/raceday` does a full paginated rider
+  load, caches it in `localStorage`, and refreshes with `?changed=<unix>`, merging
+  by rider ID. Any replacement (`?updated_after=`) must preserve all of that and
+  must not silently drop deleted riders.
 - **Offline is a requirement.** `apps/raceday` does a full paginated rider load,
   caches it in `localStorage`, and refreshes with `?changed=<unix>`, merging by
   rider ID. Any replacement (`?updated_after=`) must preserve all of that.
@@ -211,8 +226,18 @@ screens and is **replaced, not extended** (rationale and evidence:
   multi-club RBAC; permissions answer “is this an official of the club that owns
   this object?”.
 - **Retired subsystems.** The ingest pipelines and AusCycling membership polling
-  are deleted in Phase 2.0. Never add new code that reaches for them; the
-  replacement membership provider is TBD.
+  are deleted in Phase 2.0. Never add new code that reaches for them.
+- **Membership has two tracks.** Local, at-the-track verification (storing a
+  verified date, honouring `member_category`/`verifiedMemberDate` on upload) is
+  **unblocked and goes first** — the React app already ships that flow and the
+  server ignores it, so production currently has no verification at all. Provider
+  integration is **blocked** on the new AusCycling API's spec; design the seam so
+  it supplements local verification rather than rewriting it, and never put a
+  provider client secret in a model field.
+- **Same-origin deployment.** Django serves both SPA builds via WhiteNoise, so
+  **there is no CORS** — do not reintroduce `corsheaders` or `CORS_*` settings.
+  Refresh token in an httpOnly SameSite cookie, access token in memory; never
+  bearer-in-`localStorage`. `apps/raceday` mounts on a subpath (`/raceday/`).
 
 ### API Pattern
 
