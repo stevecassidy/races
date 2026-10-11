@@ -14,3 +14,5 @@ races/staticfiles/
 races_development.*
 .pgpass
 nginx.conf
+
+.pi/
