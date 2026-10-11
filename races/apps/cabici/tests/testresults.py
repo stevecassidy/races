@@ -215,4 +215,3 @@ class UserModelTests(TestCase):
         with self.assertRaises(IntegrityError):
             result2 = RaceResult(race=race, rider=rider2, grade="A", number=21, place=3)
             result2.save()
-
