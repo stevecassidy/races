@@ -39,7 +39,7 @@ from rest_framework.reverse import reverse
 
 from .models import Club, Race, RaceCourse
 from .usermodel import (
-    MEMBERSHIP_CATEGORY_RACE,
+    MEMBERSHIP_CATEGORY_CLUB,
     ClubGrade,
     ClubRole,
     Membership,
@@ -701,7 +701,7 @@ class RaceResultList(generics.ListCreateAPIView):
                     current = rider.current_membership
 
                     if not current:
-                        m = Membership(rider=rider, club=rider.club, date=memberdate, category=MEMBERSHIP_CATEGORY_RACE)
+                        m = Membership(rider=rider, club=rider.club, date=memberdate, category=MEMBERSHIP_CATEGORY_CLUB)
                         m.save()
 
                 # grade
@@ -765,7 +765,7 @@ class RaceResultList(generics.ListCreateAPIView):
                     if "member_date" in record and record["member_date"] > m.date:
                         # actually make a new membership
                         mnew = Membership(
-                            rider=rider, club=rider.club, category=MEMBERSHIP_CATEGORY_RACE, date=record["member_date"]
+                            rider=rider, club=rider.club, category=MEMBERSHIP_CATEGORY_CLUB, date=record["member_date"]
                         )
                         mnew.save()
                         rider.save()  # to trigger timestamp update
