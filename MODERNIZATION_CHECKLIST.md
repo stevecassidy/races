@@ -199,9 +199,20 @@ how this slipped — the bullets are now stated as landed only where they are.
       performance reports, `classification`
 
 ### 2.1 Model Hardening (Weeks 5-6)
-- [ ] A1: wire `PointScore.score()` to its own config fields; WMCC scale becomes
-      data (behaviour unchanged for the only club) *(confirm)*
-- [ ] A1b: delete `PointScore.method` (LACC never existed in code)
+- [x] A1: `PointScore.score()` now reads its own `points` / `smallpoints` /
+      `smallthreshold` / `participation` fields, so a series is database-driven
+      and a second club can run its own scale. Behaviour is identical for the
+      shipped defaults — the pre-existing `test_create` still passes unchanged,
+      including the reason strings, and `test_score_uses_configured_scale` /
+      `test_default_scale_matches_legacy_values` cover both directions
+      (`fix/phase2.1-pointscore-config`)
+- [x] A1b: deleted the decorative `PointScore.method` field (only WMCC ever
+      existed in code; LACC was a retired scraper) — migration `0018`
+- [ ] **Residual hardcode from A1:** the tiny-field rule (`numberriders < 6`,
+      winner gets 3) is now the documented module constants `TINY_RACE_FIELD` /
+      `TINY_RACE_POINTS`, but unlike the other four values it has **no**
+      `PointScore` field. Making it configurable needs a migration plus
+      admin/UI work — worth deciding before a second club onboards.
 - [ ] A2: fix the inverted `MEMBERSHIP_CATEGORY_CHOICES` **now** (live admin bug),
       not deferred to the provider's new vocabulary
 - [ ] **A9 — the one live production bug:** `grade_change == "y"` vs the boolean
