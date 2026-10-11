@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,31 +14,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''
+"""
 Created on August 18, 2015
 
 @author: steve
-'''
+"""
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import User
-import csv
-from races.apps.cabici.usermodel import Rider
+from django.core.management.base import BaseCommand
+
 from races.apps.cabici.models import Race
+
 
 class Command(BaseCommand):
 
-
     def add_arguments(self, parser):
-        parser.add_argument('csvfile', nargs='+', type=str)
-
+        parser.add_argument("csvfile", nargs="+", type=str)
 
     def handle(self, *args, **options):
 
         racepk = 1
 
-        for csvfile in options['csvfile']:
+        for csvfile in options["csvfile"]:
 
             race = Race.objects.get(pk=racepk)
 
