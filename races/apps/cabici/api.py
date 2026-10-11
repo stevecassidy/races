@@ -38,7 +38,17 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from .models import Club, Race, RaceCourse
-from .usermodel import ClubGrade, ClubRole, Membership, PointScore, RaceResult, RaceStaff, Rider, UserRole
+from .usermodel import (
+    MEMBERSHIP_CATEGORY_RACE,
+    ClubGrade,
+    ClubRole,
+    Membership,
+    PointScore,
+    RaceResult,
+    RaceStaff,
+    Rider,
+    UserRole,
+)
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -691,7 +701,7 @@ class RaceResultList(generics.ListCreateAPIView):
                     current = rider.current_membership
 
                     if not current:
-                        m = Membership(rider=rider, club=rider.club, date=memberdate, category="race")
+                        m = Membership(rider=rider, club=rider.club, date=memberdate, category=MEMBERSHIP_CATEGORY_RACE)
                         m.save()
 
                 # grade
@@ -754,7 +764,9 @@ class RaceResultList(generics.ListCreateAPIView):
                     # update membership date if more recent
                     if "member_date" in record and record["member_date"] > m.date:
                         # actually make a new membership
-                        mnew = Membership(rider=rider, club=rider.club, category="race", date=record["member_date"])
+                        mnew = Membership(
+                            rider=rider, club=rider.club, category=MEMBERSHIP_CATEGORY_RACE, date=record["member_date"]
+                        )
                         mnew.save()
                         rider.save()  # to trigger timestamp update
                 elif "club" in record and "member_date" in record:

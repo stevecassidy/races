@@ -213,23 +213,35 @@ how this slipped — the bullets are now stated as landed only where they are.
       `TINY_RACE_POINTS`, but unlike the other four values it has **no**
       `PointScore` field. Making it configurable needs a migration plus
       admin/UI work — worth deciding before a second club onboards.
-- [ ] A2: fix the inverted `MEMBERSHIP_CATEGORY_CHOICES` **now** (live admin bug),
-      not deferred to the provider's new vocabulary
+- [x] A2: membership categories are now the AusCycling set — `Ride`, `Club`,
+      `Race`, with `Club` and `Race` entitling the holder to race and `Ride`
+      not. Replaces the previously inverted tuple (value/label swapped, so admin
+      writes were invisible to the filters) and re-maps stored data in one
+      migration (`0019`): `race`→`Race` (6,076 rows), `ride`+`non-riding`→`Ride`
+      (116+96), verified forward **and** reverse against a copy of the dev
+      database with all 6,288 rows accounted for. `Membership.allows_racing`
+      expresses the entitlement; `RACING_CATEGORIES` replaces the single-literal
+      filters (`Club.statistics()` now counts both racing categories)
+      (`fix/phase2.1-membership-categories`)
 - [ ] **A9 — the one live production bug:** `grade_change == "y"` vs the boolean
       both clients send → in-race grade changes have never applied in production;
       also missing from the GET response so downloads reset it. Fix both ends
 - [ ] A3: fix or drop `Race`/`Rider.get_absolute_url()` (admin "View on site" 500s)
-- [ ] **Membership, track (a) — local verification, unblocked, do now:** the React
-      app already ships the flow (`MembershipVerificationDialog`,
-      `membershipUtils`) sending `verifiedMemberDate`; the server ignores it and
-      production has **no verification at all** since polling was withdrawn. Store
-      the verified date, honour `member_category` (A8), expose membership as a
-      resource, fix `Rider.current_membership` (C10), move the semantics
-      server-side
-- [ ] **Membership, track (b) — provider integration, blocked** on the new
-      provider's spec: capture the new category set, and define the seam
-      (`MembershipSource`) now so (b) supplements (a) rather than rewriting it.
-      Never again a provider client secret in a model field (C9)
+- [ ] **Membership, track (a) — local verification, unblocked, do now** (A2's
+      categories are done; this is the rest of it): the React app already ships
+      the flow (`MembershipVerificationDialog`, `membershipUtils`) sending
+      `verifiedMemberDate`, and the server still ignores it, so production has
+      **no verification at all** since polling was withdrawn. Store the verified
+      date, honour `member_category` from the payload (**A8** — it now
+      round-trips as `Race`/`Club`/`Ride` rather than the old lowercase
+      `race`), expose membership as a resource, fix `Rider.current_membership`
+      (C10), move the semantics server-side
+- [ ] **Membership, track (b) — provider integration, still open.** The three
+      categories are chosen and stored as `Ride`/`Club`/`Ride`-style values that
+      match the provider's naming, but the actual API wiring awaits the new
+      provider: define the seam (`MembershipSource`) so (b) supplements (a)
+      rather than rewriting it, and never put a provider client secret in a model
+      field again (C9)
 - [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
       category, date)`, `ClubGrade(rider, club)`, `UserRole(user, club, role)`,
       `PointscoreTally(pointscore, rider)` — `Race.hash` moot after 2.0

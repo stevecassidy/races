@@ -22,7 +22,17 @@ from django.db import IntegrityError
 from django.test import TestCase
 
 from races.apps.cabici.models import Club, Race
-from races.apps.cabici.usermodel import ClubGrade, Membership, RaceResult, Rider
+from races.apps.cabici.usermodel import (
+    MEMBERSHIP_CATEGORY_CHOICES,
+    MEMBERSHIP_CATEGORY_CLUB,
+    MEMBERSHIP_CATEGORY_RACE,
+    MEMBERSHIP_CATEGORY_RIDE,
+    RACING_CATEGORIES,
+    ClubGrade,
+    Membership,
+    RaceResult,
+    Rider,
+)
 
 
 class UserModelTests(TestCase):
@@ -51,7 +61,7 @@ class UserModelTests(TestCase):
 
         # make sure all riders are current members
         for rider in Rider.objects.all():
-            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category="race")
+            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category="Race")
             m.save()
 
     def test_rider(self):
@@ -111,7 +121,7 @@ class UserModelTests(TestCase):
         rider = Rider.objects.get(id=2930)
 
         # should be a race member
-        self.assertEqual("race", rider.member_category)
+        self.assertEqual("Race", rider.member_category)
 
         # remove this riders membership and it should return ''
         rider.membership_set.all().delete()
@@ -119,6 +129,43 @@ class UserModelTests(TestCase):
         # get rider again (to avoid cache of membership)
         rider_again = Rider.objects.get(id=2930)
         self.assertEqual("", rider_again.member_category)
+
+    def test_membership_categories(self):
+        """A2: the AusCycling categories, and which of them permit racing"""
+
+        self.assertEqual(
+            [("Ride", "Ride"), ("Club", "Club"), ("Race", "Race")],
+            list(MEMBERSHIP_CATEGORY_CHOICES),
+        )
+        self.assertEqual((MEMBERSHIP_CATEGORY_RACE, MEMBERSHIP_CATEGORY_CLUB), RACING_CATEGORIES)
+
+        rider = Rider.objects.get(id=2930)
+        club = rider.club
+        expiry = datetime.date.today() + datetime.timedelta(days=180)
+
+        def membership(category):
+            rider.membership_set.all().delete()
+            m = Membership(rider=rider, club=club, date=expiry, category=category)
+            m.save()
+            return m
+
+        # 'Club' and 'Race' both permit racing; 'Ride' does not
+        self.assertTrue(membership(MEMBERSHIP_CATEGORY_RACE).allows_racing)
+        self.assertTrue(membership(MEMBERSHIP_CATEGORY_CLUB).allows_racing)
+        self.assertFalse(membership(MEMBERSHIP_CATEGORY_RIDE).allows_racing)
+
+        # the old inverted tuple meant display and value disagreed; they must now
+        # agree, otherwise a value can be stored that no filter will ever match
+        for value, label in MEMBERSHIP_CATEGORY_CHOICES:
+            m = membership(value)
+            self.assertEqual(value, m.get_category_display())
+            self.assertEqual(value, m.category)
+
+        # racing membership counts follow the entitlement, not one literal
+        rider.membership_set.all().delete()
+        Membership.objects.create(rider=rider, club=club, date=expiry, category=MEMBERSHIP_CATEGORY_CLUB)
+        stats = club.statistics()
+        self.assertGreaterEqual(stats["racemembers"], 1)
 
     def test_member_date(self):
 

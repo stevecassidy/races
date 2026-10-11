@@ -58,10 +58,10 @@ class OfficialsTests(TestCase):
         self.riders = []
         for rider in self.oge.rider_set.all():
             if random.random() > 0.2:
-                category = "race"
+                category = "Race"
                 self.racers.append(rider)
             else:
-                category = "ride"
+                category = "Ride"
                 self.riders.append(rider)
 
             m = Membership(rider=rider, club=rider.club, date=endofyear, category=category)
@@ -98,7 +98,7 @@ class OfficialsTests(TestCase):
         dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
         dofficers = [ur.user for ur in UserRole.objects.filter(club=club, role=dutyofficer)]
 
-        members = club.membership_set.filter(date__gte=today, category="race")
+        members = club.membership_set.filter(date__gte=today, category="Race")
         for membership in members:
             user = membership.rider.user
             # don't duplicate (eg. member current for this year and next)
@@ -114,7 +114,7 @@ class OfficialsTests(TestCase):
         role, created = ClubRole.objects.get_or_create(name=rolename)
 
         riders = []
-        mm = Membership.objects.filter(club__exact=club, category__exact="race")[:n]
+        mm = Membership.objects.filter(club__exact=club, category__exact="Race")[:n]
         for m in mm:
             ur = UserRole(user=m.rider.user, club=club, role=role)
             ur.save()
@@ -146,7 +146,7 @@ class OfficialsTests(TestCase):
 
         self.create_duty_helpers(self.oge)
         helpers = self.oge.userrole_set.filter(role__name__exact="Duty Helper")
-        racers = self.oge.membership_set.filter(category__exact="race").count()
+        racers = self.oge.membership_set.filter(category__exact="Race").count()
         self.assertEqual(racers - 3, helpers.count())
         # no dofficers should be helpers
         for rider in dofficers:
