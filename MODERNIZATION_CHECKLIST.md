@@ -137,31 +137,66 @@ review in one sitting.
 >
 > Evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
-### 2.0 Retirement Pass (Week 5)
+### 2.0 Retirement Pass (Week 5) — ✅ complete
+
+Landed in two commits: `c6e89b0` on `modernization`, then the remainder on
+`chore/phase2.0-finish-retirement`. **3,463 Python lines removed** (3,037 + 426).
+
 - [x] Delete `races/ingest/` + commands `ingest`, `csvingest`, `harvestclubs`,
       `loadusers`, `wmccimport` (out-of-date pipelines, 1,029 lines)
 - [x] Delete the withdrawn AusCycling polling: `auscycling.py`,
       `validate_memberships.py`, `Club.validate_membership()`, the 3 `Club`
       credential fields and 2 `Membership` validation fields (closes C9)
-- [x] Delete `Race.load_excel_results()` (only callers are 4 tests),
-      `RiderManager.update_from_tidyhq_spreadsheet()` (tidyhq already removed),
-      `parse_img_members()`, `IMG_MAP`, `save_rider()`, `RaceResult.pointscores()`
-      (closes A4, A5, A6)
+- [x] Delete `Race.load_excel_results()` + its 4 tests (`c6e89b0`, closes A5/A6)
+- [x] Delete the dead import/parse paths in `usermodel.py` — `save_rider()`,
+      `parse_img_members()` + `IMG_MAP`, `RiderManager.update_from_tidyhq_spreadsheet()`
+      and its helper `find_user()`, and `RaceResult.pointscores()` (closes **A4**)
+      — *finished on the branch, not in `c6e89b0`*
 - [x] Delete dead schema: `RacePrototype`, `Club.icalurl`, `Club.icalpatterns`
-      (closes C4); drop the now-empty `ClubManager`/`RaceCourseManager` (sole users
-      of `ngram`)
+      (closes C4); delete `Club.ingest_race_list()` and
+      `RaceCourseManager.find_location()` (orphaned once `ingest_by_module` went),
+      then collapse the two now-empty managers `ClubManager`/`RaceCourseManager`
+      (Django's default manager suffices; `makemigrations --check` confirms no
+      migration needed)
 - [x] Delete dead tests: `testingest.py`, `imgsampledict.py`, 7 VCR cassettes
       (closes A7)
 - [x] Delete the three unreachable export views in `views.py`
-      (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`) —
-      already unrouted on this branch, and the React client uses none of them
-- [x] Drop dependencies: `icalendar`, `ngram`, `beautifulsoup4`, `requests`,
-      `vcrpy`, `pytz` — each verified used only by code deleted in this pass
-- [x] Also drop `pyexcel`/`pyexcel-xls`/`openpyxl` — the three export views are
-      already unrouted on this branch and the live React client uses none of them
-- [ ] **Keep, move to `services/`**: pointscore score/tally/recalculate,
+      (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`)
+- [x] Final dependency set: `icalendar`, `ngram`, `beautifulsoup4`/`bs4`,
+      `requests`, `vcrpy`, `pytz`, `python-dateutil`, `pyexcel`, `pyexcel-xls`,
+      `openpyxl`, `django-cors-headers` all out; `base.txt` is now Django,
+      djangorestframework, django-allauth, django-anymail, tzdata, setuptools
+
+#### Correction — an earlier "verified" claim in this section was false
+
+The first version of this section asserted each dropped dependency was *"verified
+used only by code deleted in this pass"*. It wasn't, for two of them:
+
+- `find_location()` was **kept** while `ngram` was dropped from `base.txt` —
+  `ruff` even flagged the resulting `F821` mid-session, and I fixed the import in
+  the code but never reconciled `base.txt` or this bullet.
+- `parse_img_members()` was deleted *in my working tree* and then **silently
+  reverted**: while wrestling with `models.py` I ran `git checkout -- .`, which
+  also restored `usermodel.py`, and I never re-applied those deletions before
+  committing. So `c6e89b0` shipped with ~345 lines of dead `usermodel.py` code and
+  `bs4` still genuinely imported.
+
+The result: CI failed on undeclared `ngram`/`bs4`, and it passed locally only
+because both lingered in `.venv`. **You restored both to `base.txt` to unblock CI
+(`bs4==0.0.2`, a stub that does not pin `beautifulsoup4`) — the right short-term
+move; the dependency was correct, the code was wrong.** Deleting the dead code on
+this branch is what makes dropping them honest, verified from pristine
+environments rather than by grep reasoning: 38-package dev venv → 45 tests OK;
+18-package prod venv → `check` clean.
+
+Two process notes for the PR workflow this is the first change under: a green
+`black --check`/lint gate on a *freshly created* venv would have caught both
+undeclared deps, and marking a checklist item `[x]` before its commit exists is
+how this slipped — the bullets are now stated as landed only where they are.
+
+- [ ] **Keep, move to `services/` in 2.1/2.5**: pointscore score/tally/recalculate,
       `tally_pointscores`, `fix_small_races`, official allocation, promotion and
-      performance reports, `classification`, export builders
+      performance reports, `classification`
 
 ### 2.1 Model Hardening (Weeks 5-6)
 - [ ] A1: wire `PointScore.score()` to its own config fields; WMCC scale becomes

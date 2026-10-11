@@ -6,6 +6,6 @@ djangorestframework==3.18.1
 
 django-allauth==65.19.4
 django-anymail[mailersend]==15.1
+
+# Timezone database: the slim/alpine images and macOS have no system tzdata
 tzdata==2026.4
-ngram==4.0.3
-bs4==0.0.2

@@ -306,7 +306,7 @@ system — a forward requirement, not merely the inverted-choices bug in A2.
 A4 (dead relation), A5 (Python-2 `except` form), A6 (broken `ingest_ical()`) and
 A7 (disabled ingest tests) all live in code that should be retired. That removes
 the largest single scare from this review — a silently broken core feature —
-without a fix, and it takes **2,742 measured lines** with it (see
+without a fix, and it takes **3,463 Python lines** with it (see
 *Retirement pass* below).
 
 **My Part 2 conclusion was partly wrong, and the correction matters.** I wrote
@@ -358,16 +358,44 @@ Phase 1 formatting pass), not estimated:
 | `auscycling.py` (169) + `validate_memberships.py` (136) + `Club.validate_membership()` (72) | 377 | fact 2 — withdrawn pending a new provider |
 | `Club.auscycling_client_id/_secret/_club_id`, `Membership.last_validated`/`validation_error` | 5 fields | same; also removes the plaintext-secret finding C9 |
 | `Race.load_excel_results()` | 168 | **only** callers are 4 tests in `testresults.py`; the production caller `RaceUploadExcelView` exists on master and is gone here |
-| `RiderManager.update_from_tidyhq_spreadsheet()` (255) + `parse_img_members()`/`IMG_MAP` (49) | 304 | tidyhq app already removed (`f5d37e4`) |
+| `RiderManager.update_from_tidyhq_spreadsheet()` (255) + `parse_img_members()`/`IMG_MAP` (49) | 304 | tidyhq app already removed (`f5d37e4`) — **did not land in the first pass; see the correction below** |
 | `save_rider()` (Strava callback) | 27 | never registered as an allauth pipeline |
 | `RacePrototype` | 15 | never referenced outside its own migration (closes C4) |
-| `ClubManager.closest()` + `RaceCourseManager.find_location()` | 22 | sole users of `ngram`; every caller is retired above, so both managers reduce to `models.Manager` |
+| `ClubManager.closest()` + `RaceCourseManager.find_location()` + `Club.ingest_race_list()` | 22 + 67 | once `ingest_by_module` went, `ingest_race_list` had no caller and `find_location` only that caller, so both managers collapsed to `models.Manager` (no migration needed) |
 | Three unrouted export views in `views.py` (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`) | 200 | **already unrouted on this branch**; the live React client uses none of them |
 | `tests/testingest.py` (230), `imgsampledict.py` (370) | 600 | tests the code they cover no longer exists (closes A7) |
 | 7 VCR cassettes in `fixtures/vcr_cassettes/` | 428 KB | unused once `testingest.py` goes |
 | `Club.icalurl`, `Club.icalpatterns` | 2 fields | ingest-only |
-| **Dependencies**: `icalendar`, `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz`, `pyexcel`, `pyexcel-xls`, `openpyxl` | 9 packages | each verified used only by code deleted in this pass |
-| **Total Python lines removed** | **2,742** | plus 5+2 model fields, 428 KB of cassettes, 9 dependencies |
+| **Dependencies**: `icalendar`, `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz`, `pyexcel`, `pyexcel-xls`, `openpyxl` | 9 packages | claimed "each verified used only by code deleted in this pass" — **that claim was false for `ngram` and `bs4`; see the correction below** |
+| **Total Python lines removed** | **3,463** | 3,037 in `c6e89b0` + 426 on `chore/phase2.0-finish-retirement`; plus 7 model fields, 428 KB of cassettes, 11 dependencies (also `django-cors-headers`, `python-dateutil`) |
+
+### Correction: the retirement did not land complete, and two "verified" claims were false
+
+This table was written from static reading plus grep, and two errors followed.
+
+1. **`ngram` was not dead when `base.txt` was trimmed.** `find_location()` was
+   *kept* by the first pass, so `import ngram` in `models.py` became an undeclared
+   dependency. `ruff` flagged the resulting `F821` mid-session, and the fix applied
+   was to re-add the import to the *code* — `base.txt` and this table were never
+   reconciled with it.
+2. **The `usermodel.py` deletions were silently reverted.** While debugging
+   `models.py` I ran `git checkout -- .`, which also restored `usermodel.py`, and
+   the ~345 lines of dead import/parse code were never re-deleted before the
+   commit. So `c6e89b0` shipped with `save_rider`, `parse_img_members`, `IMG_MAP`,
+   `update_from_tidyhq_spreadsheet`, `find_user` and `pointscores()` still present —
+   `bs4` genuinely imported, and **A4 still live**.
+
+Both surfaced as CI failures on undeclared modules, masked locally because the
+packages lingered in `.venv`. The owner restored `ngram` and `bs4` to unblock CI —
+the right call, since the code really did import them (`bs4==0.0.2` being a stub
+that fails to pin `beautifulsoup4`). Removing the dead code on
+`chore/phase2.0-finish-retirement` is what lets both go back out honestly, and the
+totals above are re-measured from the actual trees rather than estimated.
+
+The general lesson, and the argument for the gates: **"verified" by grep reasoning
+is not verified.** A pristine-environment install is what proves a dependency list —
+38-package dev venv → 45 tests OK; 18-package prod venv → `check` clean;
+`makemigrations --check` → no pending change.
 
 **Keep, but move into `services/`** (these encode real domain rules):
 `PointScore.score()`/`tally()`/`recalculate()`, `Race.tally_pointscores()`,
@@ -742,7 +770,7 @@ Contract-first, and the race-day contract first:
 1. **2.0 Retirement pass** *(new, from the briefing)* — delete the ingest
    pipelines, the withdrawn AusCycling polling, the tidyhq/IMG import paths,
    `load_excel_results`, `RacePrototype` and the dead tests/cassettes
-   (2,742 measured lines, 9 dependencies). Resolves A4–A7 by removal. Do this before
+   (3,463 Python lines, 11 dependencies). Resolves A4–A7 by removal. Do this before
    anything else: it shrinks every subsequent estimate.
 2. **2.1 Model hardening** — A1 (wire the pointscale config), A3 (fix or drop
    `get_absolute_url`), Tier B constraints, then C1 (merge `usermodel.py` →

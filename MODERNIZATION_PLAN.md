@@ -298,60 +298,68 @@ responses if deferred), then vendor and audit the race-day client (its real shap
 are inputs to the contract), then design the contract for both clients, then build
 the rest.
 
-### 2.0 Retirement Pass (Week 5)
+### 2.0 Retirement Pass (Week 5) ✅ complete
 
-Delete before rebuilding. Every item was verified unreferenced by any live code
-path — the only callers are tests or features the briefing confirms are dead.
-Resolves defects **A4–A7 by removal** rather than repair.
+Delete before rebuilding. Landed as `c6e89b0` on `modernization` plus
+`chore/phase2.0-finish-retirement`, which finished the part the first commit
+missed. **3,463 Python lines removed** (3,037 + 426), 11 dependencies, 7 VCR
+cassettes, 7 model fields.
 
-- [ ] **Ingest pipelines** — `races/ingest/` entirely (lacc, penrith, waratahs,
+- [x] **Ingest pipelines** — `races/ingest/` entirely (lacc, penrith, waratahs,
       csvingest = 384 lines) and the commands `ingest`, `csvingest`,
       `harvestclubs`, `loadusers`, `wmccimport` (645 lines) *(fact 1)*
-- [ ] **Withdrawn AusCycling polling** — `auscycling.py` (169),
-      `validate_memberships.py` (136), `Club.validate_membership()` (≈ 70 lines in
-      `models.py`), and the fields `Club.auscycling_client_id` /
-      `_client_secret` / `_club_id`, `Membership.last_validated` /
-      `validation_error` *(fact 2; also closes finding **C9**, the plaintext
-      secret)*
-- [ ] **Dead import/parse paths in the models** — `Race.load_excel_results()`
-      (≈ 150 lines; only callers are 4 tests, its production caller
-      `RaceUploadExcelView` is already gone), `RiderManager.update_from_tidyhq_spreadsheet()`
-      (≈ 250 lines; the tidyhq app was removed in `f5d37e4`),
-      `parse_img_members()`, `IMG_MAP`, `save_rider()` (unregistered Strava
-      callback), `RaceResult.pointscores()` *(closes **A4**, **A5**, **A6**)*
-- [ ] **Dead schema** — `RacePrototype` (zero references outside its own
-      migration), `Club.icalurl`, `Club.icalpatterns` *(closes **C4**)*
-- [ ] **Now-empty managers** — `ClubManager.closest()` and
-      `RaceCourseManager.find_location()` are the only users of `ngram`, and their
-      callers are all retired above (`load_excel_results`, `ingest_ical`,
-      `ingest_race_list`, `wmccimport`), so both custom managers reduce to
-      `models.Manager` and can go
-- [ ] **Unreachable export views** in `views.py` — `club_riders_csv_view`,
-      `ClubRidersExcelView`, `RaceSummarySpreadsheet`: all three are **already
-      unrouted on this branch** (master had 3 such routes) and the live React
-      client uses none of them, so they delete rather than migrate
-- [ ] **Dead tests and fixtures** — `tests/testingest.py`, `imgsampledict.py`,
-      the 7 VCR cassettes in `fixtures/vcr_cassettes/` *(closes **A7**)*
-- [ ] **Dependencies** — drop `icalendar`, `ngram`, `beautifulsoup4`,
-      `requests`, `vcrpy`, `pytz`. Verified: `requests` is imported only by
-      `auscycling.py`; `pytz` only at `models.py:25` and `:420`, inside
-      `ingest_ical()`; `icalendar`/`ngram` only in the ingest paths; `bs4` only in
-      the scrapers, `parse_img_members()` and `harvestclubs`
-- [ ] **Also drop** `pyexcel`, `pyexcel-xls`, `openpyxl` — their three export
-      views (`club_riders_csv_view`, `ClubRidersExcelView`,
-      `RaceSummarySpreadsheet`) are **already unrouted on this branch**, and the
-      live React client uses none of them (it fetches riders as JSON). Reinstate
-      any that are still wanted in 2.5 as an explicit `services/exports.py`
-      action, not inherited dead code
-- [ ] **Keep, relocate into `services/`** (real domain rules):
+- [x] **Withdrawn AusCycling polling** — `auscycling.py` (169),
+      `validate_memberships.py` (136), `Club.validate_membership()` (~70 lines in
+      `models.py`), and the fields `Club.auscycling_client_id` / `_client_secret`
+      / `_club_id`, `Membership.last_validated` / `validation_error` *(fact 2;
+      also closes **C9**, the plaintext secret)*
+- [x] **`Race.load_excel_results()`** + its 4 tests *(closes **A5**, **A6**)* —
+      `c6e89b0`
+- [x] **Dead import/parse paths in `usermodel.py`** — `save_rider()`
+      (unregistered Strava callback), `parse_img_members()` + `IMG_MAP`,
+      `RiderManager.update_from_tidyhq_spreadsheet()` (the tidyhq app went in
+      `f5d37e4`) and its helper `find_user()`, `RaceResult.pointscores()`
+      *(closes **A4**)* — **finished on the branch: these were reverted by a stray
+      `git checkout -- .` and never re-applied before `c6e89b0`**
+- [x] **Dead schema** — `RacePrototype`, `Club.icalurl`, `Club.icalpatterns`
+      *(closes **C4**)*
+- [x] **Orphaned ingest helpers** — `Club.ingest_race_list()` (lost its only
+      caller when `ingest_by_module` went) and
+      `RaceCourseManager.find_location()` (called only from there)
+- [x] **Now-empty managers** — `ClubManager` and `RaceCourseManager` collapsed to
+      `pass` and then removed entirely; Django's default manager suffices, and
+      `makemigrations --check` confirms no migration is required
+- [x] **Unreachable export views** in `views.py` — `club_riders_csv_view`,
+      `ClubRidersExcelView`, `RaceSummarySpreadsheet`: all three already unrouted
+      on this branch (master had 3 such routes), and the React client fetches
+      riders as JSON, never XLS
+- [x] **Dead tests and fixtures** — `tests/testingest.py`, `imgsampledict.py`, the
+      7 VCR cassettes in `fixtures/vcr_cassettes/` *(closes **A7**)*
+- [x] **Dependencies** — `base.txt` is now Django, djangorestframework,
+      django-allauth, django-anymail, tzdata, setuptools. Dropped: `icalendar`,
+      `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz`,
+      `python-dateutil`, `pyexcel`, `pyexcel-xls`, `openpyxl`,
+      `django-cors-headers`
+- [ ] **Keep, relocate into `services/`** in 2.1/2.5 (real domain rules):
       `PointScore.score()`/`tally()`/`recalculate()`, `Race.tally_pointscores()`,
       `fix_small_races()`, `Club.allocate_officials()`/`promotion()`/
       `performancereport()`, `Rider.classification()`
 
-**Success Criteria:** 2,742 fewer Python lines (measured, plus 7 VCR cassettes
-and 5 model fields); `manage.py check`,
-`makemigrations --check` and the test suite green with the dead tests removed;
-no reference to any retired module remains in `races/`.
+**Success Criteria — met:** 3,463 fewer Python lines; `manage.py check`,
+`makemigrations --check` and the suite green with the dead tests removed (45
+tests, 1 pre-existing skip); no reference to any retired module remains in
+`races/`.
+
+> **Process correction.** The first version of this section claimed every dropped
+> dependency was "verified used only by code deleted in this pass". That was false
+> for `ngram` (still imported by the *kept* `find_location()`) and for `bs4` (the
+> `usermodel.py` deletions had been silently reverted). Both surfaced as CI
+> failures on undeclared modules, hidden locally because the packages lingered in
+> `.venv`; the owner restored them to unblock CI. The dead code is now genuinely
+> gone, so both go back out — and verification is by **pristine-environment
+> install**, not grep reasoning: 38-package dev venv → 45 tests OK, 18-package
+> prod venv → `check` clean. See
+> [`MODEL_REVIEW.md`](MODEL_REVIEW.md) → Correction.
 
 ### 2.1 Model Hardening (Weeks 5-6)
 
