@@ -83,9 +83,10 @@ Known gaps carried into Phase 2:
   unresolved, needs an owner decision (changing it shifts displayed times).
 
 **Phase 2 planning outcome (2026-10-11):** a full review of the model and API
-layers was carried out as part of closing Phase 1. It found five live model
-defects, nine integrity gaps and twelve structural issues, and concluded that the
-existing API should be rebuilt rather than adapted. See
+layers was carried out as part of closing Phase 1. It found seven live model
+defects (one of them a silently broken automatic-ingest path), nine integrity
+gaps and twelve structural issues, and concluded that the existing API should be
+rebuilt rather than adapted. See
 [MODEL_REVIEW.md](MODEL_REVIEW.md); the task lists below reflect it.
 
 ## ✅ Phase 2: Backend API Rebuild (Weeks 5-12)
@@ -108,6 +109,12 @@ existing API should be rebuilt rather than adapted. See
       names → admin "View on site" 500s
 - [ ] A4: delete `RaceResult.pointscores()` (references non-existent relation)
 - [ ] A5: parenthesise the PEP-758 `except ValueError, Rider.DoesNotExist:` form
+- [ ] A6: **`Club.ingest_ical()` raises `TypeError` on every race** — constructs
+      `Race(time=…)`; the field is `starttime`. Silently breaks automatic race
+      ingestion (`ingest` command swallows it per club). Verify production
+      `icalurl` usage
+- [ ] A7: re-enable the ingest test suite (`testingest.IngestTests` does not
+      subclass `TestCase`, so 0 tests collect and 7 VCR cassettes are unused)
 
 **Tier B — database integrity (one additive migration):**
 - [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,

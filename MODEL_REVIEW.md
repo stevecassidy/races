@@ -18,27 +18,35 @@ you can re-run them after changes.
 **Verdict: the structure is sound, the details are not.** The domain model
 (Club → Race → RaceResult → PointScore, Rider/Membership, ClubRole/UserRole) is
 coherent and matches how graded track/road racing actually works. Nothing here
-needs redesigning. But there are five live defects, a set of missing integrity
-constraints, and a structural problem that will directly shape the API: **almost
-all real behaviour lives in model methods that do I/O and bulk mutation.**
+needs redesigning. But there are seven live defects — including one that silently
+breaks automatic race ingestion — a set of missing integrity constraints, and a
+structural problem that will directly shape the API: **almost all real behaviour
+lives in model methods that do I/O and bulk mutation.**
 
 Data is clean today — zero duplicate slugs, roles, grades or tallies in the
 fixtures — so the integrity gaps below are latent, not active. That is the
 good news: they can be fixed with plain additive migrations rather than a data
 rescue.
 
+The counterweight to that optimism is **A6/A7**: a core feature has been raising
+`TypeError` on every call, for years, inside a test suite that collects zero
+tests. That is the argument for doing model hardening *before* endpoints, not
+alongside them.
+
 ### Tier A — Defects to fix before Phase 2 (the API would inherit them)
 
 | # | Finding | Where | Impact |
 |---|---|---|---|
 | A1 | **`PointScore.score()` ignores its own configuration.** It hardcodes `points = [7,6,5,4,3]`, `smallpoints = [5,4]`, `participation = 2` and never reads `self.points`, `self.smallpoints`, `self.smallthreshold`, `self.participation` or `self.method`. The accessors `get_points()` / `get_smallpoints()` exist and are called from nowhere except a test. | `usermodel.py:727-780` | Five model fields are decorative. A club that configures a different pointscale gets WMCC numbers silently. The existing test asserts the *defaults*, so it passes and hides the bug. **This is a scoring-correctness bug in the app's core purpose.** |
-| A2 | **`MEMBERSHIP_CATEGORY_CHOICES` is inverted.** `(("Ride", "ride"), ("Race", "race"), ("Non-riding", "non-riding"))` — Django reads `(value, label)`, so the stored value is `"Ride"` and the label is `"ride"`. All 6288 existing rows use lowercase (`race` 6076, `ride` 116, `non-riding` 96). | `usermodel.py:571` | Admin and any ModelForm writes `"Race"`, which is invisible to the `category='race'` filters used in 14 places. `get_category_display()` returns `'race'` for *both* `'race'` and `'Race'`, so the corruption is undetectable in the UI. Verified: `Membership(category='Race').get_category_display() == 'race'`. |
+| A2 | **`MEMBERSHIP_CATEGORY_CHOICES` is inverted.** `(("Ride", "ride"), ("Race", "race"), ("Non-riding", "non-riding"))` — Django reads `(value, label)`, so the stored value is `"Ride"` and the label is `"ride"`. All 6288 existing rows use lowercase (`race` 6076, `ride` 116, `non-riding` 96). | `usermodel.py:571` | Admin and any ModelForm writes `"Race"`, which is invisible to the seven `category="race"` create/filter sites (`models.py:132,181,734`, `api.py:694,757`, `views.py:184`, `wmccimport.py:298`). `get_category_display()` returns `'race'` for *both* `'race'` and `'Race'`, so the corruption is undetectable in the UI. Verified: `Membership(category='Race').get_category_display() == 'race'`. |
 | A3 | **`get_absolute_url()` reverses URL names that no longer exist.** `Race` → `reverse('race', …)`, `Rider` → `reverse('rider', …)`; neither name is registered since the template views were removed. | `models.py:636`, `usermodel.py:437` | The admin "View on site" link 500s — verified end-to-end through `/admin/r/<content_type>/<id>/`. Admin is the one piece of UI we are keeping through Phase 4. `feeds.py` `item_link` has the same problem, so the iCal/Atom feeds cannot be re-routed as-is. |
 | A4 | **`RaceResult.pointscores()` references a relation that does not exist** (`resultpoints_set`); no model has an FK to `RaceResult` with that related name. | `usermodel.py:691-693` | `AttributeError` on call. Dead code that will be mistaken for a live API surface. |
 | A5 | **`except ValueError, Rider.DoesNotExist:`** — Python 2 syntax that only parses because PEP 758 landed in 3.14. | `models.py:706` | Reads as a bug to every reviewer, is invisible to ruff, and breaks the moment anyone builds on ≤3.13. Needs parentheses. |
+| A6 | **⚠️ `Club.ingest_ical()` is broken: it raises `TypeError` on the first race it creates.** It constructs `Race(date=…, time=…, …)` but `Race` has no `time` field (it is `starttime`/`signontime`). Verified end-to-end against the repo's own `tests/cccc.ical` fixture: `TypeError: Race() got unexpected keyword arguments: 'time'`. | `models.py:461-470` | Automatic race ingestion silently does nothing for any club that configures `icalurl`. `management/commands/ingest.py` wraps `club.ingest()` in a per-club `try/except` that only *prints* the error, so a full nightly run reports "Club: CCCC error: …" and exits 0 — no alarm, no races. The sibling path `ingest_by_module()` / `ingest_race_list()` is unaffected (it uses `starttime` correctly), which is why this survived: half the ingest subsystem works. No club in the local dev databases or fixtures currently sets `icalurl`, so the fault is dormant here — **check production before assuming the feature works.** |
+| A7 | **The entire ingest test suite is disabled.** `tests/testingest.py` declares `class IngestTests():` with the `TestCase` base commented out on the line above, so the runner collects **0 tests** from it (verified). | `tests/testingest.py:26` | Seven VCR cassettes in `fixtures/vcr_cassettes/` are unused, the ical/module/CSV ingest paths have zero coverage, and that is precisely why A6 went unnoticed for years. Any Phase 2 work on ingest starts by re-enabling these tests. |
 
-A1 and A2 need a decision from you before I touch them (see Tier D) because
-both change computed results or stored data.
+A1, A2 and A6 need a decision from you before I touch them (see Tier D) because
+all change computed results, stored data, or a live feature's behaviour.
 
 ### Tier B — Integrity that belongs in the database
 
@@ -87,13 +95,18 @@ Because the data is already clean, this is one migration with no backfill.
 2. **A2 (inverted choices):** I'd flip the tuple and add a data migration
    normalising any `'Race'`/`'Ride'`/`'Non-riding'` values to lowercase. Fixtures
    are clean, so this is a no-op on current data. Confirm.
-3. **C4:** delete `RacePrototype` and `Race.grading`, or wire them into the
+3. **A6/A7 (broken ical ingest):** does production have clubs with `icalurl` set?
+   If yes, this feature has been silently failing and deserves an out-of-band fix
+   rather than waiting for Phase 2. Either way I'd re-enable the ingest tests
+   (A7) immediately and fix `time=` → `starttime=` (A6) as a small standalone
+   commit, since it is a one-line correction to a broken feature.
+4. **C4:** delete `RacePrototype` and `Race.grading`, or wire them into the
    bulk-create feature? Both are currently dead weight the API would otherwise
    have to expose.
-4. **C7:** are you willing to keep `django.contrib.auth.User` (no
+5. **C7:** are you willing to keep `django.contrib.auth.User` (no
    `AUTH_USER_MODEL` swap) through this modernization? I recommend yes, and
    treating a custom user model as post-cutover work.
-5. **B8:** should bib numbers be unique per race (not per race+grade), and
+6. **B8:** should bib numbers be unique per race (not per race+grade), and
    nullable-or-allocated? That decides whether the three "increment to avoid
    clash" hacks can be deleted.
 
@@ -239,6 +252,24 @@ Membership(category="race").get_category_display()   # -> 'race'
 from django.urls import reverse, NoReverseMatch
 reverse("race", kwargs={"pk": 1, "slug": "X"})       # -> NoReverseMatch
 # GET /admin/r/<content_type_id>/<race_id>/  -> NoReverseMatch (500)
+
+# A6: ical ingest raises, verified with the repo's own fixture
+from unittest import mock
+from races.apps.cabici.models import Club
+club = Club.objects.create(name="CCCC", slug="CCCC",
+                           icalurl="http://example.org/x.ical")
+with mock.patch("races.apps.cabici.models.urlopen") as m:
+    m.return_value.read.return_value = open(
+        "races/apps/cabici/tests/cccc.ical", "rb").read()
+    club.ingest_ical()
+# -> TypeError: Race() got unexpected keyword arguments: 'time'
+# Race._meta.local_fields has starttime/signontime, never 'time'
+# ingest_by_module()/ingest_race_list() are unaffected (they use starttime)
+
+# A7: ingest tests collect nothing
+import unittest
+unittest.TestLoader().loadTestsFromName(
+    "races.apps.cabici.tests.testingest").countTestCases()   # -> 0
 
 # B: integrity census
 for model in (Club, Race, RaceCourse, RacePrototype, Membership, PointScore,

@@ -232,6 +232,17 @@ findings in [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
       `resultpoints_set`)
 - [ ] A5: parenthesise `except ValueError, Rider.DoesNotExist:` in
       `load_excel_results`
+- [ ] A6: **`Club.ingest_ical()` is broken** — it builds `Race(time=…)` but the
+      field is `starttime`, so every call raises `TypeError` (verified against
+      `tests/cccc.ical`). `management/commands/ingest.py` catches it per club and
+      only prints, so automatic ingestion silently produces nothing. The
+      module-based path (`ingest_race_list`) is unaffected, which is why this hid.
+      **Check production for clubs with `icalurl` set before treating this as
+      routine**
+- [ ] A7: re-enable the ingest tests — `tests/testingest.py` declares
+      `class IngestTests():` with the `TestCase` base commented out, so **0 tests
+      collect** and the 7 cassettes in `fixtures/vcr_cassettes/` are unused. This
+      is the direct cause of A6 surviving undetected
 
 **Tier B — database integrity (one additive migration):**
 - [ ] `UniqueConstraint` on `Club.slug`, `ClubRole.name`,
