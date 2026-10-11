@@ -51,8 +51,7 @@ jobs:
           coverage run --rcfile=pyproject.toml bin/runtests.py
           coverage report --rcfile=pyproject.toml
 
-      # Advisory only: the legacy modules are unannotated, typing is introduced
-      # with the new API packages in Phase 2.
+      # Shallow for now: legacy modules are unannotated so mypy only checks
+      # signatures it can infer. Depth increases in Phase 2.
       - name: Mypy
-        continue-on-error: true
         run: mypy races

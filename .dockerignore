@@ -1,0 +1,25 @@
+# Keep the build context small and out of the image anything that is local
+# state, secrets, or development tooling (requirements/dev.txt).
+.git
+.github
+.devcontainer
+.vscode
+.venv
+__pycache__
+*.pyc
+
+# local only
+.env.dev
+.env.dev.dist
+.pgpass
+nginx.conf
+run-production.sh
+
+# local databases and dumps
+races_development
+races_development.*
+*.sqlite3
+
+# runtime data / collected assets
+result-uploads
+races/staticfiles
