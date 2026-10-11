@@ -15,8 +15,8 @@
 # limitations under the License.
 
 from django.urls import reverse
+from django.test import TestCase
 from django.contrib.auth.models import User
-from django_webtest import WebTest
 from django.core import mail
 
 from races.apps.cabici.models import Club, RaceCourse, Race
@@ -26,7 +26,7 @@ import re
 import random
 
 
-class OfficialsTests(WebTest):
+class OfficialsTests(TestCase):
     """Tests related to allocation of club officials """
 
     fixtures = ['clubs', 'courses', 'users', 'riders', 'races']

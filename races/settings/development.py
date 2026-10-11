@@ -14,12 +14,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Local development settings (bin/develop.py)."""
+
 from races.settings.base import *
 
-DATABASES['default']['NAME'] = 'races_development'
+DEBUG = True
+
+# Throwaway key for local runs only. Never used in production, where the key
+# must come from the environment (see production.py).
+SECRET_KEY = SECRET_KEY or "django-insecure-local-development-key"
+
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost 127.0.0.1 [::1]").split(" ")
+
+DATABASES["default"]["NAME"] = "races_development"
 
 # email to the console
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
-GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
+# Debug toolbar is a development-only dependency (requirements/dev.txt), so it
+# is wired up here rather than in the shared base settings.
+INSTALLED_APPS += ("debug_toolbar",)
+MIDDLEWARE += ("debug_toolbar.middleware.DebugToolbarMiddleware",)
+
+GOOGLE_MAPS_API_KEY = os.environ.get("GOOGLE_MAPS_API_KEY")

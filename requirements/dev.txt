@@ -1,9 +1,16 @@
 -r base.txt
 
-# Development tools and debug integrations
-django-debug-toolbar==6.3.0
-vcrpy==8.3.0
-django-webtest==1.9.14
-
 # Local development server / static serving
 whitenoise==6.12.0
+
+# Debug toolbar, wired up in races/settings/development.py only
+django-debug-toolbar==6.3.0
+
+# HTTP cassettes for the ingest tests
+vcrpy==8.3.0
+
+# Code quality tooling (configured in pyproject.toml)
+black==26.10.1
+ruff==0.17.0
+pre_commit==4.6.2
+coverage==7.16.2

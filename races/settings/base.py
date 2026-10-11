@@ -21,7 +21,9 @@ import os
 BASE_DIR = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
 
-DEBUG = True
+# Secure by default. Environment specific settings modules opt in to debug
+# mode (see development.py / docker.py).
+DEBUG = False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -81,10 +83,6 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# If you set this to False, Django will not format dates, numbers and
-# calendars according to the current locale.
-USE_L10N = True
-
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
 
@@ -119,10 +117,22 @@ STATICFILES_FINDERS = (
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = '^g=q21r_nnmbz49d!vs*2gvpll-y9b@&amp;t3k2r3c$*u&amp;2la5!%s'
+# Make this unique, and don't share it with anybody. The key is read from the
+# environment so that nothing secret is committed to the repository; local
+# development settings supply a throwaway value.
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY") or ""
 
-#
+# Storage backends. Environments override the "staticfiles" entry (see
+# production.py / testing.py).
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+    },
+}
+
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -134,7 +144,6 @@ MIDDLEWARE = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 )
 
@@ -163,12 +172,6 @@ INSTALLED_APPS = (
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    #'allauth.socialaccount.providers.facebook',
-
-
-    "bootstrapform",
-
-    #'pagination',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -176,8 +179,6 @@ INSTALLED_APPS = (
     'corsheaders',
 
     "anymail",
-
-    "debug_toolbar",
 )
 
 REST_FRAMEWORK = {
@@ -224,12 +225,6 @@ LOGGING = {
 }
 
 
-CRISPY_TEMPLATE_PACK = "bootstrap"
-
-# settings for django-easy-maps
-# default centre of maps
-#EASY_MAPS_CENTER = (-41.3, 32)
-
 LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -242,7 +237,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ACCOUNT_OPEN_SIGNUP = False
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 # long sessions by default
@@ -253,44 +247,9 @@ def ACCOUNT_USER_DISPLAY(user):
     return user.email
 
 
-SOCIALACCOUNT_PROVIDERS = {
-    'strava': {
-        'METHOD': 'oauth2',
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id',
-            'email',
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ],
-        'EXCHANGE_TOKEN': True,
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v2.5',
-    },
-    'tidyhq': {
-        'METHOD': 'oauth2',
-        'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
-        'INIT_PARAMS': {'cookie': True},
-        'FIELDS': [
-            'id'
-        ],
-        'EXCHANGE_TOKEN': True,
-        'VERIFIED_EMAIL': False,
-        'VERSION': 'v1',
-    }
-}
-
 # CORS configuration (django-cors-headers)
 # anyone can make GET requests to the API
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_URLS_REGEX = r'^/api/.*$'
 CORS_ALLOW_METHODS = (
         'GET',
