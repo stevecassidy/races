@@ -15,6 +15,7 @@
 # limitations under the License.
 
 from django import template
+
 from races.apps.cabici.usermodel import ClubGrade
 
 register = template.Library()
@@ -26,7 +27,7 @@ def clubgrade(club, rider):
 
     try:
         return ClubGrade.objects.get(club=club, rider=rider).grade
-    except:
+    except Exception:
         return ""
 
 
@@ -35,8 +36,8 @@ def clubwins(club, rider):
     """Return the number of wins of this rider for this club"""
 
     try:
-        return club.performancereport(rider=rider)['wins']
-    except:
+        return club.performancereport(rider=rider)["wins"]
+    except Exception:
         return 0
 
 
@@ -45,6 +46,6 @@ def clubplaces(club, rider):
     """Return the number of places (1-3) of this rider for this club"""
 
     try:
-        return club.performancereport(rider=rider)['places']
-    except:
+        return club.performancereport(rider=rider)["places"]
+    except Exception:
         return 0

@@ -14,30 +14,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''
+"""
 Created on Apr 17, 2013
 
 @author: steve
-'''
+"""
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
-from races.ingest.csvingest import ingest
 from races.apps.cabici.models import Club
+from races.ingest.csvingest import ingest
+
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        
+
         for csvfile in args:
             races = ingest(csvfile)
-            
+
             for racedict in races:
-                club = Club.objects.get(slug=racedict['club'])
-                (races, errors) = club.ingest_race_list([racedict])
+                club = Club.objects.get(slug=racedict["club"])
+                races, errors = club.ingest_race_list([racedict])
                 if errors != []:
                     print("Errors: ", errors)
                 if races != []:
                     print(races[0])
-            

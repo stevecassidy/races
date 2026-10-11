@@ -16,31 +16,24 @@
 
 
 from django import forms
-from races.apps.cabici.models import Race, Club
-from races.apps.cabici.usermodel import PointScore, Rider, RaceResult
 
+from races.apps.cabici.models import Club, Race
+from races.apps.cabici.usermodel import PointScore, RaceResult, Rider
 
-REPEAT_CHOICES = [('none', 'No Repeat'),
-                  ('weekly', 'Weekly'),
-                  ('monthly', 'Monthly')]
+REPEAT_CHOICES = [("none", "No Repeat"), ("weekly", "Weekly"), ("monthly", "Monthly")]
 
-MONTH_N_CHOICES = [(1, "first"),
-                   (2, "second"),
-                   (3, "third"),
-                   (4, "fourth"),
-                   (-1, "last")]
+MONTH_N_CHOICES = [(1, "first"), (2, "second"), (3, "third"), (4, "fourth"), (-1, "last")]
 
-DAYS = [(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'),
-        (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')]
+DAYS = [(0, "Monday"), (1, "Tuesday"), (2, "Wednesday"), (3, "Thursday"), (4, "Friday"), (5, "Saturday"), (6, "Sunday")]
 
-GRADE_CHOICES = [('A', 'A'), ('A2', 'A2'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F')]
+GRADE_CHOICES = [("A", "A"), ("A2", "A2"), ("B", "B"), ("C", "C"), ("D", "D"), ("E", "E"), ("F", "F")]
 
 
 class RaceResultUpdateForm(forms.ModelForm):
 
     class Meta:
         model = RaceResult
-        fields = ['place', 'number', 'usual_grade']
+        fields = ["place", "number", "usual_grade"]
 
 
 class RaceResultAddForm(forms.ModelForm):
@@ -48,11 +41,8 @@ class RaceResultAddForm(forms.ModelForm):
 
     class Meta:
         model = RaceResult
-        fields = ['rider', 'race', 'place', 'number', 'grade']
-        widgets = {
-            'rider': forms.HiddenInput,
-            'race': forms.HiddenInput
-        }
+        fields = ["rider", "race", "place", "number", "grade"]
+        widgets = {"rider": forms.HiddenInput, "race": forms.HiddenInput}
 
 
 class RaceCreateForm(forms.ModelForm):
@@ -60,14 +50,27 @@ class RaceCreateForm(forms.ModelForm):
     class Meta:
         model = Race
 
-        fields = ['title', 'date', 'starttime', 'signontime', 'club',
-                  'website', 'location', 'status', 'description',
-                  'licencereq', 'category', 'discipline', 'grading']
+        fields = [
+            "title",
+            "date",
+            "starttime",
+            "signontime",
+            "club",
+            "website",
+            "location",
+            "status",
+            "description",
+            "licencereq",
+            "category",
+            "discipline",
+            "grading",
+        ]
 
     repeat = forms.ChoiceField(label="Repeat by", required=False, choices=REPEAT_CHOICES)
     repeatN = forms.IntegerField(label="Repeat every", initial=1, required=False)
-    repeatMonthN = forms.TypedChoiceField(label="which week", required=False,
-                                          choices=MONTH_N_CHOICES, coerce=int, empty_value=1)
+    repeatMonthN = forms.TypedChoiceField(
+        label="which week", required=False, choices=MONTH_N_CHOICES, coerce=int, empty_value=1
+    )
     repeatDay = forms.TypedChoiceField(label="Repeat on day", required=False, choices=DAYS, coerce=int, empty_value=0)
     number = forms.IntegerField(initial=6, required=False)
     pointscore = forms.ModelChoiceField(queryset=PointScore.objects.all(), required=False)
@@ -85,7 +88,10 @@ class RacePublishDraftForm(forms.Form):
     club = forms.ModelChoiceField(queryset=Club.objects.all(), required=True)
 
 
-MEMBER_FILE_FORMATS = (('THQ', 'TidyHQ'), ('IMG', 'IMG Sports'), )
+MEMBER_FILE_FORMATS = (
+    ("THQ", "TidyHQ"),
+    ("IMG", "IMG Sports"),
+)
 
 
 class MembershipUploadForm(forms.Form):
@@ -108,9 +114,9 @@ class RiderSearchForm(forms.Form):
     """Form to search riders by various criteria"""
 
     name = forms.CharField(label="Rider Last Name", required=False)
-#    recent_wins = forms.BooleanField(label="With Recent Wins", required=False)
-#    recent_places = forms.BooleanField(label="With Recent Placings", required=False)
-#    grade = forms.CharField(label="Grade", required=False)
+    #    recent_wins = forms.BooleanField(label="With Recent Wins", required=False)
+    #    recent_places = forms.BooleanField(label="With Recent Placings", required=False)
+    #    grade = forms.CharField(label="Grade", required=False)
     club = forms.ModelChoiceField(label="Club", queryset=Club.objects.all(), required=False)
 
 
@@ -119,8 +125,21 @@ class RiderUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Rider
-        fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
-                    'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship']
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "gender",
+            "streetaddress",
+            "suburb",
+            "state",
+            "postcode",
+            "dob",
+            "phone",
+            "emergencyname",
+            "emergencyphone",
+            "emergencyrelationship",
+        ]
 
     first_name = forms.CharField(label="First Name")
     last_name = forms.CharField(label="Family Name")
@@ -132,25 +151,45 @@ class RiderUpdateFormOfficial(forms.ModelForm):
 
     class Meta:
         model = Rider
-        fields =  ['first_name', 'last_name', 'email', 'gender', 'streetaddress', 'suburb', 'state', 'postcode',
-                    'dob', 'phone', 'emergencyname', 'emergencyphone', 'emergencyrelationship',
-                    'club', 'dutyofficer', 'dutyhelper', 'licenceno',
-                    #'grade',
-                    'commissaire', 'commissaire_valid', 'official']
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "gender",
+            "streetaddress",
+            "suburb",
+            "state",
+            "postcode",
+            "dob",
+            "phone",
+            "emergencyname",
+            "emergencyphone",
+            "emergencyrelationship",
+            "club",
+            "dutyofficer",
+            "dutyhelper",
+            "licenceno",
+            #'grade',
+            "commissaire",
+            "commissaire_valid",
+            "official",
+        ]
 
     first_name = forms.CharField(label="First Name")
     last_name = forms.CharField(label="Family Name")
     email = forms.EmailField(label="Email", required=False)
     dutyofficer = forms.BooleanField(label="Duty Officer", required=False)
     dutyhelper = forms.BooleanField(label="Duty Helper", required=False)
-    #grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
+    # grade = forms.ChoiceField(label="Grade", choices=GRADE_CHOICES)
 
 
-SEND_CHOICES = (('self', 'Yourself (test email)'),
-                ('members', 'Current Members'),
-                ('pastriders', 'All Riders from Past Year'),
-                ('commisaires', 'Commisaires'),
-                ('dutyofficers', 'Duty Officers'))
+SEND_CHOICES = (
+    ("self", "Yourself (test email)"),
+    ("members", "Current Members"),
+    ("pastriders", "All Riders from Past Year"),
+    ("commisaires", "Commisaires"),
+    ("dutyofficers", "Duty Officers"),
+)
 
 
 class ClubMemberEmailForm(forms.Form):
@@ -163,4 +202,3 @@ class ClubMemberEmailForm(forms.Form):
 class PointScoreAddForm(forms.Form):
 
     name = forms.CharField(label="Pointscore Name")
-

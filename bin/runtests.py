@@ -15,7 +15,8 @@
 # limitations under the License.
 
 #!/usr/bin/env python
-import os, sys
+import os
+import sys
 
 if __name__ == "__main__":
     sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -24,4 +25,4 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
-    execute_from_command_line(['runtests.py', 'test'])
+    execute_from_command_line(["runtests.py", "test"])

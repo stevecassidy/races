@@ -1,0 +1,58 @@
+# CI for the Cabici backend.
+#
+# Runs on the modernization branch and on pull requests targeting it, so the
+# Phase 1 quality gates (lint, format, migrations, tests, coverage) are
+# exercised before anything lands.
+
+name: CI
+
+on:
+  push:
+    branches: ["modernization", "master"]
+  pull_request:
+    branches: ["modernization", "master"]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: Lint, format and test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: "pip"
+          cache-dependency-path: requirements/*.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements/dev.txt
+
+      - name: Ruff
+        run: ruff check .
+
+      - name: Black
+        run: black --check --diff .
+
+      - name: System checks
+        run: python bin/develop.py check
+
+      - name: No missing migrations
+        run: python bin/develop.py makemigrations --check --dry-run
+
+      - name: Tests with coverage
+        run: |
+          coverage run --rcfile=pyproject.toml bin/runtests.py
+          coverage report --rcfile=pyproject.toml
+
+      # Advisory only: the legacy modules are unannotated, typing is introduced
+      # with the new API packages in Phase 2.
+      - name: Mypy
+        continue-on-error: true
+        run: mypy races

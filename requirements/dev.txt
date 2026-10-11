@@ -14,3 +14,4 @@ black==26.10.1
 ruff==0.17.0
 pre_commit==4.6.2
 coverage==7.16.2
+mypy==2.4.0

@@ -44,13 +44,13 @@ class Geoposition:
             self.latitude = Decimal(latitude)
             self.longitude = Decimal(longitude)
         except (InvalidOperation, TypeError, ValueError) as exc:
-            raise ValueError("Invalid geoposition: %r, %r" % (latitude, longitude)) from exc
+            raise ValueError(f"Invalid geoposition: {latitude!r}, {longitude!r}") from exc
 
     def __str__(self):
-        return "%s,%s" % (self.latitude, self.longitude)
+        return f"{self.latitude},{self.longitude}"
 
     def __repr__(self):
-        return "Geoposition(%s)" % self
+        return f"Geoposition({self})"
 
     def __len__(self):
         return len(str(self))
@@ -130,10 +130,9 @@ class GeopositionFormField(forms.MultiValueField):
             forms.DecimalField(label=_("Latitude")),
             forms.DecimalField(label=_("Longitude")),
         )
-        # Require both halves or neither.
         required = kwargs.pop("required", True)
         fields[0].required = fields[1].required = required
-        super().__init__(fields=fields, *args, **kwargs)
+        super().__init__(fields, *args, **kwargs)
 
     def compress(self, value_list):
         if not value_list:

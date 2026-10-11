@@ -14,23 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''
+"""
 Created on August 18, 2015
 
 @author: steve
-'''
+"""
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from django.contrib.auth.models import User
-import csv
 import random
 
-from races.apps.cabici.usermodel import Rider, RaceResult, ClubGrade
+from django.core.management.base import BaseCommand
+
 from races.apps.cabici.models import Race
+from races.apps.cabici.usermodel import ClubGrade, RaceResult, Rider
+
 
 class Command(BaseCommand):
-
 
     def handle(self, *args, **options):
 
@@ -44,11 +42,11 @@ class Command(BaseCommand):
         riders = list(Rider.objects.all())
         riders = random.sample(riders, 200)
         random.shuffle(riders)
-        k = int(len(riders)/4)
-        grades = {'A': [], 'B': [], 'C': [], 'D': []}
+        k = int(len(riders) / 4)
+        grades = {"A": [], "B": [], "C": [], "D": []}
 
         for grade in list(grades.keys()):
-            for i in range(k-1):
+            for _ in range(k - 1):
                 rider = riders.pop()
                 grades[grade].append(rider)
 
@@ -57,9 +55,7 @@ class Command(BaseCommand):
                 who = random.sample(grades[grade], random.randint(k // 2, k - 1))
                 numbers = list(range(len(who)))
                 random.shuffle(numbers)
-                place = 0
-                for rider in who:
-                    place += 1
+                for place, rider in enumerate(who, start=1):
                     if place <= 5:
                         result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=place)
                     else:

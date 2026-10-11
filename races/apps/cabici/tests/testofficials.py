@@ -14,36 +14,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.core import mail
-
-from races.apps.cabici.models import Club, RaceCourse, Race
-from races.apps.cabici.usermodel import Rider, RaceStaff, Membership, ClubRole, UserRole, RaceResult
 import datetime
-import re
 import random
+
+from django.contrib.auth.models import User
+from django.test import TestCase
+
+from races.apps.cabici.models import Club, Race, RaceCourse
+from races.apps.cabici.usermodel import ClubRole, Membership, RaceStaff, Rider, UserRole
 
 
 class OfficialsTests(TestCase):
-    """Tests related to allocation of club officials """
+    """Tests related to allocation of club officials"""
 
-    fixtures = ['clubs', 'courses', 'users', 'riders', 'races']
+    fixtures = ["clubs", "courses", "users", "riders", "races"]
 
     def setUp(self):
 
-        self.oge = Club.objects.get(slug='OGE')
-        self.mov = Club.objects.get(slug='MOV')
+        self.oge = Club.objects.get(slug="OGE")
+        self.mov = Club.objects.get(slug="MOV")
 
         self.oge.manage_members = True
         self.oge.manage_races = True
 
         self.oge.save()
 
-        self.ogeofficial = User(username="ogeofficial", email='oge@here.com', password="hello", first_name="OGE", last_name="Official")
+        self.ogeofficial = User(
+            username="ogeofficial", email="oge@here.com", password="hello", first_name="OGE", last_name="Official"
+        )
         self.ogeofficial.save()
-        self.movofficial = User(username="movofficial", email='mov@here.com', password="hello", first_name="MOV", last_name="Official")
+        self.movofficial = User(
+            username="movofficial", email="mov@here.com", password="hello", first_name="MOV", last_name="Official"
+        )
         self.movofficial.save()
 
         self.ogeofficial.rider = Rider(official=True, club=self.oge)
@@ -56,10 +58,10 @@ class OfficialsTests(TestCase):
         self.riders = []
         for rider in self.oge.rider_set.all():
             if random.random() > 0.2:
-                category = 'race'
+                category = "race"
                 self.racers.append(rider)
             else:
-                category = 'ride'
+                category = "ride"
                 self.riders.append(rider)
 
             m = Membership(rider=rider, club=rider.club, date=endofyear, category=category)
@@ -76,7 +78,7 @@ class OfficialsTests(TestCase):
         else:
             when = datetime.date.today()
         where = RaceCourse.objects.all()[0]
-        for r in ['one', 'two', 'three']:
+        for r in ["one", "two", "three"]:
             when = when + datetime.timedelta(days=7)
             race = Race(club=self.oge, title=r, date=when, location=where, signontime="06:00", starttime="6 ish")
             race.save()
@@ -96,23 +98,23 @@ class OfficialsTests(TestCase):
         dutyofficer, created = ClubRole.objects.get_or_create(name="Duty Officer")
         dofficers = [ur.user for ur in UserRole.objects.filter(club=club, role=dutyofficer)]
 
-        members = club.membership_set.filter(date__gte=today, category='race')
+        members = club.membership_set.filter(date__gte=today, category="race")
         for membership in members:
             user = membership.rider.user
             # don't duplicate (eg. member current for this year and next)
             existing = club.userrole_set.filter(role=dutyhelper, user=user)
-            if existing.count() == 0 and not user in dofficers:
+            if existing.count() == 0 and user not in dofficers:
                 role = UserRole(user=user, club=club, role=dutyhelper)
                 role.save()
 
     def make_role(self, club, n, rolename):
         """Choose n members to have the given role,
-         return a list of riders"""
+        return a list of riders"""
 
         role, created = ClubRole.objects.get_or_create(name=rolename)
 
         riders = []
-        mm = Membership.objects.filter(club__exact=club, category__exact='race')[:n]
+        mm = Membership.objects.filter(club__exact=club, category__exact="race")[:n]
         for m in mm:
             ur = UserRole(user=m.rider.user, club=club, role=role)
             ur.save()
@@ -131,7 +133,7 @@ class OfficialsTests(TestCase):
 
         UserRole(user=rider.user, club=self.oge, role=do).save()
 
-        self.assertEqual(list(rider.roles.keys()), ['dutyofficer'])
+        self.assertEqual(list(rider.roles.keys()), ["dutyofficer"])
 
         UserRole(user=rider.user, club=self.oge, role=dh).save()
 
@@ -144,8 +146,8 @@ class OfficialsTests(TestCase):
 
         self.create_duty_helpers(self.oge)
         helpers = self.oge.userrole_set.filter(role__name__exact="Duty Helper")
-        racers = self.oge.membership_set.filter(category__exact='race').count()
-        self.assertEqual(racers-3, helpers.count())
+        racers = self.oge.membership_set.filter(category__exact="race").count()
+        self.assertEqual(racers - 3, helpers.count())
         # no dofficers should be helpers
         for rider in dofficers:
             ur = self.oge.userrole_set.filter(role__name__exact="Duty Helper", user__rider__exact=rider).count()
@@ -170,7 +172,7 @@ class OfficialsTests(TestCase):
             rs = RaceStaff(rider=dhs[1], race=race, role=dutyhelper)
             rs.save()
 
-        counted_helpers = self.oge.get_officials_with_counts('Duty Helper')
+        counted_helpers = self.oge.get_officials_with_counts("Duty Helper")
 
         self.assertEqual(len(dhs), len(counted_helpers))
         # all should be zero except for dhs[0] and dhs[1]
@@ -226,7 +228,6 @@ class OfficialsTests(TestCase):
         self.assertListEqual(who1, list(newraces[0].officials.all()))
 
         # no rider should have more than 3 allocations if we're doing it right
-        for rider in self.oge.rider_set.filter(user__userrole__role__name__exact='Duty Helper'):
+        for rider in self.oge.rider_set.filter(user__userrole__role__name__exact="Duty Helper"):
             c = self.oge.races.filter(officials__rider__exact=rider).count()
-            self.assertLessEqual(c,3)
-
+            self.assertLessEqual(c, 3)

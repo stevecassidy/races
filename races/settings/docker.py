@@ -36,7 +36,9 @@ DATABASES = {
         "NAME": os.environ.get("SQL_DATABASE", "cabici"),
         "USER": os.environ.get("SQL_USER", "cabici"),
         "PASSWORD": os.environ.get("SQL_PASSWORD", "cabici"),
-        "HOST": os.environ.get("SQL_HOST", "db"),
+        # docker-compose overrides this with SQL_HOST=db; the default targets
+        # the published port when commands run on the host.
+        "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
 }

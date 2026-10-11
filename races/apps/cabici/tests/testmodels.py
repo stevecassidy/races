@@ -14,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 from decimal import Decimal
+
 from django.test import TestCase
-from django.urls import reverse
 
 from races.apps.cabici.geoposition import Geoposition
-from races.apps.cabici.models import Club, RaceCourse, Race
-import datetime
+from races.apps.cabici.models import Club, Race, RaceCourse
+
 
 class ModelTests(TestCase):
 
@@ -38,7 +39,6 @@ class ModelTests(TestCase):
         # test failure modes of ingest
         # this triggers ingest_by_module which fails because there is no module
         self.assertEqual(club.ingest(), ([], 'No ingest module for club "test"'))
-
 
     def test_race(self):
         """Test creation of race and some methods"""
@@ -68,8 +68,8 @@ class ModelTests(TestCase):
 
         self.assertIsInstance(loc.location, Geoposition)
         self.assertEqual(str(loc.location), "-33.8688,151.2093")
-        self.assertEqual(loc.location.latitude, Decimal('-33.8688'))
-        self.assertEqual(loc.location.longitude, Decimal('151.2093'))
+        self.assertEqual(loc.location.latitude, Decimal("-33.8688"))
+        self.assertEqual(loc.location.longitude, Decimal("151.2093"))
 
         reloaded = RaceCourse.objects.get(pk=loc.pk)
         self.assertEqual(str(reloaded.location), "-33.8688,151.2093")
