@@ -7,3 +7,4 @@ djangorestframework==3.18.1
 django-allauth==65.19.4
 django-anymail[mailersend]==15.1
 tzdata==2026.4
+ngram==4.0.3
