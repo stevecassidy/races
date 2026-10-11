@@ -109,12 +109,13 @@ python bin/develop.py test
 
 **Milestone:** Modern Django 5.2 with clean dependencies ✅
 
-### Month 2-3 (Weeks 5-12): Backend API
-- **Week 5:** API audit and planning
-- **Week 6-8:** Build missing API endpoints
-- **Week 9-10:** JWT authentication
-- **Week 11:** API documentation (Swagger)
-- **Week 12:** API testing
+### Month 2-3 (Weeks 5-12): Backend API Rebuild
+- **Week 5:** Model hardening (defects, constraints, services extraction)
+- **Week 6:** Resource model + OpenAPI contract (publish before implementing)
+- **Week 7:** JWT authentication
+- **Week 8-10:** Core CRUD as ViewSets under `/api/v1/`
+- **Week 11:** API documentation + generated TypeScript client
+- **Week 12:** API test suite; delete legacy `api.py`
 
 **Milestone:** Complete REST API with documentation ✅
 

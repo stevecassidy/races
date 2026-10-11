@@ -72,7 +72,8 @@ Known gaps carried into Phase 2:
 - `races/apps/cabici/forms.py` is now imported by nothing (the template views
   that used it are gone) - port or delete.
 - `races/apps/cabici/feeds.py` (iCal/Atom) is still unrouted - decide whether to
-  expose it as an API endpoint or drop it.
+  expose it as an API endpoint or drop it. Note `item_link` reverses the removed
+  `race` URL name, so it cannot be re-routed as-is (MODEL_REVIEW A3).
 - `usermodel.save_rider()` is a dead Strava social-auth callback.
 - Lint debt is quarantined by `per-file-ignores` in `pyproject.toml` for
   `races/ingest/*` (bare excepts that are load-bearing for scraper fallbacks) and
@@ -81,68 +82,104 @@ Known gaps carried into Phase 2:
 - `TIME_ZONE = 'Europe/Helsinki'` in base settings for a NSW racing app -
   unresolved, needs an owner decision (changing it shifts displayed times).
 
-## ✅ Phase 2: Backend API (Weeks 5-12)
+**Phase 2 planning outcome (2026-10-11):** a full review of the model and API
+layers was carried out as part of closing Phase 1. It found five live model
+defects, nine integrity gaps and twelve structural issues, and concluded that the
+existing API should be rebuilt rather than adapted. See
+[MODEL_REVIEW.md](MODEL_REVIEW.md); the task lists below reflect it.
 
-### API Planning
-- [ ] Document all current views
-- [ ] Map views to API endpoints
-- [ ] Design API structure
-- [ ] Create API specification document
-- [ ] Plan permission model
+## ✅ Phase 2: Backend API Rebuild (Weeks 5-12)
 
-#### Findings from the Phase 1 review of `api.py` (829 lines, single module)
+> **Decision (2026-10-11): `api.py` is scrapped, not adapted.** Evidence, the cost
+> comparison, and the list of what to salvage are in
+> [MODEL_REVIEW.md](MODEL_REVIEW.md). Model hardening (2.0) runs first because the
+> API surface follows the domain model, and two model defects (A1 pointscore
+> config, A2 inverted membership choices) change API responses if deferred.
 
-- No routers/ViewSets: 7 hand-wired list/detail URL pairs, no `/api/v1/`, no
-  filtering/search/ordering backends, pagination on `RiderList` only.
-- `ClubOfficialPermission` reads `request.user.rider` unguarded → any
-  authenticated user without a Rider gets a 500 instead of 403 (the view code
-  uses `getattr`, the permission class does not).
-- `CustomAuthTokenSerializer.validate` calls `User.objects.get(email__iexact=…)`
-  → 500 on an unknown email instead of 401, and the response assumes
-  `user.rider` exists.
-- `RaceResultList.post` (the result uploader) has **no permission class** (it
-  inherits `IsAuthenticatedOrReadOnly`), deletes every result for the race and
-  re-inserts them without `transaction.atomic`, and swallows `IntegrityError`.
-  Highest-risk endpoint in the app.
-- `RaceOfficialField.to_internal_value()` still has a debug `print()`.
-- `fields = '__all__'` on the `RaceCourse`, `RaceStaff` and `RaceResult`
-  serializers exposes every writable model field.
-- No endpoints for `Membership`, `ClubGrade` or `ClubRole`, all of which the
-  planned club-management screens need.
-- CSV/XLS exports and the iCal/Atom feeds have no API equivalent.
-- `testapi.py:464` is `@skip('create not implemented yet')`.
+### 2.0 Model Hardening (Week 5)
 
-### API Development
-- [ ] Create serializers for all models
-- [ ] Implement missing ViewSets
-- [ ] Add filtering, search, ordering
-- [ ] Implement pagination
-- [ ] Create permission classes
-- [ ] Add custom actions
-- [ ] Version API (`/api/v1/`)
+**Tier A — defects:**
+- [ ] A1: `PointScore.score()` ignores its own points/participation/method config
+      (hardcoded WMCC values) — wire up the config, test a non-default scale
+      *(owner decision pending)*
+- [ ] A2: `MEMBERSHIP_CATEGORY_CHOICES` is inverted (value/label swapped) + data
+      migration to normalise capitalised values
+- [ ] A3: `Race.get_absolute_url()` / `Rider.get_absolute_url()` reverse removed URL
+      names → admin "View on site" 500s
+- [ ] A4: delete `RaceResult.pointscores()` (references non-existent relation)
+- [ ] A5: parenthesise the PEP-758 `except ValueError, Rider.DoesNotExist:` form
 
-### Authentication
+**Tier B — database integrity (one additive migration):**
+- [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
+      category, date)`, `ClubGrade(rider, club)`, `UserRole(user, club, role)`,
+      `PointscoreTally(pointscore, rider)`, `Race.hash`
+- [ ] Replace the `ClubGrade.save()` Python uniqueness override with a constraint
+- [ ] Conditional uniqueness for bib numbers, then delete the three
+      "increment to avoid clash" workarounds
+- [ ] Indexes on `Race(date, status)` and pointscore ordering columns
+- [ ] Verify no duplicate data against a production copy before applying
+
+**Tier C — structure:**
+- [ ] C1: merge `usermodel.py` into `models.py` (removes 6 circular imports)
+- [ ] C2: extract `services/` (ingest, results, pointscore, officials, membership
+      validation, exports) with `transaction.atomic()` at operation boundaries
+- [ ] C3: one authorization model (capability flags + roles) expressed as reusable
+      permission classes
+- [ ] C5/C6: resolve free-text pseudo-structures (`Race.grading`, comma-string
+      points, `Rider.commissaire`) and the `place` 0-vs-NULL / `dob` 1970 sentinels
+- [ ] C7/C8: fix `Rider.current_membership` category filtering; make delta
+      timestamps explicit
+- [ ] C9: guarantee `Club.auscycling_client_secret` is never serialized
+- [ ] C4: decide `RacePrototype` / `Race.grading` — delete or use
+- [ ] C11/C12: eliminate N+1 paths and normalise `Club.statistics()`
+
+### 2.1 Resource Model & API Contract (Week 6)
+- [ ] Derive resources from the domain (not from the old views)
+- [ ] One consistent public identifier per concept (rider = `Rider.id` everywhere)
+- [ ] Explicit read/write serializer shapes; never `fields='__all__'`
+- [ ] `django-filter` FilterSets replacing `?select=` / `?count=` / `?prefix=` /
+      `?changed=`
+- [ ] Domain operations as explicit actions (`POST /races/{id}/results/`,
+      `POST /races/bulk/`, `POST /pointscores/{id}/recalculate/`, …)
+- [ ] Publish OpenAPI before implementing; generate the TypeScript client from it
+- [ ] Salvage the existing result-upload payload contract (shared with the
+      race-sheet/desktop workflow)
+- [ ] Mine `tests/testapi.py` for behavioural requirements before replacing it
+
+### 2.2 Authentication (Week 7)
 - [ ] Install djangorestframework-simplejwt
-- [ ] Configure JWT authentication
-- [ ] Create auth endpoints
-- [ ] Update CORS settings
-- [ ] Test authentication flow
-- [ ] Update social auth to return JWT
+- [ ] JWT access + refresh endpoints
+- [ ] Register / password reset / profile endpoints
+- [ ] allauth → JWT; session auth for `/admin/` only
+- [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
+      must not 500
+- [ ] Scope CORS to the frontend origin (replace allow-all + GET-only)
+- [ ] Test authentication flow including failure paths
 
-### Documentation
+### 2.3 Core CRUD Implementation (Weeks 8-10)
+- [ ] ViewSets + routers under `/api/v1/` (no hand-wired URL pairs)
+- [ ] Serializers with explicit fields; write shapes separated from read shapes
+- [ ] `select_related` / `prefetch_related` on every queryset
+- [ ] Pagination on every list endpoint
+- [ ] Permission classes applied uniformly — including the result uploader, which
+      currently has none
+- [ ] `transaction.atomic()` around every multi-row write
+- [ ] Custom actions for domain operations, backed by services
+- [ ] Delete `api.py` once the new package covers the surface (single commit)
+
+### 2.4 API Documentation (Week 11)
 - [ ] Install drf-spectacular
-- [ ] Add docstrings to API views
-- [ ] Generate OpenAPI schema
-- [ ] Set up API docs UI
-- [ ] Create Postman collection
+- [ ] Add schema annotations to every view/action
+- [ ] Generate OpenAPI schema + interactive docs at `/api/docs/`
+- [ ] Create Postman collection from the schema
+- [ ] Regenerate the TypeScript client from the final spec
 - [ ] Write API usage guide
 
-### Testing
-- [ ] Write API endpoint tests
-- [ ] Test permissions
-- [ ] Test filtering/search
-- [ ] Test authentication
-- [ ] Achieve >80% coverage
+### 2.5 Test Suite Rebuild (Week 12)
+- [ ] Per-resource endpoint tests (CRUD, filters, pagination, permissions, errors)
+- [ ] Service-layer tests for upload / bulk create / allocation / recalculation
+- [ ] Contract test: generated TS types match the served schema
+- [ ] Achieve >80% coverage; ratchet `fail_under` in stages (42 → 60 → 80)
 
 ## ✅ Phase 3: React Frontend (Weeks 13-28)
 

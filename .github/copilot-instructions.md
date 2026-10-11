@@ -19,6 +19,7 @@ for verified state and carried-forward debt.
 - **[MODERNIZATION_README.md](../MODERNIZATION_README.md)** - Project overview
 - **[MODERNIZATION_PLAN.md](../MODERNIZATION_PLAN.md)** - Detailed implementation plan
 - **[MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md)** - Task tracking
+- **[MODEL_REVIEW.md](../MODEL_REVIEW.md)** - Model & API review (Phase 2 basis)
 - **[TECHNICAL_ASSESSMENT.md](../TECHNICAL_ASSESSMENT.md)** - Current state analysis
 
 ### Development Strategy
@@ -27,6 +28,7 @@ for verified state and carried-forward debt.
 - **`master` branch stays stable for production**
 - **Single deployment when complete** (not incremental)
 - **No backward compatibility needed during development**
+- **The existing `api.py` is being replaced, not extended** — see “API Rules” below
 
 ## Technology Stack
 
@@ -54,6 +56,8 @@ for verified state and carried-forward debt.
 3. **API-first approach** - Build REST endpoints, not template views
 4. **Remove template code** - Templates are being eliminated
 5. **Use JWT for API auth** - Not session auth (except admin)
+6. **Do not add endpoints to `races/apps/cabici/api.py`** - it is frozen and
+   scheduled for deletion; new work goes in the `api/` package (see API Rules)
 
 ### When Working on Frontend (Future `cabici-frontend/` directory)
 
@@ -87,11 +91,15 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 
 **Phases:**
 
-1. Foundation & Django Upgrade (Weeks 1-4)
-2. Backend API Completion (Weeks 5-12)
+1. Foundation & Django Upgrade (Weeks 1-4) — ✅ complete 2026-10-11
+2. Backend API Rebuild (Weeks 5-12) — **current**; starts with model hardening
 3. React Frontend Development (Weeks 13-26)
 4. Integration & Deployment (Weeks 27-32)
 5. Optimization (Weeks 33-38)
+
+Phase 2 begins at **2.0 Model Hardening**, before any API code. The findings it
+acts on (A1-A5 defects, B1-B9 integrity, C1-C12 structure) are numbered in
+[MODEL_REVIEW.md](../MODEL_REVIEW.md).
 
 ## Important Notes
 
@@ -108,6 +116,8 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 ### DON'T:
 
 ❌ Add new template views (we're removing them)
+❌ Add endpoints to the legacy `races/apps/cabici/api.py` (it is frozen, then deleted)
+❌ Use `fields = '__all__'` on a serializer
 ❌ Use jQuery or Bootstrap 3 (being replaced)
 ❌ Make changes to `master` branch (except critical fixes)
 ❌ Add features that aren't in the plan (discuss first)
@@ -121,14 +131,18 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 ```
 races/
   apps/
-    cabici/           # Main application
-      models.py       # Database models
-      api/            # REST API (new structure)
-        serializers/  # DRF serializers
-        views/        # API ViewSets
+    cabici/
+      models.py           # merged domain models (usermodel.py folded in, Phase 2.0)
+      services/           # domain operations: ingest, results, pointscore,
+                          # officials, membership, exports
+      api/\                # REST API (new structure)
+        routers.py        # /api/v1/ wiring
+        serializers/      # DRF serializers
+        views/            # API ViewSets
+        filters/          # django-filter FilterSets
         permissions.py
-        filters.py
-      tests/          # Test files
+        pagination.py
+      tests/              # Test files
 ```
 
 ### Frontend Structure (To Be Created)
@@ -136,7 +150,7 @@ races/
 ```
 cabici-frontend/
   src/
-    api/              # API client
+    api/              # Generated + hand-written API client
     components/       # Reusable components
     features/         # Feature modules
       clubs/
@@ -146,23 +160,43 @@ cabici-frontend/
     pages/            # Page components
 ```
 
-## API Patterns
+## API Rules
 
-### Use This Pattern for API Endpoints
+The pre-existing `races/apps/cabici/api.py` was built ad-hoc for the jQuery
+screens and is **replaced, not extended** (rationale and evidence:
+[MODEL_REVIEW.md](../MODEL_REVIEW.md)). When building the new API:
+
+- **Contract-first.** Define the resource, filters and payload shapes in the
+  OpenAPI spec before implementing; the React client is generated from it.
+- **Never `fields = '__all__'`.** Declare read and write shapes explicitly —
+  `Club.auscycling_client_secret` must never be serializable.
+- **One identifier per concept.** A rider is `Rider.id` everywhere (the old API
+  used `Rider.id`, `User.id` and a display string interchangeably under the same
+  key names).
+- **Filters are filters.** Use `django-filter` FilterSets + search/ordering
+  backends, not per-view query params like `?select=future` or `?count=10`.
+- **Domain operations are actions**, backed by `services/`, wrapped in
+  `transaction.atomic()`, permission-checked, and tested for their failure paths.
+- **No 500s for expected client errors.** Unknown email → 401, missing Rider →
+  403, bad payload → 400, duplicate → 409.
+
+### API Pattern
 
 ```python
 from rest_framework import viewsets, filters
 from rest_framework.decorators import action
 
 class RaceViewSet(viewsets.ModelViewSet):
-    queryset = Race.objects.select_related('club').all()
+    queryset = Race.objects.select_related('club', 'location').all()
     serializer_class = RaceSerializer
+    permission_classes = [CanManageClub]
+    filterset_class = RaceFilter
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'location__name']
 
     @action(detail=True, methods=['post'])
     def upload_results(self, request, pk=None):
-        # Custom action
+        # delegates to services.results; atomic; returns typed errors
         pass
 ```
 

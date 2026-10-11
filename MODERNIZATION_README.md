@@ -10,6 +10,7 @@ Welcome to the Cabici application modernization project! This directory contains
 | **[MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** | High-level overview | Understanding the approach |
 | **[MODERNIZATION_CHECKLIST.md](MODERNIZATION_CHECKLIST.md)** | Task tracking | Daily development |
 | **[MODERNIZATION_PLAN.md](MODERNIZATION_PLAN.md)** | Detailed implementation guide | Implementing each phase |
+| **[MODEL_REVIEW.md](MODEL_REVIEW.md)** | Model & API review (Phase 2 input) | Before touching models or the API |
 | **[TECHNICAL_ASSESSMENT.md](TECHNICAL_ASSESSMENT.md)** | Current state analysis | Understanding the codebase |
 
 ## 🎯 Project Goals
@@ -55,12 +56,22 @@ Transform the Cabici cycling application into a modern, maintainable system:
 
 **Total Duration:** 38 weeks (~9 months part-time)
 
-- **Phase 1:** Foundation (4 weeks)
-- **Phase 2:** Backend API (8 weeks)
+- **Phase 1:** Foundation (4 weeks) ✅ complete
+- **Phase 2:** Backend API rebuild (8 weeks)
 - **Phase 3:** React Frontend (14 weeks)
 - **Phase 4:** Integration & Deployment (4 weeks)
 - **Phase 5:** Optimization (5 weeks)
 - **Buffer:** 3 weeks
+
+### Key Decision: the existing API is rebuilt, not adapted
+
+Phase 2 does **not** extend `races/apps/cabici/api.py`. That API grew ad-hoc
+around specific jQuery screens (per-view query params, inconsistent rider
+identifiers, `fields='__all__'` writes, an unpermissioned result uploader, no
+schema or versioning) and its only clients are deleted in Phase 4. It is
+replaced by a contract-first `/api/v1/` generated from an OpenAPI spec, with the
+model layer hardened first. Rationale and evidence:
+[MODEL_REVIEW.md](MODEL_REVIEW.md).
 
 ## 🔑 Key Principles
 
@@ -116,7 +127,7 @@ ruff check . && black --check . && python bin/runtests.py
 
 ```
 Phase 1: Foundation               [██████████] 100% ✅
-Phase 2: Backend API              [░░░░░░░░░░] 0%
+Phase 2: Backend API Rebuild      [░░░░░░░░░░] 0%  ← replanned 2026-10-11
 Phase 3: React Frontend           [░░░░░░░░░░] 0%
 Phase 4: Integration & Deployment [░░░░░░░░░░] 0%
 Phase 5: Optimization             [░░░░░░░░░░] 0%
@@ -254,8 +265,9 @@ Phase 1 (Foundation) is complete. From here:
 1. ✅ **Read this README** - You're here!
 2. ⬜ **Scan [MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** - Understand the plan
 3. ⬜ **Read the Phase 1 Exit Notes** in [MODERNIZATION_CHECKLIST.md](MODERNIZATION_CHECKLIST.md) - what works, what's owed
-4. ⬜ **Start Phase 2.1** - API audit & planning (endpoint map is already drafted)
-5. ⬜ **Track progress** - Use the checklist daily
+4. ⬜ **Read [MODEL_REVIEW.md](MODEL_REVIEW.md)** — why the API is being rebuilt and what the models need
+5. ⬜ **Start Phase 2.0** — model hardening, then the API contract
+6. ⬜ **Track progress** — Use the checklist daily
 
 ```bash
 # set up a development environment
@@ -272,7 +284,7 @@ python bin/runtests.py
 **Created:** 2026-08-29  
 **Last Updated:** 2026-10-11  
 **Target Completion:** Q2 2027 (9 months from start)  
-**Current Phase:** Phase 2 - Backend API Completion
+**Current Phase:** Phase 2 - Backend API Rebuild (starts with model hardening)
 
 ---
 

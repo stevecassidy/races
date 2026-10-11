@@ -22,16 +22,19 @@ The current production application remains stable while modernization work happe
 - Template views stripped down to `HomePage`; ~61 legacy templates and 3.3 MB of
   Bootstrap/jQuery static assets remain for Phase 4
 - Partial REST API in a single 829-line `api.py` (token auth, no routers)
+  — **decided 2026-10-11: scrapped and rebuilt from scratch in Phase 2**, see
+  [`MODEL_REVIEW.md`](MODEL_REVIEW.md)
 - PostgreSQL driver + production dependency set in the Docker image
 - Black / ruff / mypy / coverage / pre-commit / CI in place
 
 **Target State:**
 - Django 5.2 (latest stable)
 - Python 3.14
-- API-only backend with comprehensive REST endpoints
+- API-only backend: versioned DRF API (`/api/v1/`) generated from a published
+  OpenAPI contract
 - React SPA frontend
-- Modern authentication (JWT + session)
-- Comprehensive API documentation
+- Modern authentication (JWT + session for admin only)
+- Comprehensive API documentation and a generated TypeScript client
 - Improved test coverage
 - Modern deployment practices
 
@@ -180,127 +183,236 @@ still imported the deleted `django-geoposition` submodule. See
 verification commands, and the debt carried into Phase 2 (including the
 `api.py` review findings and the unresolved `TIME_ZONE` question).
 
-**Definition of done for Phase 2 entry:** nothing outstanding — start at 2.1 with
-the endpoint inventory, using the `api.py` notes already recorded.
+**Definition of done for Phase 2 entry:** nothing outstanding. Phase 2 was
+replanned as a result of this review: it starts at **2.0 Model Hardening** and
+rebuilds the API rather than extending `api.py` — see
+[`MODEL_REVIEW.md`](MODEL_REVIEW.md).
 
 ---
 
-## Phase 2: Backend API Completion
+## Phase 2: Backend API Rebuild
 
-**Goal:** Complete the REST API to support all frontend operations
+**Goal:** Replace the ad-hoc API with a complete, documented, contract-first REST
+API built on the existing models.
 
-### 2.1 API Audit & Planning (Week 5)
+**Decision (2026-10-11): the existing `api.py` is scrapped, not adapted.**
+It was assembled ad-hoc to support specific jQuery front-end capabilities and is
+idiosyncratic in ways that a typed React client cannot absorb: per-view query
+vocabularies instead of filters (`?select=future`, `?count=N`, `?prefix=`), three
+different meanings for `rider`/`riderid` across serializers, `fields='__all__'`
+writes, an unpermissioned and non-transactional result uploader, no schema, no
+versioning, no refresh auth, and 5 of 13 models unexposed. Because its only
+consumers — `cabici.js` (588 lines) and `riders.js` (81 lines) — are deleted in
+Phase 4, adaptation would touch ~100% of the file while inheriting every
+inconsistency, and there is no client to preserve compatibility for. Full
+evidence and the cost comparison live in
+[`MODEL_REVIEW.md`](MODEL_REVIEW.md); the domain knowledge worth keeping is
+listed there under "What to salvage".
 
-**Current API Endpoints:**
-- `/api/clubs/` - List/detail
-- `/api/races/` - List/detail  
-- `/api/riders/` - List/detail
-- `/api/raceresults/` - List/detail
-- `/api/pointscores/` - List/detail
-- `/api/racecourses/` - List/detail
-- `/api/racestaff/` - List/detail
-- `/api/clubroles/` - User roles
+**Sequencing rationale:** model work comes first because the API surface is
+determined by the domain model, and two of the model defects (pointscore
+configuration, membership category values) change API responses if fixed later.
 
-**Tasks:**
-- [ ] Document all current template views
-- [ ] Map views to required API endpoints
-- [ ] Identify missing API functionality
-- [ ] Design API endpoint structure
-- [ ] Plan authentication/authorization strategy
+### 2.0 Model Hardening (Week 5)
 
-**Missing API Endpoints (to be created):**
-```
-POST   /api/races/:id/upload-results/
-POST   /api/races/:id/publish/
-GET    /api/clubs/:slug/statistics/
-GET    /api/clubs/:slug/members/
-POST   /api/clubs/:slug/email/
-GET    /api/riders/:id/results/
-GET    /api/pointscores/:id/audit/:rider_id/
-POST   /api/races/bulk-create/
-PATCH  /api/races/:id/officials/
-GET    /api/clubs/:slug/duty-roster/
-```
+Prerequisite for everything below. Referenced items (A#, B#, C#) are the
+findings in [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
 
-### 2.2 API Development (Week 6-10)
+**Tier A — defects (fix first):**
+- [ ] A1: make `PointScore.score()` read its own `points` / `smallpoints` /
+      `smallthreshold` / `participation` / `method` fields instead of hardcoded
+      WMCC constants; wire up `get_points()` / `get_smallpoints()`; add a test
+      with a non-default configuration *(owner decision pending)*
+- [ ] A2: correct the inverted `MEMBERSHIP_CATEGORY_CHOICES` tuple and add a
+      data migration normalising any capitalised values
+- [ ] A3: remove or repair `Race.get_absolute_url()` / `Rider.get_absolute_url()`
+      (they reverse URL names that no longer exist → admin "View on site" 500);
+      route the new URLs or delete the methods
+- [ ] A4: delete `RaceResult.pointscores()` (references a non-existent
+      `resultpoints_set`)
+- [ ] A5: parenthesise `except ValueError, Rider.DoesNotExist:` in
+      `load_excel_results`
 
-**Tasks:**
-- [ ] Create comprehensive serializers for all models
-- [ ] Implement ViewSets for remaining models
-- [ ] Add filtering, searching, ordering to all endpoints
-- [ ] Implement proper pagination
-- [ ] Add comprehensive permission classes
-- [ ] Create custom actions for complex operations (e.g., result upload)
-- [ ] Add API versioning (e.g., `/api/v1/`)
+**Tier B — database integrity (one additive migration):**
+- [ ] `UniqueConstraint` on `Club.slug`, `ClubRole.name`,
+      `Membership(rider, club, category, date)`, `ClubGrade(rider, club)`,
+      `UserRole(user, club, role)`, `PointscoreTally(pointscore, rider)`,
+      `Race.hash`
+- [ ] Replace the `ClubGrade.save()` Python-level uniqueness override with the
+      constraint
+- [ ] Bib-number uniqueness that actually fires: `UniqueConstraint` with
+      `condition=Q(number__isnull=False)`; then delete the three
+      "increment to avoid clash" workarounds
+- [ ] `Index` on `Race(date, status)` and `PointScore`/`PointscoreTally` ordering
+      columns
+- [ ] Confirm no duplicate data before applying (fixtures verified clean)
 
-**Code Structure:**
+**Tier C — structure (shapes the API):**
+- [ ] C1: merge `usermodel.py` into `models.py` (or a `models/` package),
+      removing the six function-level circular imports
+- [ ] C2: extract `services.py` — `ingest`, `results` (Excel/JSON upload),
+      `pointscore`, `officials`, `membership_validation`, `exports` — as pure
+      functions with `transaction.atomic()` at the operation boundary and typed
+      result/error objects. No HTTP, no filesystem, no model-save side effects
+      hidden inside model methods
+- [ ] C3: settle one authorization model — club capability flags +
+      `UserRole`/`ClubRole` — and express it in reusable permission classes;
+      demote `Rider.official` to a cached convenience
+- [ ] C5/C6: resolve the free-text pseudo-structures (`Race.grading`,
+      comma-string points, `Rider.commissaire`) and the `place` 0-vs-NULL and
+      `dob` 1970-01-01 sentinels
+- [ ] C7: fix `Rider.current_membership` to filter by category and validity
+      window; make `Rider.classification` an explicit mapping
+- [ ] C8: make `Rider.updated` delta tracking explicit (touch on related writes)
+- [ ] C9: ensure `Club.auscycling_client_secret` is never serializable
+- [ ] C4: decide `RacePrototype` / `Race.grading` — delete or use
+- [ ] C11/C12: kill the N+1 paths (`get_officials_with_counts`,
+      `PointScore.tabulate` serialization, `tally_helpers`) and normalise
+      `Club.statistics()` to counts + nested resources
+
+**Success Criteria:**
+- All 49 existing tests pass (adjusted for A1/A2 semantics) plus new tests for
+  each Tier A fix
+- `makemigrations --check` clean; constraints verified against a copy of
+  production data
+- No model method performs network or filesystem I/O
+
+### 2.1 Resource Model & API Contract (Week 6)
+
+Replaces the old "map current views to endpoints" task — the old views are
+going away, so the resources are derived from the domain instead.
+
+- [ ] Enumerate resources from the (merged) models: clubs, races, racecourses,
+      riders, memberships, club roles, user roles, club grades, race staff,
+      race results, pointscores, pointscore tallies, users/auth
+- [ ] One public identifier per concept, applied consistently (rider = `Rider.id`
+      everywhere; no `riderid` meaning `User.id` in one endpoint and a display
+      string in another)
+- [ ] Define representation contracts (read shape, write shape, sparse field
+      set where needed) — never `fields='__all__'`
+- [ ] Define the filter surface as `django-filter` `FilterSet`s (replacing
+      `?select=`/`?count=`/`?prefix=`/`?changed=` with composable, documented
+      query params: `?status=`, `?date_after=`, `?club=`, `?search=`,
+      `?ordering=`, `?updated_after=`)
+- [ ] Define domain operations as explicit actions, not serializer hacks:
+      `POST /races/{id}/results/`, `POST /races/bulk/`,
+      `POST /pointscores/{id}/recalculate/`, `POST /clubs/{slug}/officials/allocate/`,
+      `POST /memberships/validate/`, `GET /races/{id}/results.woff`-style exports
+- [ ] Publish the OpenAPI spec **before** implementing, and generate the
+      TypeScript client from it (`openapi-typescript` / `orval`) so Django and
+      React cannot drift
+- [ ] Salvage the existing result-upload payload contract
+      (`{race, riders[], entries[]}` with temporary `"ID…"` rider keys and a
+      `ridermap` response) — it is shared with the race-sheet/desktop workflow
+- [ ] Mine `tests/testapi.py` (790 lines) for behavioural requirements before it
+      is replaced
+
+**Success Criteria:**
+- Written contract covering 100% of the operations the React screens in Phase 3
+  need
+- OpenAPI spec committed and served; generated TS client compiles against it
+
+### 2.2 Authentication (Week 7)
+
+- [ ] `djangorestframework-simplejwt` with access + refresh endpoints
+- [ ] Register, password reset (request + confirm), profile read/patch
+- [ ] Logout / token blacklist or short-lived access + rotating refresh
+- [ ] allauth → JWT for the social/session path; keep session auth for `/admin/`
+      only
+- [ ] Fix the token-auth defects carried over: unknown email must return 401 (not
+      500), and a user without a `Rider` must not 500 on `user.rider.club`
+- [ ] CORS scoped to the frontend origin (replace `CORS_ALLOW_ALL_ORIGINS` +
+      GET-only `CORS_URLS_REGEX` with credential-aware config)
+
+**Recommended packages:** `djangorestframework-simplejwt`, optionally
+`dj-rest-auth`.
+
+**Success Criteria:** every auth endpoint tested, including the failure paths
+that currently 500.
+
+### 2.3 Core CRUD Implementation (Weeks 8-10)
+
+**Code structure:**
 ```
 races/apps/cabici/
+  models.py                  # merged domain models (2.0)
+  services/                  # domain operations (2.0)
+    __init__.py
+    ingest.py
+    results.py
+    pointscore.py
+    officials.py
+    membership.py
   api/
     __init__.py
+    routers.py               # DefaultRouter wiring for /api/v1/
+    pagination.py
+    permissions.py           # capability + role driven (C3)
+    filters/
+      __init__.py
+      race.py
+      rider.py
+      results.py
     serializers/
       __init__.py
       club.py
       race.py
       rider.py
+      membership.py
       results.py
+      pointscore.py
     views/
       __init__.py
       club.py
       race.py
       rider.py
+      membership.py
       results.py
-    filters.py
-    permissions.py
-    pagination.py
+      pointscore.py
+      auth.py
 ```
-
-**Success Criteria:**
-- All CRUD operations available via API
-- Proper permissions enforced
-- Comprehensive test coverage (>80%)
-- API documentation generated
-
-### 2.3 Authentication Modernization (Week 11)
 
 **Tasks:**
-- [ ] Implement JWT authentication alongside session auth
-- [ ] Add refresh token endpoint
-- [ ] Update CustomAuthToken to return JWT
-- [ ] Implement user registration endpoint
-- [ ] Add password reset via API
-- [ ] Maintain allauth integration for social auth
-- [ ] Add CORS configuration for frontend
-
-**Recommended Packages:**
-- `djangorestframework-simplejwt`
-- `dj-rest-auth` (for common auth endpoints)
-
-**Endpoints:**
-```
-POST   /api/auth/login/
-POST   /api/auth/logout/
-POST   /api/auth/register/
-POST   /api/auth/token/refresh/
-POST   /api/auth/password/reset/
-POST   /api/auth/password/reset/confirm/
-GET    /api/auth/user/
-PATCH  /api/auth/user/
-```
-
-### 2.4 API Documentation (Week 12)
-
-**Tasks:**
-- [ ] Set up drf-spectacular or drf-yasg for OpenAPI/Swagger
-- [ ] Add docstrings to all API views
-- [ ] Document request/response examples
-- [ ] Generate interactive API documentation
-- [ ] Create Postman/Insomnia collection
+- [ ] ViewSets + `DefaultRouter` under `/api/v1/` (no hand-wired URL pairs)
+- [ ] Explicit serializer fields for every resource; write shapes separated from
+      read shapes
+- [ ] `select_related` / `prefetch_related` on every queryset (C11)
+- [ ] Pagination on every list endpoint, uniform defaults (200/1000 lifted from
+      `StandardResultsSetPagination`)
+- [ ] Permission classes from 2.0/C3 applied uniformly — including the result
+      uploader, which currently has none
+- [ ] `transaction.atomic()` around every multi-row write
+- [ ] Schema annotations (`drf-spectacular`) on each viewset/action as it lands
+- [ ] Delete `api.py` once coverage is complete (single commit, no shim)
 
 **Success Criteria:**
-- Interactive API docs at `/api/docs/`
-- OpenAPI 3.0 schema generated
-- All endpoints documented with examples
+- All CRUD operations available via API with tests for permissions, filtering,
+  pagination and error shapes
+- No endpoint reachable by an unauthenticated write; no 500s on expected client
+  errors (400/401/403/404/409 instead)
+- >80% coverage on `api/` and `services/`
+
+### 2.4 API Documentation (Week 11)
+
+- [ ] `drf-spectacular` generating OpenAPI 3.x from annotations
+- [ ] Interactive docs at `/api/docs/`, schema at `/api/schema/`
+- [ ] Postman/Insomnia collection generated from the schema
+- [ ] Usage guide covering auth flow, filtering, pagination, error envelope,
+      result upload and the export endpoints
+- [ ] Regenerate the TypeScript client from the final spec
+
+**Success Criteria:** interactive docs; every endpoint documented with examples.
+
+### 2.5 Test Suite Rebuild (Week 12)
+
+- [ ] Per-resource endpoint tests (CRUD, filters, pagination, permissions)
+- [ ] Service-layer tests for result upload, bulk race creation, official
+      allocation, pointscore recalculation, membership validation
+- [ ] Contract test: generated TS client types match the served schema
+- [ ] Achieve >80% coverage; raise `fail_under` in `pyproject.toml` in step
+      (42 → 60 → 80) so the gate ratchets rather than leaping
+
+**Success Criteria:** all tests passing, >80% coverage enforced in CI.
 
 ---
 

@@ -62,13 +62,14 @@ Production (master branch)     Development (modernization branch)
 
 **Output:** Modern Django 5.2 foundation
 
-### Phase 2: Backend API (Weeks 5-12)
-**What:** Complete the REST API
-- Build all missing API endpoints
+### Phase 2: Backend API Rebuild (Weeks 5-12)
+**What:** Replace the ad-hoc API with a contract-first `/api/v1/`
+- Harden the models first (defects, DB constraints, `services/` extraction)
+- Define resources + OpenAPI contract before implementing
+- Build all endpoints as ViewSets with explicit serializers and filters
 - Implement JWT authentication
-- Add filtering, search, pagination
-- Generate API documentation (OpenAPI/Swagger)
-- Write comprehensive tests
+- Generate TypeScript client from the schema
+- Write comprehensive tests, then delete the legacy `api.py`
 
 **Output:** Feature-complete REST API
 
