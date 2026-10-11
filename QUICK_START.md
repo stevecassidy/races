@@ -110,11 +110,14 @@ python bin/develop.py test
 **Milestone:** Modern Django 5.2 with clean dependencies ✅
 
 ### Month 2-3 (Weeks 5-12): Backend API Rebuild
-- **Week 5:** Model hardening (defects, constraints, services extraction)
-- **Week 6:** Resource model + OpenAPI contract (publish before implementing)
-- **Week 7:** JWT authentication
-- **Week 8-10:** Core CRUD as ViewSets under `/api/v1/`
-- **Week 11:** API documentation + generated TypeScript client
+- **Week 5:** Retirement pass (ingest, withdrawn AusCycling polling, dead import
+  paths) + model hardening
+- **Week 6:** Race-day contract design (frozen external client) + resource model
+  and OpenAPI contract
+- **Week 7:** Publish contract, generate TypeScript client
+- **Week 8:** JWT authentication (token auth retained for the entry app)
+- **Week 9-10:** Core CRUD as ViewSets under `/api/v1/`
+- **Week 11:** API documentation
 - **Week 12:** API test suite; delete legacy `api.py`
 
 **Milestone:** Complete REST API with documentation ✅

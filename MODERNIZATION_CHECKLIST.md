@@ -74,119 +74,159 @@ Known gaps carried into Phase 2:
 - `races/apps/cabici/feeds.py` (iCal/Atom) is still unrouted - decide whether to
   expose it as an API endpoint or drop it. Note `item_link` reverses the removed
   `race` URL name, so it cannot be re-routed as-is (MODEL_REVIEW A3).
-- `usermodel.save_rider()` is a dead Strava social-auth callback.
+- ~~`usermodel.save_rider()` is a dead Strava social-auth callback~~ — deleted in
+  Phase 2.0.
 - Lint debt is quarantined by `per-file-ignores` in `pyproject.toml` for
   `races/ingest/*` (bare excepts that are load-bearing for scraper fallbacks) and
-  `races/apps/cabici/tests/*` (star imports, unused locals). Clear them as those
-  modules are rewritten.
+  `races/apps/cabici/tests/*` (star imports, unused locals). The `races/ingest/*`
+  quarantine disappears when 2.0 deletes the scrapers; the tests one clears as
+  those modules are rewritten.
 - `TIME_ZONE = 'Europe/Helsinki'` in base settings for a NSW racing app -
   unresolved, needs an owner decision (changing it shifts displayed times).
 
 **Phase 2 planning outcome (2026-10-11):** a full review of the model and API
-layers was carried out as part of closing Phase 1. It found seven live model
-defects (one of them a silently broken automatic-ingest path), nine integrity
+layers was carried out as part of closing Phase 1, then revised the same day
+after an owner briefing. It found **nine** live model defects, nine integrity
 gaps and twelve structural issues, and concluded that the existing API should be
-rebuilt rather than adapted. See
-[MODEL_REVIEW.md](MODEL_REVIEW.md); the task lists below reflect it.
+rebuilt rather than adapted — with one exception, the race-day upload contract,
+which has an external client. Four defects are resolved by retiring the code they
+live in. See [MODEL_REVIEW.md](MODEL_REVIEW.md); the task lists below reflect it.
+
+Briefing facts that changed the plan:
+
+- All **ingest pipelines are out of date** → deleted in 2.0, not repaired
+- **AusCycling membership polling is withdrawn**, pending a new provider →
+  deleted in 2.0; membership categories to be redesigned around the new system
+- **WMCC is the only client club** → no multi-tenancy design; the hardcoded
+  pointscale becomes data rather than a bug
+- The **race-day entry app is the only rider-creation path**, and it is external
+  to this repo → its contract is frozen until it is retired
 
 ## ✅ Phase 2: Backend API Rebuild (Weeks 5-12)
 
-> **Decision (2026-10-11): `api.py` is scrapped, not adapted.** Evidence, the cost
-> comparison, and the list of what to salvage are in
-> [MODEL_REVIEW.md](MODEL_REVIEW.md). Model hardening (2.0) runs first because the
-> API surface follows the domain model, and two model defects (A1 pointscore
-> config, A2 inverted membership choices) change API responses if deferred.
+> **Decisions (2026-10-11):**
+> 1. `api.py` is **scrapped, not adapted** — but one endpoint is a **frozen
+>    external contract** (see 2.2).
+> 2. A **retirement pass comes first**: the ingest pipelines, the withdrawn
+>    AusCycling polling and the dead import paths are deleted, not repaired, which
+>    resolves four of the nine model defects by removal.
+> 3. **WMCC is the only client club** — do not design for multi-tenancy.
+>
+> Evidence for all of it: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
-### 2.0 Model Hardening (Week 5)
+### 2.0 Retirement Pass (Week 5)
+- [ ] Delete `races/ingest/` + commands `ingest`, `csvingest`, `harvestclubs`,
+      `loadusers`, `wmccimport` (out-of-date pipelines, ≈ 1,145 lines)
+- [ ] Delete the withdrawn AusCycling polling: `auscycling.py`,
+      `validate_memberships.py`, `Club.validate_membership()`, the 3 `Club`
+      credential fields and 2 `Membership` validation fields (closes C9)
+- [ ] Delete `Race.load_excel_results()` (only callers are 4 tests),
+      `RiderManager.update_from_tidyhq_spreadsheet()` (tidyhq already removed),
+      `parse_img_members()`, `IMG_MAP`, `save_rider()`, `RaceResult.pointscores()`
+      (closes A4, A5, A6)
+- [ ] Delete dead schema: `RacePrototype`, `Club.icalurl`, `Club.icalpatterns`
+      (closes C4); drop the now-empty `ClubManager`/`RaceCourseManager` (sole users
+      of `ngram`)
+- [ ] Delete dead tests: `testingest.py`, `imgsampledict.py`, 7 VCR cassettes
+      (closes A7)
+- [ ] Drop dependencies: `icalendar`, `ngram`, `beautifulsoup4`, `requests`,
+      `vcrpy`, `pytz` — each verified used only by code deleted in this pass
+- [ ] **Hold** `pyexcel`/`pyexcel-xls`/`openpyxl` — the rider XLS export is part of
+      the live race-day contract
+- [ ] **Keep, move to `services/`**: pointscore score/tally/recalculate,
+      `tally_pointscores`, `fix_small_races`, official allocation, promotion and
+      performance reports, `classification`, export builders
 
-**Tier A — defects:**
-- [ ] A1: `PointScore.score()` ignores its own points/participation/method config
-      (hardcoded WMCC values) — wire up the config, test a non-default scale
-      *(owner decision pending)*
-- [ ] A2: `MEMBERSHIP_CATEGORY_CHOICES` is inverted (value/label swapped) + data
-      migration to normalise capitalised values
-- [ ] A3: `Race.get_absolute_url()` / `Rider.get_absolute_url()` reverse removed URL
-      names → admin "View on site" 500s
-- [ ] A4: delete `RaceResult.pointscores()` (references non-existent relation)
-- [ ] A5: parenthesise the PEP-758 `except ValueError, Rider.DoesNotExist:` form
-- [ ] A6: **`Club.ingest_ical()` raises `TypeError` on every race** — constructs
-      `Race(time=…)`; the field is `starttime`. Silently breaks automatic race
-      ingestion (`ingest` command swallows it per club). Verify production
-      `icalurl` usage
-- [ ] A7: re-enable the ingest test suite (`testingest.IngestTests` does not
-      subclass `TestCase`, so 0 tests collect and 7 VCR cassettes are unused)
-
-**Tier B — database integrity (one additive migration):**
+### 2.1 Model Hardening (Weeks 5-6)
+- [ ] A1: wire `PointScore.score()` to its own config fields; WMCC scale becomes
+      data (behaviour unchanged for the only club) *(confirm)*
+- [ ] A1b: delete `PointScore.method` (LACC never existed in code)
+- [ ] A2: fix the inverted `MEMBERSHIP_CATEGORY_CHOICES` **in the same migration**
+      that adopts the new AusCycling categories — migrate once, not twice
+- [ ] A3: fix or drop `Race`/`Rider.get_absolute_url()` (admin "View on site" 500s)
+- [ ] **Membership redesign** (new, from the briefing): capture AusCycling's new
+      category set *(blocked on the new provider's spec)*, replace the values,
+      fix `Rider.current_membership` to select by category (C10)
 - [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
       category, date)`, `ClubGrade(rider, club)`, `UserRole(user, club, role)`,
-      `PointscoreTally(pointscore, rider)`, `Race.hash`
+      `PointscoreTally(pointscore, rider)` — `Race.hash` moot after 2.0
 - [ ] Replace the `ClubGrade.save()` Python uniqueness override with a constraint
-- [ ] Conditional uniqueness for bib numbers, then delete the three
-      "increment to avoid clash" workarounds
+- [ ] Conditional uniqueness for bib numbers, then delete the "increment to avoid
+      clash" workaround in `api.py` (the others went with 2.0)
 - [ ] Indexes on `Race(date, status)` and pointscore ordering columns
 - [ ] Verify no duplicate data against a production copy before applying
-
-**Tier C — structure:**
 - [ ] C1: merge `usermodel.py` into `models.py` (removes 6 circular imports)
-- [ ] C2: extract `services/` (ingest, results, pointscore, officials, membership
-      validation, exports) with `transaction.atomic()` at operation boundaries
-- [ ] C3: one authorization model (capability flags + roles) expressed as reusable
-      permission classes
-- [ ] C5/C6: resolve free-text pseudo-structures (`Race.grading`, comma-string
-      points, `Rider.commissaire`) and the `place` 0-vs-NULL / `dob` 1970 sentinels
-- [ ] C7/C8: fix `Rider.current_membership` category filtering; make delta
-      timestamps explicit
-- [ ] C9: guarantee `Club.auscycling_client_secret` is never serialized
-- [ ] C4: decide `RacePrototype` / `Race.grading` — delete or use
+- [ ] C2: extract `services/` (results, pointscore, officials, exports)
+- [ ] C3: **simplified** — permissions answer "official of the owning club?";
+      keep the schema, do not build a general RBAC engine
+- [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen
+      renders); resolve `place` 0-vs-NULL and `dob` 1970-01-01 sentinels; give
+      `Rider.commissaire` a real boolean or drop its `"0"` sentinel
+- [ ] C8: make `Rider.updated` delta tracking explicit
 - [ ] C11/C12: eliminate N+1 paths and normalise `Club.statistics()`
 
-### 2.1 Resource Model & API Contract (Week 6)
-- [ ] Derive resources from the domain (not from the old views)
+### 2.2 The Race-Day Contract (Week 6) ⚠️ highest priority
+- [ ] **Decide the entry app's fate** — rewritten in React (contract negotiable,
+      token auth + XLS export can go) or kept external (contract frozen).
+      Highest-leverage open decision in the project
+- [ ] Reproduce `POST /races/{id}/results/` byte-compatibly if external:
+      `{race, entries[], riders[]}` → `{message, errors, ridermap}`
+- [ ] A8: honour `member_category` from the payload — `api.py:694,757` hardcode
+      `category="race"` and silently drop the client's value; no test covers it
+- [ ] A9: resolve the `grade_change` mismatch (`== "y"` vs JSON booleans) — if the
+      live client sends booleans, in-race promotions have never applied
+- [ ] `transaction.atomic()` around the delete-then-reinsert
+- [ ] Apply a permission class (the endpoint currently has none, so any
+      authenticated user can overwrite any race's results)
+- [ ] Preserve the `ridermap` temporary-ID mechanism
+- [ ] Replacement for `GET /clubs/<slug>/riders.xlsx` (already unrouted on this
+      branch), or confirm it retires with the app
+- [ ] Turn `tests/result-upload.json` + `testapi.py` upload tests into the
+      executable specification
+
+### 2.3 Resource Model & API Contract (Week 7)
+- [ ] Derive remaining resources from the domain (not from the old views)
 - [ ] One consistent public identifier per concept (rider = `Rider.id` everywhere)
 - [ ] Explicit read/write serializer shapes; never `fields='__all__'`
 - [ ] `django-filter` FilterSets replacing `?select=` / `?count=` / `?prefix=` /
-      `?changed=`
-- [ ] Domain operations as explicit actions (`POST /races/{id}/results/`,
-      `POST /races/bulk/`, `POST /pointscores/{id}/recalculate/`, …)
+      `?changed=` (delta sync becomes `?updated_after=` + `ETag`)
+- [ ] Domain operations as explicit actions (`POST /races/bulk/`,
+      `POST /pointscores/{id}/recalculate/`,
+      `POST /clubs/{slug}/officials/allocate/`)
 - [ ] Publish OpenAPI before implementing; generate the TypeScript client from it
-- [ ] Salvage the existing result-upload payload contract (shared with the
-      race-sheet/desktop workflow)
-- [ ] Mine `tests/testapi.py` for behavioural requirements before replacing it
 
-### 2.2 Authentication (Week 7)
-- [ ] Install djangorestframework-simplejwt
-- [ ] JWT access + refresh endpoints
+### 2.4 Authentication (Week 8)
+- [ ] Install djangorestframework-simplejwt; JWT access + refresh endpoints
 - [ ] Register / password reset / profile endpoints
 - [ ] allauth → JWT; session auth for `/admin/` only
 - [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
       must not 500
 - [ ] Scope CORS to the frontend origin (replace allow-all + GET-only)
-- [ ] Test authentication flow including failure paths
+- [ ] **Keep DRF token auth** until the race-day entry app is retired (per 2.2)
 
-### 2.3 Core CRUD Implementation (Weeks 8-10)
+### 2.5 Core CRUD Implementation (Weeks 9-10)
 - [ ] ViewSets + routers under `/api/v1/` (no hand-wired URL pairs)
 - [ ] Serializers with explicit fields; write shapes separated from read shapes
 - [ ] `select_related` / `prefetch_related` on every queryset
 - [ ] Pagination on every list endpoint
-- [ ] Permission classes applied uniformly — including the result uploader, which
-      currently has none
+- [ ] Permission classes applied uniformly
 - [ ] `transaction.atomic()` around every multi-row write
 - [ ] Custom actions for domain operations, backed by services
-- [ ] Delete `api.py` once the new package covers the surface (single commit)
 
-### 2.4 API Documentation (Week 11)
-- [ ] Install drf-spectacular
-- [ ] Add schema annotations to every view/action
+### 2.6 API Documentation (Week 11)
+- [ ] Install drf-spectacular; annotate every view/action
 - [ ] Generate OpenAPI schema + interactive docs at `/api/docs/`
 - [ ] Create Postman collection from the schema
 - [ ] Regenerate the TypeScript client from the final spec
 - [ ] Write API usage guide
 
-### 2.5 Test Suite Rebuild (Week 12)
+### 2.7 Test Suite Rebuild & Retirement of api.py (Week 12)
 - [ ] Per-resource endpoint tests (CRUD, filters, pagination, permissions, errors)
-- [ ] Service-layer tests for upload / bulk create / allocation / recalculation
+- [ ] Service-layer tests for the race-day upload, bulk create, allocation,
+      pointscore recalculation
 - [ ] Contract test: generated TS types match the served schema
-- [ ] Achieve >80% coverage; ratchet `fail_under` in stages (42 → 60 → 80)
+- [ ] Achieve >80% coverage; ratchet `fail_under` (42 → 60 → 80)
+- [ ] **Delete `api.py`** and its hand-wired URL pairs in one commit
 
 ## ✅ Phase 3: React Frontend (Weeks 13-28)
 

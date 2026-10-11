@@ -12,3 +12,5 @@ races/staticfiles/
 *.sqlite3
 .env.dev
 races_development.*
+.pgpass
+nginx.conf

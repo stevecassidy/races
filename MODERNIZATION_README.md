@@ -67,11 +67,28 @@ Transform the Cabici cycling application into a modern, maintainable system:
 
 Phase 2 does **not** extend `races/apps/cabici/api.py`. That API grew ad-hoc
 around specific jQuery screens (per-view query params, inconsistent rider
-identifiers, `fields='__all__'` writes, an unpermissioned result uploader, no
-schema or versioning) and its only clients are deleted in Phase 4. It is
-replaced by a contract-first `/api/v1/` generated from an OpenAPI spec, with the
-model layer hardened first. Rationale and evidence:
-[MODEL_REVIEW.md](MODEL_REVIEW.md).
+identifiers, `fields='__all__'` writes, no schema or versioning) and its in-repo
+clients are deleted in Phase 4. It is replaced by a contract-first `/api/v1/`
+generated from an OpenAPI spec, with the model layer hardened first. Rationale
+and evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
+
+**One exception, and it is the most important thing in Phase 2.** The API does
+have a live external consumer: the **race-day entry application**, which is not in
+this repository and is currently the only way to add riders. Its loop is token
+auth → `GET /clubs/<slug>/riders.xlsx` → `POST /api/raceresults/`. That contract
+is **frozen** until the app is retired or rewritten (an open decision), so Phase 2
+designs it first and rebuilds everything else around it.
+
+### Key Decision: retire before rebuilding
+
+The owner briefing established that the **ingest pipelines are out of date** and
+that **AusCycling membership polling has been withdrawn**, pending a new API
+provider. Phase 2 therefore opens with a retirement pass — roughly 2,400 lines
+and six dependencies — which resolves four of the nine model defects by removal
+rather than repair. **WMCC is the only client club**, so the API must not be
+designed for multi-tenancy, and the hardcoded pointscale becomes data instead of
+a bug. Membership categories are to be redesigned around the new AusCycling
+system once its spec lands.
 
 ## 🔑 Key Principles
 
@@ -265,8 +282,9 @@ Phase 1 (Foundation) is complete. From here:
 1. ✅ **Read this README** - You're here!
 2. ⬜ **Scan [MODERNIZATION_SUMMARY.md](MODERNIZATION_SUMMARY.md)** - Understand the plan
 3. ⬜ **Read the Phase 1 Exit Notes** in [MODERNIZATION_CHECKLIST.md](MODERNIZATION_CHECKLIST.md) - what works, what's owed
-4. ⬜ **Read [MODEL_REVIEW.md](MODEL_REVIEW.md)** — why the API is being rebuilt and what the models need
-5. ⬜ **Start Phase 2.0** — model hardening, then the API contract
+4. ⬜ **Read [MODEL_REVIEW.md](MODEL_REVIEW.md)** — why the API is being rebuilt,
+   what the models need, and the frozen race-day contract
+5. ⬜ **Start Phase 2.0** — the retirement pass, then model hardening
 6. ⬜ **Track progress** — Use the checklist daily
 
 ```bash

@@ -92,14 +92,16 @@ Check [MODERNIZATION_CHECKLIST.md](../MODERNIZATION_CHECKLIST.md) for current ph
 **Phases:**
 
 1. Foundation & Django Upgrade (Weeks 1-4) — ✅ complete 2026-10-11
-2. Backend API Rebuild (Weeks 5-12) — **current**; starts with model hardening
+2. Backend API Rebuild (Weeks 5-12) — **current**; starts with a retirement pass
 3. React Frontend Development (Weeks 13-26)
 4. Integration & Deployment (Weeks 27-32)
 5. Optimization (Weeks 33-38)
 
-Phase 2 begins at **2.0 Model Hardening**, before any API code. The findings it
-acts on (A1-A5 defects, B1-B9 integrity, C1-C12 structure) are numbered in
-[MODEL_REVIEW.md](../MODEL_REVIEW.md).
+Phase 2 runs **2.0 Retirement Pass** (delete the out-of-date ingest pipelines and
+the withdrawn AusCycling polling — ~2,400 lines) → **2.1 Model Hardening** →
+**2.2 The Race-Day Contract** (the one frozen external contract, designed before
+the general API). Findings it acts on (A1-A9 defects, B1-B9 integrity, C1-C12
+structure) are numbered in [MODEL_REVIEW.md](../MODEL_REVIEW.md).
 
 ## Important Notes
 
@@ -166,10 +168,15 @@ The pre-existing `races/apps/cabici/api.py` was built ad-hoc for the jQuery
 screens and is **replaced, not extended** (rationale and evidence:
 [MODEL_REVIEW.md](../MODEL_REVIEW.md)). When building the new API:
 
+- **The race-day contract is frozen.** The external race-day entry application
+  (not in this repo) authenticates with a DRF token, downloads
+  `GET /clubs/<slug>/riders.xlsx`, and posts `POST /api/raceresults/` with
+  `{race, entries[], riders[]}` expecting `{message, errors, ridermap}`. It is
+  the app's only rider-creation path. Reproduce it compatibly until it is
+  formally retired — do **not** treat it as free to redesign.
 - **Contract-first.** Define the resource, filters and payload shapes in the
   OpenAPI spec before implementing; the React client is generated from it.
-- **Never `fields = '__all__'`.** Declare read and write shapes explicitly —
-  `Club.auscycling_client_secret` must never be serializable.
+- **Never `fields = '__all__'`.** Declare read and write shapes explicitly.
 - **One identifier per concept.** A rider is `Rider.id` everywhere (the old API
   used `Rider.id`, `User.id` and a display string interchangeably under the same
   key names).
@@ -179,6 +186,12 @@ screens and is **replaced, not extended** (rationale and evidence:
   `transaction.atomic()`, permission-checked, and tested for their failure paths.
 - **No 500s for expected client errors.** Unknown email → 401, missing Rider →
   403, bad payload → 400, duplicate → 409.
+- **Single tenant.** WMCC is the only client club. Do not design generic
+  multi-club RBAC; permissions answer “is this an official of the club that owns
+  this object?”.
+- **Retired subsystems.** The ingest pipelines and AusCycling membership polling
+  are deleted in Phase 2.0. Never add new code that reaches for them; the
+  replacement membership provider is TBD.
 
 ### API Pattern
 
