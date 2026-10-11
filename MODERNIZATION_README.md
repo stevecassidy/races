@@ -151,8 +151,9 @@ system once its spec lands.
 ## 🔑 Key Principles
 
 ### Development Branch Strategy
-- All work on `modernization` branch
-- Production stays stable on `master`
+- One branch per change, merged to `modernization` by reviewed pull request
+- `modernization` never receives direct commits — it is the integration branch
+- Production stays stable on `master` (hotfix branches + PR only)
 - Single deployment when complete
 - No backward compatibility concerns during development
 
@@ -277,11 +278,20 @@ checks gated in CI. See "Phase 1 Exit Notes" in
 
 ### Workflow
 
-1. Work on `modernization` branch or feature branches
-2. Make small, focused commits
+1. Branch off `modernization` (`feature/…`, `fix/…`, `chore/…`, `refactor/…`, `docs/…`)
+2. Make small, focused commits — one logical change each
 3. Write tests for new code
-4. Run code quality tools
-5. Push regularly
+4. Run the quality gates: `ruff check .`, `black --check .`, `mypy races`,
+   `python bin/runtests.py`
+5. Push the branch and open a PR targeting `modernization`
+6. Wait for CI, then for review — **the owner merges**
+
+```bash
+git checkout modernization && git pull
+git checkout -b chore/phase2.1-model-constraints
+# ... work ...
+git push -u origin HEAD
+```
 
 ### Code Quality
 

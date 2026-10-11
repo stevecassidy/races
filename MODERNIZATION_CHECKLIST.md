@@ -2,7 +2,16 @@
 
 This is a condensed checklist version of the full modernization plan. Use this for quick tracking of progress.
 
-**Development Approach:** All work is done on a development branch. Production remains stable until final deployment when complete.
+**Development Approach:** Work happens on short-lived branches cut from
+`modernization`, each landing as a reviewed pull request. `modernization` is the
+integration branch and is never committed to directly. Production remains stable
+on `master` until final deployment when complete. See
+[MODERNIZATION_PLAN.md](MODERNIZATION_PLAN.md) → Branch Strategy for the loop and
+naming convention.
+
+> **Adopted 2026-10-12.** Phase 1 and the 2.0 retirement pass (`c6e89b0`) are
+> already on `modernization` from before this rule existed. Everything from 2.1
+> onward: branch → PR → review → merge.
 
 ## ✅ Phase 1: Foundation (Weeks 1-4)
 
@@ -104,6 +113,11 @@ Briefing facts that changed the plan:
 
 ## ✅ Phase 2: Backend API Rebuild (Weeks 5-12)
 
+Each numbered section below is its own branch and PR: e.g.
+`chore/phase2.1-model-constraints`, `feature/phase2.2-vendor-raceday`,
+`feature/phase2.3-api-contract`. Split further when a section is too large to
+review in one sitting.
+
 > **Decisions (2026-10-11, third revision):**
 > 1. `api.py` is **scrapped, not adapted**.
 > 2. A **retirement pass comes first**: the ingest pipelines, the withdrawn
@@ -124,26 +138,26 @@ Briefing facts that changed the plan:
 > Evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
 ### 2.0 Retirement Pass (Week 5)
-- [ ] Delete `races/ingest/` + commands `ingest`, `csvingest`, `harvestclubs`,
+- [x] Delete `races/ingest/` + commands `ingest`, `csvingest`, `harvestclubs`,
       `loadusers`, `wmccimport` (out-of-date pipelines, 1,029 lines)
-- [ ] Delete the withdrawn AusCycling polling: `auscycling.py`,
+- [x] Delete the withdrawn AusCycling polling: `auscycling.py`,
       `validate_memberships.py`, `Club.validate_membership()`, the 3 `Club`
       credential fields and 2 `Membership` validation fields (closes C9)
-- [ ] Delete `Race.load_excel_results()` (only callers are 4 tests),
+- [x] Delete `Race.load_excel_results()` (only callers are 4 tests),
       `RiderManager.update_from_tidyhq_spreadsheet()` (tidyhq already removed),
       `parse_img_members()`, `IMG_MAP`, `save_rider()`, `RaceResult.pointscores()`
       (closes A4, A5, A6)
-- [ ] Delete dead schema: `RacePrototype`, `Club.icalurl`, `Club.icalpatterns`
+- [x] Delete dead schema: `RacePrototype`, `Club.icalurl`, `Club.icalpatterns`
       (closes C4); drop the now-empty `ClubManager`/`RaceCourseManager` (sole users
       of `ngram`)
-- [ ] Delete dead tests: `testingest.py`, `imgsampledict.py`, 7 VCR cassettes
+- [x] Delete dead tests: `testingest.py`, `imgsampledict.py`, 7 VCR cassettes
       (closes A7)
-- [ ] Delete the three unreachable export views in `views.py`
+- [x] Delete the three unreachable export views in `views.py`
       (`club_riders_csv_view`, `ClubRidersExcelView`, `RaceSummarySpreadsheet`) —
       already unrouted on this branch, and the React client uses none of them
-- [ ] Drop dependencies: `icalendar`, `ngram`, `beautifulsoup4`, `requests`,
+- [x] Drop dependencies: `icalendar`, `ngram`, `beautifulsoup4`, `requests`,
       `vcrpy`, `pytz` — each verified used only by code deleted in this pass
-- [ ] Also drop `pyexcel`/`pyexcel-xls`/`openpyxl` — the three export views are
+- [x] Also drop `pyexcel`/`pyexcel-xls`/`openpyxl` — the three export views are
       already unrouted on this branch and the live React client uses none of them
 - [ ] **Keep, move to `services/`**: pointscore score/tally/recalculate,
       `tally_pointscores`, `fix_small_races`, official allocation, promotion and
@@ -613,9 +627,9 @@ docker-compose exec web python manage.py shell
 ## Rollback Plans
 
 ### If Django upgrade fails:
-1. Continue on old branch
+1. Continue on the existing branch
 2. Review migration issues
-3. Fix and retry on development branch
+3. Fix and retry on a branch, merged by PR
 
 ### If API development has issues:
 1. Fix issues before frontend integration

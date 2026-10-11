@@ -44,34 +44,62 @@ The current production application remains stable while modernization work happe
 
 ### Branch Strategy
 
+`modernization` is the **integration** branch. It only moves by merging reviewed
+pull requests — no direct commits, from anyone.
+
 ```
 master (production)
-  └── modernization (all development work)
-       ├── feature/django-upgrade
-       ├── feature/api-endpoints
-       ├── feature/react-frontend
-       └── ... (other feature branches as needed)
+  └── modernization (integration: PRs merged in, never committed to directly)
+       ├── chore/phase2.1-model-constraints
+       ├── docs/phase2-planning-notes
+       ├── feature/phase2.3-race-day-contract
+       ├── feature/phase2.5-core-crud
+       └── ... one short-lived branch per unit of work
+```
+
+**The loop for every change:**
+
+```bash
+git checkout modernization && git pull
+git checkout -b <type>/<plan-section-slug>   # feature/ | fix/ | chore/ | refactor/ | docs/
+# ... small, focused commits ...
+ruff check . && black --check . && mypy races && python bin/runtests.py
+git push -u origin HEAD                       # open a PR targeting modernization
 ```
 
 **Key Points:**
-- All modernization work happens on the `modernization` branch or feature branches off it
-- `master` branch remains untouched and production-ready throughout development
+
+- One PR per checklist section, or smaller if the section is large — reviewable
+  beats convenient
+- The assistant prepares the branch, summarises the diff, and **stops at "ready
+  for review"**; the owner reviews and merges
+- CI must pass before review is requested; rebase onto `modernization` if it has
+  moved; force-push only to your own feature branch
+- Branch names reference the plan section so `git log` maps back to the checklist
+- `master` remains untouched and production-ready; critical fixes go through a
+  `hotfix/*` branch and a PR to `master`
 - No need to maintain backward compatibility during development
-- Can make breaking changes freely on development branch
+- Breaking changes are fine **inside a reviewed PR** — review is where the risk
+  gets accepted, not at deploy time
 - Single merge to master when complete and tested
+
+> History note: Phase 1 and the 2.0 retirement pass (`c6e89b0`) were committed
+> directly to `modernization` before this workflow was adopted. From 2.1 onward,
+> everything lands as a PR.
 
 ### Development Environment
 
-Developers work on the `modernization` branch with:
+Developers work on short-lived branches cut from `modernization`, with:
 - Local Django development server
 - Local React development server (Vite)
 - SQLite or local PostgreSQL for development
-- Can freely experiment and refactor
+- Freedom to experiment and refactor — nothing reaches `modernization` until the
+  PR is reviewed and CI is green
 
 ### Testing Strategy
 
 **During Development:**
-- Unit tests run on each commit (CI)
+- Unit tests run on every commit and every PR (CI)
 - Integration tests for completed features
 - No need to test against production environment
 
@@ -85,7 +113,7 @@ Developers work on the `modernization` branch with:
 ### Deployment
 
 **Single Cutover Approach:**
-1. Complete all phases on development branch
+1. Complete all phases as merged PRs on the integration branch
 2. Full integration testing
 3. Merge `modernization` → `master`
 4. Deploy to production
@@ -1234,7 +1262,8 @@ export default api;
 ### Risk: Breaking Existing Functionality
 
 **Mitigation:**
-- Work on development branch; production remains stable
+- Work on feature branches merged to `modernization` by reviewed PR; production
+  remains stable
 - Comprehensive test suite before deployment
 - Full integration testing before production deployment
 - Rollback plan ready (previous Docker image + database backup)
@@ -1286,7 +1315,11 @@ export default api;
 
 *Note: Timeline assumes part-time development (15-20 hours/week). Full-time development could complete in 4-5 months.*
 
-**Development Approach:** All work is done on a `modernization` or `development` branch. Production remains on `master` branch and stays stable throughout development. Once all phases are complete and tested, the new version is merged and deployed to production in a single cutover.
+**Development Approach:** All work is done on short-lived branches merged into
+the `modernization` integration branch by reviewed pull request. Production
+remains on `master` branch and stays stable throughout development. Once all
+phases are complete and tested, the new version is merged and deployed to
+production in a single cutover.
 *Note: Timeline assumes part-time development (15-20 hours/week). Full-time development could complete in 5-6 months.*
 
 ### Infrastructure Costs

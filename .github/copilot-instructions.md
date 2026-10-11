@@ -24,11 +24,49 @@ for verified state and carried-forward debt.
 
 ### Development Strategy
 
-- **All modernization work happens on `modernization` branch**
-- **`master` branch stays stable for production**
+- **One branch per change, merged by pull request.** Nothing is committed or
+  pushed directly to `modernization`
+- **`modernization` is the integration branch** — it only advances by merging
+  reviewed PRs
+- **`master` stays stable for production** (critical fixes go via a `hotfix/*`
+  branch and a PR to `master`)
 - **Single deployment when complete** (not incremental)
 - **No backward compatibility needed during development**
 - **The existing `api.py` is being replaced, not extended** — see “API Rules” below
+
+### Branch & Review Workflow
+
+Every unit of work — normally one checklist section, often less — gets its own
+short-lived branch off `modernization` and a PR back into it. The owner reviews
+and merges.
+
+```bash
+# start from an up-to-date integration branch
+git checkout modernization && git pull
+
+# one branch per change: feature/ | fix/ | chore/ | refactor/ | docs/, named for the plan section
+git checkout -b chore/phase2.1-model-constraints
+
+# keep the gates green before pushing
+ruff check . && black --check . && mypy races && python bin/runtests.py
+
+git push -u origin HEAD        # then open a PR targeting modernization
+```
+
+Rules:
+
+- **The assistant proposes work and stops at "PR ready for review"** — it does
+  not merge, close, or push to `modernization`/`master`, and does not open the
+  PR until asked to.
+- Branch names carry the plan section (e.g. `feature/phase2.3-race-day-contract`)
+  so history maps back to the checklist.
+- Small, reviewable PRs: one logical change per commit, and the PR description
+  states what is *behavioural* rather than mechanical.
+- CI must be green before review is requested; rebase onto `modernization` if it
+  has moved. Force-push only to your own feature branch, never to
+  `modernization`.
+- Deleting code is fine; changing model semantics, points maths, membership
+  categories or API contracts is flagged prominently for review.
 
 ## Technology Stack
 
@@ -120,11 +158,16 @@ auth kept until Angular retires) → 2.5 CRUD →
 defects, B1-B9 integrity, C1-C12 structure) are numbered in
 [MODEL_REVIEW.md](../MODEL_REVIEW.md).
 
+**Each numbered section lands as its own branch + PR.** Note that **2.0 already
+merged directly into `modernization` (`c6e89b0`) before this workflow was
+adopted**; everything from 2.1 onward goes through review.
+
 ## Important Notes
 
 ### DO:
 
-✅ Work on `modernization` branch
+✅ Propose a branch off `modernization` and a PR for each change
+✅ Run the gates locally (`ruff`, `black --check`, `mypy`, tests) before pushing
 ✅ Follow the modernization plan
 ✅ Write modern Django 5.2 code
 ✅ Build API endpoints, not template views
@@ -134,6 +177,8 @@ defects, B1-B9 integrity, C1-C12 structure) are numbered in
 
 ### DON'T:
 
+❌ Commit or push directly to `modernization` — branch and open a PR
+❌ Merge a PR, or approve work on your own behalf — the owner reviews and merges
 ❌ Add new template views (we're removing them)
 ❌ Add endpoints to the legacy `races/apps/cabici/api.py` (it is frozen, then deleted)
 ❌ Use `fields = '__all__'` on a serializer

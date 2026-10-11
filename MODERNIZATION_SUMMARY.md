@@ -8,17 +8,19 @@ This is a comprehensive plan to modernize the Cabici cycling application from Dj
 
 ## Key Approach: Development Branch Strategy
 
-**🔑 Core Principle:** Complete modernization on development branch, then deploy all at once.
+**🔑 Core Principle:** Complete modernization on the `modernization` integration
+branch — each change arriving as a **reviewed pull request from its own branch** —
+then deploy all at once.
 
 ```
-Production (master branch)     Development (modernization branch)
-     Stable                           Active Work
+Production (master branch)     Integration (modernization branch)
+     Stable                           Reviewed PRs only
         ↓                                  ↓
    [Users continue                  [Complete all 5
-    using current                    phases here]
-    application]                         ↓
-        ↓                           [Full testing]
-        ↓                                ↓
+    using current                    phases here] ←─┐
+    application]                         ↓          │ feature/… PRs
+        ↓                           [Full testing]  │ branched off
+        ↓                                ↓          ┘ modernization
         ←───────────[Merge & Deploy]─────┘
 ```
 
@@ -36,7 +38,10 @@ Production (master branch)     Development (modernization branch)
 ❌ **No feature flags** - Not switching between versions
 ❌ **No beta testing during development** - All testing before deployment
 ❌ **No maintaining templates** - Can remove Django templates early
-✅ **Work freely** - Make breaking changes without concern
+✅ **Work freely** - Make breaking changes without concern — but on a branch, and
+the PR review is where the risk is formally accepted
+✅ **Everything is reviewed** - `modernization` only advances by merged PRs, so
+no change lands unseen
 
 ## Timeline
 
@@ -253,7 +258,9 @@ A: Current app is stable. Completing everything first allows for more aggressive
 A: Production remains stable. Development can take as long as needed. Buffer time built into schedule.
 
 **Q: Can we add new features during modernization?**
-A: Critical fixes can go to production. New features should wait or go on modernization branch.
+A: Critical fixes can go to production (via a `hotfix/*` branch and a PR to
+`master`). New features go on a branch off `modernization` and land as a reviewed
+PR.
 
 **Q: What happens to the old code?**
 A: Remains in git history. Will be archived/removed from the modernization branch as it's replaced.
@@ -296,4 +303,5 @@ A: Rollback to previous Docker image and database backup. Fix issues, redeploy.
 
 **Questions?** Review the detailed MODERNIZATION_PLAN.md or TECHNICAL_ASSESSMENT.md for more information.
 
-**Ready to start?** Create the development branch and begin Phase 1!
+**Ready for the next change?** Branch off `modernization`, keep the gates green,
+open a PR — see MODERNIZATION_PLAN.md → Branch Strategy.

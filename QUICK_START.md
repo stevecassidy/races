@@ -2,19 +2,29 @@
 
 ## 🚀 Start Here
 
-### 1. Create Development Branch (5 minutes)
+### 1. Start Work on a Branch (2 minutes)
+
+The `modernization` branch already exists and holds all merged work. Do not
+commit to it directly — one branch per change, merged back by reviewed PR.
 
 ```bash
-# Ensure you're on master and up to date
-git checkout master
-git pull origin master
+# sync the integration branch
+git checkout modernization
+git pull origin modernization
 
-# Create modernization branch
-git checkout -b modernization
+# branch for this unit of work (feature/ | fix/ | chore/ | refactor/)
+git checkout -b chore/phase2.1-model-constraints
 
-# Push to remote
-git push -u origin modernization
+# ... make small, focused commits, keep the gates green ...
+ruff check . && black --check . && mypy races && python bin/runtests.py
+
+# publish and open a PR targeting modernization; the owner reviews and merges
+git push -u origin HEAD
+gh pr create --base modernization --fill
 ```
+
+Only critical production fixes skip this flow, and they still go through a
+`hotfix/*` branch with a PR to `master`.
 
 ### 2. Set Up Development Environment (30 minutes)
 
