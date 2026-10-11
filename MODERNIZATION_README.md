@@ -317,6 +317,11 @@ Use clear, descriptive commit messages:
 - "Updates"
 ```
 
+**Attribution:** assistant contributions use an `Assisted by: <model> (<PI_MODEL>
+via <PI_PROVIDER>)` footer naming the model that actually ran — read it from the
+environment, never assumed, and not as a `Co-Authored-By` trailer. See
+`.github/copilot-instructions.md` → Commit & PR attribution.
+
 ## 📖 Additional Resources
 
 ### Django
