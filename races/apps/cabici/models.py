@@ -47,16 +47,18 @@ class Club(models.Model):
     def statistics(self):
         """Return a dictionary of statistics for this club"""
 
-        from .usermodel import Membership, Rider, UserRole
+        from .usermodel import MEMBERSHIP_CATEGORY_RIDE, RACING_CATEGORIES, Membership, Rider, UserRole
 
         today = datetime.date.today()
 
         dd = dict()
         dd["currentmembers"] = Membership.objects.filter(rider__club__exact=self, date__gte=today).count()
-        dd["racemembers"] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category="race").count()
-        dd["ridemembers"] = Membership.objects.filter(rider__club__exact=self, date__gte=today, category="ride").count()
-        dd["nonridingmembers"] = Membership.objects.filter(
-            rider__club__exact=self, date__gte=today, category="non-riding"
+        # racing entitlement covers both racing categories
+        dd["racemembers"] = Membership.objects.filter(
+            rider__club__exact=self, date__gte=today, category__in=RACING_CATEGORIES
+        ).count()
+        dd["ridemembers"] = Membership.objects.filter(
+            rider__club__exact=self, date__gte=today, category=MEMBERSHIP_CATEGORY_RIDE
         ).count()
 
         # roles

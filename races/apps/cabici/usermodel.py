@@ -227,7 +227,23 @@ class Rider(models.Model):
         return info
 
 
-MEMBERSHIP_CATEGORY_CHOICES = (("Ride", "ride"), ("Race", "race"), ("Non-riding", "non-riding"))
+# AusCycling membership categories, as the new provider names them.
+# 'Race' and 'Club' entitle the holder to race; 'Ride' does not.
+# Values are the stored form and must match what the provider exposes.
+# (Replaces the previous tuple, which was inverted - value 'Ride' against label
+# 'ride' - so admin writes were invisible to the category filters; A2.)
+MEMBERSHIP_CATEGORY_RIDE = "Ride"
+MEMBERSHIP_CATEGORY_CLUB = "Club"
+MEMBERSHIP_CATEGORY_RACE = "Race"
+
+MEMBERSHIP_CATEGORY_CHOICES = (
+    (MEMBERSHIP_CATEGORY_RIDE, "Ride"),
+    (MEMBERSHIP_CATEGORY_CLUB, "Club"),
+    (MEMBERSHIP_CATEGORY_RACE, "Race"),
+)
+
+# the categories that permit racing
+RACING_CATEGORIES = (MEMBERSHIP_CATEGORY_RACE, MEMBERSHIP_CATEGORY_CLUB)
 
 
 class Membership(models.Model):
@@ -244,6 +260,12 @@ class Membership(models.Model):
         null=True, blank=True, help_text="Last time membership was validated with AusCycling API"
     )
     validation_error = models.TextField(blank=True, default="", help_text="Last validation error message if any")
+
+    @property
+    def allows_racing(self):
+        """Does this membership category entitle the holder to race?"""
+
+        return self.category in RACING_CATEGORIES
 
     def is_valid_on(self, check_date=None):
         """Check if membership is valid on the given date (default: today)"""
