@@ -367,13 +367,16 @@ Prerequisite for serializers. Referenced items are the findings in
 [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
 
 **Defects (A4–A7 gone with 2.0):**
-- [ ] A1: make `PointScore.score()` read its own `points` / `smallpoints` /
+- [x] A1: `PointScore.score()` reads its own `points` / `smallpoints` /
       `smallthreshold` / `participation` fields instead of the hardcoded WMCC
-      constants; wire up `get_points()` / `get_smallpoints()`; add a test with a
-      non-default configuration. Behaviour is unchanged for WMCC once its scale is
-      stored as data *(confirm)*
-- [ ] A1b: delete `PointScore.method` — it offers `WMCC`/`LACC`, only WMCC exists
-      in code, and LACC was one of the retired scrapers
+      constants. Defaults reproduce the legacy output exactly (existing
+      `test_create` untouched, plus new tests for a custom scale and for the
+      defaults). **Left undone deliberately:** the tiny-field rule (`< 6` riders,
+      winner gets 3) has no config field and is now
+      `TINY_RACE_FIELD`/`TINY_RACE_POINTS` constants — decide whether to make it
+      configurable before a second club onboards
+- [x] A1b: deleted `PointScore.method` (WMCC/LACC, only WMCC ever existed in
+      code) — migration `0018`
 - [ ] A2: **fix now, not deferred** (third revision) — the inverted
       `MEMBERSHIP_CATEGORY_CHOICES` tuple is a live admin bug: writing `'Race'`
       makes a membership invisible to the seven `category="race"` sites. Correct

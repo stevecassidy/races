@@ -81,6 +81,58 @@ class PointscoreTests(TestCase):
         self.assertEqual((3, "Placed 1 in small race < 6 riders"), ps.score(place(1), 3))
         self.assertEqual((2, "Participation, small race < 6 riders"), ps.score(place(2), 3))
 
+    def test_score_uses_configured_scale(self):
+        """A1: score() must follow the pointscore's own configured scale, not a
+        hardcoded WMCC one, so a second club can run its own series."""
+
+        club = Club.objects.get(slug="OGE")
+        self.generate_races(club, 1)
+        race = Race.objects.all()[0]
+        rider1 = Rider.objects.all()[0]
+        result = RaceResult(race=race, rider=rider1, grade="A", usual_grade="A", number=1, place=1)
+        result.save()
+
+        def place(p):
+            result.place = p
+            result.save()
+            return result
+
+        ps = PointScore(
+            club=club,
+            name="Custom",
+            points="10,8,6",
+            smallpoints="4,2",
+            smallthreshold=8,
+            participation=1,
+        )
+
+        self.assertEqual([10, 8, 6], ps.get_points())
+        self.assertEqual([4, 2], ps.get_smallpoints())
+
+        # the configured large-race scale applies, and a configured participation
+        # value replaces the old hardcoded 2
+        self.assertEqual((10, "Placed 1 in race"), ps.score(place(1), 9))
+        self.assertEqual((8, "Placed 2 in race"), ps.score(place(2), 9))
+        self.assertEqual((1, "Participation"), ps.score(place(4), 9))
+
+        # smallthreshold drives both the branch and the reported reason text
+        self.assertEqual((4, "Placed 1 in race <= 8 riders"), ps.score(place(1), 8))
+        self.assertEqual((1, "Participation, race <= 8 riders"), ps.score(place(3), 8))
+
+        # the tiny-field rule still applies below it
+        self.assertEqual((3, "Placed 1 in small race < 6 riders"), ps.score(place(1), 5))
+
+    def test_default_scale_matches_legacy_values(self):
+        """A1 regression guard: with the shipped defaults the configured path
+        must reproduce the numbers the hardcoded WMCC scale used to produce."""
+
+        club = Club.objects.get(slug="OGE")
+        ps = PointScore(club=club, name="Defaults")
+        self.assertEqual([7, 6, 5, 4, 3], ps.get_points())
+        self.assertEqual([5, 4], ps.get_smallpoints())
+        self.assertEqual(12, ps.smallthreshold)
+        self.assertEqual(2, ps.participation)
+
     def test_points(self):
         """Getting points for a race result"""
 

@@ -347,7 +347,12 @@ class RaceResult(models.Model):
     dnf = models.BooleanField("DNF", default=False)
 
 
-POINTSCORE_METHODS = (("WMCC", "WMCC"), ("LACC", "LACC"))
+# A grade field smaller than this races for a fixed amount rather than the
+# configured scale. Unlike points/smallpoints/smallthreshold/participation these
+# two have no PointScore field (MODEL_REVIEW.md A1): a residual WMCC rule that
+# would need a migration and admin/UI work to become configurable.
+TINY_RACE_FIELD = 6
+TINY_RACE_POINTS = 3
 
 
 class PointScore(models.Model):
@@ -367,7 +372,6 @@ class PointScore(models.Model):
     smallthreshold = models.IntegerField("Small Race Threshold", default=12)
     participation = models.IntegerField("Points for participation", default=2)
     races = models.ManyToManyField(Race, blank=True)
-    method = models.CharField("Pointscore Method", default="WMCC", choices=POINTSCORE_METHODS, max_length=10)
 
     def __str__(self):
         return str(str(self.club) + " " + self.name)
@@ -379,16 +383,18 @@ class PointScore(models.Model):
         return self.races.filter(date__gt=startdate).count() > 0
 
     def score(self, result, numberriders):
-        """Calculate the points for this placing
-        according to the Waratah CC pointscore rules
+        """Calculate the points for this placing using this pointscore's own
+        configured scale (`points`, `smallpoints`, `smallthreshold`,
+        `participation`), so each series can define its own rules.
 
         Return a tuple: (points, reason)
         where reason is a string explaining the score
         """
 
-        points = [7, 6, 5, 4, 3]
-        smallpoints = [5, 4]
-        participation = 2
+        points = self.get_points()
+        smallpoints = self.get_smallpoints()
+        participation = self.participation
+        smallthreshold = self.smallthreshold
         # is the rider eligible for promotion or riding down a grade
         promote = result.race.club.promotion(result.rider, when=result.race.date)
 
@@ -398,15 +404,18 @@ class PointScore(models.Model):
             return participation, "Rider eligible for promotion"
         if result.grade > result.usual_grade:
             return participation, "Riding below normal grade"
-        if numberriders < 6:
-            # only 3 points to the winner
+        if numberriders < TINY_RACE_FIELD:
+            # a field this small races for a fixed amount
             if result.place == 1:
-                return 3, "Placed 1 in small race < 6 riders"
-            return participation, "Participation, small race < 6 riders"
-        if numberriders <= 12:
+                return TINY_RACE_POINTS, "Placed 1 in small race < %d riders" % TINY_RACE_FIELD
+            return participation, "Participation, small race < %d riders" % TINY_RACE_FIELD
+        if numberriders <= smallthreshold:
             if result.place - 1 < len(smallpoints):
-                return smallpoints[result.place - 1], "Placed %s in race <= 12 riders" % result.place
-            return participation, "Participation, race <= 12 riders"
+                return (
+                    smallpoints[result.place - 1],
+                    "Placed %s in race <= %d riders" % (result.place, smallthreshold),
+                )
+            return participation, "Participation, race <= %d riders" % smallthreshold
         else:
             if result.place - 1 < len(points):
                 return points[result.place - 1], "Placed %s in race" % result.place
