@@ -9,8 +9,10 @@ name: CI
 on:
   push:
     branches: ["modernization", "master"]
+  # No branch filter here on purpose: stacked branches (a PR whose base is
+  # another open feature branch, e.g. the A1/A2 chain) otherwise get no CI at
+  # all, which defeats the point of gating merges on review.
   pull_request:
-    branches: ["modernization", "master"]
   workflow_dispatch:
 
 jobs:
