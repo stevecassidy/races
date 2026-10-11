@@ -38,10 +38,10 @@ source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
 
 # Install dependencies
-pip install -r requirements.txt
+pip install -r requirements/dev.txt
 
 # Run tests to verify
-python bin/develop.py test
+python bin/runtests.py
 ```
 
 ### 3. Update Django (2-3 hours)
@@ -61,7 +61,7 @@ python bin/develop.py check
 python bin/develop.py migrate
 
 # Run tests
-python bin/develop.py test
+python bin/runtests.py
 
 # Fix any deprecation warnings
 ```
@@ -168,29 +168,28 @@ python bin/develop.py test
 ### As You Work
 
 ```bash
-# Start your work session
+# Start your work session from an up-to-date integration branch
 git checkout modernization
 git pull origin modernization
 
-# Create feature branch (optional, for major features)
-git checkout -b feature/api-clubs
+# Branch for this unit of work — required, not optional.
+# feature/ | fix/ | chore/ | refactor/ | docs/, named for the plan section
+git checkout -b feature/phase2.5-club-endpoints
 
-# Make changes
-# ... edit files ...
+# Make changes ...
 
-# Run tests
-python bin/develop.py test
+# Run the gates before pushing
+ruff check . && black --check . && mypy races && python bin/runtests.py
 
-# Format code
-black .
-ruff check --fix .
-
-# Commit
-git add .
+# Commit small, focused changes
+git add <files>
 git commit -m "Add club API endpoints"
 
-# Push
-git push origin modernization
+# Push the branch and open a PR against modernization
+git push -u origin HEAD
+gh pr create --base modernization --fill
+
+# The owner reviews and merges - never push to modernization directly
 ```
 
 ### Track Progress
@@ -225,11 +224,14 @@ Use these docs as you work:
 # Run development server
 python bin/develop.py runserver
 
-# Run tests
-python bin/develop.py test
+# Run the full suite (canonical: uses races/settings/testing.py)
+python bin/runtests.py
 
-# Run specific test
+# Run one module, or repeat a single test while iterating
 python bin/develop.py test races.apps.cabici.tests.testapi
+
+# Surface deprecation warnings
+python -Wd bin/runtests.py
 
 # Create migrations
 python bin/develop.py makemigrations
@@ -281,7 +283,7 @@ npm run type-check
 ### Issue: Django upgrade breaks tests
 **Solution:** Check deprecation warnings, update code patterns
 ```bash
-python bin/develop.py test --warnings
+python -Wd bin/runtests.py
 ```
 
 ### Issue: Package conflicts

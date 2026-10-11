@@ -542,46 +542,52 @@ These items are blocking for subsequent work:
 
 ### Backend
 ```bash
-# Run tests
-python bin/production.py test
+# Run the full suite (canonical runner, uses races/settings/testing.py)
+python bin/runtests.py
 
-# Run migrations
-python bin/production.py migrate
-
-# Create migrations
-python bin/production.py makemigrations
+# Coverage, with the pyproject.toml gate
+coverage run --rcfile=pyproject.toml bin/runtests.py && coverage report
 
 # Run development server
 python bin/develop.py runserver
 
-# Format code
+# Migrations (development settings)
+python bin/develop.py makemigrations
+python bin/develop.py migrate
+python bin/develop.py makemigrations --check --dry-run
+
+# Quality gates (run before pushing)
 black .
 ruff check --fix .
+ruff check . && black --check . && mypy races
 
-# Type check
-mypy races/
+# Or all of them
+pre-commit run --all-files
 ```
 
-### Frontend
+Against **production** settings (`bin/production.py`) requires `DJANGO_SECRET_KEY`
+in the environment — it refuses to start without one, so use `bin/develop.py` for
+local work.
+
+### Frontend (pnpm workspaces, from `frontend/`)
 ```bash
-# Install dependencies
-npm install
+cd frontend
+pnpm install                                  # all workspaces
 
-# Development server
-npm run dev
+pnpm --filter @cabici/raceday dev             # dev server for one app
+pnpm --filter @cabici/web dev
 
-# Build for production
-npm run build
+pnpm -r build                                 # production builds for both
+pnpm -r test                                  # vitest across workspaces
+pnpm -r lint
+pnpm -r type-check
 
-# Run tests
-npm test
-
-# Type check
-npm run type-check
-
-# Lint
-npm run lint
+# Regenerate the API client from the served schema
+pnpm --filter @cabici/api-client generate
 ```
+
+Package names are tentative until 2.2 vendors the app; the commands are the
+shape the monorepo decision implies (same-origin serving, no CORS).
 
 ### Docker
 ```bash
