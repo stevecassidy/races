@@ -15,40 +15,18 @@
 # limitations under the License.
 
 import datetime
-import hashlib
-from importlib import import_module
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
 
-import icalendar
 import ngram
-import pytz
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError, models, transaction
+from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 
 from races.apps.cabici.geoposition import GeopositionField
 
 
 class ClubManager(models.Manager):
 
-    def closest(self, name):
-        """Find a Club using an approximate match to
-        the given name, return the best matching Club instance"""
-
-        clubs = self.all()
-
-        ng = ngram.NGram(clubs, key=str)
-
-        club = ng.finditem(name)
-
-        if club is None:
-            unknown_club, created = Club.objects.get_or_create(name="Unknown Club", slug="Unknown")
-            club = unknown_club
-
-        return club
+    pass
 
 
 class Club(models.Model):
@@ -59,103 +37,9 @@ class Club(models.Model):
     website = models.URLField(max_length=400)
     slug = models.SlugField()  # short name eg. WVCC, MWCC for use in URL
     contact = models.EmailField(blank=True)
-    icalurl = models.URLField(max_length=400, blank=True, default="")
-    icalpatterns = models.CharField(max_length=100, blank=True, default="")
-    # flags for club capabilities
     manage_races = models.BooleanField(default=False)
     manage_members = models.BooleanField(default=False)
     manage_results = models.BooleanField(default=False)
-
-    # AusCycling API credentials
-    auscycling_client_id = models.CharField(
-        max_length=200, blank=True, default="", help_text="AusCycling API OAuth2 Client ID"
-    )
-    # TODO: that we're storing client secret in plaintext here for simplicity
-    # for better security we should use encrypted fields or a secrets manager
-    auscycling_client_secret = models.CharField(
-        max_length=200, blank=True, default="", help_text="AusCycling API OAuth2 Client Secret"
-    )
-    auscycling_club_id = models.CharField(
-        max_length=50, blank=True, default="", help_text="AusCycling Club ID for membership verification"
-    )
-
-    def has_auscycling_credentials(self):
-        """Check if club has AusCycling API credentials configured"""
-        return bool(self.auscycling_client_id and self.auscycling_client_secret)
-
-    def validate_membership(self, rider, check_date=None):
-        """
-        Validate a rider's Race membership with AusCycling API
-
-        Args:
-            rider: Rider instance to validate
-            check_date: Date to check validity for (default: next Sunday)
-
-        Returns:
-            tuple: (success: bool, message: str)
-        """
-        from .auscycling import AusCyclingAPIError, AusCyclingClient
-        from .usermodel import Membership
-
-        if not self.has_auscycling_credentials():
-            return False, f"Club {self.slug} has no AusCycling API credentials configured"
-
-        if not rider.licenceno:
-            return False, "Rider has no licence number"
-
-        if not rider.user.last_name:
-            return False, "Rider has no last name"
-
-        # Default to next Sunday
-        if check_date is None:
-            today = datetime.date.today()
-            days_until_sunday = (6 - today.weekday()) % 7
-            if days_until_sunday == 0:
-                days_until_sunday = 7
-            check_date = today + datetime.timedelta(days=days_until_sunday)
-
-        try:
-            client = AusCyclingClient(self.auscycling_client_id, self.auscycling_client_secret)
-
-            result = client.verify_membership(
-                member_id=rider.licenceno,
-                last_name=rider.user.last_name,
-                check_date=check_date,
-                club_id=self.auscycling_club_id if self.auscycling_club_id else None,
-            )
-
-            # Update the membership record for this rider
-            #
-            race_membership = rider.current_membership
-            if not race_membership:
-                # create a new membership record
-                race_membership = Membership(rider=rider, club=rider.club, category="race", date=datetime.date.today())
-
-            race_membership.last_validated = timezone.now()
-
-            if result["success"]:
-                # Update membership date to the check_date if it is in the past
-                if race_membership.date < check_date:
-                    race_membership.date = check_date
-                race_membership.validation_error = ""
-                message = f"Valid until {check_date}: {result['message']}"
-            else:
-                # not valid
-                # update membership date to today if it is in the future
-                # so that it will show as expired
-                if race_membership.date > datetime.date.today():
-                    race_membership.date = datetime.date.today()
-                race_membership.validation_error = result["message"]
-                message = f"Validation failed: {result['message']}"
-
-            race_membership.save()
-
-            return result["success"], message
-
-        except AusCyclingAPIError as e:
-            return False, f"API Error: {str(e)}"
-        except Exception as e:
-            return False, f"Unexpected error: {str(e)}"
 
     def __str__(self):
         return self.slug
@@ -194,40 +78,6 @@ class Club(models.Model):
         dd["roles"] = UserRole.objects.filter(club__exact=self).order_by("role").select_related("user", "role")
 
         return dd
-
-    def ingest(self):
-        """Try a couple of ingest methods.
-        Return a tuple (races, errormsg) where races is a list
-        of Race instances and errormsg is an error message if any."""
-
-        if self.icalurl != "":
-            return self.ingest_ical()
-        else:
-            return self.ingest_by_module()
-
-    def ingest_by_module(self):
-        """Try to find a module named for the (lowercased) slug field
-        of this club. If found call the ingest procedure
-        to generate a list of races and pass it to ingest_race_list.
-        Return a tuple (races, errormsg) where races is a list
-        of Race instances and errormsg is an error message if any."""
-
-        modulename = self.slug.lower()
-
-        # do we have this module inside ingest?
-        try:
-
-            mod = import_module("races.ingest." + modulename)
-            # now invoke the ingest procedure
-            racedict = mod.ingest()
-
-            races, error = self.ingest_race_list(racedict)
-
-        except ImportError:
-            races = []
-            error = 'No ingest module for club "' + modulename + '"'
-
-        return (races, error)
 
     def recent_races(self):
         """Return a list of the most recent races
@@ -391,90 +241,6 @@ class Club(models.Model):
         promotable.sort(key=lambda x: x.user.last_name)
         return promotable
 
-    def ingest_ical(self):
-        """Import races from an icalendar feed
-        Return a tuple (races, errormsg) where races is a list
-        of Race instances and errormsg is an error message if any."""
-
-        if self.icalurl == "":
-            return ([], "No icalendar URL")
-
-        try:
-            req = Request(self.icalurl)
-            req.add_header("User-Agent", "cabici/1.0 event harvester http://cabici.net/")
-            h = urlopen(req)
-            ical_text = h.read()
-            h.close()
-        except HTTPError as e:
-            content = e.read()
-            return ([], "Error reading icalendar URL:" + content)
-        except URLError:
-            return ([], "Bad URL: " + self.icalurl)
-
-        try:
-            cal = icalendar.Calendar.from_ical(ical_text)
-        except ValueError:
-            return ([], "Error reading icalendar file")
-
-        patterns = [p.strip() for p in self.icalpatterns.split(",")]
-        tz = pytz.timezone("Australia/Sydney")
-
-        races = []
-        for component in cal.walk():
-
-            if "DTSTART" in component:
-                start = component.decoded("DTSTART")
-                title = component.get("SUMMARY", "")
-                description = component.get("DESCRIPTION", "")
-                website = component.get("URL", "")
-
-                # CCCC at least has quoted chars in the description
-                # this removes them
-                description = icalendar.parser.unescape_char(description)
-                description = description.replace(r"\:", r":")
-
-                if patterns == [""] or any(title.find(p) > 0 for p in patterns):
-
-                    calstring = "%s%s%s%s" % (str(start), title, description, website)
-                    # need to fix encoding to ascii before calculating the hash
-                    calstring = calstring.encode("ascii", errors="replace")
-                    racehash = hashlib.sha1(calstring).hexdigest()
-
-                    # do we already have this race?
-                    if Race.objects.filter(hash=racehash).count() == 0:
-
-                        location = RaceCourse.objects.find_location(title)
-
-                        if isinstance(start, datetime.datetime):
-
-                            start = start.astimezone(tz)
-
-                            startdate = start.date().isoformat()
-                            starttime = start.time().isoformat()
-                        elif isinstance(start, datetime.date):
-
-                            startdate = start.isoformat()
-                            starttime = "0:0"
-                        else:
-
-                            startdate = start
-                            starttime = "0:0"
-
-                        race = Race(
-                            date=startdate,
-                            time=starttime,
-                            title=str(title),
-                            website=website,
-                            description=str(description),
-                            location=location,
-                            club=self,
-                            hash=racehash,
-                        )
-                        race.save()
-                        races.append(race)
-
-        return (races, "")
-
     def ingest_race_list(self, races):
         """Create races from a list of dictionaries containing
         the race properties
@@ -560,20 +326,6 @@ class RaceCourse(models.Model):
         ordering = ["name"]
 
 
-class RacePrototype(models.Model):
-    """A race prototype describes a race that
-    happens often - it includes all details except
-    the date"""
-
-    title = models.CharField(max_length=100)
-    time = models.TimeField()
-    club = models.ForeignKey(Club, on_delete=models.CASCADE)
-    location = models.ForeignKey(RaceCourse, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.club) + ": " + self.title
-
-
 STATUS_CHOICES = (("d", "Draft"), ("p", "Published"), ("w", "Withdrawn"), ("c", "Cancelled"))
 
 CATEGORY_CHOICES = (
@@ -641,182 +393,6 @@ class Race(models.Model):
         but make it draft"""
 
         pass
-
-    def load_excel_results(self, fd, extension):
-        """Load race results from a file handle pointing to an Excel file"""
-
-        import pyexcel
-
-        from races.apps.cabici.usermodel import Membership, RaceResult, Rider
-
-        content = fd.read()
-
-        try:
-            rows = pyexcel.get_records(file_content=content, file_type=extension)
-        except Exception as exc:
-            # file format problem
-            raise Exception("Error reading uploaded file, please check the file format.") from exc
-
-        # validate the file format
-        if "LicenceNo" not in rows[0] or "LastName" not in rows[0] or "Grade" not in rows[0]:
-            raise Exception("Error in spreadsheet format, required columns missing.")
-
-        # now that we have new data, delete any existing results for this race
-        # but first count them so we can see if we need to recompute points below
-        previousresults = RaceResult.objects.filter(race=self).count()
-        RaceResult.objects.filter(race=self).delete()
-
-        messages = []
-        for row in rows:
-            message = []
-
-            if not isinstance(row["Id"], int):
-                # this should be a new rider, but it could be someone we know who
-                # wasn't in the spreadsheet
-                username = Rider.objects.make_username(row["FirstName"], row["LastName"], str(row["LicenceNo"]))
-
-                # just in case we know them already we use get_or_create
-                user, created = User.objects.get_or_create(
-                    first_name=row["FirstName"], last_name=row["LastName"], username=username
-                )
-
-                if row["Email"] != "":
-                    user.email = row["Email"]
-                    user.save()
-
-                club = Club.objects.closest(row["Club"])
-                if created:
-                    # make the rider record
-                    rider = Rider(licenceno=row["LicenceNo"], club=club, user=user)
-                    message.append("Added new rider record for %s %s" % (row["FirstName"], row["LastName"]))
-                else:
-                    # we didn't find this person by licence number so set it if we have it
-                    rider = user.rider
-                    if row["LicenceNo"] != "":
-                        rider.licenceno = str(row["LicenceNo"])
-                        message.append("Updated Licence Number to %s" % (row["LicenceNo"],))
-                    if club.slug != "Unknown":
-                        rider.club = club
-                        message.append("Updated Club to %s" % (club.slug,))
-
-                rider.save()
-            else:
-                try:
-                    rider = Rider.objects.get(id=int(row["Id"]))
-                except ValueError, Rider.DoesNotExist:
-                    messages.append("Rider Id '%s' not found in database " % row["Id"])
-                    continue
-
-                # validate a bit
-                if row["LastName"] != rider.user.last_name:
-                    messages.append(
-                        "Rider with Id %s has wrong last name, expected %s but found %s."
-                        % (row["Id"], rider.user.last_name, row["LastName"])
-                    )
-                    continue
-
-            # ok, we now have our rider, either existing or new
-
-            # update licenceno if we didn't know it before
-            if rider.licenceno == "0" and row["LicenceNo"] != "0":
-                rider.licenceno = row["LicenceNo"]
-                rider.save()
-                message.append(
-                    "Updated licence number for %s %s to %s"
-                    % (rider.user.first_name, rider.user.last_name, rider.licenceno)
-                )
-
-            # we know that this rider is a current member of their club if the Regd field is R
-            if row["Regd"] == "R":
-                endofyear = datetime.date(day=31, month=12, year=datetime.date.today().year)
-
-                m, created = Membership.objects.get_or_create(
-                    rider=rider, club=rider.club, date=endofyear, category="race"
-                )
-                if created:
-                    message.append(
-                        "Updated membership of rider %s of club %s to %s" % (str(rider), rider.club.slug, endofyear)
-                    )
-
-            # deal with grades
-            grading, created = rider.clubgrade_set.get_or_create(club=self.club, rider=rider)
-            if created:
-                # allocate the grade they raced this time
-                grading.grade = row["Grade"]
-                grading.save()
-
-            usual_grade = grading.grade
-
-            # a grade ending in P means the rider is being permanently re-graded
-            # so we should change their recorded grade
-            if row["Grade"].endswith("P"):
-                # get the real grade for the result
-                row["Grade"] = row["Grade"][0]
-                grading.grade = row["Grade"]
-                grading.save()
-                message.append("Updated grade of %s to %s" % (str(rider), grading.grade))
-            elif row["Grade"] != usual_grade:
-                message.append("%s rode in grade %s but is usually %s grade" % (str(rider), row["Grade"], usual_grade))
-
-            # work out place from points - actually need to account for small grades (E, F)
-            points = int(row["Points"])
-            if points == 2:
-                place = 0
-            elif points > 0:
-                place = 8 - points
-            else:
-                place = 0
-
-            if row["ShirtNo"] == "":
-                shirtno = 0
-            else:
-                shirtno = int(row["ShirtNo"])
-
-            # special case of number 999 indicates a helper, change the 'grade'
-            if shirtno == 999:
-                row["Grade"] = "Helper"
-                message.append("%s recorded as a Helper" % (str(rider),))
-
-            result = RaceResult(
-                rider=rider, race=self, place=place, usual_grade=usual_grade, grade=row["Grade"], number=shirtno
-            )
-
-            # check for duplicate race number
-            while RaceResult.objects.filter(race=self, number=result.number).count() == 1:
-                result.number = result.number + 200
-
-            # check for duplicate race/rider
-            if RaceResult.objects.filter(race=self, rider=result.rider).count() == 1:
-                # not much we can do here
-                message.append("Error: duplicate result discarded for rider %s" % (str(rider)))
-            else:
-                try:
-                    with transaction.atomic():
-                        result.save()
-                except IntegrityError as e:
-                    message.append(
-                        "Error saving result for rider %s: %s"
-                        % (
-                            str(rider),
-                            e,
-                        )
-                    )
-
-            if message != []:
-                messages.append("\n".join(message))
-
-        self.fix_small_races()
-
-        # once results are in place, we tally the pointscores for this race
-        if previousresults > 0:
-            # need to recalculate pointscores since we've deleted results
-            for ps in self.pointscore_set.all():
-                ps.recalculate()
-        else:
-            # can just tally these results
-            self.tally_pointscores()
-
-        return messages
 
     def fix_small_races(self):
         """fix up races with small fields after import

@@ -15,11 +15,10 @@
 # limitations under the License.
 
 import datetime
-import os
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError, transaction
+from django.db import IntegrityError
 from django.test import TestCase
 
 from races.apps.cabici.models import Club, Race
@@ -217,123 +216,3 @@ class UserModelTests(TestCase):
             result2 = RaceResult(race=race, rider=rider2, grade="A", number=21, place=3)
             result2.save()
 
-    def test_load_results_excel(self):
-        """Load results from Excel creates riders and results"""
-
-        club = Club.objects.get(slug="MOV")
-
-        race = Race.objects.get(pk=1)
-
-        with open(os.path.join(os.path.dirname(__file__), "Waratahresults201536.xls"), "rb") as fd:
-            messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # check result of our riders
-        resultsA = RaceResult.objects.filter(race__exact=race, grade__exact="A").order_by("place")
-
-        # 11 riders in A grade
-        self.assertEqual(resultsA.count(), 11)
-
-        # highest place in A grade should be Joaqin Rodriguez at 1 (small group fix)
-        firstplace = resultsA.filter(place__gt=0)[0]
-        self.assertEqual("ESP19790512", firstplace.rider.licenceno)
-        self.assertEqual(1, firstplace.place)
-
-        # winner of B grade
-        resultsB = RaceResult.objects.filter(race__exact=race, grade__exact="B", place__gt=0).order_by("place")
-
-        # highest place in B grade should be Nikki Terpstra NED19840518
-        firstplace = resultsB[0]
-        self.assertEqual("NED19840518", firstplace.rider.licenceno)
-        self.assertEqual(1, firstplace.place)
-
-        # check messages
-        # two riders get upgraded to A
-        self.assertIn("Updated grade of Alejandro VALVERDE BELMONTE to A", messages)
-        self.assertIn("Updated grade of Joaquin RODRIGUEZ OLIVER to A", messages)
-        # new rider record created
-        thisyear = datetime.date.today().year
-        self.assertIn("Added new rider record for Trisma Allan", messages)
-        self.assertIn(
-            "Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to %d-12-31"
-            % thisyear,
-            messages,
-        )
-
-    def test_load_results_excel_duplicates(self):
-        """Load results from Excel creates riders and results
-        check handling of duplicate entries"""
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), "Waratahresults201536-dup.xls"), "rb") as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # check that we have results from both riders with number 104
-        r1 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact="ESP19800425")
-        r2 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact="ESP19790512")
-
-        self.assertEqual(1, len(r1))
-        self.assertEqual(1, len(r2))
-
-        self.assertEqual(1, r2[0].place)
-        self.assertEqual(0, r1[0].place)
-
-        self.assertIn("Error: duplicate result discarded for rider Ryder HESJEDAL", messages)
-
-    def test_load_results_excel_rider_update(self):
-        """Load results from Excel creates riders and results
-        check behaviour with a rider we know with no licence number"""
-
-        # modify a rider so they have a temporary licence number
-        rider1 = Rider.objects.get(licenceno="FRA19900529")
-        rider1.licenceno = "0"
-        rider1.save()
-        user1 = rider1.user
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), "Waratahresults201536-dup.xls"), "rb") as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # re-get the rider record from the db
-        rider1 = Rider.objects.get(id=rider1.id)
-
-        # we should have a result for user1
-        r1 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact="FRA19900529")
-
-        # and only one rider - no extras created
-        riders = Rider.objects.filter(user__first_name__exact="Thibaut")
-        self.assertEqual(1, riders.count())
-
-        self.assertEqual(1, len(r1))
-        self.assertEqual(rider1, r1[0].rider)
-        # licenceno should be updated
-        self.assertEqual("FRA19900529", rider1.licenceno)
-
-        self.assertIn("Updated licence number for Thibaut PINOT to FRA19900529", messages)
-
-    def test_load_results_excel_duty_helper(self):
-        """Load results from Excel gives points to duty helpers
-        with the special shirtno of 999"""
-
-        rider1 = Rider.objects.get(licenceno="ESP19870625")
-        user1 = rider1.user
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), "Waratahresults201536.xls"), "rb") as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        result1 = race.raceresult_set.get(rider=rider1)
-        self.assertEqual("Helper", result1.grade)

@@ -36,9 +36,6 @@ class ModelTests(TestCase):
         # string version of club is the slug
         self.assertEqual(str(club), slug)
 
-        # test failure modes of ingest
-        # this triggers ingest_by_module which fails because there is no module
-        self.assertEqual(club.ingest(), ([], 'No ingest module for club "test"'))
 
     def test_race(self):
         """Test creation of race and some methods"""

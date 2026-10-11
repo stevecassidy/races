@@ -135,7 +135,6 @@ STORAGES = {
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -170,7 +169,6 @@ INSTALLED_APPS = (
     "allauth.socialaccount",
     "rest_framework",
     "rest_framework.authtoken",
-    "corsheaders",
     "anymail",
 )
 
@@ -233,7 +231,6 @@ def ACCOUNT_USER_DISPLAY(user):
     return user.email
 
 
-# CORS configuration (django-cors-headers)
 # anyone can make GET requests to the API
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_URLS_REGEX = r"^/api/.*$"
