@@ -16,7 +16,7 @@
 
 from django import template
 
-from races.apps.cabici.usermodel import ClubGrade
+from races.apps.cabici.models import ClubGrade
 
 register = template.Library()
 

@@ -20,12 +20,14 @@ from datetime import datetime, timedelta
 
 from django.test import TestCase
 
-from races.apps.cabici.models import Club, Race, RaceCourse
-from races.apps.cabici.usermodel import (
+from races.apps.cabici.models import (
+    Club,
     ClubGrade,
     ClubRole,
     PointScore,
     PointscoreTally,
+    Race,
+    RaceCourse,
     RaceResult,
     RaceStaff,
     Rider,

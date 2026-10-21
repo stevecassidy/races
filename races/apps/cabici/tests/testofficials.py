@@ -20,8 +20,7 @@ import random
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from races.apps.cabici.models import Club, Race, RaceCourse
-from races.apps.cabici.usermodel import ClubRole, Membership, RaceStaff, Rider, UserRole
+from races.apps.cabici.models import Club, ClubRole, Membership, Race, RaceCourse, RaceStaff, Rider, UserRole
 
 
 class OfficialsTests(TestCase):

@@ -229,7 +229,10 @@ how this slipped — the bullets are now stated as landed only where they are.
       `_truthy()` accepts the JSON boolean (and the legacy `"y"`), and the
       serializer exposes `grade_change` as `grade != usual_grade`
       (`fix/phase2.1-grade-change`)
-- [ ] A3: fix or drop `Race`/`Rider.get_absolute_url()` (admin "View on site" 500s)
+- [x] A3: `Race`/`Rider.get_absolute_url()` now point at the API detail
+      resources instead of the retired `race`/`rider` template names, so the admin
+      "View on site" shortcut redirects rather than 500s; `Rider` uses `Rider.id`
+      (C7). `feeds.py` is already gone (`refactor/phase2.1-merge-models`)
 - [ ] **Membership, track (a) — local verification, unblocked, do now** (A2's
       categories are done; this is the rest of it): the React app already ships
       the flow (`MembershipVerificationDialog`, `membershipUtils`) sending
@@ -253,7 +256,9 @@ how this slipped — the bullets are now stated as landed only where they are.
       clash" workaround in `api.py` (the others went with 2.0)
 - [ ] Indexes on `Race(date, status)` and pointscore ordering columns
 - [ ] Verify no duplicate data against a production copy before applying
-- [ ] C1: merge `usermodel.py` into `models.py` (removes 6 circular imports)
+- [x] C1: `usermodel.py` merged into `models.py` and deleted; the six
+      function-level circular imports are gone. No migration required
+      (`refactor/phase2.1-merge-models`)
 - [ ] C2: extract `services/` (results, pointscore, officials, exports)
 - [ ] C3: **simplified** — permissions answer "official of the owning club?";
       keep the schema, do not build a general RBAC engine

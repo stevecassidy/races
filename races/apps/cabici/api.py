@@ -37,13 +37,15 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from .models import Club, Race, RaceCourse
-from .usermodel import (
+from .models import (
     MEMBERSHIP_CATEGORY_CLUB,
+    Club,
     ClubGrade,
     ClubRole,
     Membership,
     PointScore,
+    Race,
+    RaceCourse,
     RaceResult,
     RaceStaff,
     Rider,
