@@ -23,6 +23,7 @@ Created on August 18, 2015
 from django.core.management.base import BaseCommand
 
 from races.apps.cabici.models import PointScore
+from races.apps.cabici.services.pointscore import recalculate
 
 
 class Command(BaseCommand):
@@ -44,13 +45,13 @@ class Command(BaseCommand):
             else:
                 for p in pointscores:
                     print("Rescoring", p)
-                    p.recalculate()
+                    recalculate(p)
 
         else:
             pointscores = PointScore.objects.all()
             for p in pointscores:
                 if p.current():
                     print("Rescoring", p)
-                    p.recalculate()
+                    recalculate(p)
                 else:
                     print("Not rescoring", p)

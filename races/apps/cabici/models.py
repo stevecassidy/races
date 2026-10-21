@@ -317,32 +317,6 @@ class Race(models.Model):
 
         pass
 
-    def fix_small_races(self):
-        """fix up races with small fields after import
-        - points/place calculation is incorrect"""
-
-        for grade in ["A", "B", "C", "D", "E", "F"]:
-            results = self.raceresult_set.filter(grade=grade, place__gt=0)
-            ingrade = self.raceresult_set.filter(grade=grade).count()
-
-            if ingrade < 12:
-                # if the smallest place is not 1
-                places = [r.place for r in results]
-                if places != [] and min(places) > 1:
-                    fudge = min(places) - 1
-                    for result in results:
-                        result.place -= fudge
-                        result.save()
-
-    def tally_pointscores(self):
-        """Tally all points for this race
-        called when all results for this race are loaded
-        so that we know how many riders there were per grade"""
-
-        for ps in self.pointscore_set.all():
-            for result in self.raceresult_set.all():
-                ps.tally(result)
-
 
 # ---------------------------------------------------------------------------
 # Merged from the former usermodel.py (C1). The Club/Race vs rider/membership
@@ -694,14 +668,6 @@ class RaceResult(models.Model):
     dnf = models.BooleanField("DNF", default=False)
 
 
-# A grade field smaller than this races for a fixed amount rather than the
-# configured scale. Unlike points/smallpoints/smallthreshold/participation these
-# two have no PointScore field (MODEL_REVIEW.md A1): a residual WMCC rule that
-# would need a migration and admin/UI work to become configurable.
-TINY_RACE_FIELD = 6
-TINY_RACE_POINTS = 3
-
-
 class PointScore(models.Model):
     """A pointscore is a series of races where points are accumulated"""
 
@@ -728,116 +694,6 @@ class PointScore(models.Model):
 
         startdate = datetime.date.today() - datetime.timedelta(days=8)
         return self.races.filter(date__gt=startdate).count() > 0
-
-    def score(self, result, numberriders):
-        """Calculate the points for this placing using this pointscore's own
-        configured scale (`points`, `smallpoints`, `smallthreshold`,
-        `participation`), so each series can define its own rules.
-
-        Return a tuple: (points, reason)
-        where reason is a string explaining the score
-        """
-
-        points = self.get_points()
-        smallpoints = self.get_smallpoints()
-        participation = self.participation
-        smallthreshold = self.smallthreshold
-        # is the rider eligible for promotion or riding down a grade
-        promote = result.race.club.promotion(result.rider, when=result.race.date)
-
-        if not result.place:
-            return participation, "Participation"
-        if promote:
-            return participation, "Rider eligible for promotion"
-        if result.grade > result.usual_grade:
-            return participation, "Riding below normal grade"
-        if numberriders < TINY_RACE_FIELD:
-            # a field this small races for a fixed amount
-            if result.place == 1:
-                return TINY_RACE_POINTS, "Placed 1 in small race < %d riders" % TINY_RACE_FIELD
-            return participation, "Participation, small race < %d riders" % TINY_RACE_FIELD
-        if numberriders <= smallthreshold:
-            if result.place - 1 < len(smallpoints):
-                return (
-                    smallpoints[result.place - 1],
-                    "Placed %s in race <= %d riders" % (result.place, smallthreshold),
-                )
-            return participation, "Participation, race <= %d riders" % smallthreshold
-        else:
-            if result.place - 1 < len(points):
-                return points[result.place - 1], "Placed %s in race" % result.place
-            return participation, "Participation"
-
-    def get_points(self):
-        "Return a list of integers from the points field"
-
-        if not hasattr(self, "pointslist"):
-            self.pointslist = [int(n.strip()) for n in self.points.split(",")]
-
-        return self.pointslist
-
-    def get_smallpoints(self):
-        "Return a list of integers from the smallpoints field"
-
-        if not hasattr(self, "smallpointslist"):
-            self.smallpointslist = [int(n.strip()) for n in self.smallpoints.split(",")]
-
-        return self.smallpointslist
-
-    def tally(self, result):
-        """Add points for this result to the tally"""
-
-        # check that this race is part of this pointscore
-        if self.races.filter(pk=result.race.pk).count() == 0:
-            return
-
-        number_in_grade = RaceResult.objects.filter(race=result.race, grade=result.grade).count()
-        points, reason = self.score(result, number_in_grade)
-
-        tally, created = PointscoreTally.objects.get_or_create(rider=result.rider, pointscore=self)
-
-        reason += " : " + str(result.race)
-
-        tally.add(points, reason)
-
-    def tally_helpers(self, race):
-        """Add points for helpers in this race to the pointscore"""
-
-        # no points if there are no results for this race yet
-        results = race.raceresult_set.all()
-        if results.count() == 0:
-            return
-
-        for staff in RaceStaff.objects.filter(race=race):
-            tally, created = PointscoreTally.objects.get_or_create(rider=staff.rider, pointscore=self)
-
-            in_this_race = False
-            if not created:
-                # staff has some results already, check if they are in this race
-                for reason in tally.audit_trail():
-                    if str(race) in reason[1]:
-                        in_this_race = True
-            # if staff also got points for the race, they get a max
-            # of 3 points for helping
-            if in_this_race:
-                points = 3 - tally.points
-            else:
-                points = 3
-
-            if points > 0:
-                reason = staff.role.name + " in race: " + str(race)
-                tally.add(points, reason)
-
-    def recalculate(self):
-        """Recalculate all points from scratch"""
-
-        PointscoreTally.objects.filter(pointscore=self).delete()
-
-        for race in self.races.all().order_by("date"):
-            for result in race.raceresult_set.all():
-                self.tally(result)
-            # add points for helpers in this race
-            self.tally_helpers(race)
 
     def tabulate(self):
         """Generate a queryset of point tallys in order"""

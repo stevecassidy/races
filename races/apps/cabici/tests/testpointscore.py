@@ -32,6 +32,13 @@ from races.apps.cabici.models import (
     RaceStaff,
     Rider,
 )
+from races.apps.cabici.services.pointscore import (
+    get_points,
+    get_smallpoints,
+    recalculate,
+    score,
+    tally_race,
+)
 
 
 class PointscoreTests(TestCase):
@@ -62,26 +69,26 @@ class PointscoreTests(TestCase):
 
         ps = PointScore(club=club, name="Test")
 
-        self.assertEqual([7, 6, 5, 4, 3], ps.get_points())
+        self.assertEqual([7, 6, 5, 4, 3], get_points(ps))
         self.assertEqual(2, ps.participation)
-        self.assertEqual([5, 4], ps.get_smallpoints())
+        self.assertEqual([5, 4], get_smallpoints(ps))
 
-        self.assertEqual((7, "Placed 1 in race"), ps.score(place(1), 20))
-        self.assertEqual((6, "Placed 2 in race"), ps.score(place(2), 20))
-        self.assertEqual((5, "Placed 3 in race"), ps.score(place(3), 20))
-        self.assertEqual((4, "Placed 4 in race"), ps.score(place(4), 20))
-        self.assertEqual((2, "Participation"), ps.score(place(12), 20))
+        self.assertEqual((7, "Placed 1 in race"), score(ps, place(1), 20))
+        self.assertEqual((6, "Placed 2 in race"), score(ps, place(2), 20))
+        self.assertEqual((5, "Placed 3 in race"), score(ps, place(3), 20))
+        self.assertEqual((4, "Placed 4 in race"), score(ps, place(4), 20))
+        self.assertEqual((2, "Participation"), score(ps, place(12), 20))
 
         # small race less than or equal to 12
-        self.assertEqual((7, "Placed 1 in race"), ps.score(place(1), 13))
-        self.assertEqual((5, "Placed 1 in race <= 12 riders"), ps.score(place(1), 12))
-        self.assertEqual((4, "Placed 2 in race <= 12 riders"), ps.score(place(2), 11))
-        self.assertEqual((2, "Participation, race <= 12 riders"), ps.score(place(3), 6))
+        self.assertEqual((7, "Placed 1 in race"), score(ps, place(1), 13))
+        self.assertEqual((5, "Placed 1 in race <= 12 riders"), score(ps, place(1), 12))
+        self.assertEqual((4, "Placed 2 in race <= 12 riders"), score(ps, place(2), 11))
+        self.assertEqual((2, "Participation, race <= 12 riders"), score(ps, place(3), 6))
 
         # very small races, less than five
-        self.assertEqual((3, "Placed 1 in small race < 6 riders"), ps.score(place(1), 5))
-        self.assertEqual((3, "Placed 1 in small race < 6 riders"), ps.score(place(1), 3))
-        self.assertEqual((2, "Participation, small race < 6 riders"), ps.score(place(2), 3))
+        self.assertEqual((3, "Placed 1 in small race < 6 riders"), score(ps, place(1), 5))
+        self.assertEqual((3, "Placed 1 in small race < 6 riders"), score(ps, place(1), 3))
+        self.assertEqual((2, "Participation, small race < 6 riders"), score(ps, place(2), 3))
 
     def test_score_uses_configured_scale(self):
         """A1: score() must follow the pointscore's own configured scale, not a
@@ -108,21 +115,21 @@ class PointscoreTests(TestCase):
             participation=1,
         )
 
-        self.assertEqual([10, 8, 6], ps.get_points())
-        self.assertEqual([4, 2], ps.get_smallpoints())
+        self.assertEqual([10, 8, 6], get_points(ps))
+        self.assertEqual([4, 2], get_smallpoints(ps))
 
         # the configured large-race scale applies, and a configured participation
         # value replaces the old hardcoded 2
-        self.assertEqual((10, "Placed 1 in race"), ps.score(place(1), 9))
-        self.assertEqual((8, "Placed 2 in race"), ps.score(place(2), 9))
-        self.assertEqual((1, "Participation"), ps.score(place(4), 9))
+        self.assertEqual((10, "Placed 1 in race"), score(ps, place(1), 9))
+        self.assertEqual((8, "Placed 2 in race"), score(ps, place(2), 9))
+        self.assertEqual((1, "Participation"), score(ps, place(4), 9))
 
         # smallthreshold drives both the branch and the reported reason text
-        self.assertEqual((4, "Placed 1 in race <= 8 riders"), ps.score(place(1), 8))
-        self.assertEqual((1, "Participation, race <= 8 riders"), ps.score(place(3), 8))
+        self.assertEqual((4, "Placed 1 in race <= 8 riders"), score(ps, place(1), 8))
+        self.assertEqual((1, "Participation, race <= 8 riders"), score(ps, place(3), 8))
 
         # the tiny-field rule still applies below it
-        self.assertEqual((3, "Placed 1 in small race < 6 riders"), ps.score(place(1), 5))
+        self.assertEqual((3, "Placed 1 in small race < 6 riders"), score(ps, place(1), 5))
 
     def test_default_scale_matches_legacy_values(self):
         """A1 regression guard: with the shipped defaults the configured path
@@ -130,8 +137,8 @@ class PointscoreTests(TestCase):
 
         club = Club.objects.get(slug="OGE")
         ps = PointScore(club=club, name="Defaults")
-        self.assertEqual([7, 6, 5, 4, 3], ps.get_points())
-        self.assertEqual([5, 4], ps.get_smallpoints())
+        self.assertEqual([7, 6, 5, 4, 3], get_points(ps))
+        self.assertEqual([5, 4], get_smallpoints(ps))
         self.assertEqual(12, ps.smallthreshold)
         self.assertEqual(2, ps.participation)
 
@@ -165,7 +172,7 @@ class PointscoreTests(TestCase):
         result3.save()
 
         # tally them in first ps
-        ps.recalculate()
+        recalculate(ps)
         table = ps.tabulate()
 
         self.assertEqual(1, table.count())
@@ -173,7 +180,7 @@ class PointscoreTests(TestCase):
         self.assertEqual(rider1, table[0].rider)
         self.assertEqual(3, table[0].points)
 
-        ps2.recalculate()
+        recalculate(ps2)
         table = ps2.tabulate()
 
         self.assertEqual(2, table.count())
@@ -237,7 +244,7 @@ class PointscoreTests(TestCase):
 
                     grading, ignore = ClubGrade.objects.get_or_create(rider=rider, club=race.club, grade=grade)
 
-            race.tally_pointscores()
+            tally_race(race)
 
     def test_points_helpers(self):
         """Test that we assign points to helpers properly"""
@@ -273,7 +280,7 @@ class PointscoreTests(TestCase):
         resultC = RaceResult(rider=riderC, race=races[1], grade="A", usual_grade="A", number=444, place=0)
         resultC.save()
 
-        ps.recalculate()
+        recalculate(ps)
         # check that rider has 3 points
         pstA = PointscoreTally.objects.get(rider=riderA)
         self.assertEqual(5, pstA.points)  # 3 for helping + 2 for racing
@@ -313,7 +320,7 @@ class PointscoreTests(TestCase):
 
         start = time.time()
         print("Recalculating...")
-        ps.recalculate()
+        recalculate(ps)
         print("Done", time.time() - start)
 
         table = ps.tabulate()
@@ -391,7 +398,7 @@ class PointscoreTests(TestCase):
         ouresults = RaceResult.objects.filter(rider__exact=rider)
 
         # recalculate points
-        ps.recalculate()
+        recalculate(ps)
 
         # results for our rider
         results = RaceResult.objects.filter(rider=rider)
@@ -438,7 +445,7 @@ class PointscoreTests(TestCase):
         ouresults = RaceResult.objects.filter(rider__exact=rider)
 
         # recalculate points
-        ps.recalculate()
+        recalculate(ps)
 
         # results for our rider
         results = RaceResult.objects.filter(rider=rider)
@@ -480,7 +487,7 @@ class PointscoreTests(TestCase):
         ouresults = RaceResult.objects.filter(rider__exact=rider)
 
         # recalculate points
-        ps.recalculate()
+        recalculate(ps)
 
         # results for our rider
         results = RaceResult.objects.filter(rider=rider)

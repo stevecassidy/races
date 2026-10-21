@@ -7,7 +7,7 @@ legacy views and the new `/api/v1/` package without being re-implemented.
 
 Modules:
     results    race-day result upload
-    pointscore tally / recalculate (2.1 follow-up)
+    pointscore scoring, tally / recalculate
     officials  allocation (2.1 follow-up)
     exports    rider XLS / race summary / member CSV (2.5, if wanted)
 """
