@@ -24,11 +24,13 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
-from races.apps.cabici.models import Club, Race, RaceCourse
-from races.apps.cabici.usermodel import (
+from races.apps.cabici.models import (
+    Club,
     ClubGrade,
     ClubRole,
     PointScore,
+    Race,
+    RaceCourse,
     RaceResult,
     RaceStaff,
     Rider,

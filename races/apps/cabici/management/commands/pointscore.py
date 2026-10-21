@@ -22,7 +22,7 @@ Created on August 18, 2015
 
 from django.core.management.base import BaseCommand
 
-from races.apps.cabici.usermodel import PointScore
+from races.apps.cabici.models import PointScore
 
 
 class Command(BaseCommand):

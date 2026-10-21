@@ -24,8 +24,18 @@ from django.db.models import Max
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
 
-from races.apps.cabici.models import Club, Race, RaceCourse
-from races.apps.cabici.usermodel import ClubGrade, ClubRole, PointScore, RaceResult, RaceStaff, Rider, UserRole
+from races.apps.cabici.models import (
+    Club,
+    ClubGrade,
+    ClubRole,
+    PointScore,
+    Race,
+    RaceCourse,
+    RaceResult,
+    RaceStaff,
+    Rider,
+    UserRole,
+)
 
 OGE = {
     "name": "ORICA GREENEDGE",
@@ -942,7 +952,7 @@ class APITests(APITestCase):
             ],
         }
 
-        with mock.patch("races.apps.cabici.usermodel.RaceResult.save", side_effect=RuntimeError("boom")):
+        with mock.patch("races.apps.cabici.models.RaceResult.save", side_effect=RuntimeError("boom")):
             with self.assertRaises(RuntimeError):
                 self.upload(payload)
 
