@@ -98,15 +98,17 @@ Reading both clients is what made this a Phase 2 task rather than a Phase 3 one:
   `newriders` where the server reads `riders` (rider creations vanish), and maps
   downloads by `entry.rider` where the API returns a display string (loading a
   race always yields an empty sheet). Angular gets both right.
-- **A9 is the one live production bug:** the server compares `grade_change` to
-  `"y"` while **both** clients send a boolean, so in-race grade changes have never
-  applied in production.
-- **D3's server half is real regardless of client:** no permission class, no
-  transaction — any authenticated user can replace a race's results.
-- **A8 is unblocked work everyone assumed was blocked:** the React app already
-  ships a complete manual membership-verification flow sending
-  `verifiedMemberDate`, and the server ignores it. With AusCycling polling
-  withdrawn, production has no verification at all.
+- **A9 was the one live production bug (fixed):** the server compared
+  `grade_change` to `"y"` while **both** clients send a boolean, so in-race grade
+  changes had never applied in production.
+- **D3's server half is real regardless of client (fixed):** there was no
+  permission class and no transaction — any authenticated user could replace a
+  race's results.
+- **A8 is deferred (owner decision, 2026-10-21):** the React app ships a complete
+  manual membership-verification flow sending `verifiedMemberDate`, and the server
+  ignores it. With AusCycling polling withdrawn, production has no verification at
+  all — but there is no authoritative membership source to build against yet, so
+  the membership track waits for the provider spec.
 
 ### Key Decision: one repo, two apps (monorepo), served same-origin
 
@@ -146,7 +148,9 @@ provider. Phase 2 therefore opens with a retirement pass — **3,463 Python line
 rather than repair. **WMCC is the only client club**, so the API must not be
 designed for multi-tenancy, and the hardcoded pointscale becomes data instead of
 a bug. Membership categories are to be redesigned around the new AusCycling
-system once its spec lands.
+system once its spec lands. The category vocabulary was updated to the new
+`Ride`/`Club`/`Race` set (A2); the rest of the membership work is deferred until
+that spec lands (owner decision, 2026-10-21).
 
 ## 🔑 Key Principles
 

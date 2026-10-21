@@ -261,11 +261,12 @@ briefing corrected their severity:
 - **D3's server half is real regardless of client:** the upload endpoint has no
   permission class and no transaction, so any authenticated user can replace a
   race's results and a mid-request failure leaves it half-populated.
-- **A8 is the unblocked membership work everyone assumed was blocked:** the React
+- **A8 is membership work now deferred pending the provider spec:** the React
   app already ships a complete manual at-the-track membership verification flow
   sending `verifiedMemberDate`, and the server ignores it entirely. With
   AusCycling polling withdrawn, production has **no verification at all** and the
-  interim design is sitting in an unfinished client.
+  interim design is sitting in an unfinished client. The owner has decided there
+  is no authoritative source to build against yet (2026-10-21), so it waits.
 
 This is also why the API is contract-first with a **generated** client:
 hand-maintained wire formats across two repos, with every layer mocking the layer
@@ -400,33 +401,34 @@ Prerequisite for serializers. Referenced items are the findings in
       to `false`. Regression tests through the real HTTP boundary
       (`fix/phase2.1-grade-change`)
 
-**Membership — two tracks (third revision):**
+**Membership — deferred pending the AusCycling provider spec (2026-10-21):**
 
-*Track (a): local verification — **unblocked, do now**.* The React app already
-ships a complete manual at-the-track verification flow (`MembershipVerificationDialog`,
-`membershipUtils`: `isCurrentMember`, `needsMembershipVerification`,
-`isValidMemberDate`, `getEffectiveMemberDate`) that sends `verifiedMemberDate`,
-and the server has **zero** support for it (`grep -rn "verifiedMemberDate" races`
-→ no matches). With AusCycling polling withdrawn, production currently has **no
-membership verification at all**.
+The third revision split this into an unblocked local-verification track (a) and
+a provider track (b), on the argument that the React app already ships a manual
+at-the-track flow sending `verifiedMemberDate` and production has had no
+verification since polling was withdrawn. **The owner has deferred the whole
+track.** With no authoritative source of membership data there is nothing to
+verify against, so building the storage and API around the client's flow now
+risks rework when the provider's data model lands. Production continues without
+verification and the React app's verification flow stays unfinished — an
+accepted trade-off.
 
-- [ ] Store a verified membership date on `Membership` (or `Rider`) and honour
-      `member_category` from the upload payload instead of hardcoding it (A8) —
-      the field now round-trips as `Race`/`Club`/`Ride`, and the deployed Angular
-      client only displays it (verified: it never compares the value), so the
-      casing change is a cutover concern, not a live one
+What is already settled and stays: the categories are `Ride`/`Club`/`Race`, with
+`Club`/`Race` entitling the holder to race (A2, migration `0019`).
+
+When the provider spec lands:
+
+- [ ] Capture AusCycling's new membership category set and confirm the stored
+      vocabulary
+- [ ] Store a verified membership date and honour `member_category` /
+      `verifiedMemberDate` from the upload payload (A8)
 - [ ] Expose membership as a first-class resource, not an upload side effect
 - [ ] Fix `Rider.current_membership` (C10) to select by category and validity
       window instead of max date across all categories
 - [ ] Port the verification semantics out of the client into the server so they
       are enforced once rather than per client
-
-*Track (b): provider integration — **blocked** on the new API provider's spec.*
-
-- [ ] Capture AusCycling's new membership category set when the spec lands
-- [ ] Define the seam now (a `MembershipSource` interface or equivalent) so the
-      provider supplements track (a) rather than rewriting it — and so (a) is
-      **not** held hostage to (b)
+- [ ] Define the seam (a `MembershipSource` interface or equivalent) so provider
+      integration does not entangle with the storage/API work
 - [ ] Never re-introduce a model field holding a provider client secret (C9 —
       the lesson from the withdrawn polling)
 
@@ -567,9 +569,10 @@ against the real API.
       or version/`If-Match` contract belongs with the new results endpoint in
       2.2/2.5, where both clients' shapes are designed — a required flag would
       break the deployed Angular app
-- [ ] **A8:** honour `member_category` and `verifiedMemberDate` instead of
-      hardcoding `category="race"` — this is track (a) of the membership work in
-      2.1, and it is what makes the React app finishable
+- [ ] **A8 — deferred with the membership track:** honour `member_category` and
+      `verifiedMemberDate` instead of hardcoding a category. Blocked on the
+      AusCycling provider spec (see 2.1); the React app's verification flow stays
+      unfinished until then
 - [ ] **Preserve the offline contract:** `RiderService` does a full paginated
       load, caches riders in `localStorage`, and refreshes with
       `?changed=<unix>`, merging by `rider.id`. That is load-bearing at a

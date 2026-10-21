@@ -132,8 +132,8 @@ review in one sitting.
 >    forward; the new API uses the correct keys (`newriders[]`, `riderid`) natively.
 >    DRF token auth goes at cutover with Angular.
 > 6. D1/D2 are **React-only, not live** — no hotfix, no urgency. **A9 is the one
->    live production bug.** A8 is unblocked membership work sitting in an
->    unfinished client.
+>    live production bug.** A8 and the rest of the membership track are
+>    **deferred** pending the AusCycling provider spec (2026-10-21).
 >
 > Evidence: [MODEL_REVIEW.md](MODEL_REVIEW.md).
 
@@ -230,21 +230,19 @@ how this slipped — the bullets are now stated as landed only where they are.
       serializer exposes `grade_change` as `grade != usual_grade`
       (`fix/phase2.1-grade-change`)
 - [ ] A3: fix or drop `Race`/`Rider.get_absolute_url()` (admin "View on site" 500s)
-- [ ] **Membership, track (a) — local verification, unblocked, do now** (A2's
-      categories are done; this is the rest of it): the React app already ships
-      the flow (`MembershipVerificationDialog`, `membershipUtils`) sending
-      `verifiedMemberDate`, and the server still ignores it, so production has
-      **no verification at all** since polling was withdrawn. Store the verified
-      date, honour `member_category` from the payload (**A8** — it now
-      round-trips as `Race`/`Club`/`Ride` rather than the old lowercase
-      `race`), expose membership as a resource, fix `Rider.current_membership`
-      (C10), move the semantics server-side
-- [ ] **Membership, track (b) — provider integration, still open.** The three
-      categories are chosen and stored as `Ride`/`Club`/`Ride`-style values that
-      match the provider's naming, but the actual API wiring awaits the new
-      provider: define the seam (`MembershipSource`) so (b) supplements (a)
-      rather than rewriting it, and never put a provider client secret in a model
-      field again (C9)
+- [ ] **Membership — DEFERRED (owner decision, 2026-10-21), pending the
+      AusCycling provider spec.** The earlier split into "track (a) local
+      verification — do now" and "track (b) provider integration — blocked" is
+      withdrawn: with no authoritative source of membership data there is
+      nothing to verify against, so building the storage/API now risks rework
+      when the provider's data model lands. Deferred together: **A8**
+      (`member_category` / `verifiedMemberDate` on upload), membership as a
+      resource, `Rider.current_membership` (**C10**), and the verification
+      semantics. Settled and staying: the `Ride`/`Club`/`Race` categories (A2,
+      migration `0019`). Production continues without verification and the React
+      app's flow stays unfinished — an accepted trade-off. When the spec lands:
+      capture the provider category set, define the `MembershipSource` seam, and
+      never put a provider client secret in a model field again (C9)
 - [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
       category, date)`, `ClubGrade(rider, club)`, `UserRole(user, club, role)`,
       `PointscoreTally(pointscore, rider)` — `Race.hash` moot after 2.0
@@ -312,7 +310,8 @@ how this slipped — the bullets are now stated as landed only where they are.
       contract belongs with the new results endpoint in 2.2/2.5, where both
       clients' shapes are designed — a required flag would break the deployed
       Angular app
-- [ ] **A8:** honour `member_category` + `verifiedMemberDate` (track (a) above)
+- [ ] **A8 — deferred with the membership track:** honour `member_category` +
+      `verifiedMemberDate` once the AusCycling provider spec lands
 - [ ] **Preserve the offline contract:** full paginated load + `localStorage`
       cache + `?changed=<unix>` merge-by-`rider.id`. Load-bearing at the
       velodrome; `?updated_after=` must keep all three and not silently drop
