@@ -455,9 +455,15 @@ When the provider spec lands:
       reference `Rider`/`Membership`/`UserRole`/`RaceStaff`/`RaceResult` directly.
       No migration: models keep their app label and names
       (`refactor/phase2.1-merge-models`)
-- [ ] C2: extract `services/` (results, pointscore, officials, exports) — pure
-      functions, `transaction.atomic()` at the operation boundary, typed
-      results, no HTTP or filesystem I/O in models
+- [x] C2 (results slice): the race-day upload moved into
+      `services/results.py` — `upload_results(payload)` owns the transaction and
+      the race row lock and returns a typed `ResultUpload`; the legacy `api.py`
+      view is now only the HTTP projection. Rejected payloads return 400 instead
+      of the old 500 (`refactor/phase2.1-services-results`)
+- [ ] C2 (remaining slices): `services/pointscore.py`, `services/officials.py`,
+      `services/exports.py` (deferred until wanted) — pure functions,
+      `transaction.atomic()` at the operation boundary, typed results; move the
+      logic outright and update callers
 - [ ] C3: **simplified by the briefing** — with one client club, permissions
       answer "is this an official of the club that owns this object?". Keep the
       schema (capability flags, `UserRole`/`ClubRole`) but do not design a

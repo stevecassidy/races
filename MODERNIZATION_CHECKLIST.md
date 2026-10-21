@@ -254,7 +254,18 @@ how this slipped — the bullets are now stated as landed only where they are.
 - [x] C1: `usermodel.py` merged into `models.py` and deleted; the six
       function-level circular imports are gone. No migration required
       (`refactor/phase2.1-merge-models`)
-- [ ] C2: extract `services/` (results, pointscore, officials, exports)
+- [x] C2 (results slice): the race-day upload moved out of `api.py` into
+      `races/apps/cabici/services/results.py`. `upload_results(payload)` owns the
+      transaction and the race row lock and returns a typed `ResultUpload`
+      (`ridermap` / `errors` / `deleted` / `created`); the view is now only the
+      HTTP projection (debug dump, 400 mapping, response shape). Rejected
+      payloads return 400 rather than the old 500. Direct service tests added
+      (`refactor/phase2.1-services-results`)
+- [ ] C2 (remaining slices): `services/pointscore.py`
+      (score/tally/recalculate, `tally_pointscores`, `fix_small_races`),
+      `services/officials.py` (allocation, promotion, performance reports),
+      `services/exports.py` (deferred until wanted). Move the logic outright and
+      update callers
 - [ ] C3: **simplified** — permissions answer "official of the owning club?";
       keep the schema, do not build a general RBAC engine
 - [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen
