@@ -472,7 +472,7 @@ four are retired with the code they live in rather than repaired.
 | # | Finding | Where | Disposition |
 |---|---|---|---|
 | A1 | **`PointScore.score()` ignores its own configuration.** Hardcodes `points = [7,6,5,4,3]`, `smallpoints = [5,4]`, `participation = 2`; never reads `self.points`, `self.smallpoints`, `self.smallthreshold`, `self.participation` or `self.method`. `get_points()`/`get_smallpoints()` are called only from a test. | `usermodel.py:727-780` | **Fix** — wire to config, WMCC scale becomes data. Behaviour unchanged for the only club. *(decision 3)* |
-| A2 | **`MEMBERSHIP_CATEGORY_CHOICES` is inverted.** `(("Ride","ride"),("Race","race"),("Non-riding","non-riding"))` — Django reads `(value,label)`, so the stored value is `"Ride"`. All 6288 rows use lowercase (`race` 6076, `ride` 116, `non-riding` 96). `get_category_display()` returns `'race'` for both `'race'` and `'Race'`, so admin-written corruption is invisible in the UI. | `usermodel.py:571` | **Fix, deferred** — fold into the single migration that adopts AusCycling's new categories; do not migrate twice. *(decision 2)* |
+| A2 | **`MEMBERSHIP_CATEGORY_CHOICES` is inverted.** `(("Ride","ride"),("Race","race"),("Non-riding","non-riding"))` — Django reads `(value,label)`, so the stored value is `"Ride"`. All 6288 rows use lowercase (`race` 6076, `ride` 116, `non-riding` 96). `get_category_display()` returns `'race'` for both `'race'` and `'Race'`, so admin-written corruption is invisible in the UI. | `usermodel.py` | ✅ **FIXED** on `fix/phase2.1-membership-categories`: categories adopted as the AusCycling set `Ride`/`Club`/`Race` (`Club`+`Race` allow racing), inversion corrected and stored rows re-mapped in one migration (`0019`), forward *and* reverse verified against a copy of the dev database. Adds `Membership.allows_racing` + `RACING_CATEGORIES` |
 | A3 | **`get_absolute_url()` reverses URL names that no longer exist** (`Race`→`'race'`, `Rider`→`'rider'`), so the admin "View on site" link 500s — verified end-to-end through `/admin/r/<content_type>/<id>/`. `feeds.py` `item_link` has the same fault, so the iCal/Atom feeds cannot be re-routed as-is. | `models.py:636`, `usermodel.py:437` | **Fix** — admin is the one UI we keep through Phase 4. |
 | A4 | **`RaceResult.pointscores()` references a relation that does not exist** (`resultpoints_set`); no model has an FK to `RaceResult` with that related name. | `usermodel.py:691-693` | **Delete** with the retirement pass. |
 | A5 | **`except ValueError, Rider.DoesNotExist:`** — Python 2 syntax that only parses because PEP 758 landed in 3.14; invisible to ruff, breaks on ≤3.13. | `models.py:706` | **Delete** — it lives inside `load_excel_results()`, whose only callers are 4 tests. |
@@ -572,8 +572,13 @@ follows are the model-layer questions that remain.
    decorative-fields landmine is removed. Alternative: delete the fields and
    state the WMCC-only assumption in the model docstring. Either way, do not
    leave five editable fields that do nothing.
-2. **A2 (inverted choices):** still needs fixing, but as **one** migration
-   together with the new AusCycling category set — not twice.
+2. ~~A2 (inverted choices): fold into the provider's new category set~~ —
+   **DECIDED and shipped.** The owner supplied the vocabulary (`Ride`, `Club`,
+   `Race`; `Club` and `Race` permit racing, `Ride` does not), so the inversion
+   fix and the re-mapping landed as a single migration instead of two. What
+   remains from that decision is **A8** (honour the payload's `member_category`,
+   which now round-trips as `Race`/`Club`/`Ride`) and the `verifiedMemberDate`
+   field the server has never handled.
 3. ~~A6/A7 (broken ical ingest)~~ — **resolved by retirement**; the production
    `icalurl` question is moot once the code is gone.
 4. **C4:** `RacePrototype` is deleted by the retirement pass. `Race.grading`

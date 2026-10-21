@@ -367,19 +367,27 @@ Prerequisite for serializers. Referenced items are the findings in
 [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
 
 **Defects (A4–A7 gone with 2.0):**
-- [ ] A1: make `PointScore.score()` read its own `points` / `smallpoints` /
+- [x] A1: `PointScore.score()` reads its own `points` / `smallpoints` /
       `smallthreshold` / `participation` fields instead of the hardcoded WMCC
-      constants; wire up `get_points()` / `get_smallpoints()`; add a test with a
-      non-default configuration. Behaviour is unchanged for WMCC once its scale is
-      stored as data *(confirm)*
-- [ ] A1b: delete `PointScore.method` — it offers `WMCC`/`LACC`, only WMCC exists
-      in code, and LACC was one of the retired scrapers
-- [ ] A2: **fix now, not deferred** (third revision) — the inverted
-      `MEMBERSHIP_CATEGORY_CHOICES` tuple is a live admin bug: writing `'Race'`
-      makes a membership invisible to the seven `category="race"` sites. Correct
-      the tuple and normalise any capitalised rows in this phase. Adopting
-      AusCycling's *new* vocabulary can follow later as a second migration; the
-      inversion should not wait on an unspecified provider date
+      constants. Defaults reproduce the legacy output exactly (existing
+      `test_create` untouched, plus new tests for a custom scale and for the
+      defaults). **Left undone deliberately:** the tiny-field rule (`< 6` riders,
+      winner gets 3) has no config field and is now
+      `TINY_RACE_FIELD`/`TINY_RACE_POINTS` constants — decide whether to make it
+      configurable before a second club onboards
+- [x] A1b: deleted `PointScore.method` (WMCC/LACC, only WMCC ever existed in
+      code) — migration `0018`
+- [x] A2: **categories adopted and migrated.** The stored set is now the
+      AusCycling naming — `Ride`, `Club`, `Race`, of which `Club` and `Race`
+      entitle the holder to race and `Ride` does not. This replaces the inverted
+      `MEMBERSHIP_CATEGORY_CHOICES` tuple (value/label swapped, so an admin write
+      of `'Race'` was invisible to every `category="race"` filter and
+      `get_category_display()` hid the difference) in a single migration
+      (`0019`) that corrects the choices **and** re-maps stored rows:
+      `race`→`Race` (6,076) and `ride`+`non-riding`→`Ride` (116+96), forward and
+      reverse both verified against a copy of the development database with all
+      6,288 rows accounted for. Adds `Membership.allows_racing` plus
+      `RACING_CATEGORIES`, so entitlement stops being a single string literal
 - [ ] A3: remove or repair `Race.get_absolute_url()` / `Rider.get_absolute_url()`
       (they reverse URL names that no longer exist → admin "View on site" 500s,
       verified through `/admin/r/<content_type>/<id>/`); admin is the one UI we
@@ -401,8 +409,11 @@ and the server has **zero** support for it (`grep -rn "verifiedMemberDate" races
 → no matches). With AusCycling polling withdrawn, production currently has **no
 membership verification at all**.
 
-- [ ] Store a verified membership date on `Membership` (or `Rider`) and honour it
-      on upload alongside `member_category` (A8)
+- [ ] Store a verified membership date on `Membership` (or `Rider`) and honour
+      `member_category` from the upload payload instead of hardcoding it (A8) —
+      the field now round-trips as `Race`/`Club`/`Ride`, and the deployed Angular
+      client only displays it (verified: it never compares the value), so the
+      casing change is a cutover concern, not a live one
 - [ ] Expose membership as a first-class resource, not an upload side effect
 - [ ] Fix `Rider.current_membership` (C10) to select by category and validity
       window instead of max date across all categories
