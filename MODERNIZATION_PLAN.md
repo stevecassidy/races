@@ -460,10 +460,15 @@ When the provider spec lands:
       the race row lock and returns a typed `ResultUpload`; the legacy `api.py`
       view is now only the HTTP projection. Rejected payloads return 400 instead
       of the old 500 (`refactor/phase2.1-services-results`)
-- [ ] C2 (remaining slices): `services/pointscore.py`, `services/officials.py`,
-      `services/exports.py` (deferred until wanted) — pure functions,
-      `transaction.atomic()` at the operation boundary, typed results; move the
-      logic outright and update callers
+- [x] C2 (pointscore slice): scoring, tallying, recalculation,
+      `tally_pointscores` and `fix_small_races` moved into
+      `services/pointscore.py` and removed from the models; the write operations
+      own their transaction and the callers are updated
+      (`refactor/phase2.1-services-pointscore`)
+- [ ] C2 (remaining slices): `services/officials.py`, `services/exports.py`
+      (deferred until wanted) — pure functions, `transaction.atomic()` at the
+      operation boundary, typed results; move the logic outright and update
+      callers
 - [ ] C3: **simplified by the briefing** — with one client club, permissions
       answer "is this an official of the club that owns this object?". Keep the
       schema (capability flags, `UserRole`/`ClubRole`) but do not design a

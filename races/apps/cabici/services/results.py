@@ -41,6 +41,7 @@ from ..models import (
     RaceResult,
     Rider,
 )
+from .pointscore import recalculate, tally_race
 
 
 class ResultUploadError(Exception):
@@ -317,9 +318,9 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
     if result.deleted > 0:
         # need to recalculate pointscores since we've deleted results
         for ps in race.pointscore_set.all():
-            ps.recalculate()
+            recalculate(ps)
     else:
         # can just tally these results
-        race.tally_pointscores()
+        tally_race(race)
 
     return result

@@ -261,11 +261,17 @@ how this slipped — the bullets are now stated as landed only where they are.
       HTTP projection (debug dump, 400 mapping, response shape). Rejected
       payloads return 400 rather than the old 500. Direct service tests added
       (`refactor/phase2.1-services-results`)
-- [ ] C2 (remaining slices): `services/pointscore.py`
-      (score/tally/recalculate, `tally_pointscores`, `fix_small_races`),
-      `services/officials.py` (allocation, promotion, performance reports),
-      `services/exports.py` (deferred until wanted). Move the logic outright and
-      update callers
+- [x] C2 (pointscore slice): `score`, `get_points`/`get_smallpoints`,
+      `tally`/`tally_helpers`, `recalculate`, `tally_pointscores` and
+      `fix_small_races` moved into `services/pointscore.py` and removed from the
+      models. `recalculate`, `tally`, `tally_race` and `fix_small_races` now own
+      their transaction. Callers updated: the upload service, the `pointscore`
+      management command and the pointscore tests. `current()`, `tabulate()` and
+      `audit()` stay on the model as read accessors
+      (`refactor/phase2.1-services-pointscore`)
+- [ ] C2 (remaining slices): `services/officials.py` (allocation, promotion,
+      performance reports), `services/exports.py` (deferred until wanted). Move
+      the logic outright and update callers
 - [ ] C3: **simplified** — permissions answer "official of the owning club?";
       keep the schema, do not build a general RBAC engine
 - [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen
