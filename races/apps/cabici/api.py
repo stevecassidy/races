@@ -24,25 +24,21 @@ import time
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.db import IntegrityError, transaction
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 from rest_framework import generics, permissions, relations, serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import APIException, ParseError
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from .models import (
-    MEMBERSHIP_CATEGORY_CLUB,
     Club,
-    ClubGrade,
     ClubRole,
-    Membership,
     PointScore,
     Race,
     RaceCourse,
@@ -51,23 +47,7 @@ from .models import (
     Rider,
     UserRole,
 )
-
-
-def _truthy(value):
-    """Interpret a truth value from an uploaded result payload.
-
-    Both race-day clients send ``grade_change`` as a JSON boolean; the
-    template-era ``"y"``/``"n"`` strings are still accepted so an old payload
-    cannot silently stop applying grade changes (A9). Anything else is false.
-    """
-
-    if isinstance(value, bool):
-        return value
-    if isinstance(value, str):
-        return value.strip().lower() in ("y", "yes", "true", "1")
-    if isinstance(value, int):
-        return value != 0
-    return False
+from .services.results import ResultUploadError, upload_results
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -730,253 +710,36 @@ class RaceResultList(generics.ListCreateAPIView):
             # given a non integer for raceid
             raise Http404("Invalid Race ID") from exc
 
-    @transaction.atomic
     def post(self, request, *args, **kwargs):
-        """Handle post payload containing entries and new riders"""
+        """Handle post payload containing entries and new riders.
 
-        messages = []  # error messages
+        The operation itself lives in ``services.results``; this is only the
+        HTTP projection -- stash the payload for debugging, map a rejected
+        payload to a 400, and shape the response.
+        """
 
         data = request.data
-        if "race" in data:
-            raceid = data["race"]
-        else:
-            raise APIException("Invalid JSON for race results: require 'race'")
-
-        try:
-            # lock the race so two concurrent uploads for the same race serialise
-            # rather than interleaving their delete/insert (D3)
-            race = Race.objects.select_for_update().get(id=raceid)
-        except Race.DoesNotExist as exc:
-            raise APIException("Invalid Race ID in JSON upload") from exc
 
         # stash the payload in a file for later analysis
         if settings.SAVE_RESULT_UPLOADS:
             if not os.path.exists(settings.SAVE_RESULT_UPLOADS_DIR):
                 os.makedirs(settings.SAVE_RESULT_UPLOADS_DIR)
-            filename = os.path.join(settings.SAVE_RESULT_UPLOADS_DIR, f"{race.id}-{time.time()}.json")
+            filename = os.path.join(settings.SAVE_RESULT_UPLOADS_DIR, f"{data.get('race')}-{time.time()}.json")
             with open(filename, "w") as fd:
                 json.dump(data, fd, indent=2)
 
-        ridermap = {}  # will hold a mapping between temporary and real ids for riders
-
-        # handle new and updated riders
-        for record in data.get("riders", []):
-            # new rider id starts with "ID"
-            if str(record["id"]).startswith("ID"):
-                # create a new rider record with these details
-                username = Rider.objects.make_username(
-                    record["first_name"], record["last_name"], str(record["licenceno"])
-                )
-
-                # just in case we know them already we use get_or_create
-                user, created = User.objects.get_or_create(username=username)
-                # add user details
-                user.first_name = record["first_name"]
-                user.last_name = record["last_name"]
-                if "email" in record:
-                    user.email = record["email"]
-                user.save()
-
-                try:
-                    club = Club.objects.get(slug=record["clubslug"])
-                except Club.DoesNotExist:
-                    messages.append("Unknown club '%s' in rider record ignored" % (record["clubslug"]))
-                    club = Club.objects.get(slug="Unknown")
-
-                if not created:
-                    # guard against recreating the rider
-                    rider = user.rider
-                    if rider.club != club:
-                        rider.club = club
-                        rider.save()
-                else:
-                    rider = Rider(licenceno=record["licenceno"], club=club, user=user)
-                    rider.save()
-
-                # membership
-                if "member_date" in record:
-                    memberdate = datetime.date.fromisoformat(record["member_date"])
-
-                    current = rider.current_membership
-
-                    if not current:
-                        m = Membership(rider=rider, club=rider.club, date=memberdate, category=MEMBERSHIP_CATEGORY_CLUB)
-                        m.save()
-
-                # grade
-                if "grade" in record:
-                    cg = rider.clubgrade_set.filter(club=race.club)
-                    if cg:
-                        cg[0].grade = record["grade"]
-                        cg[0].save()
-                    else:
-                        ClubGrade(rider=rider, club=race.club, grade=record["grade"]).save()
-
-                if "dob" in record:
-                    # validate date format
-                    try:
-                        dob = datetime.date.fromisoformat(record["dob"])
-                        rider.dob = dob
-                    except ValueError:
-                        messages.append("Bad DOB date format (%s) ignored" % record["dob"])
-
-                if "gender" in record and record["gender"] in ["M", "F"]:
-                    rider.gender = record["gender"]
-                if "phone" in record:
-                    rider.phone = record["phone"]
-
-                rider.save()
-                # now remember the id of this rider for the results entry later
-                ridermap[record["id"]] = rider.id
-            else:
-                # existing rider updated
-                try:
-                    rider = Rider.objects.get(id=record["id"])
-                except Rider.DoesNotExist:
-                    messages.append("Ignored new rider record with unknown temporary rider ID (%s)" % record)
-                    continue
-
-                # membership: club and date
-                if "clubslug" in record:
-                    try:
-                        record["club"] = Club.objects.get(slug=record["clubslug"])
-                    except Club.DoesNotExist:
-                        messages.append("Unknown club '%s' in rider record ignored" % (record["clubslug"]))
-                        record["club"] = Club.objects.get(slug="Unknown")
-
-                # try to parse the member date string
-                if "member_date" in record:
-                    try:
-                        record["member_date"] = datetime.date.fromisoformat(record["member_date"])
-                    except ValueError:
-                        del record["member_date"]
-
-                m = rider.current_membership
-                if m:
-                    # update club if different
-                    if "club" in record and m.club != record["club"]:
-                        m.club = record["club"]
-                        m.save()
-                        rider.club = record["club"]
-                        rider.save()
-
-                    # update membership date if more recent
-                    if "member_date" in record and record["member_date"] > m.date:
-                        # actually make a new membership
-                        mnew = Membership(
-                            rider=rider, club=rider.club, category=MEMBERSHIP_CATEGORY_CLUB, date=record["member_date"]
-                        )
-                        mnew.save()
-                        rider.save()  # to trigger timestamp update
-                elif "club" in record and "member_date" in record:
-                    # no current membership so make one
-                    m = Membership(rider=rider, club=record["club"], date=record["member_date"])
-                    m.save()
-                    rider.club = record["club"]
-                    rider.save()
-
-                # licenceno
-                if "licenceno" in record and rider.licenceno != record["licenceno"]:
-                    rider.licenceno = record["licenceno"]
-                    rider.save()
-
-                # name
-                if "first_name" in record and rider.user.first_name != record["first_name"]:
-                    rider.user.first_name = record["first_name"]
-                    rider.user.save()
-
-                if "last_name" in record and rider.user.last_name != record["last_name"]:
-                    rider.user.last_name = record["last_name"]
-                    rider.user.save()
-
-        # handle entries, first remove any existing results for this race
-        # then create one result for each entry
-        entryfields = ["rider", "grade"]
-
-        # count how many results we have already, if non zero we need to
-        # recalculate all of the pointscore, if zero we only need to do this one
-        previousresults = race.raceresult_set.all().count()
-
-        race.raceresult_set.all().delete()
-        for entry in data.get("entries", []):
-
-            # ensure all required fields
-            if not all(f in entry for f in entryfields):
-                raise APIException("Missing fields in JSON entry")
-
-            if str(entry["rider"]).startswith("ID"):
-                if entry["rider"] in ridermap:
-                    entry["rider"] = ridermap[entry["rider"]]
-                else:
-                    grade = entry.get("grade", "Unknown")
-                    number = entry.get("number", "Unknown")
-                    messages.append("Ignored result record with unknown temporary rider ID (%s/%s)" % (grade, number))
-                    continue
-
-            try:
-                rider = Rider.objects.get(id=entry["rider"])
-            except Rider.DoesNotExist:
-                grade = entry.get("grade", "Unknown")
-                number = entry.get("number", "Unknown")
-                messages.append("Rider (id=%s) not found for result (%s/%s)" % (entry["rider"], grade, number))
-                continue
-
-            if race.club.slug in rider.grades:
-                usual_grade = rider.grades[race.club.slug]
-            else:
-                usual_grade = entry["grade"]
-                # create a rider grade
-                ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
-                rider.save()  # to trigger timestamp update
-
-            if usual_grade != entry["grade"] and _truthy(entry.get("grade_change")):
-                # update rider grade
-                grade = ClubGrade.objects.get(rider=rider, club=race.club)
-                grade.grade = entry["grade"]
-                grade.save()
-                rider.save()  # to trigger timestamp update
-
-            if "dnf" in entry and entry["dnf"]:
-                dnf = True
-            else:
-                dnf = False
-
-            result = RaceResult(
-                rider=rider,
-                race=race,
-                grade=entry["grade"],
-                number=entry.get("number", 999),
-                usual_grade=usual_grade,
-                place=entry.get("place", 0),
-                dnf=dnf,
-            )
-            try:
-                # a savepoint keeps one rejected row from aborting the upload
-                with transaction.atomic():
-                    result.save()
-            except IntegrityError:
-                # a duplicate number within a grade: report it rather than drop
-                # the result silently. The race row is locked, so this is a
-                # genuine duplicate in the payload, not a race with another upload
-                messages.append(
-                    "Ignored duplicate result for rider %s in grade %s (number %s)"
-                    % (rider.id, entry.get("grade"), entry.get("number"))
-                )
-
-        # once results are in place, we tally the pointscores for this race
-        if previousresults > 0:
-            # need to recalculate pointscores since we've deleted results
-            for ps in race.pointscore_set.all():
-                ps.recalculate()
-        else:
-            # can just tally these results
-            race.tally_pointscores()
+        try:
+            result = upload_results(data)
+        except ResultUploadError as exc:
+            raise ParseError(str(exc)) from exc
 
         return Response(
             {
                 "message": "race results uploaded",
-                "errors": messages,
-                "ridermap": ridermap,
+                "errors": result.errors,
+                "ridermap": result.ridermap,
+                "deleted": result.deleted,
+                "created": result.created,
             }
         )
 

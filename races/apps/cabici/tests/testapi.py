@@ -979,3 +979,27 @@ class APITests(APITestCase):
         self.client.force_login(self.movofficial, backend="django.contrib.auth.backends.ModelBackend")
         response = self.client.delete(url)
         self.assertEqual(204, response.status_code)
+
+    # ---- rejected payloads are 400, not 500 (the view projects service errors) ----
+
+    def test_upload_missing_race_is_400(self):
+        response = self.upload({"entries": []})
+        self.assertEqual(400, response.status_code)
+
+    def test_upload_unknown_race_is_400(self):
+        response = self.upload({"race": 999999, "entries": []})
+        self.assertEqual(400, response.status_code)
+
+    def test_upload_missing_entry_fields_is_400(self):
+        response = self.upload({"race": Race.objects.get(id=1).id, "entries": [{"grade": "A"}]})
+        self.assertEqual(400, response.status_code)
+
+    def test_upload_response_reports_replacement(self):
+        """The response makes the replace-all visible (deleted/created)"""
+
+        response = self.upload(self.grade_change_payload(Rider.objects.get(id=2930), "B", False))
+
+        self.assertEqual(200, response.status_code)
+        jsonresp = response.json()
+        self.assertEqual(0, jsonresp["deleted"])
+        self.assertEqual(1, jsonresp["created"])
