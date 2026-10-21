@@ -17,7 +17,7 @@
 import datetime
 import json
 import os
-from unittest import skip
+from unittest import mock, skip
 
 from django.contrib.auth.models import User
 from django.db.models import Max
@@ -63,6 +63,18 @@ class APITests(APITestCase):
         self.pointscore = PointScore(club=self.oge, name="sample pointscore")
 
         self.pointscore.save()
+
+    def mov_official_token(self):
+        """Auth token for an official of MOV, the club that owns race 1.
+
+        setUp creates the MOV user but no Rider for it, so make that Rider
+        here; creating it in setUp would change the rider counts that
+        test_rider_list depends on.
+        """
+
+        Rider.objects.get_or_create(user=self.movofficial, defaults={"club": self.mov, "official": True})
+        token, _ = Token.objects.get_or_create(user=self.movofficial)
+        return token
 
     def test_club_list(self):
         """Can retrieve club information via the API"""
@@ -662,7 +674,7 @@ class APITests(APITestCase):
         """Can upload JSON results via the API"""
 
         url = "/api/raceresults/"
-        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+        token = self.mov_official_token()
         with open(os.path.join(os.path.dirname(__file__), "result-upload.json")) as fd:
             payload = json.load(fd)
 
@@ -766,7 +778,7 @@ class APITests(APITestCase):
         cause any problems"""
 
         url = "/api/raceresults/"
-        token, created = Token.objects.get_or_create(user=self.ogeofficial)
+        token = self.mov_official_token()
         with open(os.path.join(os.path.dirname(__file__), "result-upload.json")) as fd:
             payload = json.load(fd)
 
@@ -788,3 +800,172 @@ class APITests(APITestCase):
         )
 
         self.assertEqual(200, response.status_code)
+
+    # ---- result upload: permissions and grade changes (A9, D3) ----
+
+    def upload(self, payload):
+        """POST a result payload as an official of the race's club"""
+
+        token = self.mov_official_token()
+        return self.client.post(
+            "/api/raceresults/",
+            json.dumps(payload),
+            content_type="application/json",
+            HTTP_AUTHORIZATION="Token %s" % token.key,
+        )
+
+    def grade_change_payload(self, rider, grade, grade_change):
+        """A one-entry upload for race 1 that asks for a grade change"""
+
+        return {
+            "race": Race.objects.get(id=1).id,
+            "entries": [
+                {
+                    "rider": rider.id,
+                    "grade": grade,
+                    "number": "1",
+                    "place": 1,
+                    "dnf": False,
+                    "grade_change": grade_change,
+                }
+            ],
+        }
+
+    def test_upload_requires_authentication(self):
+        """D3: an anonymous client cannot replace a race's results"""
+
+        payload = {"race": Race.objects.get(id=1).id, "entries": []}
+        response = self.client.post("/api/raceresults/", json.dumps(payload), content_type="application/json")
+
+        self.assertEqual(401, response.status_code)
+
+    def test_upload_requires_official(self):
+        """D3: an authenticated rider who is not an official cannot upload"""
+
+        user = User.objects.create_user("plainrider", password="hello")
+        Rider.objects.create(user=user, club=self.mov, official=False)
+        self.client.force_login(user, backend="django.contrib.auth.backends.ModelBackend")
+
+        payload = {"race": Race.objects.get(id=1).id, "entries": []}
+        response = self.client.post("/api/raceresults/", json.dumps(payload), content_type="application/json")
+
+        self.assertEqual(403, response.status_code)
+
+    def test_upload_rejects_official_of_another_club(self):
+        """D3: an official of another club cannot replace this race's results"""
+
+        # ogeofficial is an official of OGE; race 1 belongs to MOV
+        self.client.force_login(self.ogeofficial, backend="django.contrib.auth.backends.ModelBackend")
+
+        payload = {"race": Race.objects.get(id=1).id, "entries": []}
+        response = self.client.post("/api/raceresults/", json.dumps(payload), content_type="application/json")
+
+        self.assertEqual(403, response.status_code)
+
+    def test_upload_applies_grade_change_boolean(self):
+        """A9: a JSON boolean grade_change promotes the rider's grade"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        ClubGrade.objects.create(rider=rider, club=race.club, grade="C")
+
+        response = self.upload(self.grade_change_payload(rider, "B", True))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("B", ClubGrade.objects.get(rider=rider, club=race.club).grade)
+
+    def test_upload_ignores_grade_change_false(self):
+        """A9: grade_change false leaves the rider's grade alone"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        ClubGrade.objects.create(rider=rider, club=race.club, grade="C")
+
+        response = self.upload(self.grade_change_payload(rider, "B", False))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("C", ClubGrade.objects.get(rider=rider, club=race.club).grade)
+
+    def test_upload_applies_legacy_grade_change_string(self):
+        """A9: the template-era 'y' still applies, so old payloads keep working"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        ClubGrade.objects.create(rider=rider, club=race.club, grade="C")
+
+        response = self.upload(self.grade_change_payload(rider, "B", "y"))
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual("B", ClubGrade.objects.get(rider=rider, club=race.club).grade)
+
+    def test_result_response_exposes_grade_change(self):
+        """A9: a download reports the grade change instead of resetting it"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        ClubGrade.objects.create(rider=rider, club=race.club, grade="C")
+
+        self.upload(self.grade_change_payload(rider, "B", True))
+
+        response = self.client.get("/api/raceresults/?race=%d" % race.id)
+        self.assertEqual(200, response.status_code)
+        entries = {entry["riderid"]: entry for entry in response.json()}
+        self.assertTrue(entries[rider.id]["grade_change"])
+
+    def test_result_response_grade_change_false_by_default(self):
+        """A9: a result that did not move the rider's grade reports false"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        ClubGrade.objects.create(rider=rider, club=race.club, grade="B")
+
+        self.upload(self.grade_change_payload(rider, "B", False))
+
+        response = self.client.get("/api/raceresults/?race=%d" % race.id)
+        entries = {entry["riderid"]: entry for entry in response.json()}
+        self.assertFalse(entries[rider.id]["grade_change"])
+
+    def test_upload_is_atomic(self):
+        """D3: a failure part-way through an upload leaves the race untouched"""
+
+        race = Race.objects.get(id=1)
+        rider_a = Rider.objects.get(id=2930)
+        rider_b = Rider.objects.get(id=2931)
+        RaceResult.objects.create(race=race, rider=rider_a, grade="B", usual_grade="B", number=1, place=1)
+        before = list(race.raceresult_set.order_by("rider_id").values_list("rider_id", "grade", "number", "place"))
+
+        payload = {
+            "race": race.id,
+            "entries": [
+                {"rider": rider_a.id, "grade": "B", "number": "1", "place": 2, "dnf": False},
+                {"rider": rider_b.id, "grade": "B", "number": "2", "place": 1, "dnf": False},
+            ],
+        }
+
+        with mock.patch("races.apps.cabici.usermodel.RaceResult.save", side_effect=RuntimeError("boom")):
+            with self.assertRaises(RuntimeError):
+                self.upload(payload)
+
+        # the delete and every insert were rolled back
+        after = list(race.raceresult_set.order_by("rider_id").values_list("rider_id", "grade", "number", "place"))
+        self.assertEqual(before, after)
+
+    def test_delete_result_requires_official_of_race_club(self):
+        """D3: the detail route applies the same club-official rule"""
+
+        race = Race.objects.get(id=1)
+        rider = Rider.objects.get(id=2930)
+        result = RaceResult.objects.create(race=race, rider=rider, grade="B", usual_grade="B", number=1, place=1)
+        url = "/api/raceresults/%d/" % result.id
+
+        response = self.client.delete(url)
+        self.assertEqual(401, response.status_code)
+
+        self.client.force_login(self.ogeofficial, backend="django.contrib.auth.backends.ModelBackend")
+        response = self.client.delete(url)
+        self.assertEqual(403, response.status_code)
+
+        self.mov_official_token()
+        self.client.force_login(self.movofficial, backend="django.contrib.auth.backends.ModelBackend")
+        response = self.client.delete(url)
+        self.assertEqual(204, response.status_code)

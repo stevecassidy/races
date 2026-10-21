@@ -223,9 +223,12 @@ how this slipped — the bullets are now stated as landed only where they are.
       expresses the entitlement; `RACING_CATEGORIES` replaces the single-literal
       filters (`Club.statistics()` now counts both racing categories)
       (`fix/phase2.1-membership-categories`)
-- [ ] **A9 — the one live production bug:** `grade_change == "y"` vs the boolean
+- [x] **A9 — the one live production bug:** `grade_change == "y"` vs the boolean
       both clients send → in-race grade changes have never applied in production;
-      also missing from the GET response so downloads reset it. Fix both ends
+      also missing from the GET response so downloads reset it. Fixed both ends:
+      `_truthy()` accepts the JSON boolean (and the legacy `"y"`), and the
+      serializer exposes `grade_change` as `grade != usual_grade`
+      (`fix/phase2.1-grade-change`)
 - [ ] A3: fix or drop `Race`/`Rider.get_absolute_url()` (admin "View on site" 500s)
 - [ ] **Membership, track (a) — local verification, unblocked, do now** (A2's
       categories are done; this is the rest of it): the React app already ships
@@ -299,11 +302,16 @@ how this slipped — the bullets are now stated as landed only where they are.
       their absence is why D1/D2 survived both suites
 
 **Server-side fixes (affect the deployed Angular app)**
-- [ ] **D3 (server half):** no permission class, no transaction — any
-      authenticated user can replace any race's results, and a mid-request failure
-      leaves it half-populated (reproduced: 3 → 1, HTTP 200). Add
-      `transaction.atomic()`, a permission class, and an explicit overwrite
-      contract instead of silent replace-all
+- [x] **D3 (server half) — permissions + atomicity:** `RaceResultPermission`
+      requires an official of the race's club (reads stay open; guarded against a
+      User with no Rider), `post()` is `@transaction.atomic` with the race row
+      locked and per-row savepoints, and a rejected duplicate is reported rather
+      than dropped silently (`fix/phase2.1-grade-change`)
+- [ ] **D3 (server half) — explicit overwrite contract:** the upload still
+      replaces all results for a race. The confirmation flag / `If-Match` version
+      contract belongs with the new results endpoint in 2.2/2.5, where both
+      clients' shapes are designed — a required flag would break the deployed
+      Angular app
 - [ ] **A8:** honour `member_category` + `verifiedMemberDate` (track (a) above)
 - [ ] **Preserve the offline contract:** full paginated load + `localStorage`
       cache + `?changed=<unix>` merge-by-`rider.id`. Load-bearing at the

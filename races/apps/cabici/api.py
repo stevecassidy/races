@@ -24,7 +24,7 @@ import time
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.http import Http404
 from django.utils.translation import gettext_lazy as _
 from rest_framework import generics, permissions, relations, serializers
@@ -49,6 +49,23 @@ from .usermodel import (
     Rider,
     UserRole,
 )
+
+
+def _truthy(value):
+    """Interpret a truth value from an uploaded result payload.
+
+    Both race-day clients send ``grade_change`` as a JSON boolean; the
+    template-era ``"y"``/``"n"`` strings are still accepted so an old payload
+    cannot silently stop applying grade changes (A9). Anything else is false.
+    """
+
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in ("y", "yes", "true", "1")
+    if isinstance(value, int):
+        return value != 0
+    return False
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -191,6 +208,72 @@ class ClubOfficialPermission(permissions.BasePermission):
             return False
 
         return request.user.rider.club == club
+
+
+class RaceResultPermission(permissions.BasePermission):
+    """Write access to race results belongs to officials of the race's club.
+
+    Reads stay open (the result list is public). The upload is a
+    collection-level write whose race arrives in the request body, so the club
+    check has to happen in ``has_permission``; the detail route checks the
+    result's own race in ``has_object_permission`` (D3).
+    """
+
+    message = "Only officials of the race's club may change results."
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        race = self._race_from_body(request)
+        return self._is_club_official(request, race.club_id if race is not None else None)
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        if not isinstance(obj, RaceResult):
+            return False
+
+        return self._is_club_official(request, obj.race.club_id)
+
+    @staticmethod
+    def _race_from_body(request):
+        """Resolve the race named in an upload body, or None.
+
+        A missing or malformed race is left for the view to reject with its
+        usual error; validating the payload is not this permission's job.
+        """
+
+        data = getattr(request, "data", None)
+        if not isinstance(data, dict) or not data.get("race"):
+            return None
+        try:
+            return Race.objects.filter(pk=data["race"]).first()
+        except TypeError, ValueError:
+            return None
+
+    @staticmethod
+    def _is_club_official(request, club_id):
+        """Is the request user an official of ``club_id`` (or a superuser)?
+
+        ``getattr`` is deliberate: a User need not have a Rider, and an
+        unguarded ``request.user.rider`` raises inside the permission check,
+        turning a 403 into a 500.
+        """
+
+        user = getattr(request, "user", None)
+        if user is None or not user.is_authenticated:
+            return False
+        if user.is_superuser:
+            return True
+
+        rider = getattr(user, "rider", None)
+        if rider is None or not rider.official:
+            return False
+        if club_id is None:
+            # no race to compare against; the view will reject the payload
+            return True
+        return rider.club_id == club_id
 
 
 # ---------------Club------------------
@@ -590,6 +673,16 @@ class RaceResultSerializer(serializers.ModelSerializer):
     rider = serializers.SerializerMethodField("rider_name")
     riderid = serializers.SerializerMethodField("rider_id")
     club = serializers.SerializerMethodField("club_name")
+    grade_change = serializers.SerializerMethodField("grade_change_flag")
+
+    def grade_change_flag(self, result):
+        """A9: did this result move the rider's grade?
+
+        Derived rather than stored, so a download/upload round trip keeps the
+        flag instead of resetting it to false -- the old response omitted it.
+        """
+
+        return bool(result.usual_grade) and result.grade != result.usual_grade
 
     def club_name(self, result):
         if result.rider.club is not None:
@@ -608,6 +701,7 @@ class RaceResultSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+@permission_classes((RaceResultPermission,))
 class RaceResultList(generics.ListCreateAPIView):
 
     serializer_class = RaceResultSerializer
@@ -634,6 +728,7 @@ class RaceResultList(generics.ListCreateAPIView):
             # given a non integer for raceid
             raise Http404("Invalid Race ID") from exc
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         """Handle post payload containing entries and new riders"""
 
@@ -646,7 +741,9 @@ class RaceResultList(generics.ListCreateAPIView):
             raise APIException("Invalid JSON for race results: require 'race'")
 
         try:
-            race = Race.objects.get(id=raceid)
+            # lock the race so two concurrent uploads for the same race serialise
+            # rather than interleaving their delete/insert (D3)
+            race = Race.objects.select_for_update().get(id=raceid)
         except Race.DoesNotExist as exc:
             raise APIException("Invalid Race ID in JSON upload") from exc
 
@@ -830,7 +927,7 @@ class RaceResultList(generics.ListCreateAPIView):
                 ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
                 rider.save()  # to trigger timestamp update
 
-            if usual_grade != entry["grade"] and "grade_change" in entry and entry["grade_change"] == "y":
+            if usual_grade != entry["grade"] and _truthy(entry.get("grade_change")):
                 # update rider grade
                 grade = ClubGrade.objects.get(rider=rider, club=race.club)
                 grade.grade = entry["grade"]
@@ -851,14 +948,18 @@ class RaceResultList(generics.ListCreateAPIView):
                 place=entry.get("place", 0),
                 dnf=dnf,
             )
-            try:  # noqa: SIM105 - the explicit except documents a concurrency assumption
-                result.save()
+            try:
+                # a savepoint keeps one rejected row from aborting the upload
+                with transaction.atomic():
+                    result.save()
             except IntegrityError:
-                # since we deleted all entries for this race at the start of the loop
-                # the most likely cause of this error is two upload requests running
-                # at the same time, so we just ignore this error assuming that
-                # the existing record is the same as this one
-                pass
+                # a duplicate number within a grade: report it rather than drop
+                # the result silently. The race row is locked, so this is a
+                # genuine duplicate in the payload, not a race with another upload
+                messages.append(
+                    "Ignored duplicate result for rider %s in grade %s (number %s)"
+                    % (rider.id, entry.get("grade"), entry.get("number"))
+                )
 
         # once results are in place, we tally the pointscores for this race
         if previousresults > 0:
@@ -878,6 +979,7 @@ class RaceResultList(generics.ListCreateAPIView):
         )
 
 
+@permission_classes((RaceResultPermission,))
 class RaceResultDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RaceResult.objects.all()
     serializer_class = RaceResultSerializer
