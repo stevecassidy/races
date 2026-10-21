@@ -81,25 +81,21 @@ The server has **zero support for any of it**:
   **withdrawn** (fact 2), and its replacement provider has no spec yet.
 
 So the app currently has **no membership verification whatsoever** in production,
-and the unfinished React client contains the design for the interim one. This
-splits the membership work in 2.1 into two tracks with very different blocking
-status:
+and the unfinished React client contains the design for the interim one.
 
-- **(a) Local verification — unblocked, do now.** Store a verified date,
-honour `member_category` and `verifiedMemberDate` on upload, expose membership
-as a resource. No provider dependency. This is the workflow race directors
-actually need today, and it is what makes the React app finishable.
-- **(b) Provider integration — blocked** on the new API provider's spec. Design
-  the seam (a `MembershipSource` interface or equivalent) so (a) can be
-  supplemented rather than rewritten when the spec lands. Do **not** hold (a)
-  hostage to (b).
+**Deferred — owner decision, 2026-10-21.** The earlier revision split this into
+an unblocked local-verification track (a) and a provider track (b), on the
+argument that the client's flow was independent of the provider. That split is
+withdrawn: with no authoritative source of membership data there is nothing to
+verify against, so building the storage and API around the client's flow now
+risks rework when the provider's data model lands. Track (a), track (b), **A8**
+and the `current_membership` fix (**C10**) are all deferred until the AusCycling
+provider spec is available. Production continues without verification and the
+React app's flow stays unfinished — an accepted trade-off, not an oversight.
 
-That also revises the earlier "fix A2 when the new categories land" instruction:
-the inverted `MEMBERSHIP_CATEGORY_CHOICES` tuple (A2) is a **live bug in the
-admin** today — writing `'Race'` makes a membership invisible to the seven
-`category="race"` sites — and it should be fixed with track (a), not deferred to
-an unspecified provider date. Adopting the new category vocabulary can follow
-later as a second migration; the inversion should not wait.
+The inverted `MEMBERSHIP_CATEGORY_CHOICES` tuple (A2) was a **live admin bug**
+and has since been fixed independently, in migration `0019`, adopting the
+`Ride`/`Club`/`Race` vocabulary. That part stands.
 
 ### What same-origin actually commits us to
 
@@ -148,8 +144,8 @@ correct upload/download semantics. Recommendation:
 - **2.3** the contract must be satisfiable by *both* Angular (unchanged,
   deployed) and the React app (evolving in-repo). The generated client serves the
   React side; Angular is the regression baseline.
-- **2.1** membership splits into track (a) unblocked now and track (b) blocked on
-  the provider; **A2 is fixed now**, not deferred.
+- **2.1** membership is **deferred** (owner decision 2026-10-21) pending the
+  AusCycling provider spec; the A2 category fix shipped independently.
 - **2.4** deletes CORS, adds the allauth-link-into-SPA task, and settles token
   storage as httpOnly cookie + in-memory access.
 - **Phase 4** gains: multi-stage Docker with a Node build, the
@@ -298,7 +294,8 @@ visible from the code:
    point values are hardcoded (a quick fix rather than an oversight).
 
 Membership categories also need updating to reflect AusCycling's new membership
-system — a forward requirement, not merely the inverted-choices bug in A2.
+system. The A2 vocabulary fix shipped (migration `0019`); the rest of the
+membership work is deferred pending the provider spec.
 
 ### What this changes
 
@@ -422,12 +419,11 @@ wanted for humans or the desktop workflow, it comes back as an explicit
    is deleted not retained, and the XLS export disappears (no live consumer).
    ~~**New question in its place: which client is live on race day?**~~ —
    **Answered by the third revision: Angular.** No live data loss, no hotfix.
-2. **Membership categories are blocked on the new AusCycling spec.** Don't ship
-   two migrations: fix the inverted tuple (A2) *as part of* adopting the new
-   category set, in one migration. The upload payload already carries
-   `member_category` (A8) and the React app also sends a `verifiedMemberDate`
-   the server has never handled — settle all three together. Historical note:
-   the Angular app once used a `'trial'` category (`2e838ef Change membership
+2. ~~**Membership categories are blocked on the new AusCycling spec.**~~ —
+   **A2 shipped** (migration `0019`, the `Ride`/`Club`/`Race` set). The rest —
+   A8 (`member_category`) and the `verifiedMemberDate` field — is **deferred**
+   with the membership track, pending the provider spec. Historical note: the
+   Angular app once used a `'trial'` category (`2e838ef Change membership
    types`, 2022), so this vocabulary has churned before; pin it in the schema
    rather than letting clients invent values.
 3. **Pointscale:** wire `score()` to its config fields (WMCC scale becomes
@@ -456,8 +452,9 @@ rescue.
 **After the briefing, the picture is better than it first looked.** Four of the
 nine defects (A4–A7) sit in code that is being retired, and C2/C3/C4/C9 shrink
 or disappear — so the model layer is in less trouble than the raw count
-suggests. Two defects become *more* important instead: **A8** and **A9**, both in
-the race-day upload contract, which is the app's only live rider-creation path.
+suggests. Two defects sit in the race-day upload contract — the app's only live
+rider-creation path: **A9** (fixed) and **A8** (deferred with the membership
+track).
 
 The general lesson from A6/A7 still stands and is the argument for doing model
 work before endpoints: a core feature raised `TypeError` on every call for years
@@ -478,14 +475,14 @@ four are retired with the code they live in rather than repaired.
 | A5 | **`except ValueError, Rider.DoesNotExist:`** — Python 2 syntax that only parses because PEP 758 landed in 3.14; invisible to ruff, breaks on ≤3.13. | `models.py:706` | **Delete** — it lives inside `load_excel_results()`, whose only callers are 4 tests. |
 | A6 | **`Club.ingest_ical()` raises `TypeError` on every call** — builds `Race(date=…, time=…)`; `Race` has no `time` field. Reproduced against `tests/cccc.ical`. Invisible because `manage.py ingest` catches per club and only *prints*, and the sibling `ingest_by_module()` path works, so half the subsystem functions. | `models.py:461-470` | **Delete** with the retirement pass (fact 1). Was flagged "check production"; moot once ingest is retired. |
 | A7 | **The whole ingest test suite is disabled** — `testingest.py` declares `class IngestTests():` with the `TestCase` base commented out, so **0 tests collect** (verified) and 7 VCR cassettes are dead. The direct cause of A6 surviving for years. | `tests/testingest.py:26` | **Delete** with the retirement pass. Keep the lesson: untested surfaces rot silently. |
-| A8 | **The upload endpoint silently drops `member_category`** — and, more importantly, **the entire `verifiedMemberDate` mechanism**. The React app ships a complete manual at-the-track membership verification flow (`MembershipVerificationDialog`, `membershipUtils`) that sends `verifiedMemberDate`; `grep -rn "verifiedMemberDate\|verified_member" races --include=*.py` returns **nothing**. Angular sends neither field. | `api.py:694,757` | **Forward requirement, not a production bug** (third revision). Becomes load-bearing when the React app is finished, and it is the core of *track (a)* of the membership work — which is **unblocked** and should not wait for the new provider. |
+| A8 | **The upload endpoint silently drops `member_category`** — and, more importantly, **the entire `verifiedMemberDate` mechanism**. The React app ships a complete manual at-the-track membership verification flow (`MembershipVerificationDialog`, `membershipUtils`) that sends `verifiedMemberDate`; `grep -rn "verifiedMemberDate\|verified_member" races --include=*.py` returns **nothing**. Angular sends neither field. | `api.py:694,757` | **Deferred** with the membership track (owner decision, 2026-10-21) — blocked on the AusCycling provider spec. It becomes load-bearing when the React app is finished, but with no authoritative membership source there is nothing to verify against yet. |
 | A9 | **⚠️ LIVE PRODUCTION BUG — `grade_change` never applies.** Both clients send a JSON boolean; `api.py:821` compares `== "y"`. Angular (deployed) forwards it verbatim (`entry.service.ts:240`), so **in-race grade changes have never worked in production**. The `"y"` is template-era residue from a `ChoiceField` whose form layer was deleted. | `api.py:821` | **Fixed** in `fix/phase2.1-grade-change` — the comparison accepts the JSON boolean (and the legacy `"y"`), and the response now exposes `grade_change`, with regression tests through the real HTTP boundary. |
 
-A1 and A2 change computed results or stored data. **A9 is the one live
-production bug** in the review; **A8 is a forward requirement** that gates
-finishing the React client and is the substance of the unblocked half of the
-membership work (third revision). A8 and A9 were both found only by reading the
-actual clients rather than inferring them from the server.
+A1 and A2 change computed results or stored data. **A9 was the one live
+production bug** in the review and is now fixed. **A8** sits in the same upload
+contract but is **deferred** with the membership track, pending the provider
+spec. Both were found only by reading the actual clients rather than inferring
+them from the server.
 
 ### Tier B — Integrity that belongs in the database
 
@@ -576,9 +573,9 @@ follows are the model-layer questions that remain.
    **DECIDED and shipped.** The owner supplied the vocabulary (`Ride`, `Club`,
    `Race`; `Club` and `Race` permit racing, `Ride` does not), so the inversion
    fix and the re-mapping landed as a single migration instead of two. What
-   remains from that decision is **A8** (honour the payload's `member_category`,
-   which now round-trips as `Race`/`Club`/`Ride`) and the `verifiedMemberDate`
-   field the server has never handled.
+   remains from that decision — **A8** (honour the payload's `member_category`)
+   and the `verifiedMemberDate` field — is now **deferred** with the membership
+   track pending the provider spec (2026-10-21).
 3. ~~A6/A7 (broken ical ingest)~~ — **resolved by retirement**; the production
    `icalurl` question is moot once the code is gone.
 4. **C4:** `RacePrototype` is deleted by the retirement pass. `Race.grading`
