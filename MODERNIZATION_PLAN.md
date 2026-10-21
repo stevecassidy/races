@@ -341,10 +341,11 @@ cassettes, 7 model fields.
       `ngram`, `beautifulsoup4`, `requests`, `vcrpy`, `pytz`,
       `python-dateutil`, `pyexcel`, `pyexcel-xls`, `openpyxl`,
       `django-cors-headers`
-- [ ] **Keep, relocate into `services/`** in 2.1/2.5 (real domain rules):
-      `PointScore.score()`/`tally()`/`recalculate()`, `Race.tally_pointscores()`,
-      `fix_small_races()`, `Club.allocate_officials()`/`promotion()`/
-      `performancereport()`, `Rider.classification()`
+- [x] **Keep, relocate into `services/`** (real domain rules) — done in the C2
+      slices: `PointScore.score()`/`tally()`/`recalculate()`,
+      `Race.tally_pointscores()`, `fix_small_races()` (`services/pointscore.py`);
+      `Club.allocate_officials()`/`promotion()`/`performancereport()`,
+      `Rider.classification()` (`services/officials.py`)
 
 **Success Criteria — met:** 3,463 fewer Python lines; `manage.py check`,
 `makemigrations --check` and the suite green with the dead tests removed (45
@@ -465,10 +466,11 @@ When the provider spec lands:
       `services/pointscore.py` and removed from the models; the write operations
       own their transaction and the callers are updated
       (`refactor/phase2.1-services-pointscore`)
-- [ ] C2 (remaining slices): `services/officials.py`, `services/exports.py`
-      (deferred until wanted) — pure functions, `transaction.atomic()` at the
-      operation boundary, typed results; move the logic outright and update
-      callers
+- [x] C2 (officials + exports slice): allocation, promotion, performance
+      reports and rider classification moved into `services/officials.py`; the
+      member CSV and rider/race-summary row builders recovered into
+      `services/exports.py` as data-only functions (no XLS dependency re-added).
+      **C2 is complete** (`refactor/phase2.1-services-officials-exports`)
 - [ ] C3: **simplified by the briefing** — with one client club, permissions
       answer "is this an official of the club that owns this object?". Keep the
       schema (capability flags, `UserRole`/`ClubRole`) but do not design a

@@ -194,9 +194,10 @@ Two process notes for the PR workflow this is the first change under: a green
 undeclared deps, and marking a checklist item `[x]` before its commit exists is
 how this slipped — the bullets are now stated as landed only where they are.
 
-- [ ] **Keep, move to `services/` in 2.1/2.5**: pointscore score/tally/recalculate,
-      `tally_pointscores`, `fix_small_races`, official allocation, promotion and
-      performance reports, `classification`
+- [x] **Keep, move to `services/`**: pointscore score/tally/recalculate,
+      `tally_pointscores`, `fix_small_races` (`services/pointscore.py`); official
+      allocation, promotion and performance reports, `classification`
+      (`services/officials.py`)
 
 ### 2.1 Model Hardening (Weeks 5-6)
 - [x] A1: `PointScore.score()` now reads its own `points` / `smallpoints` /
@@ -269,9 +270,15 @@ how this slipped — the bullets are now stated as landed only where they are.
       management command and the pointscore tests. `current()`, `tabulate()` and
       `audit()` stay on the model as read accessors
       (`refactor/phase2.1-services-pointscore`)
-- [ ] C2 (remaining slices): `services/officials.py` (allocation, promotion,
-      performance reports), `services/exports.py` (deferred until wanted). Move
-      the logic outright and update callers
+- [x] C2 (officials + exports slice): `officials_with_counts`,
+      `allocate_officials` (atomic), `performance_report`, `promotion`,
+      `promotable_riders`, `rider_performance_report` and `classification` moved
+      into `services/officials.py` and removed from `Club`/`Rider`; callers
+      updated (the pointscore service, `racetags.py`, the Rider serializer and
+      the tests). `services/exports.py` recovers the member-CSV and
+      rider/race-summary row builders as data-only functions — no
+      pyexcel/openpyxl re-added; XLS serialisation is left to a 2.5 adapter.
+      **C2 is complete** (`refactor/phase2.1-services-officials-exports`)
 - [ ] C3: **simplified** — permissions answer "official of the owning club?";
       keep the schema, do not build a general RBAC engine
 - [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen

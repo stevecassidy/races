@@ -34,6 +34,7 @@ from races.apps.cabici.models import (
     RaceResult,
     Rider,
 )
+from races.apps.cabici.services.officials import classification
 
 
 class UserModelTests(TestCase):
@@ -88,13 +89,13 @@ class UserModelTests(TestCase):
 
         # try some different ages
         rider.dob = datetime.date(thisyear - 48, 1, 1)
-        self.assertEqual("M4", rider.classification)
+        self.assertEqual("M4", classification(rider))
 
         rider.dob = datetime.date(thisyear - 54, 1, 1)
-        self.assertEqual("M5", rider.classification)
+        self.assertEqual("M5", classification(rider))
 
         rider.dob = datetime.date(thisyear - 23, 1, 1)
-        self.assertEqual("Elite Men", rider.classification)
+        self.assertEqual("Elite Men", classification(rider))
 
         # females are a bit different
         rider.gender = "F"
@@ -102,20 +103,20 @@ class UserModelTests(TestCase):
 
         # try some different ages
         rider.dob = datetime.date(thisyear - 48, 1, 1)
-        self.assertEqual("W4", rider.classification)
+        self.assertEqual("W4", classification(rider))
 
         rider.dob = datetime.date(thisyear - 54, 1, 1)
-        self.assertEqual("W5", rider.classification)
+        self.assertEqual("W5", classification(rider))
 
         rider.dob = datetime.date(thisyear - 23, 1, 1)
-        self.assertEqual("Elite Women", rider.classification)
+        self.assertEqual("Elite Women", classification(rider))
         # U23 is not for women
         rider.dob = datetime.date(thisyear - 22, 1, 1)
-        self.assertEqual("Elite Women", rider.classification)
+        self.assertEqual("Elite Women", classification(rider))
 
         # kiddies
         rider.dob = datetime.date(thisyear - 12, 1, 1)
-        self.assertEqual("U13 Girls", rider.classification)
+        self.assertEqual("U13 Girls", classification(rider))
 
     def test_member_category(self):
 
