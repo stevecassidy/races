@@ -251,7 +251,9 @@ how this slipped — the bullets are now stated as landed only where they are.
       clash" workaround in `api.py` (the others went with 2.0)
 - [ ] Indexes on `Race(date, status)` and pointscore ordering columns
 - [ ] Verify no duplicate data against a production copy before applying
-- [ ] C1: merge `usermodel.py` into `models.py` (removes 6 circular imports)
+- [x] C1: `usermodel.py` merged into `models.py` and deleted; the six
+      function-level circular imports are gone. No migration required
+      (`refactor/phase2.1-merge-models`)
 - [ ] C2: extract `services/` (results, pointscore, officials, exports)
 - [ ] C3: **simplified** — permissions answer "official of the owning club?";
       keep the schema, do not build a general RBAC engine

@@ -21,15 +21,16 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.test import TestCase
 
-from races.apps.cabici.models import Club, Race
-from races.apps.cabici.usermodel import (
+from races.apps.cabici.models import (
     MEMBERSHIP_CATEGORY_CHOICES,
     MEMBERSHIP_CATEGORY_CLUB,
     MEMBERSHIP_CATEGORY_RACE,
     MEMBERSHIP_CATEGORY_RIDE,
     RACING_CATEGORIES,
+    Club,
     ClubGrade,
     Membership,
+    Race,
     RaceResult,
     Rider,
 )

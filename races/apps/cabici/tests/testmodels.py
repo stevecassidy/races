@@ -17,10 +17,12 @@
 import datetime
 from decimal import Decimal
 
+from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 
 from races.apps.cabici.geoposition import Geoposition
-from races.apps.cabici.models import Club, Race, RaceCourse
+from races.apps.cabici.models import Club, Race, RaceCourse, Rider
 
 
 class ModelTests(TestCase):
@@ -69,3 +71,39 @@ class ModelTests(TestCase):
 
         reloaded = RaceCourse.objects.get(pk=loc.pk)
         self.assertEqual(str(reloaded.location), "-33.8688,151.2093")
+
+    def make_race(self):
+        club = Club(name="test club", website="http://example.com/", slug="TEST")
+        club.save()
+        loc = RaceCourse(name="Test Course")
+        loc.save()
+        race = Race(title="Race Title", date=datetime.date.today(), signontime="08:00", club=club, location=loc)
+        race.save()
+        return race
+
+    def test_get_absolute_url_points_at_api(self):
+        """A3: the model URLs must resolve instead of reversing a retired route"""
+
+        race = self.make_race()
+        self.assertEqual("/api/races/%d/" % race.id, race.get_absolute_url())
+
+        user = User.objects.create_user("urlrider")
+        rider = Rider(user=user, club=race.club)
+        rider.save()
+
+        # the public rider identifier is Rider.id, matching the API (C7/A3)
+        self.assertEqual("/api/riders/%d/" % rider.id, rider.get_absolute_url())
+
+    def test_admin_view_on_site_redirects(self):
+        """A3: /admin/r/<content_type>/<id>/ redirects instead of raising 500"""
+
+        race = self.make_race()
+
+        admin_user = User.objects.create_superuser("admin", "admin@example.com", "password")
+        self.client.force_login(admin_user)
+
+        content_type = ContentType.objects.get_for_model(Race)
+        response = self.client.get("/admin/r/%d/%d/" % (content_type.pk, race.pk))
+
+        self.assertEqual(302, response.status_code)
+        self.assertIn("/api/races/%d/" % race.id, response["Location"])

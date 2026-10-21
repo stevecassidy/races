@@ -389,10 +389,13 @@ Prerequisite for serializers. Referenced items are the findings in
       reverse both verified against a copy of the development database with all
       6,288 rows accounted for. Adds `Membership.allows_racing` plus
       `RACING_CATEGORIES`, so entitlement stops being a single string literal
-- [ ] A3: remove or repair `Race.get_absolute_url()` / `Rider.get_absolute_url()`
-      (they reverse URL names that no longer exist → admin "View on site" 500s,
-      verified through `/admin/r/<content_type>/<id>/`); admin is the one UI we
-      keep through Phase 4. `feeds.py` `item_link` has the same fault
+- [x] A3: fixed `Race.get_absolute_url()` / `Rider.get_absolute_url()` — they
+      reversed the retired `race`/`rider` template names, so the admin "View on
+      site" shortcut 500'd. They now point at the API detail resources
+      (`race-detail`, `rider-detail`, keyed on `Rider.id` per C7), with tests for
+      both the model URL and the `/admin/r/<content_type>/<id>/` shortcut. Note
+      `feeds.py` was already deleted in an earlier pass, so its `item_link` is
+      moot (`refactor/phase2.1-merge-models`)
 - [x] **A9: the one live production bug** — `api.py:821` compares
       `entry["grade_change"] == "y"` while both clients send a JSON boolean, so
       in-race grade changes have never applied in production. Fixed: `_truthy()`
@@ -447,8 +450,11 @@ When the provider spec lands:
       (fixtures verified clean)
 
 **Structure (shapes the API):**
-- [ ] C1: merge `usermodel.py` into `models.py`, removing the six function-level
-      circular imports
+- [x] C1: merged `usermodel.py` into `models.py` and deleted the former — the
+      six function-level circular imports are gone, and `Club` methods now
+      reference `Rider`/`Membership`/`UserRole`/`RaceStaff`/`RaceResult` directly.
+      No migration: models keep their app label and names
+      (`refactor/phase2.1-merge-models`)
 - [ ] C2: extract `services/` (results, pointscore, officials, exports) — pure
       functions, `transaction.atomic()` at the operation boundary, typed
       results, no HTTP or filesystem I/O in models

@@ -24,8 +24,7 @@ import random
 
 from django.core.management.base import BaseCommand
 
-from races.apps.cabici.models import Race
-from races.apps.cabici.usermodel import ClubGrade, RaceResult, Rider
+from races.apps.cabici.models import ClubGrade, Race, RaceResult, Rider
 
 
 class Command(BaseCommand):
