@@ -392,12 +392,13 @@ Prerequisite for serializers. Referenced items are the findings in
       (they reverse URL names that no longer exist → admin "View on site" 500s,
       verified through `/admin/r/<content_type>/<id>/`); admin is the one UI we
       keep through Phase 4. `feeds.py` `item_link` has the same fault
-- [ ] **A9: the one live production bug** — `api.py:821` compares
+- [x] **A9: the one live production bug** — `api.py:821` compares
       `entry["grade_change"] == "y"` while both clients send a JSON boolean, so
-      in-race grade changes have never applied in production. Fix the comparison
-      (and the response, which omits `grade_change` entirely so a download
-      resets it to `false`), with a regression test through the real HTTP
-      boundary
+      in-race grade changes have never applied in production. Fixed: `_truthy()`
+      accepts the boolean (and the legacy `"y"`), and the serializer now exposes
+      `grade_change` as `grade != usual_grade` so a download no longer resets it
+      to `false`. Regression tests through the real HTTP boundary
+      (`fix/phase2.1-grade-change`)
 
 **Membership — two tracks (third revision):**
 
@@ -554,13 +555,18 @@ against the real API.
       while **both** clients send a JSON boolean, so in-race grade changes have
       never applied in production. Also absent from the GET response, so a
       download resets it to `false`. Fix both ends
-- [ ] **D3 (server half):** the upload deletes all results then re-inserts only
-      what is sent, with no permission class and no transaction — so *any*
-      authenticated user can replace any race's results, and a mid-request failure
-      leaves the race half-populated. Reproduced: 3 results → 1, HTTP 200, no
-      conflict signal. Add `transaction.atomic()`, a permission class, and an
-      explicit overwrite contract (confirmation flag or version/`If-Match`)
-      instead of silent replace-all — **while staying acceptable to Angular**
+- [x] **D3 (server half) — permissions + atomicity:** the upload had no
+      permission class and no transaction — *any* authenticated user could
+      replace any race's results, and a mid-request failure left the race
+      half-populated. Fixed: `RaceResultPermission` requires an official of the
+      race's club (reads stay open), `post()` is `@transaction.atomic` with the
+      race row locked and per-row savepoints, and a rejected duplicate is
+      reported rather than dropped (`fix/phase2.1-grade-change`)
+- [ ] **D3 (server half) — explicit overwrite contract:** the upload still
+      deletes all results and re-inserts only what is sent. The confirmation flag
+      or version/`If-Match` contract belongs with the new results endpoint in
+      2.2/2.5, where both clients' shapes are designed — a required flag would
+      break the deployed Angular app
 - [ ] **A8:** honour `member_category` and `verifiedMemberDate` instead of
       hardcoding `category="race"` — this is track (a) of the membership work in
       2.1, and it is what makes the React app finishable
