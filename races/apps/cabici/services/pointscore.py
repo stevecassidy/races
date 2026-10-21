@@ -31,6 +31,7 @@ from functools import cache
 from django.db import transaction
 
 from ..models import PointScore, PointscoreTally, Race, RaceResult, RaceStaff
+from .officials import promotion
 
 # A grade field smaller than this races for a fixed amount rather than the
 # configured scale. Unlike points/smallpoints/smallthreshold/participation these
@@ -70,7 +71,7 @@ def score(pointscore: PointScore, result: RaceResult, numberriders: int) -> tupl
     participation = pointscore.participation
     smallthreshold = pointscore.smallthreshold
     # is the rider eligible for promotion or riding down a grade
-    promote = result.race.club.promotion(result.rider, when=result.race.date)
+    promote = promotion(result.race.club, result.rider, when=result.race.date)
 
     if not result.place:
         return participation, "Participation"

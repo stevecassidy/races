@@ -82,117 +82,6 @@ class Club(models.Model):
 
         return self.races.filter(date__lte=datetime.date.today()).order_by("-date")[:5]
 
-    def get_officials_with_counts(self, role, skip_club_filter=False):
-        """Get a list of people who can fill a given role ordered
-        by the number of times they have done so in the last year
-
-        role - a role, eg. 'Duty Helper'
-
-        Returns: a list of tuples (count, rider)
-        where rider is a Rider instance, count is a count
-        of the number of times they have been allocated to this role
-        ordered by count, smallest first
-        """
-
-        import random
-
-        # candidates are all riders with a UserRole for this club
-        candidates = Rider.objects.filter(user__userrole__role__name__exact=role).distinct()
-
-        if not skip_club_filter:
-            candidates = candidates.filter(user__userrole__club__exact=self)
-
-        # candidates = self.rider_set.filter(user__userrole__role__name__exact=role).distinct()
-
-        # if we have no candidates we can't do anything
-        if candidates.count() == 0:
-            return []
-
-        # order candidates by number of recent duty assignments
-        ordered = []
-        epoch = datetime.date.today() - datetime.timedelta(days=365)
-
-        for rider in candidates:
-            c = self.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
-            ordered.append((c, rider))
-
-        # shuffle to get a randomish distribution before sorting
-        random.shuffle(ordered)
-
-        # order on count
-        ordered.sort(key=lambda x: x[0])
-
-        return ordered
-
-    def allocate_officials(self, role, number, races, replace=False):
-        """Allocate people to fill the given roles for
-        the given races.
-
-        role - a role to allocate to, eg. 'Duty Helper'
-        number - number to allocate to each race
-        races - list (or result set) of races to allocate
-        replace - if True, replace any existing officials for each race
-
-        Select people at random from the eligebility list weighted
-        by the number of times they have served in this role
-        recently.
-        """
-
-        clubrole, created = ClubRole.objects.get_or_create(name=role)
-
-        ordered = self.get_officials_with_counts(role)
-        # can't allocate if there are no candidates
-        if len(ordered) == 0:
-            return
-
-        for race in races:
-            existing = RaceStaff.objects.filter(race=race, role=clubrole)
-            if replace:
-                existing.delete()
-            else:
-                # remove any that aren't in this role any more
-                for staff in existing:
-                    if UserRole.objects.filter(user=staff.rider.user, club=self, role=clubrole).count() == 0:
-                        staff.delete()
-                # refresh existing in case we removed someone
-                existing = RaceStaff.objects.filter(race=race, role=clubrole)
-
-            # allocate more if there are less than number already allocated
-            for _ in range(max(0, number - existing.count())):
-                c, rider = ordered.pop(0)
-                rs = RaceStaff(rider=rider, race=race, role=clubrole)
-                rs.save()
-                # requeue the rider
-                ordered.append((c, rider))
-
-    def performancereport(self, rider, when=None):
-        """Generate a rider performance report for this club,
-        if the when arg is provided it should be a date
-        and the performance report is generated as if on
-        that date. Otherwise it is generated as of today."""
-
-        # number of races
-        # number of wins/places in last 12 months
-        # wins in grade
-        # places in grade (> 3rd place)
-
-        info = dict()
-
-        if when is None:
-            when = datetime.date.today()
-
-        # get the rider's current grade with this club, if we have one
-        grade = self.grade(rider)
-
-        startdate = when - datetime.timedelta(days=365)
-        info["recent"] = rider.raceresult_set.filter(
-            race__club__exact=self, place__lte=5, race__date__gt=startdate, race__date__lt=when
-        )
-        info["places"] = info["recent"].filter(place__lte=3, place__gt=0, grade__exact=grade).count()
-        info["wins"] = info["recent"].filter(place__exact=1, place__gt=0, grade__exact=grade).count()
-
-        return info
-
     def grade(self, rider):
         """Get the current grade of this rider, if we have one
         return the string grade name or None if there is no grade recorded"""
@@ -203,34 +92,6 @@ class Club(models.Model):
             return grades[0].grade
         else:
             return None
-
-    def promotion(self, rider, when=None):
-        """Is this rider eligible for promotion according to the
-        WaratahCC rules
-        More than 3 wins in grade or more than 7 placings in last 12 months.
-        If the when argument is given, the calculation is done at that time.
-        Return True if eligible, false otherwise."""
-
-        perf = self.performancereport(rider, when=when)
-        grade = self.grade(rider)
-
-        return grade != "A" and ((perf["wins"] >= 3) or (perf["places"] >= 7))
-
-    def promotable(self):
-        """Return a list of riders who might be eligible for
-        promotion based on results in races run by this club."""
-
-        oneyearago = datetime.date.today() - datetime.timedelta(days=365)
-
-        winresults = RaceResult.objects.filter(race__club__exact=self, race__date__gt=oneyearago, place=1)
-        riders = {res.rider for res in winresults}
-        promotable = []
-        for rider in riders:
-            if self.promotion(rider):
-                promotable.append(rider)
-
-        promotable.sort(key=lambda x: x.user.last_name)
-        return promotable
 
 
 class RaceCourse(models.Model):
@@ -436,51 +297,6 @@ class Rider(models.Model):
             return False
 
     @property
-    def classification(self):
-        """Return the racing classification for this rider based
-        on their DOB"""
-
-        # classes with upper bound + 1 for each group in order
-        classes = (
-            ("Kidz", 7),
-            ("U9", 9),
-            ("U11", 11),
-            ("U13 Boys", 13),
-            ("U15 Men", 15),
-            ("U17 Men", 17),
-            ("U19 Men", 19),
-            ("U23 Men", 23),
-            ("Elite Men", 30),
-            ("M1", 35),
-            ("M2", 40),
-            ("M3", 45),
-            ("M4", 50),
-            ("M5", 55),
-            ("M6", 60),
-            ("M7", 65),
-            ("M8", 70),
-            ("M9", 75),
-            ("M10", 81),
-            ("M11", 110),
-        )
-
-        age = datetime.datetime.now().year - self.dob.year
-
-        for cat, cutoff in classes:
-            if age < cutoff:
-                if self.gender == "F":
-                    if cat.startswith("M"):
-                        cat = cat.replace("M", "W")
-                    elif cat == "Elite Men":
-                        cat = cat.replace("Men", "Women")
-                    elif cat == "U23 Men":
-                        cat = "Elite Women"
-                    elif cat.startswith("U"):
-                        cat = cat.replace("Men", "Women")
-                        cat = cat.replace("Boys", "Girls")
-                return cat
-
-    @property
     def grades(self):
         """Return a dictionary of grades for
         different clubs for this rider, key is the
@@ -502,28 +318,6 @@ class Rider(models.Model):
         for role in roles:
             result[role.role.shortname] = role.id
         return result
-
-    def performancereport(self, when=None):
-        """Generate a rider performance report for all clubs
-        if the when arg is provided it should be a date
-        and the performance report is generated as if on
-        that date. Otherwise it is generated as of today."""
-
-        # note that this duplicates logic in Club.performancereport but for all
-        # clubs, we use it in generating the rider details page
-
-        # number of races
-        # number of wins/places in last 12 months
-        # wins in grade
-        # places in grade
-
-        info = dict()
-        startdate = datetime.date.today() - datetime.timedelta(days=365)
-        info["recent"] = self.raceresult_set.filter(place__lte=5, place__gt=0, race__date__gt=startdate)
-        info["places"] = info["recent"].filter(place__lte=3, place__gt=0).count()
-        info["wins"] = info["recent"].filter(place__exact=1).count()
-
-        return info
 
 
 # AusCycling membership categories, as the new provider names them.

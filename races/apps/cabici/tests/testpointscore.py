@@ -32,6 +32,7 @@ from races.apps.cabici.models import (
     RaceStaff,
     Rider,
 )
+from races.apps.cabici.services.officials import promotable_riders, promotion
 from races.apps.cabici.services.pointscore import (
     get_points,
     get_smallpoints,
@@ -347,7 +348,7 @@ class PointscoreTests(TestCase):
             winner = RaceResult(race=race, rider=rider, place=0, grade=gradeletter)
             winner.save()
         # should not be promotable
-        self.assertFalse(club.promotion(rider))
+        self.assertFalse(promotion(club, rider))
 
         # make this person win five
         for race in Race.objects.all()[5:10]:
@@ -355,7 +356,7 @@ class PointscoreTests(TestCase):
             winner.save()
 
         self.assertEqual(gradeletter, club.grade(rider))
-        self.assertTrue(club.promotion(rider))
+        self.assertTrue(promotion(club, rider))
 
         # now remove all results and grade for this person
         rider.raceresult_set.all().delete()
@@ -363,7 +364,7 @@ class PointscoreTests(TestCase):
         # we should still be able to get results
 
         self.assertEqual(None, club.grade(rider))
-        self.assertFalse(club.promotion(rider))
+        self.assertFalse(promotion(club, rider))
 
     def test_points_promotion(self):
         """A rider who is eligible for promotion shouldn't
@@ -409,7 +410,7 @@ class PointscoreTests(TestCase):
 
         # they should also show up in the promotions report
 
-        report = club.promotable()
+        report = promotable_riders(club)
         self.assertIn(rider, report)
 
         # look at the audit report

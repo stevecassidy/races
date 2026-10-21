@@ -17,6 +17,7 @@
 from django import template
 
 from races.apps.cabici.models import ClubGrade
+from races.apps.cabici.services.officials import performance_report
 
 register = template.Library()
 
@@ -36,7 +37,7 @@ def clubwins(club, rider):
     """Return the number of wins of this rider for this club"""
 
     try:
-        return club.performancereport(rider=rider)["wins"]
+        return performance_report(club, rider)["wins"]
     except Exception:
         return 0
 
@@ -46,6 +47,6 @@ def clubplaces(club, rider):
     """Return the number of places (1-3) of this rider for this club"""
 
     try:
-        return club.performancereport(rider=rider)["places"]
+        return performance_report(club, rider)["places"]
     except Exception:
         return 0

@@ -47,6 +47,7 @@ from .models import (
     Rider,
     UserRole,
 )
+from .services.officials import classification as rider_classification
 from .services.results import ResultUploadError, upload_results
 
 
@@ -519,6 +520,10 @@ class RiderSerializer(serializers.HyperlinkedModelSerializer):
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     club = serializers.CharField(source="club.name", read_only=True)
     clubslug = serializers.CharField(source="club.slug", read_only=True)
+    classification = serializers.SerializerMethodField()
+
+    def get_classification(self, rider):
+        return rider_classification(rider)
 
     class Meta:
         model = Rider

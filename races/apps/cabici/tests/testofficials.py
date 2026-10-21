@@ -21,6 +21,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 
 from races.apps.cabici.models import Club, ClubRole, Membership, Race, RaceCourse, RaceStaff, Rider, UserRole
+from races.apps.cabici.services.officials import allocate_officials, officials_with_counts
 
 
 class OfficialsTests(TestCase):
@@ -171,7 +172,7 @@ class OfficialsTests(TestCase):
             rs = RaceStaff(rider=dhs[1], race=race, role=dutyhelper)
             rs.save()
 
-        counted_helpers = self.oge.get_officials_with_counts("Duty Helper")
+        counted_helpers = officials_with_counts(self.oge, "Duty Helper")
 
         self.assertEqual(len(dhs), len(counted_helpers))
         # all should be zero except for dhs[0] and dhs[1]
@@ -191,7 +192,7 @@ class OfficialsTests(TestCase):
 
         self.create_duty_helpers(self.oge)
 
-        self.oge.allocate_officials("Duty Helper", 2, races)
+        allocate_officials(self.oge, "Duty Helper", 2, races)
 
         # each race should have two helpers
         helpers1 = []
@@ -200,7 +201,7 @@ class OfficialsTests(TestCase):
             helpers1.extend([off.rider for off in race.officials.all()])
 
         # do it again,
-        self.oge.allocate_officials("Duty Helper", 2, races, replace=True)
+        allocate_officials(self.oge, "Duty Helper", 2, races, replace=True)
 
         helpers2 = []
         for race in races:
@@ -212,12 +213,12 @@ class OfficialsTests(TestCase):
         newraces = self.make_races()
 
         # allocate the first two
-        self.oge.allocate_officials("Duty Helper", 2, newraces[:2])
+        allocate_officials(self.oge, "Duty Helper", 2, newraces[:2])
 
         who1 = list(newraces[0].officials.all())
 
         # now all of them, the first two should not be reallocated
-        self.oge.allocate_officials("Duty Helper", 2, newraces)
+        allocate_officials(self.oge, "Duty Helper", 2, newraces)
         helpers3 = []
         for race in newraces:
             self.assertEqual(2, race.officials.all().count())
