@@ -252,10 +252,12 @@ how this slipped — the bullets are now stated as landed only where they are.
 - [x] Conditional bib uniqueness (`cabici_raceresult_bib_uniq`, `number IS NOT
       NULL`); the "increment to avoid clash" workarounds were already gone
 - [x] Indexes on `Race(date, status)` and `PointscoreTally(pointscore, -points)`
-- [ ] **Before deploy:** confirm no duplicate data against a production copy.
-      Development fixtures verified clean (17 clubs, 3 club roles, 201 club
-      grades, 200 memberships — no duplicate keys). Migration
-      `0020_integrity_constraints` (`refactor/phase2.1-integrity-constraints`)
+- [ ] **Before deploy:** run `python manage.py checkconstraints` against a
+      production copy (read-only; non-zero exit if any) and resolve the reported
+      duplicates — `--fix` handles the unambiguous Membership/UserRole/ClubRole
+      cases, the rest need a human decision. Development fixtures verified clean
+      (17 clubs, 3 club roles, 201 club grades, 200 memberships). Migrations
+      `0020_integrity_constraints` and `0021_membership_club_required`
 - [x] C1: `usermodel.py` merged into `models.py` and deleted; the six
       function-level circular imports are gone. No migration required
       (`refactor/phase2.1-merge-models`)
@@ -567,6 +569,10 @@ still the only way officials sign in until JWT lands) and
       `CSRF_TRUSTED_ORIGINS` for one-origin operation
 - [ ] Final database backup before deployment
 - [ ] Set up monitoring (Sentry — already a dependency of `apps/raceday`)
+- [ ] **Run `manage.py checkconstraints` against a production copy** (read-only)
+      and resolve any duplicates (`--fix` for the unambiguous cases) before the
+      cutover `migrate` — the constraints migration fails on duplicates, and the
+      container runs `migrate` on start
 - [ ] Deploy Django (one image, one cutover); run migrations
 - [ ] Smoke test all critical functionality
 - [ ] Update DNS/CORS settings — ~~eliminated by same-origin~~
