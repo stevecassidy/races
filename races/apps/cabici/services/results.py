@@ -240,7 +240,6 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                         date=record["member_date"],
                     )
                     mnew.save()
-                    rider.save()  # to trigger timestamp update
             elif "club" in record and "member_date" in record:
                 # no current membership so make one
                 m = Membership(rider=rider, club=record["club"], date=record["member_date"])
@@ -299,14 +298,12 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
             usual_grade = entry["grade"]
             # create a rider grade
             ClubGrade(rider=rider, club=race.club, grade=usual_grade).save()
-            rider.save()  # to trigger timestamp update
 
         if usual_grade != entry["grade"] and _truthy(entry.get("grade_change")):
             # update rider grade
             grade = ClubGrade.objects.get(rider=rider, club=race.club)
             grade.grade = entry["grade"]
             grade.save()
-            rider.save()  # to trigger timestamp update
 
         if "dnf" in entry and entry["dnf"]:
             dnf = True
