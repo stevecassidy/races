@@ -139,58 +139,63 @@ class CustomAuthToken(ObtainAuthToken):
 # ---------------Permissions-----------------
 
 
+def user_is_club_official(user, club=None):
+    """Is this user an official of ``club`` (or a superuser)?
+
+    A User need not have a Rider; the guard keeps a permission failure from
+    becoming a 500. With no club, the question is only "is this person an
+    official of some club", which is all a create can answer before the payload
+    is bound to a club.
+    """
+
+    if user is None or not user.is_authenticated:
+        return False
+    if user.is_superuser:
+        return True
+
+    rider = getattr(user, "rider", None)
+    if rider is None or not rider.official:
+        return False
+    if club is None:
+        return True
+
+    club_id = getattr(club, "pk", club)
+    return rider.club_id == club_id
+
+
+def club_for_object(obj):
+    """The club that owns an object, or None if we do not know it."""
+
+    if isinstance(obj, Race | Rider | UserRole):
+        return obj.club
+    if isinstance(obj, RaceResult):
+        return obj.race.club
+    return None
+
+
 class ClubOfficialPermission(permissions.BasePermission):
-    """Permission only for officials of a club"""
+    """Writes require an official of the club that owns the object.
+
+    Reads stay open. For an object the owning club is read off the object. A
+    create has no object yet, so any club official passes here; binding the
+    payload to the owning club is a per-view check (2.5). Superusers bypass, and
+    a User with no Rider is denied rather than raising.
+    """
+
+    message = "Only officials of the owning club may make this change."
 
     def has_permission(self, request, view):
-        """
-        Return `True` if permission is granted, `False` otherwise.
-        """
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        # anonymous user can't do anything unsafe
-        if not request.user.is_authenticated:
-            return False
-
-        # superuser can do anything
-        if request.user.is_superuser:
-            return True
-
-        # user should be an official of the club referenced in the view
-        return request.user.rider.official
+        return user_is_club_official(request.user)
 
     def has_object_permission(self, request, view, obj):
-        """
-        Return `True` if permission is granted, `False` otherwise.
-        """
         if request.method in permissions.SAFE_METHODS:
             return True
-
-        # anonymous user can't do anything unsafe
-        if not request.user.is_authenticated:
+        club = club_for_object(obj)
+        if club is None:
             return False
-
-        # superuser can do anything
-        if request.user.is_superuser:
-            return True
-
-        # user should be an official of the club referenced in the view
-        if not request.user.rider.official:
-            return False
-
-        # if they are an official then they can operate on their club
-        # races or members
-        if isinstance(obj, Race | Rider):
-            club = obj.club
-        elif isinstance(obj, RaceResult):
-            club = obj.race.club
-        elif isinstance(obj, UserRole):
-            club = obj.club
-        else:
-            return False
-
-        return request.user.rider.club == club
+        return user_is_club_official(request.user, club)
 
 
 class RaceResultPermission(permissions.BasePermission):
@@ -209,7 +214,10 @@ class RaceResultPermission(permissions.BasePermission):
             return True
 
         race = self._race_from_body(request)
-        return self._is_club_official(request, race.club_id if race is not None else None)
+        if race is None:
+            # no race to bind to; the view will reject the payload
+            return user_is_club_official(request.user)
+        return user_is_club_official(request.user, race.club)
 
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
@@ -217,7 +225,7 @@ class RaceResultPermission(permissions.BasePermission):
         if not isinstance(obj, RaceResult):
             return False
 
-        return self._is_club_official(request, obj.race.club_id)
+        return user_is_club_official(request.user, obj.race.club)
 
     @staticmethod
     def _race_from_body(request):
@@ -234,29 +242,6 @@ class RaceResultPermission(permissions.BasePermission):
             return Race.objects.filter(pk=data["race"]).first()
         except TypeError, ValueError:
             return None
-
-    @staticmethod
-    def _is_club_official(request, club_id):
-        """Is the request user an official of ``club_id`` (or a superuser)?
-
-        ``getattr`` is deliberate: a User need not have a Rider, and an
-        unguarded ``request.user.rider`` raises inside the permission check,
-        turning a 403 into a 500.
-        """
-
-        user = getattr(request, "user", None)
-        if user is None or not user.is_authenticated:
-            return False
-        if user.is_superuser:
-            return True
-
-        rider = getattr(user, "rider", None)
-        if rider is None or not rider.official:
-            return False
-        if club_id is None:
-            # no race to compare against; the view will reject the payload
-            return True
-        return rider.club_id == club_id
 
 
 # ---------------Club------------------

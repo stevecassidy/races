@@ -239,7 +239,7 @@ class PointscoreTests(TestCase):
                         )
                     else:
                         result = RaceResult(
-                            race=race, rider=rider, grade=grade, usual_grade=grade, number=numbers.pop(), place=0
+                            race=race, rider=rider, grade=grade, usual_grade=grade, number=numbers.pop(), place=None
                         )
                     result.save()
 
@@ -266,19 +266,19 @@ class PointscoreTests(TestCase):
         helperA1 = RaceStaff(rider=riderA, race=races[2], role=clubrole)
         helperA1.save()
         # riderA raced in another race
-        resultA = RaceResult(rider=riderA, race=races[0], grade="A", usual_grade="A", number=123, place=0)
+        resultA = RaceResult(rider=riderA, race=races[0], grade="A", usual_grade="A", number=123, place=None)
         resultA.save()
 
         riderB = Rider.objects.all()[1]
         helperB = RaceStaff(rider=riderB, race=races[0], role=clubrole)
         helperB.save()
         # riderB also races in the race, getting 2 points for participation
-        resultB = RaceResult(rider=riderB, race=races[0], grade="A", usual_grade="A", number=234, place=0)
+        resultB = RaceResult(rider=riderB, race=races[0], grade="A", usual_grade="A", number=234, place=None)
         resultB.save()
 
         riderC = Rider.objects.all()[2]
         # riderC races in race 2 so that ricerA gets helper points
-        resultC = RaceResult(rider=riderC, race=races[1], grade="A", usual_grade="A", number=444, place=0)
+        resultC = RaceResult(rider=riderC, race=races[1], grade="A", usual_grade="A", number=444, place=None)
         resultC.save()
 
         recalculate(ps)
@@ -345,7 +345,7 @@ class PointscoreTests(TestCase):
 
         # make this person race five times but not place
         for race in Race.objects.all()[:5]:
-            winner = RaceResult(race=race, rider=rider, place=0, grade=gradeletter)
+            winner = RaceResult(race=race, rider=rider, place=None, grade=gradeletter)
             winner.save()
         # should not be promotable
         self.assertFalse(promotion(club, rider))

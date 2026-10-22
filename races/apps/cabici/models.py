@@ -53,30 +53,27 @@ class Club(models.Model):
         return [cg.rider for cg in clubgrades]
 
     def statistics(self):
-        """Return a dictionary of statistics for this club"""
+        """Counts for this club.
+
+        All integers, so the dict can go straight into a serializer; the old
+        version mixed counts with querysets (C12). Callers that need the people
+        behind the numbers fetch them as their own resource.
+        """
 
         today = datetime.date.today()
 
-        dd = dict()
-        dd["currentmembers"] = Membership.objects.filter(rider__club__exact=self, date__gte=today).count()
-        # racing entitlement covers both racing categories
-        dd["racemembers"] = Membership.objects.filter(
-            rider__club__exact=self, date__gte=today, category__in=RACING_CATEGORIES
-        ).count()
-        dd["ridemembers"] = Membership.objects.filter(
-            rider__club__exact=self, date__gte=today, category=MEMBERSHIP_CATEGORY_RIDE
-        ).count()
-
-        # roles
-        dd["commissaires"] = (
-            Rider.objects.filter(club__exact=self)
-            .exclude(commissaire__exact="")
-            .exclude(commissaire__exact=0)
-            .select_related("user")
-        )
-        dd["roles"] = UserRole.objects.filter(club__exact=self).order_by("role").select_related("user", "role")
-
-        return dd
+        return {
+            "currentmembers": Membership.objects.filter(rider__club__exact=self, date__gte=today).count(),
+            # racing entitlement covers both racing categories
+            "racemembers": Membership.objects.filter(
+                rider__club__exact=self, date__gte=today, category__in=RACING_CATEGORIES
+            ).count(),
+            "ridemembers": Membership.objects.filter(
+                rider__club__exact=self, date__gte=today, category=MEMBERSHIP_CATEGORY_RIDE
+            ).count(),
+            "commissaires": Rider.objects.filter(club__exact=self).exclude(commissaire="").count(),
+            "roles": UserRole.objects.filter(club__exact=self).count(),
+        }
 
     def recent_races(self):
         """Return a list of the most recent races
@@ -85,15 +82,16 @@ class Club(models.Model):
         return self.races.filter(date__lte=datetime.date.today()).order_by("-date")[:5]
 
     def grade(self, rider):
-        """Get the current grade of this rider, if we have one
-        return the string grade name or None if there is no grade recorded"""
+        """Get the current grade of this rider, if we have one.
 
-        # get the rider's current grade with this club, if we have one
-        grades = rider.clubgrade_set.filter(club=self)
+        Uses ``clubgrade_set.all()`` so a rider whose grades were prefetched does
+        not re-query per row (C11); the club filter is applied in Python.
+        """
+
+        grades = [grade for grade in rider.clubgrade_set.all() if grade.club_id == self.pk]
         if len(grades) == 1:
             return grades[0].grade
-        else:
-            return None
+        return None
 
 
 class RaceCourse(models.Model):
@@ -140,6 +138,12 @@ LICENCE_CHOICES = (
 )
 
 
+def default_grading():
+    """The default set of grades a new race runs."""
+
+    return ["A", "A2", "B", "C", "D", "E", "F"]
+
+
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
@@ -161,7 +165,7 @@ class Race(models.Model):
     # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
     licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
 
-    grading = models.CharField(max_length=50, default="A,A2,B,C,D,E,F")
+    grading = models.JSONField(default=default_grading, blank=True)
 
     class Meta:
         ordering = ["date", "signontime"]
@@ -225,7 +229,7 @@ class Rider(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     licenceno = models.CharField("Licence Number", max_length=20, blank=True, default="")
     gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES, blank=True, default="M")
-    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1), blank=True)
+    dob = models.DateField("Date of Birth", null=True, blank=True)
     streetaddress = models.CharField("Address", max_length=100, default="", blank=True)
     suburb = models.CharField("Suburb", max_length=100, default="", blank=True)
     state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default="NSW", blank=True)
@@ -235,9 +239,9 @@ class Rider(models.Model):
     commissaire = models.CharField(
         "Commissaire Level",
         max_length=10,
-        default="0",
+        default="",
         blank=True,
-        help_text="0 if not a Commissaire, otherwise eg. 1, RT",
+        help_text="Empty if not a Commissaire, otherwise the level/qualifications, eg. 1, RT",
     )
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 
@@ -507,9 +511,11 @@ class PointScore(models.Model):
         return self.races.filter(date__gt=startdate).count() > 0
 
     def tabulate(self):
-        """Generate a queryset of point tallys in order"""
+        """Queryset of point tallies, with the joins the serializer needs (C11)."""
 
-        return self.results.all()
+        return self.results.select_related("rider__user", "rider__club", "pointscore__club").prefetch_related(
+            "rider__clubgrade_set"
+        )
 
     def audit(self, rider):
         """Generate an audit report for this rider on this pointscore"""
