@@ -25,6 +25,7 @@ import datetime
 import random
 
 from django.db import transaction
+from django.db.models import Count
 
 from ..models import Club, ClubRole, RaceResult, RaceStaff, Rider, UserRole
 
@@ -43,17 +44,20 @@ def officials_with_counts(club: Club, role: str, skip_club_filter: bool = False)
     if not skip_club_filter:
         candidates = candidates.filter(user__userrole__club__exact=club)
 
+    candidates = list(candidates)
     # if we have no candidates we can't do anything
-    if candidates.count() == 0:
+    if not candidates:
         return []
 
-    # order candidates by number of recent duty assignments
-    ordered = []
+    # count recent duty assignments for every candidate in one query (C11)
     epoch = datetime.date.today() - datetime.timedelta(days=365)
+    counts = dict(
+        club.races.filter(date__gte=epoch, officials__rider__in=candidates)
+        .values_list("officials__rider")
+        .annotate(count=Count("id", distinct=True))
+    )
 
-    for rider in candidates:
-        c = club.races.filter(officials__rider__exact=rider, date__gte=epoch).count()
-        ordered.append((c, rider))
+    ordered = [(counts.get(rider.pk, 0), rider) for rider in candidates]
 
     # shuffle to get a randomish distribution before sorting
     random.shuffle(ordered)

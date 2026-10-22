@@ -189,6 +189,14 @@ class UserModelTests(TestCase):
         stats = club.statistics()
         self.assertGreaterEqual(stats["racemembers"], 1)
 
+    def test_statistics_are_counts(self):
+        """C12: statistics() returns counts, not querysets"""
+
+        stats = self.oge.statistics()
+
+        self.assertEqual({"currentmembers", "racemembers", "ridemembers", "commissaires", "roles"}, set(stats))
+        self.assertTrue(all(isinstance(value, int) for value in stats.values()))
+
     def test_member_date(self):
 
         rider = Rider.objects.get(id=2930)

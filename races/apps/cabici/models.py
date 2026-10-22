@@ -53,25 +53,27 @@ class Club(models.Model):
         return [cg.rider for cg in clubgrades]
 
     def statistics(self):
-        """Return a dictionary of statistics for this club"""
+        """Counts for this club.
+
+        All integers, so the dict can go straight into a serializer; the old
+        version mixed counts with querysets (C12). Callers that need the people
+        behind the numbers fetch them as their own resource.
+        """
 
         today = datetime.date.today()
 
-        dd = dict()
-        dd["currentmembers"] = Membership.objects.filter(rider__club__exact=self, date__gte=today).count()
-        # racing entitlement covers both racing categories
-        dd["racemembers"] = Membership.objects.filter(
-            rider__club__exact=self, date__gte=today, category__in=RACING_CATEGORIES
-        ).count()
-        dd["ridemembers"] = Membership.objects.filter(
-            rider__club__exact=self, date__gte=today, category=MEMBERSHIP_CATEGORY_RIDE
-        ).count()
-
-        # roles
-        dd["commissaires"] = Rider.objects.filter(club__exact=self).exclude(commissaire="").select_related("user")
-        dd["roles"] = UserRole.objects.filter(club__exact=self).order_by("role").select_related("user", "role")
-
-        return dd
+        return {
+            "currentmembers": Membership.objects.filter(rider__club__exact=self, date__gte=today).count(),
+            # racing entitlement covers both racing categories
+            "racemembers": Membership.objects.filter(
+                rider__club__exact=self, date__gte=today, category__in=RACING_CATEGORIES
+            ).count(),
+            "ridemembers": Membership.objects.filter(
+                rider__club__exact=self, date__gte=today, category=MEMBERSHIP_CATEGORY_RIDE
+            ).count(),
+            "commissaires": Rider.objects.filter(club__exact=self).exclude(commissaire="").count(),
+            "roles": UserRole.objects.filter(club__exact=self).count(),
+        }
 
     def recent_races(self):
         """Return a list of the most recent races
@@ -80,15 +82,16 @@ class Club(models.Model):
         return self.races.filter(date__lte=datetime.date.today()).order_by("-date")[:5]
 
     def grade(self, rider):
-        """Get the current grade of this rider, if we have one
-        return the string grade name or None if there is no grade recorded"""
+        """Get the current grade of this rider, if we have one.
 
-        # get the rider's current grade with this club, if we have one
-        grades = rider.clubgrade_set.filter(club=self)
+        Uses ``clubgrade_set.all()`` so a rider whose grades were prefetched does
+        not re-query per row (C11); the club filter is applied in Python.
+        """
+
+        grades = [grade for grade in rider.clubgrade_set.all() if grade.club_id == self.pk]
         if len(grades) == 1:
             return grades[0].grade
-        else:
-            return None
+        return None
 
 
 class RaceCourse(models.Model):
@@ -508,9 +511,11 @@ class PointScore(models.Model):
         return self.races.filter(date__gt=startdate).count() > 0
 
     def tabulate(self):
-        """Generate a queryset of point tallys in order"""
+        """Queryset of point tallies, with the joins the serializer needs (C11)."""
 
-        return self.results.all()
+        return self.results.select_related("rider__user", "rider__club", "pointscore__club").prefetch_related(
+            "rider__clubgrade_set"
+        )
 
     def audit(self, rider):
         """Generate an audit report for this rider on this pointscore"""
