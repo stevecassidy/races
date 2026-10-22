@@ -437,18 +437,19 @@ When the provider spec lands:
       the lesson from the withdrawn polling)
 
 **Database integrity (one additive migration):**
-- [ ] `UniqueConstraint` on `Club.slug`, `ClubRole.name`,
+- [x] `UniqueConstraint` on `Club.slug`, `ClubRole.name`,
       `Membership(rider, club, category, date)`, `ClubGrade(rider, club)`,
       `UserRole(user, club, role)`, `PointscoreTally(pointscore, rider)`
       — `Race.hash` is moot now that ingest is retired (B7)
-- [ ] Replace the `ClubGrade.save()` Python uniqueness override with the
+- [x] Replaced the `ClubGrade.save()` Python uniqueness override with the
       constraint
-- [ ] Bib-number uniqueness that actually fires: `UniqueConstraint` with
-      `condition=Q(number__isnull=False)`; then delete the "increment to avoid
-      clash" workarounds (one survives in `api.py`, the others went with 2.0)
-- [ ] `Index` on `Race(date, status)` and the pointscore ordering columns
-- [ ] Confirm no duplicate data against a production copy before applying
-      (fixtures verified clean)
+- [x] Bib-number uniqueness that actually fires: `UniqueConstraint` with
+      `condition=Q(number__isnull=False)`; the "increment to avoid clash"
+      workarounds were already gone
+- [x] `Index` on `Race(date, status)` and the pointscore ordering columns
+- [ ] **Before deploy:** confirm no duplicate data against a production copy.
+      The development fixtures are verified clean; migration
+      `0020_integrity_constraints` (`refactor/phase2.1-integrity-constraints`)
 
 **Structure (shapes the API):**
 - [x] C1: merged `usermodel.py` into `models.py` and deleted the former — the

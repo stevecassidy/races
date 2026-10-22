@@ -505,6 +505,13 @@ Recommended shape: `UniqueConstraint` (named, so they are reversible),
 `Index` on `Race(date, status)` and `PointscoreTally(pointscore, -points)`.
 Because the data is already clean, this is one migration with no backfill.
 
+**Implemented** in `0020_integrity_constraints`
+(`refactor/phase2.1-integrity-constraints`): B1-B6, B8 and B9 are now database
+constraints/indexes, and `ClubGrade.save()`'s Python check is removed (B3). B7 is
+moot — `Race.hash` was only used by the retired ingest. Applying the migration
+fails if the target database already holds duplicates; the development fixtures
+are verified clean, and a production copy must be checked before deploy.
+
 ### Tier C — Structural: these shape the API, fix them during Phase 2
 
 | # | Finding | Consequence for the new API |

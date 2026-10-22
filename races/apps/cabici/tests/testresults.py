@@ -17,8 +17,7 @@
 import datetime
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.test import TestCase
 
 from races.apps.cabici.models import (
@@ -202,11 +201,11 @@ class UserModelTests(TestCase):
         self.assertIn(grading, club.clubgrade_set.all())
         self.assertIn(rider, club.graded_riders())
 
-        # one grade per club
+        # one grade per club, enforced by the database constraint (B3)
 
-        with self.assertRaises(ValidationError):
-            grading2 = ClubGrade(rider=rider, club=club, grade="B")
-            grading2.save()
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                ClubGrade(rider=rider, club=club, grade="B").save()
 
     def test_result(self):
         """Create a race result"""

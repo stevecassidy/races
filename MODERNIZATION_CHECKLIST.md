@@ -244,14 +244,18 @@ how this slipped — the bullets are now stated as landed only where they are.
       app's flow stays unfinished — an accepted trade-off. When the spec lands:
       capture the provider category set, define the `MembershipSource` seam, and
       never put a provider client secret in a model field again (C9)
-- [ ] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
+- [x] Unique constraints: `Club.slug`, `ClubRole.name`, `Membership(rider, club,
       category, date)`, `ClubGrade(rider, club)`, `UserRole(user, club, role)`,
       `PointscoreTally(pointscore, rider)` — `Race.hash` moot after 2.0
-- [ ] Replace the `ClubGrade.save()` Python uniqueness override with a constraint
-- [ ] Conditional uniqueness for bib numbers, then delete the "increment to avoid
-      clash" workaround in `api.py` (the others went with 2.0)
-- [ ] Indexes on `Race(date, status)` and pointscore ordering columns
-- [ ] Verify no duplicate data against a production copy before applying
+- [x] Replaced the `ClubGrade.save()` Python uniqueness override with the
+      `cabici_clubgrade_uniq` constraint; a duplicate now raises `IntegrityError`
+- [x] Conditional bib uniqueness (`cabici_raceresult_bib_uniq`, `number IS NOT
+      NULL`); the "increment to avoid clash" workarounds were already gone
+- [x] Indexes on `Race(date, status)` and `PointscoreTally(pointscore, -points)`
+- [ ] **Before deploy:** confirm no duplicate data against a production copy.
+      Development fixtures verified clean (17 clubs, 3 club roles, 201 club
+      grades, 200 memberships — no duplicate keys). Migration
+      `0020_integrity_constraints` (`refactor/phase2.1-integrity-constraints`)
 - [x] C1: `usermodel.py` merged into `models.py` and deleted; the six
       function-level circular imports are gone. No migration required
       (`refactor/phase2.1-merge-models`)

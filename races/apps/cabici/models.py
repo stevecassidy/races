@@ -18,7 +18,6 @@ import datetime
 import json
 
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.core.validators import validate_comma_separated_integer_list
 from django.db import models
 from django.urls import reverse
@@ -43,6 +42,9 @@ class Club(models.Model):
 
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(fields=["slug"], name="cabici_club_slug_uniq"),
+        ]
 
     def graded_riders(self):
         """Return a list of riders with grades assigned"""
@@ -163,6 +165,9 @@ class Race(models.Model):
 
     class Meta:
         ordering = ["date", "signontime"]
+        indexes = [
+            models.Index(fields=["date", "status"], name="cabici_race_date_status_idx"),
+        ]
 
     def __str__(self):
         return self.title + ", " + str(self.date)
@@ -368,12 +373,20 @@ class Membership(models.Model):
 
     class Meta:
         ordering = ["date", "category"]
+        constraints = [
+            models.UniqueConstraint(fields=["rider", "club", "category", "date"], name="cabici_membership_uniq"),
+        ]
 
 
 class ClubRole(models.Model):
     """The name of a role that someone can hold in a club"""
 
     name = models.CharField("Name", max_length=100)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name"], name="cabici_clubrole_name_uniq"),
+        ]
 
     def __str__(self):
         return self.name
@@ -389,6 +402,11 @@ class UserRole(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     role = models.ForeignKey(ClubRole, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["user", "club", "role"], name="cabici_userrole_uniq"),
+        ]
 
     def __str__(self):
         return "Role: " + "::".join((str(self.user), self.club.slug, self.role.name))
@@ -415,6 +433,9 @@ class ClubGrade(models.Model):
 
     class Meta:
         ordering = ["rider", "grade"]
+        constraints = [
+            models.UniqueConstraint(fields=["rider", "club"], name="cabici_clubgrade_uniq"),
+        ]
 
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
@@ -423,24 +444,20 @@ class ClubGrade(models.Model):
     def __str__(self):
         return " - ".join((self.grade, str(self.rider), str(self.club)))
 
-    def save(self, *args, **kwargs):
-        """A rider can only have one grade for each club"""
-
-        cg = ClubGrade.objects.filter(rider=self.rider, club=self.club)
-        if self in cg:
-            cg = list(cg)
-            cg.remove(self)
-        if cg is not None and len(cg) > 0:
-            raise ValidationError("A rider can only have one grade for each club")
-
-        super().save(*args, **kwargs)
-
 
 class RaceResult(models.Model):
     """Model of a rider competing in a race"""
 
     class Meta:
-        unique_together = (("race", "grade", "number"), ("race", "rider"))
+        constraints = [
+            models.UniqueConstraint(fields=["race", "rider"], name="cabici_raceresult_rider_uniq"),
+            # only non-blank bibs must be unique: several riders may have no number
+            models.UniqueConstraint(
+                fields=["race", "grade", "number"],
+                condition=models.Q(number__isnull=False),
+                name="cabici_raceresult_bib_uniq",
+            ),
+        ]
         ordering = ["race", "grade", "place", "number"]
 
     def __str__(self):
@@ -509,6 +526,12 @@ class PointscoreTally(models.Model):
 
     class Meta:
         ordering = ["-points", "eventcount"]
+        constraints = [
+            models.UniqueConstraint(fields=["pointscore", "rider"], name="cabici_tally_uniq"),
+        ]
+        indexes = [
+            models.Index(fields=["pointscore", "-points"], name="cabici_tally_points_idx"),
+        ]
 
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
     pointscore = models.ForeignKey(PointScore, related_name="results", on_delete=models.CASCADE)
