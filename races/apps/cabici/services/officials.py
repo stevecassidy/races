@@ -193,6 +193,9 @@ def classification(rider: Rider) -> str | None:
         ("M11", 110),
     )
 
+    if rider.dob is None:
+        return None
+
     age = datetime.datetime.now().year - rider.dob.year
 
     for cat, cutoff in classes:

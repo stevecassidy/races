@@ -117,6 +117,14 @@ class UserModelTests(TestCase):
         rider.dob = datetime.date(thisyear - 12, 1, 1)
         self.assertEqual("U13 Girls", classification(rider))
 
+    def test_classification_without_dob(self):
+        """C6: a rider with no date of birth has no classification, not a crash"""
+
+        rider = Rider.objects.get(id=2930)
+        rider.dob = None
+
+        self.assertIsNone(classification(rider))
+
     def test_member_category(self):
 
         rider = Rider.objects.get(id=2930)

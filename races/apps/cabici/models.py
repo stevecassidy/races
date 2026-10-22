@@ -68,12 +68,7 @@ class Club(models.Model):
         ).count()
 
         # roles
-        dd["commissaires"] = (
-            Rider.objects.filter(club__exact=self)
-            .exclude(commissaire__exact="")
-            .exclude(commissaire__exact=0)
-            .select_related("user")
-        )
+        dd["commissaires"] = Rider.objects.filter(club__exact=self).exclude(commissaire="").select_related("user")
         dd["roles"] = UserRole.objects.filter(club__exact=self).order_by("role").select_related("user", "role")
 
         return dd
@@ -140,6 +135,12 @@ LICENCE_CHOICES = (
 )
 
 
+def default_grading():
+    """The default set of grades a new race runs."""
+
+    return ["A", "A2", "B", "C", "D", "E", "F"]
+
+
 class Race(models.Model):
 
     # empty help texts here to force help element in forms
@@ -161,7 +162,7 @@ class Race(models.Model):
     # Licence - format is ll.gg where l are licence types (emjkp), g are genders (mw)
     licencereq = models.CharField(max_length=10, choices=LICENCE_CHOICES, default="em.mw")
 
-    grading = models.CharField(max_length=50, default="A,A2,B,C,D,E,F")
+    grading = models.JSONField(default=default_grading, blank=True)
 
     class Meta:
         ordering = ["date", "signontime"]
@@ -225,7 +226,7 @@ class Rider(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     licenceno = models.CharField("Licence Number", max_length=20, blank=True, default="")
     gender = models.CharField("Gender", max_length=2, choices=GENDER_CHOICES, blank=True, default="M")
-    dob = models.DateField("Date of Birth", default=datetime.date(1970, 1, 1), blank=True)
+    dob = models.DateField("Date of Birth", null=True, blank=True)
     streetaddress = models.CharField("Address", max_length=100, default="", blank=True)
     suburb = models.CharField("Suburb", max_length=100, default="", blank=True)
     state = models.CharField("State", choices=STATE_CHOICES, max_length=10, default="NSW", blank=True)
@@ -235,9 +236,9 @@ class Rider(models.Model):
     commissaire = models.CharField(
         "Commissaire Level",
         max_length=10,
-        default="0",
+        default="",
         blank=True,
-        help_text="0 if not a Commissaire, otherwise eg. 1, RT",
+        help_text="Empty if not a Commissaire, otherwise the level/qualifications, eg. 1, RT",
     )
     commissaire_valid = models.DateField("Commissaire Valid To", null=True, blank=True)
 

@@ -185,7 +185,8 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                 # validate date format
                 try:
                     dob = datetime.date.fromisoformat(record["dob"])
-                    rider.dob = dob
+                    # 1970-01-01 was the old "no date of birth" sentinel
+                    rider.dob = None if dob == datetime.date(1970, 1, 1) else dob
                 except ValueError:
                     errors.append("Bad DOB date format (%s) ignored" % record["dob"])
 
@@ -318,7 +319,8 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
             grade=entry["grade"],
             number=entry.get("number", 999),
             usual_grade=usual_grade,
-            place=entry.get("place", 0),
+            # NULL is the canonical "not placed"; clients that send 0 are mapped
+            place=entry.get("place") or None,
             dnf=dnf,
         )
         try:
