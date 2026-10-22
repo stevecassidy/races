@@ -348,7 +348,7 @@ class Membership(models.Model):
     """Membership of a club with a given expiry date"""
 
     rider = models.ForeignKey(Rider, on_delete=models.CASCADE)
-    club = models.ForeignKey(Club, null=True, on_delete=models.CASCADE)
+    club = models.ForeignKey(Club, on_delete=models.CASCADE)
     date = models.DateField(null=True, blank=True)  # membership valid to this date
     category = models.CharField(max_length=10, choices=MEMBERSHIP_CATEGORY_CHOICES)
     add_on = models.BooleanField(default=False)

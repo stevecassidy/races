@@ -44,6 +44,20 @@ from ..models import (
 from .pointscore import recalculate, tally_race
 
 
+def _unknown_club() -> Club:
+    """The placeholder club for riders whose club we do not have on file.
+
+    Created on demand, so a database that has never seen an unknown club slug
+    does not gain an empty club row until it needs one.
+    """
+
+    club, _ = Club.objects.get_or_create(
+        slug="Unknown",
+        defaults={"name": "Unknown", "website": "http://unknown.invalid/"},
+    )
+    return club
+
+
 class ResultUploadError(Exception):
     """The payload as a whole cannot be processed.
 
@@ -131,7 +145,7 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                 club = Club.objects.get(slug=record["clubslug"])
             except Club.DoesNotExist:
                 errors.append("Unknown club '%s' in rider record ignored" % (record["clubslug"]))
-                club = Club.objects.get(slug="Unknown")
+                club = _unknown_club()
 
             if not created:
                 # guard against recreating the rider
@@ -150,7 +164,12 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                 current = rider.current_membership
 
                 if not current:
-                    m = Membership(rider=rider, club=rider.club, date=memberdate, category=MEMBERSHIP_CATEGORY_CLUB)
+                    m = Membership(
+                        rider=rider,
+                        club=rider.club or _unknown_club(),
+                        date=memberdate,
+                        category=MEMBERSHIP_CATEGORY_CLUB,
+                    )
                     m.save()
 
             # grade
@@ -192,7 +211,7 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                     record["club"] = Club.objects.get(slug=record["clubslug"])
                 except Club.DoesNotExist:
                     errors.append("Unknown club '%s' in rider record ignored" % (record["clubslug"]))
-                    record["club"] = Club.objects.get(slug="Unknown")
+                    record["club"] = _unknown_club()
 
             # try to parse the member date string
             if "member_date" in record:
@@ -214,7 +233,10 @@ def upload_results(payload: dict[str, Any]) -> ResultUpload:
                 if "member_date" in record and record["member_date"] > m.date:
                     # actually make a new membership
                     mnew = Membership(
-                        rider=rider, club=rider.club, category=MEMBERSHIP_CATEGORY_CLUB, date=record["member_date"]
+                        rider=rider,
+                        club=rider.club or _unknown_club(),
+                        category=MEMBERSHIP_CATEGORY_CLUB,
+                        date=record["member_date"],
                     )
                     mnew.save()
                     rider.save()  # to trigger timestamp update

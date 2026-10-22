@@ -78,6 +78,32 @@ class ResultUploadTests(TestCase):
         self.assertEqual(1, result.deleted)
         self.assertEqual(12, result.created)
 
+    def test_unknown_club_falls_back_to_placeholder(self):
+        """A club slug we do not know gets the placeholder, not a NULL membership"""
+
+        payload = {
+            "race": self.race.id,
+            "entries": [],
+            "riders": [
+                {
+                    "id": "ID_UNKNOWN",
+                    "first_name": "No",
+                    "last_name": "Club",
+                    "licenceno": "999",
+                    "clubslug": "NOPE",
+                    "member_date": "2030-12-31",
+                }
+            ],
+        }
+
+        result = upload_results(payload)
+
+        rider = Rider.objects.get(id=result.ridermap["ID_UNKNOWN"])
+        self.assertEqual("Unknown", rider.club.slug)
+        # Membership.club is required now, so the placeholder is used here too
+        self.assertEqual("Unknown", rider.current_membership.club.slug)
+        self.assertTrue(any("Unknown club" in message for message in result.errors))
+
     def test_unknown_temporary_rider_is_collected_as_error(self):
         result = upload_results({"race": self.race.id, "entries": [{"rider": "ID_NOPE", "grade": "A", "number": "1"}]})
 
