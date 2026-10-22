@@ -1003,3 +1003,26 @@ class APITests(APITestCase):
         jsonresp = response.json()
         self.assertEqual(0, jsonresp["deleted"])
         self.assertEqual(1, jsonresp["created"])
+
+    # ---- C3: one club-official rule for every write ----
+
+    def test_permission_denies_user_without_rider(self):
+        """A user with no Rider gets 403, not a 500, from the permission"""
+
+        user = User.objects.create_user("norider", password="hello")
+        self.client.force_login(user, backend="django.contrib.auth.backends.ModelBackend")
+
+        race = Race.objects.filter(club=self.mov).first()
+        response = self.client.delete("/api/races/%d/" % race.id)
+
+        self.assertEqual(403, response.status_code)
+
+    def test_official_of_another_club_cannot_edit_race(self):
+        """An OGE official cannot delete a MOV race"""
+
+        self.client.force_login(self.ogeofficial, backend="django.contrib.auth.backends.ModelBackend")
+
+        race = Race.objects.filter(club=self.mov).first()
+        response = self.client.delete("/api/races/%d/" % race.id)
+
+        self.assertEqual(403, response.status_code)
