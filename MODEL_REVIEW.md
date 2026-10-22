@@ -509,8 +509,14 @@ Because the data is already clean, this is one migration with no backfill.
 (`refactor/phase2.1-integrity-constraints`): B1-B6, B8 and B9 are now database
 constraints/indexes, and `ClubGrade.save()`'s Python check is removed (B3). B7 is
 moot — `Race.hash` was only used by the retired ingest. Applying the migration
-fails if the target database already holds duplicates; the development fixtures
-are verified clean, and a production copy must be checked before deploy.
+fails if the target database already holds duplicates; `manage.py
+checkconstraints` reports them (and `--fix` resolves the unambiguous
+Membership/UserRole/ClubRole cases) and is the pre-deploy gate. The development
+fixtures are verified clean.
+
+Also implemented: `0021_membership_club_required` makes `Membership.club`
+required, backfilling NULLs to the rider's club or a placeholder `Unknown` club,
+so the membership unique constraint no longer has a NULL-distinct loophole (B4).
 
 ### Tier C — Structural: these shape the API, fix them during Phase 2
 

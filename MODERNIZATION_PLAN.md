@@ -447,9 +447,12 @@ When the provider spec lands:
       `condition=Q(number__isnull=False)`; the "increment to avoid clash"
       workarounds were already gone
 - [x] `Index` on `Race(date, status)` and the pointscore ordering columns
-- [ ] **Before deploy:** confirm no duplicate data against a production copy.
-      The development fixtures are verified clean; migration
-      `0020_integrity_constraints` (`refactor/phase2.1-integrity-constraints`)
+- [ ] **Before deploy:** run `python manage.py checkconstraints` against a
+      production copy (read-only; non-zero exit if any) and resolve the reported
+      duplicates — `--fix` handles the unambiguous Membership/UserRole/ClubRole
+      cases, the rest need a human decision. The development fixtures are
+      verified clean. Migrations `0020_integrity_constraints` and
+      `0021_membership_club_required`
 
 **Structure (shapes the API):**
 - [x] C1: merged `usermodel.py` into `models.py` and deleted the former — the

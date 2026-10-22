@@ -21,10 +21,13 @@ than any Python check that used to stand in for it.
 """
 
 import datetime
+from io import StringIO
 
+from django.core.management import call_command
 from django.db import IntegrityError, transaction
 from django.test import TestCase
 
+from races.apps.cabici.management.commands.checkconstraints import duplicate_keys
 from races.apps.cabici.models import (
     MEMBERSHIP_CATEGORY_RACE,
     Club,
@@ -118,3 +121,19 @@ class ConstraintTests(TestCase):
     def test_hot_query_indexes_are_declared(self):
         self.assertIn("cabici_race_date_status_idx", {index.name for index in Race._meta.indexes})
         self.assertIn("cabici_tally_points_idx", {index.name for index in PointscoreTally._meta.indexes})
+
+    def test_duplicate_keys_helper(self):
+        rows = [
+            {"pk": 1, "a": "x", "b": 1},
+            {"pk": 2, "a": "x", "b": 1},
+            {"pk": 3, "a": "y", "b": 2},
+        ]
+
+        self.assertEqual({("x", 1): [1, 2]}, duplicate_keys(rows, ["a", "b"]))
+
+    def test_checkconstraints_reports_clean_fixtures(self):
+        out = StringIO()
+
+        call_command("checkconstraints", stdout=out)
+
+        self.assertIn("No duplicate data found", out.getvalue())
