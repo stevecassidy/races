@@ -363,7 +363,7 @@ tests, 1 pre-existing skip); no reference to any retired module remains in
 > prod venv → `check` clean. See
 > [`MODEL_REVIEW.md`](MODEL_REVIEW.md) → Correction.
 
-### 2.1 Model Hardening (Weeks 5-6)
+### 2.1 Model Hardening (Weeks 5-6) ✅ complete
 
 Prerequisite for serializers. Referenced items are the findings in
 [`MODEL_REVIEW.md`](MODEL_REVIEW.md).
@@ -475,20 +475,24 @@ When the provider spec lands:
       member CSV and rider/race-summary row builders recovered into
       `services/exports.py` as data-only functions (no XLS dependency re-added).
       **C2 is complete** (`refactor/phase2.1-services-officials-exports`)
-- [ ] C3: **simplified by the briefing** — with one client club, permissions
-      answer "is this an official of the club that owns this object?". Keep the
-      schema (capability flags, `UserRole`/`ClubRole`) but do not design a
-      general RBAC engine. `Club.manage_results` has no reference outside its own
-      definition; `manage_races` none outside tests
-- [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen
-      renders — the React app needs it as an array, not a comma string); resolve
-      the `place` 0-vs-NULL and `dob` 1970-01-01 sentinels; give
-      `Rider.commissaire` a real boolean or drop its `"0"` sentinel
-- [ ] C8: make `Rider.updated` delta tracking explicit instead of relying on
-      `rider.save()  # to trigger timestamp update`
-- [ ] C11/C12: kill the N+1 paths (`get_officials_with_counts`,
-      `PointScore.tabulate` serialization, `tally_helpers`) and normalise
-      `Club.statistics()` to counts + nested resources
+- [x] C3: one `user_is_club_official(user, club=None)` rule for every write —
+      an official of the club that owns the object, or a superuser; reads open;
+      a User with no Rider is denied rather than 500. `ClubOfficialPermission`
+      and `RaceResultPermission` both use it. The schema is unchanged (flags +
+      `UserRole`/`ClubRole`); binding a create's payload to its club is a
+      per-view check for the new API (2.5)
+- [x] C5/C6: `Race.grading` is a JSON list (the API exposes an array);
+      `RaceResult.place` uses NULL for unplaced; `Rider.dob` uses NULL for
+      unknown; `Rider.commissaire` drops its `"0"` sentinel. Migration `0022`
+      rewrites the stored values, verified against a copy of the dev database.
+      No Angular-compatibility constraint now (Angular retires at cutover)
+- [x] C8: `Membership`/`ClubGrade` post_save/post_delete signals touch
+      `Rider.updated`, so delta sync is correct for every writer; the
+      `rider.save()` timestamp triggers are gone
+- [x] C11/C12: `officials_with_counts` is one annotated query, `Club.grade()`
+      and `PointScore.tabulate()` are prefetch-friendly, and `Club.statistics()`
+      returns counts only. The pointscore recalculation querysets are designed
+      with the new API (2.5)
 
 **Success Criteria:** all tests pass (adjusted for A1/A2 semantics) plus new
 tests for each fix; `makemigrations --check` clean; constraints verified against
