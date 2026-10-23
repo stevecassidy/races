@@ -2,6 +2,8 @@
 
 This is a condensed checklist version of the full modernization plan. Use this for quick tracking of progress.
 
+Now subsumed by [MODERNIZATION_CHECKLIST_v2.md](version 2 of the checklist), this document kept for reference.
+
 **Development Approach:** Work happens on short-lived branches cut from
 `modernization`, each landing as a reviewed pull request. `modernization` is the
 integration branch and is never committed to directly. Production remains stable
