@@ -201,7 +201,7 @@ how this slipped — the bullets are now stated as landed only where they are.
       allocation, promotion and performance reports, `classification`
       (`services/officials.py`)
 
-### 2.1 Model Hardening (Weeks 5-6)
+### 2.1 Model Hardening (Weeks 5-6) — ✅ complete
 - [x] A1: `PointScore.score()` now reads its own `points` / `smallpoints` /
       `smallthreshold` / `participation` fields, so a series is database-driven
       and a second club can run its own scale. Behaviour is identical for the
@@ -287,13 +287,15 @@ how this slipped — the bullets are now stated as landed only where they are.
       rider/race-summary row builders as data-only functions — no
       pyexcel/openpyxl re-added; XLS serialisation is left to a 2.5 adapter.
       **C2 is complete** (`refactor/phase2.1-services-officials-exports`)
-- [ ] C3: **simplified** — permissions answer "official of the owning club?";
-      keep the schema, do not build a general RBAC engine
-- [ ] C5/C6: structure `Race.grading` (the per-race grade set the entry screen
-      renders); resolve `place` 0-vs-NULL and `dob` 1970-01-01 sentinels; give
-      `Rider.commissaire` a real boolean or drop its `"0"` sentinel
-- [ ] C8: make `Rider.updated` delta tracking explicit
-- [ ] C11/C12: eliminate N+1 paths and normalise `Club.statistics()`
+- [x] C3: one `user_is_club_official()` rule for every write (official of the
+      owning club, or superuser; no-Rider denied not 500); `ClubOfficialPermission`
+      and `RaceResultPermission` share it; schema unchanged
+- [x] C5/C6: `Race.grading` is a JSON list; `place` NULL for unplaced; `dob`
+      NULL for unknown; `commissaire` drops the `"0"` sentinel — migration `0022`
+- [x] C8: `Membership`/`ClubGrade` signals touch `Rider.updated`; the
+      `rider.save()` timestamp triggers are gone
+- [x] C11/C12: `officials_with_counts` one query; `grade()`/`tabulate()`
+      prefetch-friendly; `Club.statistics()` returns counts only
 
 ### 2.2 Monorepo: Vendor the Race-Day App (Week 6)
 

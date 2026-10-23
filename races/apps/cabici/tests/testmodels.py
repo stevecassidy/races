@@ -81,6 +81,13 @@ class ModelTests(TestCase):
         race.save()
         return race
 
+    def test_race_grading_defaults_to_a_list(self):
+        """C5: grading is a list of grades, not a comma string"""
+
+        race = self.make_race()
+
+        self.assertEqual(["A", "A2", "B", "C", "D", "E", "F"], race.grading)
+
     def test_get_absolute_url_points_at_api(self):
         """A3: the model URLs must resolve instead of reversing a retired route"""
 

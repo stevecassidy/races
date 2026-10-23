@@ -78,6 +78,43 @@ class ResultUploadTests(TestCase):
         self.assertEqual(1, result.deleted)
         self.assertEqual(12, result.created)
 
+    def test_unplaced_entry_stores_null(self):
+        """C6: a client's place=0 is stored as NULL, the canonical unplaced value"""
+
+        payload = {
+            "race": self.race.id,
+            "entries": [
+                {"rider": Rider.objects.get(id=2930).id, "grade": "B", "number": "1", "place": 0, "dnf": False}
+            ],
+        }
+
+        upload_results(payload)
+
+        self.assertIsNone(RaceResult.objects.get(race=self.race).place)
+
+    def test_dob_sentinel_becomes_null(self):
+        """C6: the old 1970-01-01 date-of-birth sentinel is stored as NULL"""
+
+        payload = {
+            "race": self.race.id,
+            "entries": [],
+            "riders": [
+                {
+                    "id": "ID_NO_DOB",
+                    "first_name": "No",
+                    "last_name": "Dob",
+                    "licenceno": "888",
+                    "clubslug": "OGE",
+                    "dob": "1970-01-01",
+                }
+            ],
+        }
+
+        result = upload_results(payload)
+
+        rider = Rider.objects.get(id=result.ridermap["ID_NO_DOB"])
+        self.assertIsNone(rider.dob)
+
     def test_unknown_club_falls_back_to_placeholder(self):
         """A club slug we do not know gets the placeholder, not a NULL membership"""
 

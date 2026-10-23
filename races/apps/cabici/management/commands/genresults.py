@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     if place <= 5:
                         result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=place)
                     else:
-                        result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=0)
+                        result = RaceResult(race=race, rider=rider, grade=grade, number=numbers.pop(), place=None)
                     result.save()
 
                     grading, ignore = ClubGrade.objects.get_or_create(rider=rider, club=race.club, grade=grade)

@@ -19,6 +19,7 @@ import datetime
 from django.contrib.auth.models import User
 from django.db import IntegrityError, transaction
 from django.test import TestCase
+from django.utils import timezone
 
 from races.apps.cabici.models import (
     MEMBERSHIP_CATEGORY_CHOICES,
@@ -117,6 +118,26 @@ class UserModelTests(TestCase):
         rider.dob = datetime.date(thisyear - 12, 1, 1)
         self.assertEqual("U13 Girls", classification(rider))
 
+    def test_related_change_touches_rider_updated(self):
+        """C8: a grade change bumps the rider's delta-sync timestamp"""
+
+        rider = Rider.objects.get(id=2930)
+        old = timezone.now() - datetime.timedelta(hours=1)
+        Rider.objects.filter(pk=rider.pk).update(updated=old)
+
+        ClubGrade.objects.create(rider=rider, club=rider.club, grade="A")
+
+        rider.refresh_from_db()
+        self.assertGreater(rider.updated, old)
+
+    def test_classification_without_dob(self):
+        """C6: a rider with no date of birth has no classification, not a crash"""
+
+        rider = Rider.objects.get(id=2930)
+        rider.dob = None
+
+        self.assertIsNone(classification(rider))
+
     def test_member_category(self):
 
         rider = Rider.objects.get(id=2930)
@@ -167,6 +188,14 @@ class UserModelTests(TestCase):
         Membership.objects.create(rider=rider, club=club, date=expiry, category=MEMBERSHIP_CATEGORY_CLUB)
         stats = club.statistics()
         self.assertGreaterEqual(stats["racemembers"], 1)
+
+    def test_statistics_are_counts(self):
+        """C12: statistics() returns counts, not querysets"""
+
+        stats = self.oge.statistics()
+
+        self.assertEqual({"currentmembers", "racemembers", "ridemembers", "commissaires", "roles"}, set(stats))
+        self.assertTrue(all(isinstance(value, int) for value in stats.values()))
 
     def test_member_date(self):
 

@@ -40,3 +40,6 @@ class CabiciConfig(AppConfig):
 
         template_context.BaseContext.__copy__ = _patched_basecontext_copy
         self._compat_patch_applied = True
+
+        # register the Rider.updated delta-sync signals (C8)
+        from . import signals  # noqa: F401
