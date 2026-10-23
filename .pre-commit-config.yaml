@@ -1,0 +1,47 @@
+# Pre-commit hooks for the Cabici backend.
+#
+# The formatting/linting tools come from requirements/dev.txt, so install the
+# project dependencies (and activate that environment) before running:
+#
+#     pip install -r requirements/dev.txt
+#     pre-commit install
+#
+# CI (.github/workflows/ci.yml) enforces the same checks with
+# `ruff check .` and `black --check .`.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-json
+        # devcontainer files are JSONC (comments are allowed)
+        exclude: ^\.devcontainer/
+      - id: check-yaml
+        # vcr cassettes carry python/unicode tags that PyYAML cannot load
+        exclude: ^fixtures/vcr_cassettes/
+      - id: debug-statements
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+        # Captured sample data keeps the line endings of its source (spreadsheets,
+        # club calendar feeds).
+        exclude: ^(fixtures/|races/apps/cabici/tests/)
+
+  - repo: local
+    hooks:
+      - id: ruff
+        name: ruff check
+        entry: ruff check --fix --force-exclude
+        language: system
+        types: [python]
+
+      - id: black
+        name: black
+        entry: black
+        language: system
+        types: [python]
+        # pre-commit passes explicit filenames, which bypasses black's
+        # extend-exclude in pyproject.toml.
+        exclude: ^races/apps/cabici/migrations/

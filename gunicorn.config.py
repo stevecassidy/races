@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 import os
 
-bind="0.0.0.0"
+bind = "0.0.0.0"
+
 
 def pre_request(worker, req):
     # pretend the request came over https
     if os.environ.get("GUNICORN_REWRITE_HTTPS") == "1":
-        req.scheme = 'https'
-    
+        req.scheme = "https"

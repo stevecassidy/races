@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,44 +14,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-'''
+"""
 Created on August 18, 2015
 
 @author: steve
-'''
+"""
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from races.apps.cabici.usermodel import PointScore, PointscoreTally, Rider
+from django.core.management.base import BaseCommand
+
+from races.apps.cabici.models import PointScore
+from races.apps.cabici.services.pointscore import recalculate
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
-        parser.add_argument('name', nargs='?', type=str)
-        parser.add_argument('--list', dest='list', action='store_const', const=True, default=False)
+        parser.add_argument("name", nargs="?", type=str)
+        parser.add_argument("--list", dest="list", action="store_const", const=True, default=False)
 
     def handle(self, *args, **options):
 
-        if options['list']:
+        if options["list"]:
             pointscores = PointScore.objects.all()
             for p in pointscores:
                 print(p)
-        elif options['name']:
-            pointscores = PointScore.objects.filter(name__contains=options['name'])
+        elif options["name"]:
+            pointscores = PointScore.objects.filter(name__contains=options["name"])
 
             if pointscores.count() == 0:
-                print("No pointscore matches", options['name'])
+                print("No pointscore matches", options["name"])
             else:
                 for p in pointscores:
                     print("Rescoring", p)
-                    p.recalculate()
+                    recalculate(p)
 
         else:
             pointscores = PointScore.objects.all()
             for p in pointscores:
                 if p.current():
                     print("Rescoring", p)
-                    p.recalculate()
+                    recalculate(p)
                 else:
                     print("Not rescoring", p)
-
-

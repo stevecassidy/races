@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,27 +14,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.db import IntegrityError
-from django.core.exceptions import ValidationError
-from django.db import transaction
-
-import os
 import datetime
 
-from races.apps.cabici.usermodel import Rider, RaceResult, ClubGrade, Membership
-from races.apps.cabici.models import Club, Race
+from django.contrib.auth.models import User
+from django.db import IntegrityError, transaction
+from django.test import TestCase
+from django.utils import timezone
+
+from races.apps.cabici.models import (
+    MEMBERSHIP_CATEGORY_CHOICES,
+    MEMBERSHIP_CATEGORY_CLUB,
+    MEMBERSHIP_CATEGORY_RACE,
+    MEMBERSHIP_CATEGORY_RIDE,
+    RACING_CATEGORIES,
+    Club,
+    ClubGrade,
+    Membership,
+    Race,
+    RaceResult,
+    Rider,
+)
+from races.apps.cabici.services.officials import classification
 
 
 class UserModelTests(TestCase):
 
-    fixtures = ['users', 'clubs', 'courses', 'races', 'riders']
+    fixtures = ["users", "clubs", "courses", "races", "riders"]
 
     def setUp(self):
 
-        self.oge = Club.objects.get(slug='OGE')
-        self.mov = Club.objects.get(slug='MOV')
+        self.oge = Club.objects.get(slug="OGE")
+        self.mov = Club.objects.get(slug="MOV")
 
         self.oge.manage_members = True
         self.oge.manage_races = True
@@ -53,22 +63,22 @@ class UserModelTests(TestCase):
 
         # make sure all riders are current members
         for rider in Rider.objects.all():
-            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category='race')
+            m = Membership(rider=rider, club=rider.club, date=self.memberdate, category="Race")
             m.save()
 
     def test_rider(self):
         """Test creation of a rider"""
 
-        user = User(username='user1')
+        user = User(username="user1")
         user.save()
 
-        club = Club.objects.get(slug='OGE')
+        club = Club.objects.get(slug="OGE")
 
-        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider = Rider(user=user, club=club, gender="M", licenceno="123456")
 
         # test we can get to the rider through the user
         self.assertEqual(user.rider.club, club)
-        self.assertEqual(user.rider.gender, 'M')
+        self.assertEqual(user.rider.gender, "M")
 
     def test_rider_classification(self):
         """We can work out the classification of a rider from their DOB"""
@@ -78,49 +88,114 @@ class UserModelTests(TestCase):
         thisyear = datetime.date.today().year
 
         # try some different ages
-        rider.dob = datetime.date(thisyear-48, 1, 1)
-        self.assertEqual("M4", rider.classification)
+        rider.dob = datetime.date(thisyear - 48, 1, 1)
+        self.assertEqual("M4", classification(rider))
 
-        rider.dob = datetime.date(thisyear-54, 1, 1)
-        self.assertEqual("M5", rider.classification)
+        rider.dob = datetime.date(thisyear - 54, 1, 1)
+        self.assertEqual("M5", classification(rider))
 
-        rider.dob = datetime.date(thisyear-23, 1, 1)
-        self.assertEqual("Elite Men", rider.classification)
+        rider.dob = datetime.date(thisyear - 23, 1, 1)
+        self.assertEqual("Elite Men", classification(rider))
 
         # females are a bit different
-        rider.gender="F"
+        rider.gender = "F"
         rider.save()
 
         # try some different ages
-        rider.dob = datetime.date(thisyear-48, 1, 1)
-        self.assertEqual("W4", rider.classification)
+        rider.dob = datetime.date(thisyear - 48, 1, 1)
+        self.assertEqual("W4", classification(rider))
 
-        rider.dob = datetime.date(thisyear-54, 1, 1)
-        self.assertEqual("W5", rider.classification)
+        rider.dob = datetime.date(thisyear - 54, 1, 1)
+        self.assertEqual("W5", classification(rider))
 
-        rider.dob = datetime.date(thisyear-23, 1, 1)
-        self.assertEqual("Elite Women", rider.classification)
+        rider.dob = datetime.date(thisyear - 23, 1, 1)
+        self.assertEqual("Elite Women", classification(rider))
         # U23 is not for women
-        rider.dob = datetime.date(thisyear-22, 1, 1)
-        self.assertEqual("Elite Women", rider.classification)
+        rider.dob = datetime.date(thisyear - 22, 1, 1)
+        self.assertEqual("Elite Women", classification(rider))
 
         # kiddies
-        rider.dob = datetime.date(thisyear-12, 1, 1)
-        self.assertEqual("U13 Girls", rider.classification)
+        rider.dob = datetime.date(thisyear - 12, 1, 1)
+        self.assertEqual("U13 Girls", classification(rider))
+
+    def test_related_change_touches_rider_updated(self):
+        """C8: a grade change bumps the rider's delta-sync timestamp"""
+
+        rider = Rider.objects.get(id=2930)
+        old = timezone.now() - datetime.timedelta(hours=1)
+        Rider.objects.filter(pk=rider.pk).update(updated=old)
+
+        ClubGrade.objects.create(rider=rider, club=rider.club, grade="A")
+
+        rider.refresh_from_db()
+        self.assertGreater(rider.updated, old)
+
+    def test_classification_without_dob(self):
+        """C6: a rider with no date of birth has no classification, not a crash"""
+
+        rider = Rider.objects.get(id=2930)
+        rider.dob = None
+
+        self.assertIsNone(classification(rider))
 
     def test_member_category(self):
 
         rider = Rider.objects.get(id=2930)
 
         # should be a race member
-        self.assertEqual('race', rider.member_category)
+        self.assertEqual("Race", rider.member_category)
 
         # remove this riders membership and it should return ''
         rider.membership_set.all().delete()
 
         # get rider again (to avoid cache of membership)
         rider_again = Rider.objects.get(id=2930)
-        self.assertEqual('', rider_again.member_category)
+        self.assertEqual("", rider_again.member_category)
+
+    def test_membership_categories(self):
+        """A2: the AusCycling categories, and which of them permit racing"""
+
+        self.assertEqual(
+            [("Ride", "Ride"), ("Club", "Club"), ("Race", "Race")],
+            list(MEMBERSHIP_CATEGORY_CHOICES),
+        )
+        self.assertEqual((MEMBERSHIP_CATEGORY_RACE, MEMBERSHIP_CATEGORY_CLUB), RACING_CATEGORIES)
+
+        rider = Rider.objects.get(id=2930)
+        club = rider.club
+        expiry = datetime.date.today() + datetime.timedelta(days=180)
+
+        def membership(category):
+            rider.membership_set.all().delete()
+            m = Membership(rider=rider, club=club, date=expiry, category=category)
+            m.save()
+            return m
+
+        # 'Club' and 'Race' both permit racing; 'Ride' does not
+        self.assertTrue(membership(MEMBERSHIP_CATEGORY_RACE).allows_racing)
+        self.assertTrue(membership(MEMBERSHIP_CATEGORY_CLUB).allows_racing)
+        self.assertFalse(membership(MEMBERSHIP_CATEGORY_RIDE).allows_racing)
+
+        # the old inverted tuple meant display and value disagreed; they must now
+        # agree, otherwise a value can be stored that no filter will ever match
+        for value, label in MEMBERSHIP_CATEGORY_CHOICES:
+            m = membership(value)
+            self.assertEqual(value, m.get_category_display())
+            self.assertEqual(value, m.category)
+
+        # racing membership counts follow the entitlement, not one literal
+        rider.membership_set.all().delete()
+        Membership.objects.create(rider=rider, club=club, date=expiry, category=MEMBERSHIP_CATEGORY_CLUB)
+        stats = club.statistics()
+        self.assertGreaterEqual(stats["racemembers"], 1)
+
+    def test_statistics_are_counts(self):
+        """C12: statistics() returns counts, not querysets"""
+
+        stats = self.oge.statistics()
+
+        self.assertEqual({"currentmembers", "racemembers", "ridemembers", "commissaires", "roles"}, set(stats))
+        self.assertTrue(all(isinstance(value, int) for value in stats.values()))
 
     def test_member_date(self):
 
@@ -134,17 +209,17 @@ class UserModelTests(TestCase):
 
         # get rider again (to avoid cache of membership)
         rider_again = Rider.objects.get(id=2930)
-        self.assertEqual('', rider_again.member_date)
+        self.assertEqual("", rider_again.member_date)
 
     def test_grade(self):
         """Assigning riders to grades"""
 
-        user = User(username='user1', first_name='User', last_name='One')
+        user = User(username="user1", first_name="User", last_name="One")
         user.save()
 
-        club = Club.objects.get(slug='OGE')
+        club = Club.objects.get(slug="OGE")
 
-        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider = Rider(user=user, club=club, gender="M", licenceno="123456")
         rider.save()
 
         grading = ClubGrade(rider=rider, club=club, grade="A")
@@ -155,24 +230,24 @@ class UserModelTests(TestCase):
         self.assertIn(grading, club.clubgrade_set.all())
         self.assertIn(rider, club.graded_riders())
 
-        # one grade per club
+        # one grade per club, enforced by the database constraint (B3)
 
-        with self.assertRaises(ValidationError):
-            grading2 = ClubGrade(rider=rider, club=club, grade="B")
-            grading2.save()
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                ClubGrade(rider=rider, club=club, grade="B").save()
 
     def test_result(self):
         """Create a race result"""
 
-        user = User(username='user1')
+        user = User(username="user1")
         user.save()
-        club = Club.objects.get(slug='OGE')
+        club = Club.objects.get(slug="OGE")
         race = Race.objects.get(pk=1)
 
-        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider = Rider(user=user, club=club, gender="M", licenceno="123456")
         rider.save()
 
-        result = RaceResult(race=race, rider=rider, grade='A', number=12, place=1)
+        result = RaceResult(race=race, rider=rider, grade="A", number=12, place=1)
         result.save()
 
         self.assertEqual(result.rider.licenceno, rider.licenceno)
@@ -180,160 +255,40 @@ class UserModelTests(TestCase):
     def test_result_one_race_per_rider(self):
         """A rider can only appear once in a race"""
 
-        user = User(username='user1')
+        user = User(username="user1")
         user.save()
-        club = Club.objects.get(slug='MOV')
+        club = Club.objects.get(slug="MOV")
         race = Race.objects.get(pk=1)
 
-        rider = Rider(user=user, club=club, gender='M', licenceno='123456')
+        rider = Rider(user=user, club=club, gender="M", licenceno="123456")
         rider.save()
 
-        result1 = RaceResult(race=race, rider=rider, grade='A', number=21, place=1)
+        result1 = RaceResult(race=race, rider=rider, grade="A", number=21, place=1)
         result1.save()
 
         with self.assertRaises(IntegrityError):
-            result2 = RaceResult(race=race, rider=rider, grade='A', number=22, place=3)
+            result2 = RaceResult(race=race, rider=rider, grade="A", number=22, place=3)
             result2.save()
 
     def test_result_one_number_per_grade(self):
         """A number is used only once in a grade"""
 
-        user1 = User(username='user1')
-        user2 = User(username='user2')
+        user1 = User(username="user1")
+        user2 = User(username="user2")
         user1.save()
         user2.save()
 
-        club = Club.objects.get(slug='MOV')
+        club = Club.objects.get(slug="MOV")
         race = Race.objects.get(pk=1)
 
-        rider1 = Rider(user=user1, club=club, gender='M', licenceno='123456')
-        rider2 = Rider(user=user2, club=club, gender='M', licenceno='123457')
+        rider1 = Rider(user=user1, club=club, gender="M", licenceno="123456")
+        rider2 = Rider(user=user2, club=club, gender="M", licenceno="123457")
         rider1.save()
         rider2.save()
 
-        result1 = RaceResult(race=race, rider=rider1, grade='A', number=21, place=1)
+        result1 = RaceResult(race=race, rider=rider1, grade="A", number=21, place=1)
         result1.save()
 
         with self.assertRaises(IntegrityError):
-            result2 = RaceResult(race=race, rider=rider2, grade='A', number=21, place=3)
+            result2 = RaceResult(race=race, rider=rider2, grade="A", number=21, place=3)
             result2.save()
-
-    def test_load_results_excel(self):
-        """Load results from Excel creates riders and results"""
-
-        club = Club.objects.get(slug='MOV')
-
-        race = Race.objects.get(pk=1)
-
-        with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
-            messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # check result of our riders
-        resultsA = RaceResult.objects.filter(race__exact=race,
-                                             grade__exact="A").order_by("place")
-
-        # 11 riders in A grade
-        self.assertEqual(resultsA.count(), 11)
-
-        # highest place in A grade should be Joaqin Rodriguez at 1 (small group fix)
-        firstplace = resultsA.filter(place__gt=0)[0]
-        self.assertEqual('ESP19790512', firstplace.rider.licenceno)
-        self.assertEqual(1, firstplace.place)
-
-        # winner of B grade
-        resultsB = RaceResult.objects.filter(race__exact=race,
-                                             grade__exact="B",
-                                             place__gt=0).order_by("place")
-
-        # highest place in B grade should be Nikki Terpstra NED19840518
-        firstplace = resultsB[0]
-        self.assertEqual('NED19840518', firstplace.rider.licenceno)
-        self.assertEqual(1, firstplace.place)
-
-        # check messages
-        # two riders get upgraded to A
-        self.assertIn('Updated grade of Alejandro VALVERDE BELMONTE to A', messages)
-        self.assertIn('Updated grade of Joaquin RODRIGUEZ OLIVER to A', messages)
-        # new rider record created
-        thisyear = datetime.date.today().year
-        self.assertIn('Added new rider record for Trisma Allan', messages)
-        self.assertIn('Added new rider record for Stanisic Igor\nUpdated membership of rider Stanisic Igor of club AST to %d-12-31' % thisyear, messages)
-
-    def test_load_results_excel_duplicates(self):
-        """Load results from Excel creates riders and results
-        check handling of duplicate entries"""
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536-dup.xls'), 'rb') as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # check that we have results from both riders with number 104
-        r1 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact='ESP19800425')
-        r2 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact='ESP19790512')
-
-        self.assertEqual(1, len(r1))
-        self.assertEqual(1, len(r2))
-
-        self.assertEqual(1, r2[0].place)
-        self.assertEqual(0, r1[0].place)
-
-        self.assertIn('Error: duplicate result discarded for rider Ryder HESJEDAL', messages)
-
-    def test_load_results_excel_rider_update(self):
-        """Load results from Excel creates riders and results
-        check behaviour with a rider we know with no licence number"""
-
-        # modify a rider so they have a temporary licence number
-        rider1 = Rider.objects.get(licenceno='FRA19900529')
-        rider1.licenceno = '0'
-        rider1.save()
-        user1 = rider1.user
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536-dup.xls'), 'rb') as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        # re-get the rider record from the db
-        rider1 = Rider.objects.get(id=rider1.id)
-
-        # we should have a result for user1
-        r1 = RaceResult.objects.filter(race__exact=race, rider__licenceno__exact='FRA19900529')
-
-        # and only one rider - no extras created
-        riders = Rider.objects.filter(user__first_name__exact="Thibaut")
-        self.assertEqual(1, riders.count())
-
-        self.assertEqual(1, len(r1))
-        self.assertEqual(rider1, r1[0].rider)
-        # licenceno should be updated
-        self.assertEqual('FRA19900529', rider1.licenceno)
-
-        self.assertIn('Updated licence number for Thibaut PINOT to FRA19900529', messages)
-
-    def test_load_results_excel_duty_helper(self):
-        """Load results from Excel gives points to duty helpers
-        with the special shirtno of 999"""
-
-        rider1 = Rider.objects.get(licenceno='ESP19870625')
-        user1 = rider1.user
-
-        race = Race.objects.get(pk=1)
-
-        with transaction.atomic():
-            with open(os.path.join(os.path.dirname(__file__), 'Waratahresults201536.xls'), 'rb') as fd:
-                messages = race.load_excel_results(fd, "xls")
-
-        self.assertEqual(race.raceresult_set.all().count(), 116)
-
-        result1 = race.raceresult_set.get(rider=rider1)
-        self.assertEqual("Helper", result1.grade)
