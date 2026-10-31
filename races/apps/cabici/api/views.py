@@ -1,8 +1,12 @@
 """Read-only v1 resource layer with schema-first endpoints."""
 
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from rest_framework import filters, viewsets
+from rest_framework import filters, serializers, status, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -20,6 +24,10 @@ from races.apps.cabici.api.filters import (
     UserRoleFilter,
 )
 from races.apps.cabici.api.serializers import (
+    AuthPasswordResetConfirmSerializer,
+    AuthPasswordResetRequestSerializer,
+    AuthProfileSerializer,
+    AuthRegisterSerializer,
     ClubRoleSerializer,
     ClubSerializer,
     PointScoreSerializer,
@@ -50,6 +58,10 @@ def api_root(request, format=None):
             "auth_token": reverse("v1:auth-token-obtain", request=request, format=format),
             "auth_refresh": reverse("v1:auth-token-refresh", request=request, format=format),
             "auth_me": reverse("v1:auth-me", request=request, format=format),
+            "auth_register": reverse("v1:auth-register", request=request, format=format),
+            "auth_profile": reverse("v1:auth-profile", request=request, format=format),
+            "auth_password_reset": reverse("v1:auth-password-reset", request=request, format=format),
+            "auth_password_reset_confirm": reverse("v1:auth-password-reset-confirm", request=request, format=format),
             "schema": reverse("v1:schema", request=request, format=format),
             "documentation": reverse("v1:swagger-ui", request=request, format=format),
         }
@@ -176,3 +188,95 @@ class AuthMeView(APIView):
                 "official": bool(rider and rider.official),
             }
         )
+
+
+class AuthRegisterView(APIView):
+    permission_classes = (AllowAny,)
+
+    @extend_schema(summary="Register user", request=AuthRegisterSerializer, responses={201: {"type": "object"}})
+    @transaction.atomic
+    def post(self, request):
+        serializer = AuthRegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        rider = Rider.objects.filter(user=user).first()
+        return Response(
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "rider_id": rider.id if rider else None,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class AuthProfileView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    @staticmethod
+    def _profile_payload(user: User) -> dict:
+        rider = Rider.objects.select_related("club").filter(user=user).first()
+        return {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "rider_id": rider.id if rider else None,
+            "club_id": rider.club_id if rider else None,
+            "official": bool(rider and rider.official),
+        }
+
+    @extend_schema(summary="Get authenticated profile", responses={200: AuthProfileSerializer})
+    def get(self, request):
+        return Response(self._profile_payload(request.user))
+
+    @extend_schema(
+        summary="Update authenticated profile", request=AuthProfileSerializer, responses={200: AuthProfileSerializer}
+    )
+    def patch(self, request):
+        serializer = AuthProfileSerializer(data=request.data, context={"user": request.user}, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.update(request.user, serializer.validated_data)
+        return Response(self._profile_payload(request.user))
+
+
+class AuthPasswordResetView(APIView):
+    permission_classes = (AllowAny,)
+
+    @extend_schema(
+        summary="Request password reset",
+        request=AuthPasswordResetRequestSerializer,
+        responses={200: {"type": "object"}},
+    )
+    def post(self, request):
+        serializer = AuthPasswordResetRequestSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data["email"]
+        form = PasswordResetForm({"email": email})
+        if form.is_valid():
+            form.save(request=request, use_https=request.is_secure())
+        return Response({"detail": "If this email exists, a reset email has been sent."})
+
+
+class AuthPasswordResetConfirmView(APIView):
+    permission_classes = (AllowAny,)
+
+    @extend_schema(
+        summary="Confirm password reset",
+        request=AuthPasswordResetConfirmSerializer,
+        responses={200: {"type": "object"}},
+    )
+    def post(self, request):
+        serializer = AuthPasswordResetConfirmSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.context["reset_user"]
+        token = serializer.validated_data["token"]
+        if not default_token_generator.check_token(user, token):
+            raise serializers.ValidationError({"token": "Invalid or expired reset token."})
+        user.set_password(serializer.validated_data["new_password"])
+        user.save()
+        return Response({"detail": "Password reset successful."})

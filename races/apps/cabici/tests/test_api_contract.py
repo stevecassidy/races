@@ -24,6 +24,10 @@ class V1ContractTests(APITestCase):
         self.assertIn("auth_token", payload)
         self.assertIn("auth_refresh", payload)
         self.assertIn("auth_me", payload)
+        self.assertIn("auth_register", payload)
+        self.assertIn("auth_profile", payload)
+        self.assertIn("auth_password_reset", payload)
+        self.assertIn("auth_password_reset_confirm", payload)
         self.assertIn("schema", payload)
 
     def test_v1_clubs_endpoint_is_available(self):
@@ -122,4 +126,8 @@ class V1ContractTests(APITestCase):
         self.assertIn("/auth/token/", schema["paths"])
         self.assertIn("/auth/token/refresh/", schema["paths"])
         self.assertIn("/auth/me/", schema["paths"])
+        self.assertIn("/auth/register/", schema["paths"])
+        self.assertIn("/auth/profile/", schema["paths"])
+        self.assertIn("/auth/password-reset/", schema["paths"])
+        self.assertIn("/auth/password-reset/confirm/", schema["paths"])
         self.assertNotIn("/api/clubs/", schema["paths"])

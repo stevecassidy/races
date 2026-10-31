@@ -663,7 +663,10 @@ few specific tasks.
 - [x] `djangorestframework-simplejwt` foundation landed for v1 with
       `POST /api/v1/auth/token/`, `POST /api/v1/auth/token/refresh/` and
       JWTAuthentication enabled in DRF
-- [ ] Register, password reset (request + confirm), profile read/patch
+- [x] Register, password reset (request + confirm), and profile read/patch
+      endpoints added to v1 auth surface:
+      `POST /api/v1/auth/register/`, `POST /api/v1/auth/password-reset/`,
+      `POST /api/v1/auth/password-reset/confirm/`, `GET/PATCH /api/v1/auth/profile/`
 - [ ] Logout / token blacklist or short-lived access + rotating refresh
 - [ ] allauth → JWT for the social/session path; keep session auth for `/admin/`
 - [ ] Fix the carried-over defects: unknown email must return 401 (not 500), and

@@ -100,7 +100,9 @@ Goals:
 - [x] Install `djangorestframework-simplejwt`; access + refresh endpoints
   (`/api/v1/auth/token/`, `/api/v1/auth/token/refresh/`) and initial
   authenticated profile endpoint (`/api/v1/auth/me/`)
-- [ ] Register / password reset (request + confirm) / profile endpoints
+- [x] Register / password reset (request + confirm) / profile endpoints
+  (`/api/v1/auth/register/`, `/api/v1/auth/password-reset/`,
+  `/api/v1/auth/password-reset/confirm/`, `/api/v1/auth/profile/`)
 - [ ] allauth → JWT for social auth; session auth for `/admin/` only
 - [ ] **CORS configuration:** keep `django-cors-headers`, allow all club Astro origins
   - `CORS_ALLOWED_ORIGINS` managed as an allow-list of club domains

@@ -6,6 +6,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from races.apps.cabici.api.views import (
     AuthMeView,
+    AuthPasswordResetConfirmView,
+    AuthPasswordResetView,
+    AuthProfileView,
+    AuthRegisterView,
     ClubRoleViewSet,
     ClubViewSet,
     PointScoreViewSet,
@@ -26,6 +30,10 @@ urlpatterns = [
     path("auth/token/", TokenObtainPairView.as_view(), name="auth-token-obtain"),
     path("auth/token/refresh/", TokenRefreshView.as_view(), name="auth-token-refresh"),
     path("auth/me/", AuthMeView.as_view(), name="auth-me"),
+    path("auth/register/", AuthRegisterView.as_view(), name="auth-register"),
+    path("auth/profile/", AuthProfileView.as_view(), name="auth-profile"),
+    path("auth/password-reset/", AuthPasswordResetView.as_view(), name="auth-password-reset"),
+    path("auth/password-reset/confirm/", AuthPasswordResetConfirmView.as_view(), name="auth-password-reset-confirm"),
     path("clubs/", ClubViewSet.as_view({"get": "list", "post": "create"}), name="club-list"),
     path(
         "clubs/<int:pk>/",

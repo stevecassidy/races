@@ -380,7 +380,9 @@ how this slipped — the bullets are now stated as landed only where they are.
 - [x] Install djangorestframework-simplejwt; JWT access + refresh endpoints
       (`/api/v1/auth/token/` and `/api/v1/auth/token/refresh/`) plus
       `/api/v1/auth/me/` foundation
-- [ ] Register / password reset / profile endpoints
+- [x] Register / password reset / profile endpoints
+      (`/api/v1/auth/register/`, `/api/v1/auth/password-reset/`,
+      `/api/v1/auth/password-reset/confirm/`, `/api/v1/auth/profile/`)
 - [ ] allauth → JWT; session auth for `/admin/` only
 - [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
       must not 500 (**partially done**: `/api/v1/auth/me/` now handles no-Rider
