@@ -5,3 +5,14 @@ imgsample.xls
 __pycache__
 .idea/
 
+.coverage
+htmlcov/
+.venv/
+races/staticfiles/
+*.sqlite3
+.env.dev
+races_development.*
+.pgpass
+nginx.conf
+
+.pi/

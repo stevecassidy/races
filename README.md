@@ -1,5 +1,26 @@
 # Cabici
 
+Cabici is a Django-based web application for managing cycling races, clubs, riders, and results.
+
+## 🚧 Modernization Project
+
+**Important:** This project is undergoing a comprehensive modernization to Django 5.2 + React.
+
+📖 **See [MODERNIZATION_README.md](MODERNIZATION_README.md) for complete details.**
+
+### Quick Links
+- [Modernization Summary](MODERNIZATION_SUMMARY.md) - Overview and approach
+- [Implementation Plan](MODERNIZATION_PLAN.md) - Detailed phase-by-phase guide
+- [Task Checklist](MODERNIZATION_CHECKLIST.md) - Progress tracking
+- [API Developer Guide](docs/api-developer-guide.md) - Practical JWT authentication flow for v1
+- [Technical Assessment](TECHNICAL_ASSESSMENT.md) - Current state analysis
+- [Quick Start Guide](QUICK_START.md) - Getting started
+
+### Development Branch Strategy
+All modernization work is being done on the `modernization` branch. The `master` branch remains stable for production until the new version is complete and tested.
+
+---
+
 ## Deployment
 
 ## Digital Ocean
@@ -67,4 +88,3 @@ Restore database from backup into compose container:
 ```shell
 docker compose exec -T db psql -U cabici -W --host=localhost < cabici_2023-01-01.Sunday.sql
 ```
-
