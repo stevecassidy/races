@@ -211,7 +211,7 @@ Use these docs as you work:
 | Document | When to Use |
 |----------|-------------|
 | **MODERNIZATION_SUMMARY.md** | Overview and quick reference |
-| **MODERNIZATION_CHECKLIST.md** | Daily task tracking |
+| **MODERNIZATION_CHECKLIST_v2.md** | Daily task tracking |
 | **MODERNIZATION_PLAN.md** | Detailed implementation guidance |
 | **TECHNICAL_ASSESSMENT.md** | Understanding current codebase |
 
