@@ -1,9 +1,13 @@
 """Read-only v1 resource layer with schema-first endpoints."""
 
+from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.db import transaction
+from django.middleware.csrf import get_token
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_protect
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, serializers, status, viewsets
@@ -12,6 +16,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from races.apps.cabici.api.filters import (
@@ -25,6 +30,7 @@ from races.apps.cabici.api.filters import (
     UserRoleFilter,
 )
 from races.apps.cabici.api.serializers import (
+    AuthLogoutSerializer,
     AuthPasswordResetConfirmSerializer,
     AuthPasswordResetRequestSerializer,
     AuthProfileSerializer,
@@ -42,6 +48,24 @@ from races.apps.cabici.models import Club, ClubRole, PointScore, Race, RaceCours
 from races.apps.cabici.services.pointscore import recalculate as recalculate_points
 
 AUTH_REQUIRED_SCHEMES = ["jwtAuth", "tokenAuth", "cookieAuth"]
+REFRESH_COOKIE_NAME = "api_refresh_token"
+REFRESH_COOKIE_PATH = "/api/v1/auth/"
+REFRESH_COOKIE_SAMESITE = "Strict"
+
+
+def _set_refresh_cookie(response: Response, refresh_token: str) -> None:
+    response.set_cookie(
+        REFRESH_COOKIE_NAME,
+        refresh_token,
+        httponly=True,
+        secure=not settings.DEBUG,
+        samesite=REFRESH_COOKIE_SAMESITE,
+        path=REFRESH_COOKIE_PATH,
+    )
+
+
+def _clear_refresh_cookie(response: Response) -> None:
+    response.delete_cookie(REFRESH_COOKIE_NAME, path=REFRESH_COOKIE_PATH, samesite=REFRESH_COOKIE_SAMESITE)
 
 
 class AuthTokenObtainView(TokenObtainPairView):
@@ -49,15 +73,66 @@ class AuthTokenObtainView(TokenObtainPairView):
 
     @extend_schema(auth=[], summary="Obtain JWT access and refresh tokens")
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK and "refresh" in response.data:
+            refresh_token = response.data.pop("refresh")
+            _set_refresh_cookie(response, refresh_token)
+            get_token(request)
+        return response
 
 
+@method_decorator(csrf_protect, name="dispatch")
 class AuthTokenRefreshView(TokenRefreshView):
     permission_classes = (AllowAny,)
 
     @extend_schema(auth=[], summary="Refresh JWT access token")
     def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        payload = request.data.copy()
+        if not payload.get("refresh"):
+            cookie_token = request.COOKIES.get(REFRESH_COOKIE_NAME)
+            if cookie_token:
+                payload["refresh"] = cookie_token
+        if not payload.get("refresh"):
+            raise serializers.ValidationError({"refresh": "Refresh token is required."})
+
+        serializer = self.get_serializer(data=payload)
+        serializer.is_valid(raise_exception=True)
+
+        response = Response(serializer.validated_data, status=status.HTTP_200_OK)
+        rotated_refresh = serializer.validated_data.pop("refresh", None)
+        if rotated_refresh:
+            _set_refresh_cookie(response, rotated_refresh)
+        get_token(request)
+        return response
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class AuthLogoutView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(
+        summary="Logout and blacklist refresh token",
+        auth=AUTH_REQUIRED_SCHEMES,
+        request=AuthLogoutSerializer,
+        responses={200: {"type": "object"}},
+    )
+    def post(self, request):
+        serializer = AuthLogoutSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        refresh_token = serializer.validated_data.get("refresh") or request.COOKIES.get(REFRESH_COOKIE_NAME)
+        if not refresh_token:
+            raise serializers.ValidationError({"refresh": "Refresh token is required."})
+
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except TokenError as exc:
+            raise serializers.ValidationError({"refresh": "Invalid or expired refresh token."}) from exc
+
+        response = Response({"detail": "Logout successful."}, status=status.HTTP_200_OK)
+        _clear_refresh_cookie(response)
+        return response
 
 
 @extend_schema(description="The canonical v1 API root for public resources.", responses={200: {"type": "object"}})
@@ -76,6 +151,7 @@ def api_root(request, format=None):
             "pointscores": reverse("v1:pointscore-list", request=request, format=format),
             "auth_token": reverse("v1:auth-token-obtain", request=request, format=format),
             "auth_refresh": reverse("v1:auth-token-refresh", request=request, format=format),
+            "auth_logout": reverse("v1:auth-logout", request=request, format=format),
             "auth_me": reverse("v1:auth-me", request=request, format=format),
             "auth_register": reverse("v1:auth-register", request=request, format=format),
             "auth_profile": reverse("v1:auth-profile", request=request, format=format),

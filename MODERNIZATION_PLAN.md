@@ -667,7 +667,9 @@ few specific tasks.
       endpoints added to v1 auth surface:
       `POST /api/v1/auth/register/`, `POST /api/v1/auth/password-reset/`,
       `POST /api/v1/auth/password-reset/confirm/`, `GET/PATCH /api/v1/auth/profile/`
-- [ ] Logout / token blacklist or short-lived access + rotating refresh
+- [x] Logout + refresh hardening for local-account JWT rollout:
+      `POST /api/v1/auth/logout/` blacklists refresh tokens and
+      `/api/v1/auth/token/refresh/` rotates refresh tokens
 - [ ] Initial rollout uses local accounts only (no social auth requirement);
       keep session auth for `/admin/`. Social/OAuth can be reintroduced later
       as a separate work item if/when needed
@@ -676,16 +678,11 @@ few specific tasks.
       login depends on `club` and `official` being present (**partially done**:
       `/api/v1/auth/me/` is now guarded and returns nullable rider fields instead
       of erroring when a user has no Rider)
-- [ ] **Token storage settled by same-origin:** access token in memory, refresh
-      token in an **httpOnly SameSite cookie**. The previous
-      "memory vs httpOnly cookie" question is closed, and bearer-in-`localStorage`
-      is off the table. Cookie-authenticated writes need CSRF protection (DRF's
-      `SessionAuthentication` provides it; a cookie-JWT authentication class must
-      too)
-- [ ] **Delete CORS entirely** rather than scoping it: `corsheaders` from
-      `INSTALLED_APPS`, `CorsMiddleware`, and `CORS_ALLOW_ALL_ORIGINS` /
-      `CORS_URLS_REGEX` / `CORS_ALLOW_METHODS` all go. Also drop
-      `django-cors-headers` from `requirements/base.txt`
+- [x] **Token storage settled by same-origin:** access token in memory, refresh
+      token in an **httpOnly SameSite cookie** (`api_refresh_token`); cookie-based
+      refresh/logout writes are CSRF-protected
+- [x] **Delete CORS entirely** rather than scoping it: no `corsheaders`,
+      middleware, or `CORS_*` settings remain in project settings
 - [ ] **Flatpages need a decision:** `FlatpageFallbackMiddleware` + the `/` flatpage
       back the current home page content. With `/` owned by the SPA, either
       expose pages as a resource (`GET /api/pages/<path>/`) or reorder the
@@ -1249,11 +1246,12 @@ REST_FRAMEWORK = {
 ```
 
 **JWT Flow:**
-1. User logs in via `/api/auth/login/`
-2. Backend returns access + refresh tokens
-3. Frontend stores tokens (localStorage or memory)
-4. Frontend includes token in Authorization header
-5. Backend validates token on each request
+1. User logs in via `POST /api/v1/auth/token/`
+2. Backend returns access token and sets refresh token in an httpOnly cookie
+3. Frontend stores access token in memory only
+4. Frontend includes access token in `Authorization: Bearer <token>` header
+5. On expiry, frontend calls `POST /api/v1/auth/token/refresh/` (with CSRF header)
+6. Backend rotates refresh token and returns a new access token
 
 **Social Auth (Strava) Integration:**
 - Deferred for initial rollout (local accounts only)
@@ -1261,24 +1259,8 @@ REST_FRAMEWORK = {
 
 ### CORS Configuration
 
-```python
-# settings.py
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite dev server
-    "https://app.cabici.com",  # Production frontend
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-```
+For the same-origin rollout, CORS is intentionally not configured. Django serves
+the SPA builds and API from one origin, so no `CORS_*` settings are required.
 
 ### Frontend API Client Setup
 

@@ -30,26 +30,26 @@ Successful response (200):
 
 ```json
 {
-  "access": "<jwt-access-token>",
-  "refresh": "<jwt-refresh-token>"
+  "access": "<jwt-access-token>"
 }
 ```
 
-Invalid credentials return `401`.
+The refresh token is issued in an **httpOnly cookie** (`api_refresh_token`),
+not in the JSON body. Invalid credentials return `401`.
 
 ## 2) Call protected endpoints with the access token
 
 Use the access token in the `Authorization` header:
 
 ```http
-Authorization: Bearer <jwt-access-token>
+Authorization: Bearer <access-token>
 ```
 
 Example:
 
 ```http
 GET /api/v1/auth/me/
-Authorization: Bearer <jwt-access-token>
+Authorization: Bearer <access-token>
 ```
 
 If the token is missing/invalid/expired, the API returns `401`.
@@ -61,10 +61,7 @@ When the access token expires, call:
 ```http
 POST /api/v1/auth/token/refresh/
 Content-Type: application/json
-
-{
-  "refresh": "<jwt-refresh-token>"
-}
+X-CSRFToken: <csrftoken-cookie-value>
 ```
 
 Successful response (200):
@@ -75,9 +72,21 @@ Successful response (200):
 }
 ```
 
-Then retry protected API calls with the new access token.
+The endpoint reads the refresh token from the `api_refresh_token` cookie and,
+when rotation is enabled, writes a new refresh cookie. Then retry protected API
+calls with the new access token.
 
-## 4) Profile endpoints and auth requirements
+## 4) Logout
+
+```http
+POST /api/v1/auth/logout/
+Authorization: Bearer <access-token>
+X-CSRFToken: <csrftoken-cookie-value>
+```
+
+Logout blacklists the refresh token and clears the refresh cookie.
+
+## 5) Profile endpoints and auth requirements
 
 Protected:
 
@@ -93,7 +102,7 @@ Public (no login required):
 - `POST /api/v1/auth/token/`
 - `POST /api/v1/auth/token/refresh/`
 
-## 5) Password reset flow
+## 6) Password reset flow
 
 ### Request reset
 
@@ -123,7 +132,7 @@ Content-Type: application/json
 
 Invalid/expired reset token returns `400`.
 
-## 6) Recommended client behavior
+## 7) Recommended client behavior
 
 - Keep `refresh` token separate from access token handling.
 - Treat `401` on protected routes as a trigger to refresh once, then retry.
