@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from races.apps.cabici.api.filters import (
     ClubFilter,
@@ -39,6 +40,24 @@ from races.apps.cabici.api.serializers import (
 )
 from races.apps.cabici.models import Club, ClubRole, PointScore, Race, RaceCourse, RaceResult, Rider, UserRole
 from races.apps.cabici.services.pointscore import recalculate as recalculate_points
+
+AUTH_REQUIRED_SCHEMES = ["jwtAuth", "tokenAuth", "cookieAuth"]
+
+
+class AuthTokenObtainView(TokenObtainPairView):
+    permission_classes = (AllowAny,)
+
+    @extend_schema(auth=[], summary="Obtain JWT access and refresh tokens")
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+
+class AuthTokenRefreshView(TokenRefreshView):
+    permission_classes = (AllowAny,)
+
+    @extend_schema(auth=[], summary="Refresh JWT access token")
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
 
 @extend_schema(description="The canonical v1 API root for public resources.", responses={200: {"type": "object"}})
@@ -173,7 +192,9 @@ class UserRoleViewSet(viewsets.ModelViewSet):
 class AuthMeView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    @extend_schema(summary="Get current authenticated user", responses={200: {"type": "object"}})
+    @extend_schema(
+        summary="Get current authenticated user", auth=AUTH_REQUIRED_SCHEMES, responses={200: {"type": "object"}}
+    )
     def get(self, request):
         rider = Rider.objects.select_related("club").filter(user=request.user).first()
         return Response(
@@ -193,7 +214,9 @@ class AuthMeView(APIView):
 class AuthRegisterView(APIView):
     permission_classes = (AllowAny,)
 
-    @extend_schema(summary="Register user", request=AuthRegisterSerializer, responses={201: {"type": "object"}})
+    @extend_schema(
+        summary="Register user", auth=[], request=AuthRegisterSerializer, responses={201: {"type": "object"}}
+    )
     @transaction.atomic
     def post(self, request):
         serializer = AuthRegisterSerializer(data=request.data)
@@ -230,12 +253,17 @@ class AuthProfileView(APIView):
             "official": bool(rider and rider.official),
         }
 
-    @extend_schema(summary="Get authenticated profile", responses={200: AuthProfileSerializer})
+    @extend_schema(
+        summary="Get authenticated profile", auth=AUTH_REQUIRED_SCHEMES, responses={200: AuthProfileSerializer}
+    )
     def get(self, request):
         return Response(self._profile_payload(request.user))
 
     @extend_schema(
-        summary="Update authenticated profile", request=AuthProfileSerializer, responses={200: AuthProfileSerializer}
+        summary="Update authenticated profile",
+        auth=AUTH_REQUIRED_SCHEMES,
+        request=AuthProfileSerializer,
+        responses={200: AuthProfileSerializer},
     )
     def patch(self, request):
         serializer = AuthProfileSerializer(data=request.data, context={"user": request.user}, partial=True)
@@ -249,6 +277,7 @@ class AuthPasswordResetView(APIView):
 
     @extend_schema(
         summary="Request password reset",
+        auth=[],
         request=AuthPasswordResetRequestSerializer,
         responses={200: {"type": "object"}},
     )
@@ -267,6 +296,7 @@ class AuthPasswordResetConfirmView(APIView):
 
     @extend_schema(
         summary="Confirm password reset",
+        auth=[],
         request=AuthPasswordResetConfirmSerializer,
         responses={200: {"type": "object"}},
     )

@@ -191,9 +191,13 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Cabici API",
-    "DESCRIPTION": "The contract-first v1 application programming interface.",
+    "DESCRIPTION": (
+        "The contract-first v1 application programming interface. "
+        "See docs/api-developer-guide.md for the practical authentication flow."
+    ),
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SCHEMA_PATH_PREFIX_INSERT": "/api/v1",
 }
 
 # Saving JSON result uploads for debugging

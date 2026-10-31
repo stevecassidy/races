@@ -2,7 +2,6 @@
 
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from races.apps.cabici.api.views import (
     AuthMeView,
@@ -10,6 +9,8 @@ from races.apps.cabici.api.views import (
     AuthPasswordResetView,
     AuthProfileView,
     AuthRegisterView,
+    AuthTokenObtainView,
+    AuthTokenRefreshView,
     ClubRoleViewSet,
     ClubViewSet,
     PointScoreViewSet,
@@ -27,8 +28,8 @@ urlpatterns = [
     path("", api_root, name="api-v1-root"),
     path("schema/", SpectacularAPIView.as_view(urlconf="races.apps.cabici.api.urls"), name="schema"),
     path("docs/", SpectacularSwaggerView.as_view(url_name="v1:schema"), name="swagger-ui"),
-    path("auth/token/", TokenObtainPairView.as_view(), name="auth-token-obtain"),
-    path("auth/token/refresh/", TokenRefreshView.as_view(), name="auth-token-refresh"),
+    path("auth/token/", AuthTokenObtainView.as_view(), name="auth-token-obtain"),
+    path("auth/token/refresh/", AuthTokenRefreshView.as_view(), name="auth-token-refresh"),
     path("auth/me/", AuthMeView.as_view(), name="auth-me"),
     path("auth/register/", AuthRegisterView.as_view(), name="auth-register"),
     path("auth/profile/", AuthProfileView.as_view(), name="auth-profile"),

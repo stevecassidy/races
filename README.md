@@ -12,6 +12,7 @@ Cabici is a Django-based web application for managing cycling races, clubs, ride
 - [Modernization Summary](MODERNIZATION_SUMMARY.md) - Overview and approach
 - [Implementation Plan](MODERNIZATION_PLAN.md) - Detailed phase-by-phase guide
 - [Task Checklist](MODERNIZATION_CHECKLIST.md) - Progress tracking
+- [API Developer Guide](docs/api-developer-guide.md) - Practical JWT authentication flow for v1
 - [Technical Assessment](TECHNICAL_ASSESSMENT.md) - Current state analysis
 - [Quick Start Guide](QUICK_START.md) - Getting started
 
@@ -87,4 +88,3 @@ Restore database from backup into compose container:
 ```shell
 docker compose exec -T db psql -U cabici -W --host=localhost < cabici_2023-01-01.Sunday.sql
 ```
-
