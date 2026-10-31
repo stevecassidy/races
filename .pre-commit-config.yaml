@@ -9,6 +9,8 @@
 # CI (.github/workflows/ci.yml) enforces the same checks with
 # `ruff check .` and `black --check .`.
 
+default_install_hook_types: [pre-commit, pre-push]
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
@@ -45,3 +47,18 @@ repos:
         # pre-commit passes explicit filenames, which bypasses black's
         # extend-exclude in pyproject.toml.
         exclude: ^races/apps/cabici/migrations/
+
+      # Mirror CI on push so style/lint failures are caught locally first.
+      - id: ruff-ci
+        name: ruff check (repo)
+        entry: ruff check --force-exclude .
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: black-ci
+        name: black --check (repo)
+        entry: black --check .
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
