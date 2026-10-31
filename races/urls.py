@@ -22,6 +22,7 @@ admin.autodiscover()
 
 urlpatterns = [
     path("", include("races.apps.cabici.urls")),
+    path("api/v1/", include(("races.apps.cabici.api.urls", "v1"), namespace="v1")),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
 ]
