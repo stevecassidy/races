@@ -377,11 +377,14 @@ how this slipped — the bullets are now stated as landed only where they are.
       full generated-client parity will land with the frontend client package work
 
 ### 2.4 Authentication & Same-Origin Wiring (Week 8)
-- [ ] Install djangorestframework-simplejwt; JWT access + refresh endpoints
+- [x] Install djangorestframework-simplejwt; JWT access + refresh endpoints
+      (`/api/v1/auth/token/` and `/api/v1/auth/token/refresh/`) plus
+      `/api/v1/auth/me/` foundation
 - [ ] Register / password reset / profile endpoints
 - [ ] allauth → JWT; session auth for `/admin/` only
 - [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
-      must not 500
+      must not 500 (**partially done**: `/api/v1/auth/me/` now handles no-Rider
+      users without 500 and returns nullable rider/club fields)
 - [ ] **Token storage settled by same-origin:** access in memory, refresh in an
       httpOnly SameSite cookie, with CSRF protection on cookie-authenticated
       writes. Bearer-in-`localStorage` is off the table
