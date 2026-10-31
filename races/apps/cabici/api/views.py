@@ -69,14 +69,20 @@ class PointScoreViewSet(viewsets.ModelViewSet):
     search_fields = ["name", "club__name"]
     ordering_fields = ["name", "club__name"]
 
-    @extend_schema(summary="Recalculate a pointscore", description="Rebuild the tally table from the races attached to the pointscore.", responses={200: {"type": "object"}})
+    @extend_schema(
+        summary="Recalculate a pointscore",
+        description="Rebuild the tally table from the races attached to the pointscore.",
+        responses={200: {"type": "object"}},
+    )
     @action(detail=True, methods=["post"], url_path="recalculate")
     def recalculate(self, request, pk=None):
         pointscore = self.get_object()
         recalculate_points(pointscore)
-        return Response({
-            "status": "ok",
-            "pointscore": pointscore.id,
-            "name": pointscore.name,
-            "tallies": pointscore.results.count(),
-        })
+        return Response(
+            {
+                "status": "ok",
+                "pointscore": pointscore.id,
+                "name": pointscore.name,
+                "tallies": pointscore.results.count(),
+            }
+        )
