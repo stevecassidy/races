@@ -354,9 +354,14 @@ how this slipped — the bullets are now stated as landed only where they are.
       deleted riders
 
 ### 2.3 Resource Model & API Contract (Week 7)
-- [ ] Derive remaining resources from the domain (not from the old views)
+- [x] Added the next contract resource slice from the domain (not old views):
+      racecourses, race results, club roles and user roles now ship under
+      `/api/v1/`
+- [ ] Derive the remaining resources from the domain (memberships, club grades,
+      race staff, pointscore tallies, auth/user surfaces)
 - [ ] One consistent public identifier per concept (rider = `Rider.id` everywhere)
-- [ ] Explicit read/write serializer shapes; never `fields='__all__'`
+- [x] Explicit read/write serializer shapes for all currently exposed v1
+      resources; no `fields='__all__'` in the new contract serializers
 - [x] `django-filter` FilterSets for the initial v1 contract replacing the
       legacy ad-hoc query params on `clubs`, `riders`, `races` and
       `pointscores` (the `?status=`/`?club=`/`?search=` pattern is now in place)
@@ -367,8 +372,9 @@ how this slipped — the bullets are now stated as landed only where they are.
       `/api/v1/docs/`; the generated TypeScript client remains a later frontend
       monorepo task
 - [x] Initial contract tests in CI covering the served schema and the v1
-      routes/actions (`races/apps/cabici/tests/test_api_contract.py`); full
-      generated-client parity will land with the frontend client package work
+      routes/actions, including racecourses, race results and user-role
+      filtering/creation (`races/apps/cabici/tests/test_api_contract.py`);
+      full generated-client parity will land with the frontend client package work
 
 ### 2.4 Authentication & Same-Origin Wiring (Week 8)
 - [ ] Install djangorestframework-simplejwt; JWT access + refresh endpoints

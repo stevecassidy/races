@@ -60,6 +60,8 @@ Goals:
   - pointscores, pointscore tallies
   - users, auth, sessions
   - **content pages, posts** (new for Astro site)
+  - ✅ current v1 contract now includes clubs, races, racecourses, riders,
+    race results, pointscores, club roles and user roles
 - [ ] Design race-day upload/download contract:
   - Extract Angular semantics into `docs/raceday-contract.md`
   - Design clean contract for React app (no legacy shapes)
@@ -76,7 +78,8 @@ Goals:
   - `GET /me/results/` — own results
   - `PATCH /me/` — update profile
 - [ ] One consistent public identifier per concept (`Rider.id` everywhere)
-- [ ] Explicit read/write serializer shapes; never `fields='__all__'`
+- [x] Explicit read/write serializer shapes for all resources currently exposed
+  in v1; no `fields='__all__'` in the new contract serializers
 - [x] `django-filter` FilterSets for the initial v1 contract: `?status=`,
   `?date_after=`, `?club=`, `?search=`, `?ordering=` and the associated list
   filters are implemented for the v1 resources shipped in
@@ -87,7 +90,8 @@ Goals:
 - [x] **OpenAPI schema is live for the v1 contract** — served under
   `/api/v1/schema/` and `/api/v1/docs/` in the project repo
 - [ ] Generate TypeScript client into `frontend/packages/api-client`
-- [x] Initial contract test coverage is in place for the v1 schema and endpoints
+- [x] Initial contract test coverage is in place for the v1 schema and
+  endpoints/actions, including racecourses, race results and user roles
   (`races/apps/cabici/tests/test_api_contract.py`); full generated-client parity
   remains a frontend monorepo follow-up
 
