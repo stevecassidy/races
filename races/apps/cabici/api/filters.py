@@ -2,7 +2,7 @@
 
 import django_filters
 
-from races.apps.cabici.models import Club, PointScore, Race, Rider
+from races.apps.cabici.models import Club, ClubRole, PointScore, Race, RaceCourse, RaceResult, Rider, UserRole
 
 
 class ClubFilter(django_filters.FilterSet):
@@ -58,4 +58,54 @@ class PointScoreFilter(django_filters.FilterSet):
         fields = {
             "club": ["exact"],
             "name": ["exact", "icontains"],
+        }
+
+
+class RaceCourseFilter(django_filters.FilterSet):
+    class Meta:
+        model = RaceCourse
+        fields = {
+            "name": ["exact", "icontains"],
+            "shortname": ["exact", "icontains"],
+        }
+
+
+class RaceResultFilter(django_filters.FilterSet):
+    race = django_filters.NumberFilter(field_name="race_id")
+    rider = django_filters.NumberFilter(field_name="rider_id")
+    place_after = django_filters.NumberFilter(field_name="place", lookup_expr="gte")
+    place_before = django_filters.NumberFilter(field_name="place", lookup_expr="lte")
+    dnf = django_filters.BooleanFilter()
+
+    class Meta:
+        model = RaceResult
+        fields = {
+            "race": ["exact"],
+            "rider": ["exact"],
+            "grade": ["exact", "icontains"],
+            "usual_grade": ["exact", "icontains"],
+            "dnf": ["exact"],
+            "place": ["exact", "gte", "lte"],
+        }
+
+
+class ClubRoleFilter(django_filters.FilterSet):
+    class Meta:
+        model = ClubRole
+        fields = {
+            "name": ["exact", "icontains"],
+        }
+
+
+class UserRoleFilter(django_filters.FilterSet):
+    user = django_filters.NumberFilter(field_name="user_id")
+    club = django_filters.NumberFilter(field_name="club_id")
+    role = django_filters.NumberFilter(field_name="role_id")
+
+    class Meta:
+        model = UserRole
+        fields = {
+            "user": ["exact"],
+            "club": ["exact"],
+            "role": ["exact"],
         }

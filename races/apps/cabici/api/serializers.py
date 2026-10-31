@@ -1,8 +1,9 @@
 """Serializers defining the canonical v1 API contract."""
 
+from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from races.apps.cabici.models import Club, PointScore, Race, Rider
+from races.apps.cabici.models import Club, ClubRole, PointScore, Race, RaceCourse, RaceResult, Rider, UserRole
 
 
 class ClubSerializer(serializers.ModelSerializer):
@@ -90,4 +91,82 @@ class PointScoreSerializer(serializers.ModelSerializer):
             "smallthreshold",
             "participation",
             "races",
+        ]
+
+
+class RaceCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RaceCourse
+        fields = [
+            "id",
+            "name",
+            "shortname",
+            "location",
+        ]
+
+
+class RaceResultSerializer(serializers.ModelSerializer):
+    race = serializers.PrimaryKeyRelatedField(queryset=Race.objects.all(), write_only=True)
+    rider = serializers.PrimaryKeyRelatedField(queryset=Rider.objects.all(), write_only=True)
+    rider_name = serializers.SerializerMethodField()
+    rider_id = serializers.IntegerField(source="rider.pk", read_only=True)
+    race_id = serializers.IntegerField(source="race.pk", read_only=True)
+    grade_change = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RaceResult
+        fields = [
+            "id",
+            "race",
+            "rider",
+            "race_id",
+            "rider_id",
+            "rider_name",
+            "grade",
+            "usual_grade",
+            "number",
+            "place",
+            "dnf",
+            "grade_change",
+        ]
+
+    def get_rider_name(self, obj) -> str:
+        return str(obj.rider)
+
+    def get_grade_change(self, obj) -> bool:
+        return bool(obj.usual_grade) and obj.grade != obj.usual_grade
+
+
+class ClubRoleSerializer(serializers.ModelSerializer):
+    shortname = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = ClubRole
+        fields = [
+            "id",
+            "name",
+            "shortname",
+        ]
+
+
+class UserRoleSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    club = serializers.PrimaryKeyRelatedField(queryset=Club.objects.all(), write_only=True)
+    role = serializers.PrimaryKeyRelatedField(queryset=ClubRole.objects.all(), write_only=True)
+    user_id = serializers.IntegerField(source="user.pk", read_only=True)
+    club_id = serializers.IntegerField(source="club.pk", read_only=True)
+    role_id = serializers.IntegerField(source="role.pk", read_only=True)
+    role_name = serializers.CharField(source="role.name", read_only=True)
+
+    class Meta:
+        model = UserRole
+        fields = [
+            "id",
+            "user",
+            "club",
+            "role",
+            "user_id",
+            "club_id",
+            "role_id",
+            "role_name",
         ]

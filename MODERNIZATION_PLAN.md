@@ -624,14 +624,16 @@ types left in either app.
 Replaces the old "map current views to endpoints" task — the old views are going
 away, so resources are derived from the domain instead. **One contract, designed for the React app alone**, and the generated client is the only sanctioned way to talk to it.
 
-- [ ] Enumerate resources from the merged models: clubs, races, racecourses,
-      riders, memberships, club roles, user roles, club grades, race staff, race
-      results, pointscores, pointscore tallies, users/auth
+- [x] Expanded the initial v1 resource coverage from clubs/riders/races/pointscores
+      to include racecourses, race results, club roles and user roles in
+      `races/apps/cabici/api/`; remaining resources (memberships, club grades,
+      race staff, pointscore tallies, users/auth) stay in the next 2.3 slices
 - [ ] One public identifier per concept, applied consistently (rider = `Rider.id`
       everywhere; the old API used `Rider.id`, `User.id` and a display string
       interchangeably under the same key names)
-- [ ] Explicit representation contracts (read shape, write shape) — never
-      `fields='__all__'`
+- [x] Explicit representation contracts (read shape, write shape) are in place
+      for the v1 resources currently exposed; no `fields='__all__'` in the new
+      contract serializers
 - [x] Filters as `django-filter` `FilterSet`s for the initial v1 contract,
       replacing legacy ad-hoc query params with `?status=`, `?date_after=`,
       `?club=`, `?search=`, `?ordering=` and equivalent list filters on the
@@ -644,10 +646,10 @@ away, so resources are derived from the domain instead. **One contract, designed
       still pending the broader frontend monorepo work
 - [ ] Re-express delta sync as `?updated_after=<iso8601>` while preserving the
       offline behaviour listed in 2.2
-- [x] Contract test in CI for the initial v1 slice: the served schema and the
-      v1 root/resource endpoints are covered by the contract tests in
-      `races/apps/cabici/tests/test_api_contract.py`; full generated-client
-      parity remains a later frontend task
+- [x] Contract test in CI for the initial v1 slices: the served schema and the
+      v1 root/resource/action endpoints (including racecourses, race results and
+      user roles) are covered by `races/apps/cabici/tests/test_api_contract.py`;
+      full generated-client parity remains a later frontend task
 
 **Success Criteria:** written contract covering 100% of the operations both
 clients need; OpenAPI spec committed and served; generated TS client compiles in

@@ -8,9 +8,27 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from races.apps.cabici.api.filters import ClubFilter, PointScoreFilter, RaceFilter, RiderFilter
-from races.apps.cabici.api.serializers import ClubSerializer, PointScoreSerializer, RaceSerializer, RiderSerializer
-from races.apps.cabici.models import Club, PointScore, Race, Rider
+from races.apps.cabici.api.filters import (
+    ClubFilter,
+    ClubRoleFilter,
+    PointScoreFilter,
+    RaceCourseFilter,
+    RaceFilter,
+    RaceResultFilter,
+    RiderFilter,
+    UserRoleFilter,
+)
+from races.apps.cabici.api.serializers import (
+    ClubRoleSerializer,
+    ClubSerializer,
+    PointScoreSerializer,
+    RaceCourseSerializer,
+    RaceResultSerializer,
+    RaceSerializer,
+    RiderSerializer,
+    UserRoleSerializer,
+)
+from races.apps.cabici.models import Club, ClubRole, PointScore, Race, RaceCourse, RaceResult, Rider, UserRole
 from races.apps.cabici.services.pointscore import recalculate as recalculate_points
 
 
@@ -21,8 +39,12 @@ def api_root(request, format=None):
     return Response(
         {
             "clubs": reverse("v1:club-list", request=request, format=format),
+            "club_roles": reverse("v1:club-role-list", request=request, format=format),
             "riders": reverse("v1:rider-list", request=request, format=format),
+            "user_roles": reverse("v1:user-role-list", request=request, format=format),
             "races": reverse("v1:race-list", request=request, format=format),
+            "race_courses": reverse("v1:race-course-list", request=request, format=format),
+            "race_results": reverse("v1:race-result-list", request=request, format=format),
             "pointscores": reverse("v1:pointscore-list", request=request, format=format),
             "schema": reverse("v1:schema", request=request, format=format),
             "documentation": reverse("v1:swagger-ui", request=request, format=format),
@@ -86,3 +108,47 @@ class PointScoreViewSet(viewsets.ModelViewSet):
                 "tallies": pointscore.results.count(),
             }
         )
+
+
+class RaceCourseViewSet(viewsets.ModelViewSet):
+    queryset = RaceCourse.objects.order_by("name")
+    serializer_class = RaceCourseSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = RaceCourseFilter
+    search_fields = ["name", "shortname"]
+    ordering_fields = ["name", "shortname"]
+
+
+class RaceResultViewSet(viewsets.ModelViewSet):
+    queryset = RaceResult.objects.select_related("race", "rider", "rider__user").order_by(
+        "race_id", "grade", "place", "number"
+    )
+    serializer_class = RaceResultSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = RaceResultFilter
+    search_fields = ["rider__user__first_name", "rider__user__last_name", "grade", "usual_grade"]
+    ordering_fields = ["race_id", "grade", "place", "number"]
+
+
+class ClubRoleViewSet(viewsets.ModelViewSet):
+    queryset = ClubRole.objects.order_by("name")
+    serializer_class = ClubRoleSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = ClubRoleFilter
+    search_fields = ["name"]
+    ordering_fields = ["name"]
+
+
+class UserRoleViewSet(viewsets.ModelViewSet):
+    queryset = UserRole.objects.select_related("user", "club", "role").order_by(
+        "club__name", "role__name", "user__username"
+    )
+    serializer_class = UserRoleSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_class = UserRoleFilter
+    search_fields = ["user__username", "user__first_name", "user__last_name", "club__name", "role__name"]
+    ordering_fields = ["club__name", "role__name", "user__username"]

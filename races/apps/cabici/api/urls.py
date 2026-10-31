@@ -3,7 +3,17 @@
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from races.apps.cabici.api.views import ClubViewSet, PointScoreViewSet, RaceViewSet, RiderViewSet, api_root
+from races.apps.cabici.api.views import (
+    ClubRoleViewSet,
+    ClubViewSet,
+    PointScoreViewSet,
+    RaceCourseViewSet,
+    RaceResultViewSet,
+    RaceViewSet,
+    RiderViewSet,
+    UserRoleViewSet,
+    api_root,
+)
 
 app_name = "v1"
 
@@ -39,5 +49,29 @@ urlpatterns = [
         "pointscores/<int:pk>/recalculate/",
         PointScoreViewSet.as_view({"post": "recalculate"}),
         name="pointscore-recalculate",
+    ),
+    path("racecourses/", RaceCourseViewSet.as_view({"get": "list", "post": "create"}), name="race-course-list"),
+    path(
+        "racecourses/<int:pk>/",
+        RaceCourseViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}),
+        name="race-course-detail",
+    ),
+    path("race-results/", RaceResultViewSet.as_view({"get": "list", "post": "create"}), name="race-result-list"),
+    path(
+        "race-results/<int:pk>/",
+        RaceResultViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}),
+        name="race-result-detail",
+    ),
+    path("club-roles/", ClubRoleViewSet.as_view({"get": "list", "post": "create"}), name="club-role-list"),
+    path(
+        "club-roles/<int:pk>/",
+        ClubRoleViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}),
+        name="club-role-detail",
+    ),
+    path("user-roles/", UserRoleViewSet.as_view({"get": "list", "post": "create"}), name="user-role-list"),
+    path(
+        "user-roles/<int:pk>/",
+        UserRoleViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}),
+        name="user-role-detail",
     ),
 ]
