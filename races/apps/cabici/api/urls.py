@@ -4,7 +4,7 @@ from django.urls import path
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from races.apps.cabici.api.views import api_root, ClubViewSet, RaceViewSet, RiderViewSet
+from races.apps.cabici.api.views import PointScoreViewSet, api_root, ClubViewSet, RaceViewSet, RiderViewSet
 
 app_name = "v1"
 
@@ -18,4 +18,7 @@ urlpatterns = [
     path("riders/<int:pk>/", RiderViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="rider-detail"),
     path("races/", RaceViewSet.as_view({"get": "list", "post": "create"}), name="race-list"),
     path("races/<int:pk>/", RaceViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="race-detail"),
+    path("pointscores/", PointScoreViewSet.as_view({"get": "list", "post": "create"}), name="pointscore-list"),
+    path("pointscores/<int:pk>/", PointScoreViewSet.as_view({"get": "retrieve", "put": "update", "patch": "partial_update", "delete": "destroy"}), name="pointscore-detail"),
+    path("pointscores/<int:pk>/recalculate/", PointScoreViewSet.as_view({"post": "recalculate"}), name="pointscore-recalculate"),
 ]

@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from races.apps.cabici.models import Club, Race, Rider
+from races.apps.cabici.models import Club, PointScore, Race, Rider
 
 
 class ClubSerializer(serializers.ModelSerializer):
@@ -72,4 +72,22 @@ class RaceSerializer(serializers.ModelSerializer):
             "licencereq",
             "grading",
             "description",
+        ]
+
+
+class PointScoreSerializer(serializers.ModelSerializer):
+    club_id = serializers.IntegerField(read_only=True)
+    races = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = PointScore
+        fields = [
+            "id",
+            "club_id",
+            "name",
+            "points",
+            "smallpoints",
+            "smallthreshold",
+            "participation",
+            "races",
         ]
