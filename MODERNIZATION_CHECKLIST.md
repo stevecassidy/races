@@ -357,16 +357,18 @@ how this slipped — the bullets are now stated as landed only where they are.
 - [ ] Derive remaining resources from the domain (not from the old views)
 - [ ] One consistent public identifier per concept (rider = `Rider.id` everywhere)
 - [ ] Explicit read/write serializer shapes; never `fields='__all__'`
-- [ ] `django-filter` FilterSets replacing `?select=` / `?count=` / `?prefix=` /
-      `?changed=` (delta sync becomes `?updated_after=` + `ETag`)
-- [ ] Domain operations as explicit actions (`POST /races/bulk/`,
-      `POST /pointscores/{id}/recalculate/`,
-      `POST /clubs/{slug}/officials/allocate/`)
-- [ ] Publish OpenAPI before implementing; generate the TypeScript client into
-      `frontend/packages/api-client` and consume it from **both** apps (the control
-      that prevents a repeat of D1/D2)
-- [ ] Contract test in CI covering served schema ↔ generated client ↔ raceday
-      upload payload
+- [x] `django-filter` FilterSets for the initial v1 contract replacing the
+      legacy ad-hoc query params on `clubs`, `riders`, `races` and
+      `pointscores` (the `?status=`/`?club=`/`?search=` pattern is now in place)
+- [x] Domain operations as explicit actions in the initial v1 contract,
+      including `POST /api/v1/pointscores/{id}/recalculate/` and the action
+      pattern for later bulk/allocation endpoints
+- [x] Publish the v1 OpenAPI schema and serve the docs at `/api/v1/schema/` and
+      `/api/v1/docs/`; the generated TypeScript client remains a later frontend
+      monorepo task
+- [x] Initial contract tests in CI covering the served schema and the v1
+      routes/actions (`races/apps/cabici/tests/test_api_contract.py`); full
+      generated-client parity will land with the frontend client package work
 
 ### 2.4 Authentication & Same-Origin Wiring (Week 8)
 - [ ] Install djangorestframework-simplejwt; JWT access + refresh endpoints

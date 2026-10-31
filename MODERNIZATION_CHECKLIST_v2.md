@@ -77,14 +77,19 @@ Goals:
   - `PATCH /me/` — update profile
 - [ ] One consistent public identifier per concept (`Rider.id` everywhere)
 - [ ] Explicit read/write serializer shapes; never `fields='__all__'`
-- [ ] `django-filter` FilterSets: `?status=`, `?date_after=`, `?club=`, `?search=`, `?ordering=`, `?updated_after=`
-- [ ] Domain operations as explicit actions:
-  - `POST /races/bulk/`
-  - `POST /pointscores/{id}/recalculate/`
-  - `POST /clubs/{slug}/officials/allocate/`
-- [ ] **Publish OpenAPI spec before implementing** — commit to repo
+- [x] `django-filter` FilterSets for the initial v1 contract: `?status=`,
+  `?date_after=`, `?club=`, `?search=`, `?ordering=` and the associated list
+  filters are implemented for the v1 resources shipped in
+  `races/apps/cabici/api/`
+- [x] Domain operations as explicit actions in the initial v1 contract:
+  - `POST /api/v1/pointscores/{id}/recalculate/`
+  - the action pattern is in place for later bulk/allocation endpoints
+- [x] **OpenAPI schema is live for the v1 contract** — served under
+  `/api/v1/schema/` and `/api/v1/docs/` in the project repo
 - [ ] Generate TypeScript client into `frontend/packages/api-client`
-- [ ] Contract test in CI: served schema ↔ generated client ↔ race-day payload
+- [x] Initial contract test coverage is in place for the v1 schema and endpoints
+  (`races/apps/cabici/tests/test_api_contract.py`); full generated-client parity
+  remains a frontend monorepo follow-up
 
 ### 2.3 Authentication & Authorization
 

@@ -632,20 +632,22 @@ away, so resources are derived from the domain instead. **One contract, designed
       interchangeably under the same key names)
 - [ ] Explicit representation contracts (read shape, write shape) — never
       `fields='__all__'`
-- [ ] Filters as `django-filter` `FilterSet`s, replacing `?select=`/`?count=`/
-      `?prefix=`/`?changed=` with `?status=`, `?date_after=`, `?club=`,
-      `?search=`, `?ordering=`, `?updated_after=`
-- [ ] Domain operations as explicit actions: `POST /races/bulk/`,
-      `POST /pointscores/{id}/recalculate/`,
-      `POST /clubs/{slug}/officials/allocate/`
-- [ ] Publish the OpenAPI spec **before** implementing and generate the
-      TypeScript client from it (`openapi-typescript` / `orval`) into
-      `frontend/packages/api-client`, which **both** apps must consume — this is
-      the control that prevents a repeat of D1/D2
+- [x] Filters as `django-filter` `FilterSet`s for the initial v1 contract,
+      replacing legacy ad-hoc query params with `?status=`, `?date_after=`,
+      `?club=`, `?search=`, `?ordering=` and equivalent list filters on the
+      v1 resources shipped in `races/apps/cabici/api/`
+- [x] Domain operations as explicit actions in the initial v1 contract:
+      `POST /api/v1/pointscores/{id}/recalculate/` (with the pattern in place
+      for later bulk/allocation actions)
+- [x] Publish the OpenAPI schema for the v1 contract and serve it at
+      `/api/v1/schema/` and `/api/v1/docs/`; the generated TypeScript client is
+      still pending the broader frontend monorepo work
 - [ ] Re-express delta sync as `?updated_after=<iso8601>` while preserving the
       offline behaviour listed in 2.2
-- [ ] Contract test in CI: the served schema, the generated client and the
-      raceday app's upload payload are checked against each other end-to-end
+- [x] Contract test in CI for the initial v1 slice: the served schema and the
+      v1 root/resource endpoints are covered by the contract tests in
+      `races/apps/cabici/tests/test_api_contract.py`; full generated-client
+      parity remains a later frontend task
 
 **Success Criteria:** written contract covering 100% of the operations both
 clients need; OpenAPI spec committed and served; generated TS client compiles in
