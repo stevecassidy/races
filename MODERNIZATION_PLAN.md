@@ -660,13 +660,17 @@ both apps; the contract test fails if either side drifts.
 Same-origin (decided — see 3.1) removes a whole category of work here and adds a
 few specific tasks.
 
-- [ ] `djangorestframework-simplejwt` with access + refresh endpoints
+- [x] `djangorestframework-simplejwt` foundation landed for v1 with
+      `POST /api/v1/auth/token/`, `POST /api/v1/auth/token/refresh/` and
+      JWTAuthentication enabled in DRF
 - [ ] Register, password reset (request + confirm), profile read/patch
 - [ ] Logout / token blacklist or short-lived access + rotating refresh
 - [ ] allauth → JWT for the social/session path; keep session auth for `/admin/`
 - [ ] Fix the carried-over defects: unknown email must return 401 (not 500), and
       a user without a `Rider` must not 500 on `user.rider.club` — the raceday
-      login depends on `club` and `official` being present
+      login depends on `club` and `official` being present (**partially done**:
+      `/api/v1/auth/me/` is now guarded and returns nullable rider fields instead
+      of erroring when a user has no Rider)
 - [ ] **Token storage settled by same-origin:** access token in memory, refresh
       token in an **httpOnly SameSite cookie**. The previous
       "memory vs httpOnly cookie" question is closed, and bearer-in-`localStorage`

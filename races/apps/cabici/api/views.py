@@ -4,9 +4,10 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import filters, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.views import APIView
 
 from races.apps.cabici.api.filters import (
     ClubFilter,
@@ -46,6 +47,9 @@ def api_root(request, format=None):
             "race_courses": reverse("v1:race-course-list", request=request, format=format),
             "race_results": reverse("v1:race-result-list", request=request, format=format),
             "pointscores": reverse("v1:pointscore-list", request=request, format=format),
+            "auth_token": reverse("v1:auth-token-obtain", request=request, format=format),
+            "auth_refresh": reverse("v1:auth-token-refresh", request=request, format=format),
+            "auth_me": reverse("v1:auth-me", request=request, format=format),
             "schema": reverse("v1:schema", request=request, format=format),
             "documentation": reverse("v1:swagger-ui", request=request, format=format),
         }
@@ -152,3 +156,23 @@ class UserRoleViewSet(viewsets.ModelViewSet):
     filterset_class = UserRoleFilter
     search_fields = ["user__username", "user__first_name", "user__last_name", "club__name", "role__name"]
     ordering_fields = ["club__name", "role__name", "user__username"]
+
+
+class AuthMeView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(summary="Get current authenticated user", responses={200: {"type": "object"}})
+    def get(self, request):
+        rider = Rider.objects.select_related("club").filter(user=request.user).first()
+        return Response(
+            {
+                "id": request.user.id,
+                "username": request.user.username,
+                "email": request.user.email,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "rider_id": rider.id if rider else None,
+                "club_id": rider.club_id if rider else None,
+                "official": bool(rider and rider.official),
+            }
+        )

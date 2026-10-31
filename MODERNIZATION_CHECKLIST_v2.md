@@ -97,7 +97,9 @@ Goals:
 
 ### 2.3 Authentication & Authorization
 
-- [ ] Install `djangorestframework-simplejwt`; access + refresh endpoints
+- [x] Install `djangorestframework-simplejwt`; access + refresh endpoints
+  (`/api/v1/auth/token/`, `/api/v1/auth/token/refresh/`) and initial
+  authenticated profile endpoint (`/api/v1/auth/me/`)
 - [ ] Register / password reset (request + confirm) / profile endpoints
 - [ ] allauth → JWT for social auth; session auth for `/admin/` only
 - [ ] **CORS configuration:** keep `django-cors-headers`, allow all club Astro origins
@@ -116,7 +118,8 @@ Goals:
   - Writes: club official of owning object
 - [ ] Fix carried-over defects:
   - Unknown email → 401 (not 500)
-  - User without a Rider must not 500 on `user.rider.club`
+  - User without a Rider must not 500 on `user.rider.club` (partially done:
+    `/api/v1/auth/me/` now returns nullable rider fields instead of 500)
 - [ ] allauth links resolve into `apps/manage` SPA routes (password reset, email confirmation)
 
 ### 2.4 Core CRUD Implementation
