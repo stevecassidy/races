@@ -1,10 +1,9 @@
 """URLs for the contract-first v1 API."""
 
 from django.urls import path
-
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from races.apps.cabici.api.views import PointScoreViewSet, api_root, ClubViewSet, RaceViewSet, RiderViewSet
+from races.apps.cabici.api.views import ClubViewSet, PointScoreViewSet, RaceViewSet, RiderViewSet, api_root
 
 app_name = "v1"
 
