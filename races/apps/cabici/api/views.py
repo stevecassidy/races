@@ -69,7 +69,7 @@ def _clear_refresh_cookie(response: Response) -> None:
 
 
 class AuthTokenObtainView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]  # type: ignore[assignment]
 
     @extend_schema(auth=[], summary="Obtain JWT access and refresh tokens")
     def post(self, request, *args, **kwargs):
@@ -83,7 +83,7 @@ class AuthTokenObtainView(TokenObtainPairView):
 
 @method_decorator(csrf_protect, name="dispatch")
 class AuthTokenRefreshView(TokenRefreshView):
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]  # type: ignore[assignment]
 
     @extend_schema(auth=[], summary="Refresh JWT access token")
     def post(self, request, *args, **kwargs):
