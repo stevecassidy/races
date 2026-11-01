@@ -257,3 +257,7 @@ class AuthPasswordResetConfirmSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid reset user.") from exc
         self.context["reset_user"] = user
         return value
+
+
+class AuthLogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=False, allow_blank=False)

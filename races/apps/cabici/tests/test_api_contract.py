@@ -23,6 +23,7 @@ class V1ContractTests(APITestCase):
         self.assertIn("pointscores", payload)
         self.assertIn("auth_token", payload)
         self.assertIn("auth_refresh", payload)
+        self.assertIn("auth_logout", payload)
         self.assertIn("auth_me", payload)
         self.assertIn("auth_register", payload)
         self.assertIn("auth_profile", payload)
@@ -125,6 +126,7 @@ class V1ContractTests(APITestCase):
         self.assertIn("/api/v1/pointscores/", schema["paths"])
         self.assertIn("/api/v1/auth/token/", schema["paths"])
         self.assertIn("/api/v1/auth/token/refresh/", schema["paths"])
+        self.assertIn("/api/v1/auth/logout/", schema["paths"])
         self.assertIn("/api/v1/auth/me/", schema["paths"])
         self.assertIn("/api/v1/auth/register/", schema["paths"])
         self.assertIn("/api/v1/auth/profile/", schema["paths"])
@@ -140,3 +142,6 @@ class V1ContractTests(APITestCase):
 
         password_reset_security = schema["paths"]["/api/v1/auth/password-reset/"]["post"].get("security")
         self.assertIsNone(password_reset_security)
+
+        logout_security = schema["paths"]["/api/v1/auth/logout/"]["post"]["security"]
+        self.assertIn("jwtAuth", logout_security)

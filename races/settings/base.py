@@ -169,6 +169,7 @@ INSTALLED_APPS = (
     "allauth.socialaccount",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt.token_blacklist",
     "django_filters",
     "drf_spectacular",
     "anymail",
@@ -198,6 +199,11 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SCHEMA_PATH_PREFIX_INSERT": "/api/v1",
+}
+
+SIMPLE_JWT = {
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
 }
 
 # Saving JSON result uploads for debugging
@@ -249,9 +255,3 @@ ACCOUNT_SESSION_REMEMBER = True
 def ACCOUNT_USER_DISPLAY(user):
     """Display users as email address"""
     return user.email
-
-
-# anyone can make GET requests to the API
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_URLS_REGEX = r"^/api/.*$"
-CORS_ALLOW_METHODS = ("GET", "HEAD", "OPTIONS")
