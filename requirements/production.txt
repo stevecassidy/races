@@ -1,0 +1,9 @@
+-r base.txt
+
+# Production web server / deployment assets
+gunicorn==26.2.0
+whitenoise==6.12.0
+
+# Database driver for the deployed PostgreSQL stack. Local development with
+# bin/develop.py uses SQLite and does not need it.
+psycopg[binary]==3.3.6

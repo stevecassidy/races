@@ -1,206 +1,172 @@
 [
-{
+  {
     "fields": {
-        "name": "MOVISTAR TEAM",
-        "website": "http://movistart.team/",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "MOV"
+      "name": "MOVISTAR TEAM",
+      "website": "http://movistart.team/",
+      "contact": "",
+      "slug": "MOV"
     },
     "model": "cabici.club",
     "pk": 63
-},
-{
+  },
+  {
     "fields": {
-        "name": "TEAM KATUSHA",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "KAT"
+      "name": "TEAM KATUSHA",
+      "website": "",
+      "contact": "",
+      "slug": "KAT"
     },
     "model": "cabici.club",
     "pk": 64
-},
-{
+  },
+  {
     "fields": {
-        "name": "ASTANA PRO TEAM",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "AST"
+      "name": "ASTANA PRO TEAM",
+      "website": "",
+      "contact": "",
+      "slug": "AST"
     },
     "model": "cabici.club",
     "pk": 65
-},
-{
+  },
+  {
     "fields": {
-        "name": "TEAM SKY",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "SKY"
+      "name": "TEAM SKY",
+      "website": "",
+      "contact": "",
+      "slug": "SKY"
     },
     "model": "cabici.club",
     "pk": 66
-},
-{
+  },
+  {
     "fields": {
-        "name": "TINKOFF - SAXO",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "TCS"
+      "name": "TINKOFF - SAXO",
+      "website": "",
+      "contact": "",
+      "slug": "TCS"
     },
     "model": "cabici.club",
     "pk": 67
-},
-{
+  },
+  {
     "fields": {
-        "name": "BMC RACING TEAM",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "BMC"
+      "name": "BMC RACING TEAM",
+      "website": "",
+      "contact": "",
+      "slug": "BMC"
     },
     "model": "cabici.club",
     "pk": 68
-},
-{
+  },
+  {
     "fields": {
-        "name": "LAMPRE - MERIDA",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "LAM"
+      "name": "LAMPRE - MERIDA",
+      "website": "",
+      "contact": "",
+      "slug": "LAM"
     },
     "model": "cabici.club",
     "pk": 69
-},
-{
+  },
+  {
     "fields": {
-        "name": "FDJ",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "FDJ"
+      "name": "FDJ",
+      "website": "",
+      "contact": "",
+      "slug": "FDJ"
     },
     "model": "cabici.club",
     "pk": 70
-},
-{
+  },
+  {
     "fields": {
-        "name": "TEAM GIANT - ALPECIN",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "TGA"
+      "name": "TEAM GIANT - ALPECIN",
+      "website": "",
+      "contact": "",
+      "slug": "TGA"
     },
     "model": "cabici.club",
     "pk": 71
-},
-{
+  },
+  {
     "fields": {
-        "name": "ETIXX - QUICK STEP",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "EQS"
+      "name": "ETIXX - QUICK STEP",
+      "website": "",
+      "contact": "",
+      "slug": "EQS"
     },
     "model": "cabici.club",
     "pk": 72
-},
-{
+  },
+  {
     "fields": {
-        "name": "AG2R LA MONDIALE",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "ALM"
+      "name": "AG2R LA MONDIALE",
+      "website": "",
+      "contact": "",
+      "slug": "ALM"
     },
     "model": "cabici.club",
     "pk": 73
-},
-{
+  },
+  {
     "fields": {
-        "name": "ORICA GREENEDGE",
-        "website": "http://oge.team",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "OGE"
+      "name": "ORICA GREENEDGE",
+      "website": "http://oge.team",
+      "contact": "",
+      "slug": "OGE"
     },
     "model": "cabici.club",
     "pk": 74
-},
-{
+  },
+  {
     "fields": {
-        "name": "TREK FACTORY RACING",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "TFR"
+      "name": "TREK FACTORY RACING",
+      "website": "",
+      "contact": "",
+      "slug": "TFR"
     },
     "model": "cabici.club",
     "pk": 75
-},
-{
+  },
+  {
     "fields": {
-        "name": "LOTTO SOUDAL",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "LTS"
+      "name": "LOTTO SOUDAL",
+      "website": "",
+      "contact": "",
+      "slug": "LTS"
     },
     "model": "cabici.club",
     "pk": 76
-},
-{
+  },
+  {
     "fields": {
-        "name": "TEAM LOTTO NL - JUMBO",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "TLJ"
+      "name": "TEAM LOTTO NL - JUMBO",
+      "website": "",
+      "contact": "",
+      "slug": "TLJ"
     },
     "model": "cabici.club",
     "pk": 77
-},
-{
+  },
+  {
     "fields": {
-        "name": "TEAM CANNONDALE - GARMIN",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "TCG"
+      "name": "TEAM CANNONDALE - GARMIN",
+      "website": "",
+      "contact": "",
+      "slug": "TCG"
     },
     "model": "cabici.club",
     "pk": 78
-},
-{
+  },
+  {
     "fields": {
-        "name": "IAM CYCLING",
-        "website": "",
-        "icalurl": "",
-        "contact": "",
-        "icalpatterns": "",
-        "slug": "IAM"
+      "name": "IAM CYCLING",
+      "website": "",
+      "contact": "",
+      "slug": "IAM"
     },
     "model": "cabici.club",
     "pk": 79
-}
+  }
 ]

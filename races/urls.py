@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,20 +15,21 @@
 # limitations under the License.
 
 from django.conf import settings
-from django.urls import include, path
 from django.contrib import admin
-from races.apps.cabici.api import CustomAuthToken
+from django.urls import include, path
 
 admin.autodiscover()
 
 urlpatterns = [
-    path('', include('races.apps.cabici.urls')),
-    path('admin/', admin.site.urls),
-    path('accounts/', include('allauth.urls')),
+    path("", include("races.apps.cabici.urls")),
+    path("api/v1/", include(("races.apps.cabici.api.urls", "v1"), namespace="v1")),
+    path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
-                      path('__debug__/', include(debug_toolbar.urls)),
-                  ] + urlpatterns
+        path("__debug__/", include(debug_toolbar.urls)),
+    ] + urlpatterns

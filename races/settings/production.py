@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# Copyright 2023 Google LLC
+# Copyright 2023 Steve Cassidy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,11 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Production settings (bin/production.py)."""
+
+from django.core.exceptions import ImproperlyConfigured
+
 from races.settings.base import *
 
 DEBUG = os.environ.get("DEBUG") == "1"
-TEMPLATE_DEBUG = DEBUG
-print("DEBUG", DEBUG, os.environ.get("DEBUG"))
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY") or os.environ.get("SECRET_KEY") or ""
+if not SECRET_KEY:
+    raise ImproperlyConfigured("DJANGO_SECRET_KEY (or SECRET_KEY) must be set in the environment")
 
 DATABASES = {
     "default": {
@@ -31,35 +37,33 @@ DATABASES = {
     }
 }
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "really_secret")
-
 # 'DJANGO_ALLOWED_HOSTS' should be a single string of hosts with a space between each.
 # For example: 'DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]'
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(" ")
-CSRF_TRUSTED_ORIGINS = ['https://cabici.waratahmasters.com.au']
-
-GEOPOSITION_GOOGLE_MAPS_API_KEY = os.environ.get("GEOPOSITION_GOOGLE_MAPS_API_KEY")
-GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
+CSRF_TRUSTED_ORIGINS = ["https://cabici.waratahmasters.com.au"]
 
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 SERVER_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 # ADMINS = (
 #     ('admin', os.environ.get("ADMIN_EMAIL")),
-#)
+# )
 ADMINS = []
 
 # django-anymail configuration
 ANYMAIL = {
-     "MAILERSEND_API_TOKEN": os.environ.get("MAILERSEND_API_TOKEN"),
+    "MAILERSEND_API_TOKEN": os.environ.get("MAILERSEND_API_TOKEN"),
 }
 EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
 
 # Saving JSON result uploads for debugging
 SAVE_RESULT_UPLOADS = True
-SAVE_RESULT_UPLOADS_DIR = '/var/lib/cabici/cabici-uploads'
+SAVE_RESULT_UPLOADS_DIR = "/var/lib/cabici/cabici-uploads"
 
-STATIC_ROOT = '/var/lib/cabici/staticfiles'
+STATIC_ROOT = "/var/lib/cabici/staticfiles"
 
 # enable whitenoise handling of static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    **STORAGES,
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
