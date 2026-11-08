@@ -383,14 +383,17 @@ how this slipped — the bullets are now stated as landed only where they are.
 - [x] Register / password reset / profile endpoints
       (`/api/v1/auth/register/`, `/api/v1/auth/password-reset/`,
       `/api/v1/auth/password-reset/confirm/`, `/api/v1/auth/profile/`)
+- [x] Logout + refresh hardening:
+      `/api/v1/auth/logout/` blacklists refresh tokens and
+      `/api/v1/auth/token/refresh/` rotates refresh tokens
 - [ ] allauth → JWT; session auth for `/admin/` only
 - [ ] Fix carried-over defects: unknown email → 401 not 500; user without a Rider
       must not 500 (**partially done**: `/api/v1/auth/me/` now handles no-Rider
       users without 500 and returns nullable rider/club fields)
-- [ ] **Token storage settled by same-origin:** access in memory, refresh in an
+- [x] **Token storage settled by same-origin:** access in memory, refresh in an
       httpOnly SameSite cookie, with CSRF protection on cookie-authenticated
       writes. Bearer-in-`localStorage` is off the table
-- [ ] **Delete CORS entirely** (not scope it): `corsheaders` app, `CorsMiddleware`,
+- [x] **Delete CORS entirely** (not scope it): `corsheaders` app, `CorsMiddleware`,
       the 3 `CORS_*` settings, and `django-cors-headers` from `base.txt`
 - [ ] **allauth links must resolve into the SPA** — password reset and email
       confirmation are absolute template links today; needs allauth URL/adapter

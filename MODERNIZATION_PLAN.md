@@ -667,28 +667,22 @@ few specific tasks.
       endpoints added to v1 auth surface:
       `POST /api/v1/auth/register/`, `POST /api/v1/auth/password-reset/`,
       `POST /api/v1/auth/password-reset/confirm/`, `GET/PATCH /api/v1/auth/profile/`
-- [ ] Logout / token blacklist or short-lived access + rotating refresh
-- [ ] allauth → JWT for the social/session path; keep session auth for `/admin/`
+- [x] Logout + refresh hardening for local-account JWT rollout:
+      `POST /api/v1/auth/logout/` blacklists refresh tokens and
+      `/api/v1/auth/token/refresh/` rotates refresh tokens
+- [ ] Initial rollout uses local accounts only (no social auth requirement);
+      keep session auth for `/admin/`. Social/OAuth can be reintroduced later
+      as a separate work item if/when needed
 - [ ] Fix the carried-over defects: unknown email must return 401 (not 500), and
       a user without a `Rider` must not 500 on `user.rider.club` — the raceday
       login depends on `club` and `official` being present (**partially done**:
       `/api/v1/auth/me/` is now guarded and returns nullable rider fields instead
       of erroring when a user has no Rider)
-- [ ] **Token storage settled by same-origin:** access token in memory, refresh
-      token in an **httpOnly SameSite cookie**. The previous
-      "memory vs httpOnly cookie" question is closed, and bearer-in-`localStorage`
-      is off the table. Cookie-authenticated writes need CSRF protection (DRF's
-      `SessionAuthentication` provides it; a cookie-JWT authentication class must
-      too)
-- [ ] **Delete CORS entirely** rather than scoping it: `corsheaders` from
-      `INSTALLED_APPS`, `CorsMiddleware`, and `CORS_ALLOW_ALL_ORIGINS` /
-      `CORS_URLS_REGEX` / `CORS_ALLOW_METHODS` all go. Also drop
-      `django-cors-headers` from `requirements/base.txt`
-- [ ] **allauth links must resolve into the SPA.** Password-reset and
-      email-confirmation URLs are currently rendered as absolute template links;
-      with those flows moving to SPA screens they must point at SPA routes —
-      needs allauth URL/adapter configuration, not just endpoints. Previously
-      untasked anywhere
+- [x] **Token storage settled by same-origin:** access token in memory, refresh
+      token in an **httpOnly SameSite cookie** (`api_refresh_token`); cookie-based
+      refresh/logout writes are CSRF-protected
+- [x] **Delete CORS entirely** rather than scoping it: no `corsheaders`,
+      middleware, or `CORS_*` settings remain in project settings
 - [ ] **Flatpages need a decision:** `FlatpageFallbackMiddleware` + the `/` flatpage
       back the current home page content. With `/` owned by the SPA, either
       expose pages as a resource (`GET /api/pages/<path>/`) or reorder the
@@ -701,7 +695,7 @@ few specific tasks.
 
 **Success Criteria:** every auth endpoint tested, including the failure paths
 that currently 500; no CORS configuration anywhere in the project; password reset
-and email confirmation work end-to-end against the SPA routes.
+works end-to-end for the local-account flow.
 
 ### 2.5 Core CRUD Implementation (Weeks 9-10)
 
@@ -857,8 +851,8 @@ consequences it commits us to:
 
 It removes a whole class of Phase 4 integration work (CORS policy, credential
 handling, two-host smoke tests) and it is reversible later. What it commits to is
-enumerated in 2.2 (subpath mounting), 2.4 (CORS deleted, cookie auth, allauth
-links into the SPA, flatpage disposition) and 4.3 (multi-stage Docker, the
+enumerated in 2.2 (subpath mounting), 2.4 (CORS deleted, cookie auth, local
+account flow, flatpage disposition) and 4.3 (multi-stage Docker, the
 static-storage trap, `.dockerignore`).
 
 The trade-offs considered, kept as the record of what was weighed:
@@ -1070,7 +1064,8 @@ Docker container (python:3.14-alpine, multi-stage)
         ├── /            → apps/web   (SPA index.html via a catch-all view)
         ├── /raceday/    → apps/raceday (vendored entry app, SW scoped to subpath)
         ├── /admin/      → Django admin (session auth)
-        ├── /accounts/   → allauth (email confirmation / reset links resolve to SPA routes)
+        ├── /accounts/   → optional account pages (local-account rollout does
+        │                  not depend on allauth/social auth)
         ├── /api/        → DRF (/api/v1/ + legacy shapes for Angular until retirement)
         └── /static/     → WhiteNoise, both builds' hashed assets
 ```
@@ -1251,38 +1246,21 @@ REST_FRAMEWORK = {
 ```
 
 **JWT Flow:**
-1. User logs in via `/api/auth/login/`
-2. Backend returns access + refresh tokens
-3. Frontend stores tokens (localStorage or memory)
-4. Frontend includes token in Authorization header
-5. Backend validates token on each request
+1. User logs in via `POST /api/v1/auth/token/`
+2. Backend returns access token and sets refresh token in an httpOnly cookie
+3. Frontend stores access token in memory only
+4. Frontend includes access token in `Authorization: Bearer <token>` header
+5. On expiry, frontend calls `POST /api/v1/auth/token/refresh/` (with CSRF header)
+6. Backend rotates refresh token and returns a new access token
 
 **Social Auth (Strava) Integration:**
-- Keep django-allauth for OAuth flow
-- Return JWT after successful social auth
-- Frontend redirects to auth endpoint
-- Backend handles OAuth callback, returns JWT
+- Deferred for initial rollout (local accounts only)
+- Reintroduce only if/when product priority returns, as a separate slice
 
 ### CORS Configuration
 
-```python
-# settings.py
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite dev server
-    "https://app.cabici.com",  # Production frontend
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
-```
+For the same-origin rollout, CORS is intentionally not configured. Django serves
+the SPA builds and API from one origin, so no `CORS_*` settings are required.
 
 ### Frontend API Client Setup
 

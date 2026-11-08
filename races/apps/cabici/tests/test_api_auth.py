@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient, APITestCase
 
 from races.apps.cabici.models import Club, Rider
 
@@ -30,8 +30,9 @@ class V1AuthTests(APITestCase):
             email="no-rider@example.com",
         )
 
-    def _obtain_access_token(self, username):
-        response = self.client.post(
+    def _login(self, username, client=None):
+        api_client = client or self.client
+        response = api_client.post(
             "/api/v1/auth/token/",
             {"username": username, "password": self.password},
             format="json",
@@ -39,8 +40,8 @@ class V1AuthTests(APITestCase):
         self.assertEqual(200, response.status_code)
         payload = response.json()
         self.assertIn("access", payload)
-        self.assertIn("refresh", payload)
-        return payload["access"], payload["refresh"]
+        self.assertNotIn("refresh", payload)
+        return payload["access"], response
 
     def test_register_creates_user_and_rider(self):
         payload = {
@@ -72,7 +73,7 @@ class V1AuthTests(APITestCase):
         self.assertEqual(401, response.status_code)
 
     def test_profile_get_and_patch(self):
-        access, _ = self._obtain_access_token("auth-user")
+        access, _ = self._login("auth-user")
         headers = {"HTTP_AUTHORIZATION": f"Bearer {access}"}
 
         get_response = self.client.get("/api/v1/auth/profile/", **headers)
@@ -91,14 +92,29 @@ class V1AuthTests(APITestCase):
         self.assertEqual("Name", updated["last_name"])
 
     def test_token_obtain_and_refresh_endpoints(self):
-        access, refresh = self._obtain_access_token("auth-user")
+        access, login_response = self._login("auth-user")
         self.assertTrue(access)
-        self.assertTrue(refresh)
+        self.assertIn("api_refresh_token", login_response.cookies)
+        self.assertIn("csrftoken", login_response.cookies)
 
-        refresh_response = self.client.post("/api/v1/auth/token/refresh/", {"refresh": refresh}, format="json")
+        refresh_response = self.client.post("/api/v1/auth/token/refresh/", format="json")
         self.assertEqual(200, refresh_response.status_code)
         refreshed = refresh_response.json()
         self.assertIn("access", refreshed)
+        self.assertNotIn("refresh", refreshed)
+        self.assertIn("api_refresh_token", refresh_response.cookies)
+
+    def test_refresh_requires_csrf_when_using_cookie(self):
+        secure_client = APIClient(enforce_csrf_checks=True)
+        access, login_response = self._login("auth-user", client=secure_client)
+        self.assertTrue(access)
+        csrf_token = login_response.cookies["csrftoken"].value
+
+        failed = secure_client.post("/api/v1/auth/token/refresh/", format="json")
+        self.assertEqual(403, failed.status_code)
+
+        ok = secure_client.post("/api/v1/auth/token/refresh/", format="json", HTTP_X_CSRFTOKEN=csrf_token)
+        self.assertEqual(200, ok.status_code)
 
     def test_token_obtain_rejects_invalid_credentials(self):
         response = self.client.post(
@@ -113,7 +129,7 @@ class V1AuthTests(APITestCase):
         self.assertEqual(401, response.status_code)
 
     def test_auth_me_returns_user_and_rider_fields(self):
-        access, _ = self._obtain_access_token("auth-user")
+        access, _ = self._login("auth-user")
         response = self.client.get("/api/v1/auth/me/", HTTP_AUTHORIZATION=f"Bearer {access}")
 
         self.assertEqual(200, response.status_code)
@@ -125,7 +141,7 @@ class V1AuthTests(APITestCase):
         self.assertTrue(payload["official"])
 
     def test_auth_me_handles_user_without_rider(self):
-        access, _ = self._obtain_access_token("no-rider-user")
+        access, _ = self._login("no-rider-user")
         response = self.client.get("/api/v1/auth/me/", HTTP_AUTHORIZATION=f"Bearer {access}")
 
         self.assertEqual(200, response.status_code)
@@ -178,3 +194,22 @@ class V1AuthTests(APITestCase):
             format="json",
         )
         self.assertEqual(200, new_login.status_code)
+
+    def test_logout_blacklists_refresh_token(self):
+        access, login_response = self._login("auth-user")
+        csrf_token = login_response.cookies["csrftoken"].value
+
+        logout_response = self.client.post(
+            "/api/v1/auth/logout/",
+            format="json",
+            HTTP_AUTHORIZATION=f"Bearer {access}",
+            HTTP_X_CSRFTOKEN=csrf_token,
+        )
+        self.assertEqual(200, logout_response.status_code)
+
+        refresh_response = self.client.post(
+            "/api/v1/auth/token/refresh/",
+            format="json",
+            HTTP_X_CSRFTOKEN=csrf_token,
+        )
+        self.assertEqual(400, refresh_response.status_code)

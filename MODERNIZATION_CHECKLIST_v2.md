@@ -103,14 +103,14 @@ Goals:
 - [x] Register / password reset (request + confirm) / profile endpoints
   (`/api/v1/auth/register/`, `/api/v1/auth/password-reset/`,
   `/api/v1/auth/password-reset/confirm/`, `/api/v1/auth/profile/`)
-- [ ] allauth → JWT for social auth; session auth for `/admin/` only
-- [ ] **CORS configuration:** keep `django-cors-headers`, allow all club Astro origins
-  - `CORS_ALLOWED_ORIGINS` managed as an allow-list of club domains
-  - Public read endpoints may be open; member portal endpoints require origin matching
-- [ ] **Management apps (same-origin):**
+- [x] Logout + refresh hardening
+  (`/api/v1/auth/logout/` blacklists refresh tokens and refresh rotation is enabled)
+- [ ] Local-account rollout only; social/OAuth auth is deferred. Session auth stays for `/admin/`
+- [x] **CORS deleted for same-origin rollout** (no `django-cors-headers`/`CORS_*` settings)
+- [x] **Management apps (same-origin):**
   - Access token in memory
   - Refresh token in `httpOnly` `SameSite=Strict` cookie
-  - CSRF protection on cookie-authenticated writes
+  - CSRF protection on cookie-authenticated refresh/logout writes
 - [ ] **Astro site (cross-origin):**
   - Public endpoints: no auth
   - Member endpoints: JWT `Authorization: Bearer <access>`
