@@ -1,0 +1,35 @@
+services:
+  web:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: cabici-web
+    restart: unless-stopped
+    env_file:
+      - ../.env.production
+    volumes:
+      - /mnt/cabici-data/media:/app/media
+      - /mnt/cabici-data/static:/var/lib/cabici/staticfiles
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python bin/production.py migrate --noinput &&
+             python bin/production.py collectstatic --noinput &&
+             gunicorn -c ./gunicorn.config.py races.wsgi"
+
+  db:
+    image: postgres:16-alpine
+    container_name: cabici-db
+    restart: unless-stopped
+    env_file:
+      - ../.env.production
+    volumes:
+      - /mnt/cabici-data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

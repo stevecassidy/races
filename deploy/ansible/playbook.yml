@@ -1,0 +1,17 @@
+---
+- name: Deploy cabici Django application
+  hosts: cabici
+  become: yes
+
+  vars:
+    pip_install_packages:
+      - docker
+      - docker-compose
+
+  roles:
+    - base
+    - docker
+    - volume
+    - app
+    - nginx
+    - certbot

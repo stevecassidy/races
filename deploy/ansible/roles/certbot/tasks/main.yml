@@ -1,0 +1,31 @@
+---
+- name: Install Certbot and Nginx plugin
+  ansible.builtin.apt:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+
+- name: Check if certificate already exists
+  ansible.builtin.stat:
+    path: "/etc/letsencrypt/live/{{ app_domain }}/cert.pem"
+  register: cert_stat
+
+- name: Obtain SSL certificate
+  ansible.builtin.command: >
+    certbot --nginx
+    -d {{ app_domain }}
+    --non-interactive
+    --agree-tos
+    --email {{ certbot_email }}
+    --redirect
+    --hsts
+    --staple-ocsp
+  when: not cert_stat.stat.exists
+  changed_when: true
+
+- name: Ensure Certbot timer is enabled
+  ansible.builtin.systemd:
+    name: certbot.timer
+    state: started
+    enabled: yes

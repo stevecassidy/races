@@ -1,0 +1,7 @@
+# Copy to terraform.tfvars and edit
+do_token     = "dop_v1_xxxxxxxx"
+ssh_key_name = "your-laptop-ssh-key"
+region       = "syd1"
+domain_name  = "cabici.example.com"
+# droplet_size = "s-2vcpu-4gb"
+# volume_size  = 10

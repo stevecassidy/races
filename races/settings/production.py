@@ -57,9 +57,10 @@ EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
 
 # Saving JSON result uploads for debugging
 SAVE_RESULT_UPLOADS = True
-SAVE_RESULT_UPLOADS_DIR = '/var/lib/cabici/cabici-uploads'
+SAVE_RESULT_UPLOADS_DIR = os.environ.get("SAVE_RESULT_UPLOADS_DIR", "/var/lib/cabici/cabici-uploads")
 
-STATIC_ROOT = '/var/lib/cabici/staticfiles'
+STATIC_ROOT = os.environ.get("STATIC_ROOT", "/var/lib/cabici/staticfiles")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", "/usr/src/app/races/media")
 
 # enable whitenoise handling of static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

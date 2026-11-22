@@ -1,0 +1,16 @@
+# Remote state backend configuration
+# Copy to backend.tf and fill in your Space credentials,
+# or use local state for initial prototyping.
+terraform {
+  backend "s3" {
+    endpoint                    = "https://syd1.digitaloceanspaces.com"
+    bucket                      = "your-terraform-state-bucket"
+    key                         = "cabici/terraform.tfstate"
+    region                      = "us-east-1"
+    skip_credentials_validation = true
+    skip_metadata_api_check     = true
+    skip_region_validation      = true
+    skip_requesting_account_id  = true
+    use_path_style              = true
+  }
+}
