@@ -11,7 +11,13 @@
     path: "/etc/letsencrypt/live/{{ app_domain }}/cert.pem"
   register: cert_stat
 
-- name: Obtain SSL certificate
+- name: Check if nginx config already contains SSL directives
+  ansible.builtin.command: grep -q "ssl_certificate" /etc/nginx/sites-enabled/{{ app_name }}.conf
+  register: ssl_in_config
+  failed_when: false
+  changed_when: false
+
+- name: Obtain or re-apply SSL certificate
   ansible.builtin.command: >
     certbot --nginx
     -d {{ app_domain }}
@@ -21,7 +27,7 @@
     --redirect
     --hsts
     --staple-ocsp
-  when: not cert_stat.stat.exists
+  when: not cert_stat.stat.exists or ssl_in_config.rc != 0
   changed_when: true
 
 - name: Ensure Certbot timer is enabled
