@@ -1,3 +1,5 @@
+name: cabici
+
 services:
   web:
     build:

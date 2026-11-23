@@ -152,6 +152,10 @@ This will:
 
 After the playbook completes, the app should be available at your domain over HTTPS.
 
+The `docker-compose.production.yml` declares `name: cabici`, so all
+`docker compose` commands automatically use the correct project name
+regardless of which directory you run them from.
+
 To create a superuser or run management commands:
 
 ```bash
