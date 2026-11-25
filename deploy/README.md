@@ -101,7 +101,33 @@ terraform output -raw droplet_ip > ../ansible/inventory.ini
 
 ## 3. Configure Secrets (Ansible)
 
-Edit `deploy/ansible/group_vars/all.yml` and set your domain and non-secret values.
+Edit `deploy/ansible/group_vars/all.yml` and set your domains and non-secret values.
+
+To serve the app on multiple domains (aliases), list them all in `app_domains`.
+The first entry is automatically treated as the primary domain (used for the
+Let's Encrypt certificate path). Nginx will serve all of them, Certbot will
+obtain a single certificate covering every domain, and `DJANGO_ALLOWED_HOSTS`
+is generated automatically from the list:
+
+```yaml
+app_domains:
+  - cabici.example.com      # first entry = primary domain (cert path)
+  - www.cabici.example.com
+default_from_email: "noreply@cabici.example.com"
+```
+
+For Terraform DNS, set `domain_name` for the primary domain and `domain_aliases`
+in `terraform.tfvars` for any additional domains:
+
+```hcl
+domain_name    = "cabici.example.com"
+domain_aliases = ["otherdomain.org", "www.cabici.example.com"]
+```
+
+Each full external domain (e.g. `otherdomain.org`) gets its own DNS zone on
+DigitalOcean plus an `@` A record. Subdomains of the primary domain
+(e.g. `www.cabici.example.com`) are created as A records inside the primary
+zone. In all cases the domain's nameservers must be delegated to DigitalOcean.
 
 **Sensitive values** (passwords, API keys) should be encrypted with Ansible Vault:
 
@@ -113,7 +139,7 @@ ansible-vault create group_vars/all.yml.vault
 Key secrets to set in the vault:
 - `django_secret_key` — generate with `openssl rand -base64 50`
 - `db_password` — strong PostgreSQL password
-- `mailersend_api_token` — if using MailerSend
+- `mailgun_api_key` and `mailgun_sender_domain` — for Mailgun email delivery
 - `geoposition_google_maps_api_key` — if using maps
 
 ## 4. Configure Server (Ansible)

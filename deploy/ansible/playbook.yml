@@ -8,6 +8,11 @@
       - docker
       - docker-compose
 
+  pre_tasks:
+    - name: Set primary domain from first entry in app_domains
+      ansible.builtin.set_fact:
+        app_domain: "{{ app_domains[0] }}"
+
   roles:
     - base
     - docker

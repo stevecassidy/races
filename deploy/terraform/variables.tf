@@ -40,7 +40,13 @@ variable "project_name" {
 }
 
 variable "domain_name" {
-  description = "Domain name to assign to the Droplet (DNS must be delegated to DigitalOcean)"
+  description = "Primary domain name for the Droplet (DNS must be delegated to DigitalOcean)"
   type        = string
   default     = ""
+}
+
+variable "domain_aliases" {
+  description = "Additional full domain names to point at the Droplet (e.g. otherdomain.org). Each gets its own DNS zone and A record. Subdomains of domain_name are handled automatically (e.g. www)."
+  type        = list(string)
+  default     = []
 }

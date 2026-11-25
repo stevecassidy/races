@@ -6,10 +6,32 @@
       - python3-certbot-nginx
     state: present
 
-- name: Check if certificate already exists
+- name: Build certbot -d arguments for all domains
+  ansible.builtin.set_fact:
+    certbot_domain_args: >-
+      {{ app_domains | map('regex_replace', '^(.*)$', '-d \1') | join(' ') }}
+
+- name: Check if certificate already exists (for primary domain)
   ansible.builtin.stat:
     path: "/etc/letsencrypt/live/{{ app_domain }}/cert.pem"
   register: cert_stat
+
+- name: Read certificate info for primary domain
+  ansible.builtin.command: >
+    certbot certificates -d {{ app_domain }}
+  register: cert_info
+  failed_when: false
+  changed_when: false
+
+- name: Check if certificate covers all required domains
+  ansible.builtin.shell: |
+    set -e
+    for domain in {{ app_domains | map('to_json') | join(' ') }}; do
+      echo "{{ cert_info.stdout | default('') }}" | grep -q "DNS:.*${domain}" || exit 1
+    done
+  register: cert_covers_all
+  failed_when: false
+  changed_when: false
 
 - name: Check if nginx config already contains SSL directives
   ansible.builtin.command: grep -q "ssl_certificate" /etc/nginx/sites-enabled/{{ app_name }}.conf
@@ -20,14 +42,14 @@
 - name: Obtain or re-apply SSL certificate
   ansible.builtin.command: >
     certbot --nginx
-    -d {{ app_domain }}
+    {{ certbot_domain_args }}
     --non-interactive
     --agree-tos
     --email {{ certbot_email }}
     --redirect
     --hsts
     --staple-ocsp
-  when: not cert_stat.stat.exists or ssl_in_config.rc != 0
+  when: not cert_stat.stat.exists or cert_covers_all.rc != 0 or ssl_in_config.rc != 0
   changed_when: true
 
 - name: Ensure Certbot timer is enabled

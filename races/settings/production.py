@@ -51,9 +51,10 @@ ADMINS = []
 
 # django-anymail configuration
 ANYMAIL = {
-     "MAILERSEND_API_TOKEN": os.environ.get("MAILERSEND_API_TOKEN"),
+     "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
+     "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
 }
-EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 # Saving JSON result uploads for debugging
 SAVE_RESULT_UPLOADS = True

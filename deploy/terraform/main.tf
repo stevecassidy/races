@@ -75,7 +75,7 @@ resource "digitalocean_domain" "app" {
   name       = var.domain_name
 }
 
-# A record pointing the domain to the Droplet IP
+# A record pointing the primary domain to the Droplet IP
 resource "digitalocean_record" "app" {
   count      = var.domain_name != "" ? 1 : 0
   domain     = digitalocean_domain.app[0].name
@@ -83,4 +83,50 @@ resource "digitalocean_record" "app" {
   name       = "@"
   value      = digitalocean_droplet.app.ipv4_address
   ttl        = 300
+}
+
+# Separate out full external domains from subdomains of the primary domain.
+# External domains (different registered name) get their own DNS zone.
+# Subdomains of domain_name (e.g. www.example.com) are A records in the
+# primary zone.
+locals {
+  # Full external domains: entries in domain_aliases that are NOT subdomains of domain_name
+  external_domains = var.domain_name != "" ? [
+    for alias in var.domain_aliases :
+    alias
+    if alias != var.domain_name && !endswith(alias, ".${var.domain_name}")
+  ] : []
+
+  # Subdomains of the primary domain: strip the primary domain suffix
+  subdomain_aliases = var.domain_name != "" ? [
+    for alias in var.domain_aliases :
+    replace(alias, ".${var.domain_name}", "")
+    if endswith(alias, ".${var.domain_name}") && alias != var.domain_name
+  ] : []
+}
+
+# DNS zone for each external alias domain (nameservers must be delegated to DO)
+resource "digitalocean_domain" "aliases" {
+  for_each = toset(local.external_domains)
+  name     = each.value
+}
+
+# A record @ in each external domain pointing to the Droplet
+resource "digitalocean_record" "external_aliases" {
+  for_each = toset(local.external_domains)
+  domain   = digitalocean_domain.aliases[each.value].name
+  type     = "A"
+  name     = "@"
+  value    = digitalocean_droplet.app.ipv4_address
+  ttl      = 300
+}
+
+# A records for subdomain aliases within the primary domain (e.g. www)
+resource "digitalocean_record" "subdomain_aliases" {
+  for_each = toset(local.subdomain_aliases)
+  domain   = digitalocean_domain.app[0].name
+  type     = "A"
+  name     = each.value
+  value    = digitalocean_droplet.app.ipv4_address
+  ttl      = 300
 }

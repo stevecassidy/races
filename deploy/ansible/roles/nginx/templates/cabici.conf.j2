@@ -4,7 +4,7 @@ upstream {{ app_name }}_app {
 
 server {
     listen 80;
-    server_name {{ app_domain }};
+    server_name {% for d in app_domains %}{{ d }}{% if not loop.last %} {% endif %}{% endfor %};
 
     client_max_body_size 20M;
 
