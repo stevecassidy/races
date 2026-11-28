@@ -1,0 +1,8 @@
+[cabici]
+# Replace with the IP output from `terraform output -raw droplet_ip`
+203.0.113.10
+
+[cabici:vars]
+ansible_user=root
+ansible_python_interpreter=/usr/bin/python3
+ansible_ssh_extra_args='-o StrictHostKeyChecking=accept-new'

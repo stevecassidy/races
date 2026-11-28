@@ -51,15 +51,17 @@ ADMINS = []
 
 # django-anymail configuration
 ANYMAIL = {
-     "MAILERSEND_API_TOKEN": os.environ.get("MAILERSEND_API_TOKEN"),
+     "MAILGUN_API_KEY": os.environ.get("MAILGUN_API_KEY"),
+     "MAILGUN_SENDER_DOMAIN": os.environ.get("MAILGUN_SENDER_DOMAIN"),
 }
-EMAIL_BACKEND = "anymail.backends.mailersend.EmailBackend"
+EMAIL_BACKEND = "anymail.backends.mailgun.EmailBackend"
 
 # Saving JSON result uploads for debugging
 SAVE_RESULT_UPLOADS = True
-SAVE_RESULT_UPLOADS_DIR = '/var/lib/cabici/cabici-uploads'
+SAVE_RESULT_UPLOADS_DIR = os.environ.get("SAVE_RESULT_UPLOADS_DIR", "/var/lib/cabici/cabici-uploads")
 
-STATIC_ROOT = '/var/lib/cabici/staticfiles'
+STATIC_ROOT = os.environ.get("STATIC_ROOT", "/var/lib/cabici/staticfiles")
+MEDIA_ROOT = os.environ.get("MEDIA_ROOT", "/usr/src/app/races/media")
 
 # enable whitenoise handling of static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

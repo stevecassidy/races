@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars and edit
+do_token     = "dop_v1_xxxxxxxx"
+ssh_key_name = "your-laptop-ssh-key"
+region       = "syd1"
+domain_name  = "cabici.example.com"
+# domain_aliases: full external domains get their own DNS zone;
+# subdomains of domain_name are handled as A records in the primary zone.
+# domain_aliases = ["otherdomain.org", "www.cabici.example.com"]
+# droplet_size = "s-2vcpu-4gb"
+# volume_size  = 10

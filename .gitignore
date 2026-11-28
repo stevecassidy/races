@@ -5,3 +5,13 @@ imgsample.xls
 __pycache__
 .idea/
 
+# Deployment artifacts
+.terraform/
+terraform.tfstate
+terraform.tfstate.*.backup
+terraform.tfvars
+*.tfplan
+deploy/ansible/inventory.ini
+deploy/ansible/group_vars/all.yml.vault
+deploy/terraform/backend.tf
+

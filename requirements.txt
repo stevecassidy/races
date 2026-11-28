@@ -7,7 +7,7 @@ certifi
 chardet
 contextlib2
 django-allauth
-django-anymail[mailersend]
+django-anymail[mailgun]
 django-appconf
 django-bootstrap-form
 django-cors-headers

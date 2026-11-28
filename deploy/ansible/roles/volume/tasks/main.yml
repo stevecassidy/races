@@ -1,0 +1,37 @@
+---
+- name: Ensure volume mount directory exists
+  ansible.builtin.file:
+    path: "{{ volume_mount }}"
+    state: directory
+    mode: '0755'
+
+- name: Check if volume is already formatted
+  ansible.builtin.command: "file -s {{ volume_device }}"
+  register: volume_file
+  changed_when: false
+
+- name: Format volume as ext4 (if not already formatted)
+  ansible.builtin.filesystem:
+    fstype: ext4
+    dev: "{{ volume_device }}"
+    force: false
+  when: "'data' not in volume_file.stdout"
+
+- name: Mount volume
+  ansible.posix.mount:
+    path: "{{ volume_mount }}"
+    src: "{{ volume_device }}"
+    fstype: ext4
+    state: mounted
+    opts: defaults,noatime
+
+- name: Create data subdirectories on volume
+  ansible.builtin.file:
+    path: "{{ volume_mount }}/{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - postgres
+    - media
+    - static
+    - backups

@@ -1,0 +1,16 @@
+# SOPS configuration for the private config repository.
+#
+# Place this file at the root of your private config repo
+# (e.g. ../races-git-config/.sops.yaml).
+#
+# Generate an Age key if you haven't already:
+#   age-keygen -o ~/.config/sops/age/keys.txt
+#
+# Then replace the public key below with your own.
+
+creation_rules:
+  # Encrypt all files ending in .sops
+  - path_regex: \.sops$
+    key_groups:
+      - age:
+          - age1yourpublickey...

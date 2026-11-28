@@ -1,0 +1,31 @@
+---
+- name: Ensure application directory exists
+  ansible.builtin.file:
+    path: "{{ app_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Clone or update application repository
+  ansible.builtin.git:
+    repo: "{{ app_repo }}"
+    dest: "{{ app_dir }}"
+    version: "{{ app_version }}"
+    force: yes
+
+- name: Create production environment file
+  ansible.builtin.template:
+    src: env.j2
+    dest: "{{ app_dir }}/.env.production"
+    mode: '0600'
+
+- name: Start application with Docker Compose
+  ansible.builtin.command: >
+    docker compose -f deploy/docker-compose.production.yml up -d --build
+  args:
+    chdir: "{{ app_dir }}"
+  changed_when: true
+
+# Migrations and collectstatic run automatically in the container startup command
+# defined in docker-compose.production.yml.  If you need to run management commands
+# manually, SSH to the droplet and use:
+#   docker compose -f deploy/docker-compose.production.yml exec web python bin/production.py <command>

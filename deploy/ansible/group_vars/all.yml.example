@@ -1,0 +1,38 @@
+---
+# Application configuration
+app_name: cabici
+app_repo: https://github.com/stevecassidy/races.git
+app_version: main
+app_dir: "/opt/{{ app_name }}"
+# All domains serving this app. The first entry is treated as the primary
+# domain (used for the Let's Encrypt certificate path). Certbot obtains a
+# single certificate covering all domains listed here.
+app_domains:
+  - cabici.example.com
+  - www.cabici.example.com
+
+# Address used as the sender for outgoing email (DEFAULT_FROM_EMAIL)
+default_from_email: "noreply@cabici.example.com"
+
+# Django secrets (move sensitive values to an Ansible Vault file)
+django_secret_key: "change-me-to-a-50-char-random-string"
+django_debug: "0"
+
+# Database
+db_name: cabici
+db_user: cabici
+db_password: "change-me-strong-password"
+db_host: db
+db_port: "5432"
+
+# External services
+mailgun_api_key: ""
+mailgun_sender_domain: ""
+geoposition_google_maps_api_key: ""
+
+# Volume settings
+volume_mount: "/mnt/cabici-data"
+volume_device: "/dev/sda"
+
+# Nginx / Certbot
+certbot_email: "admin@example.com"
