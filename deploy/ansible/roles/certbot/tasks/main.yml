@@ -49,6 +49,7 @@
     --redirect
     --hsts
     --staple-ocsp
+    --expand
   when: not cert_stat.stat.exists or cert_covers_all.rc != 0 or ssl_in_config.rc != 0
   changed_when: true
 
